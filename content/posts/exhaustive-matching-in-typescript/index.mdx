@@ -1,0 +1,116 @@
+---
+title: Exhaustive matching in Typescript
+date: 2020-08-09
+tags:
+    - Typescript
+    - React
+    - Scala
+---
+
+It is already well known in the frontend development community that adopting Typescript is a good idea for (almost) every project that reaches a certain size.
+Advantages cited usually evolve around safety, clearly documented interface, finding errors before they go to production and being able to refactor safely.
+
+While I totally agree that these are great points in favor of Typescript, I think there is one advantage that is criminally underrated:
+
+### The ability to safely add code
+
+Even though I firmly believe that deleting code is much more fun (and productive) than writing code, what we do most of the time, is adding code.
+
+Adding features. Adding enhancements to existing features. Adding xyz. After all, it is mostly what customers want.
+So how come we never talk about how great typescript is, if used correctly, for _adding_ things.
+
+Yes, moving and renaming things and having the compiler tell you where you forgot something is great,
+but IDEs are catching up and pretty good at these things for JavaScript files already.
+But no Editor will tell you that you forgot to handle a new branch in your switch statement when you add a new feature.
+
+This is where exhaustive matching comes into play.
+
+### What is exhaustive matching
+
+Some languages, like `OCaml`, `F#` or `Scala` support the concept of _pattern matching_.
+It's a little bit like javascript's switch statement on steroids, as it allows matching a value not only against other values, but also against patterns.
+
+Exhaustive matching basically means that the compiler, given that he knows all the possible states,
+can tell you when you are missing one state in your match.
+I will use `scala` code for the examples since it's the language I am most familiar with.
+
+```java:title=basic-pattern-matching-in-scala
+sealed trait Shape
+
+final case class Circle(radius: Int) extends Shape
+final case class Rectangle(width: Int, height: Int) extends Shape
+
+def renderShape(shape: Shape): String = {
+  shape match {
+    case _:Rectangle => "I am a Rectangle!"
+  }
+}
+```
+
+[Try me in scastie](https://scastie.scala-lang.org/8asQjmtsSTuK2FKgmEX65w)
+
+Here, the compiler would complain with the following message:
+
+> match may not be exhaustive. It would fail on the following input: Circle
+
+Great, so as a JavaScript developer, being aware of the [default-case](https://eslint.org/docs/rules/default-case) eslint rule,
+I'll just add a default case here and call it a day:
+
+```java:title=default-case {4}"
+def renderShape(shape: Shape): String = {
+  shape match {
+    case _:Rectangle => "I am a Rectangle!"
+    case _ => "I'm a Circle"
+  }
+}
+```
+
+[Try me in scastie](https://scastie.scala-lang.org/eBVdb1hIR46nLDqwuzPeeg)
+
+The program works, and all the cases in the match are being taken care of, so no one complains.
+But what happens if we add another shape?
+
+```java:title=a-new-shape {1}"
+final case class Square(length: Int) extends Shape
+
+def renderShape(shape: Shape): String = {
+  shape match {
+    case _:Rectangle => "I am a Rectangle!"
+    case _ => "I'm a Circle"
+  }
+}
+
+```
+
+[Try me in scastie](https://scastie.scala-lang.org/gPHbnUrpTgyK0arINPP2cg)
+
+Right. The program will still work, but it will not work correctly. If we pass a `Square` to the `renderShape` method,
+it will identify as a `Circle`, which is certainly not what we would expect.
+
+Sure, as long as the code is [co-located](https://kentcdodds.com/blog/colocation), this might be a non-issue.
+You will see that you have to adapt the code right below.
+
+But obviously, in a fairly large code base, you will have go to through all the usages, and it's easy to forget one.
+Being able to utilize _compiler driven development_ (think: Fix everything that's red and then it is guaranteed to work) is of great help.
+
+So here is how the fixed scala code would look:
+
+```java:exhaustive-match {4,5}"
+def renderShape(shape: Shape): String = {
+  shape match {
+    case _:Rectangle => "I am a Rectangle!"
+    case _:Circle => "I'm a Circle"
+    case _:Square => "I'm a Square"
+  }
+}
+
+```
+
+[Try me in scastie](https://scastie.scala-lang.org/KinShmJ1R3GyxyBR5POWSQ)
+
+Notice how we just got rid of the default case completely.
+If we add a `Triangle` now, it will show us an error again.
+
+### How can we do this in Typescript
+
+
