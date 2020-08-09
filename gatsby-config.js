@@ -60,10 +60,15 @@ module.exports = {
             // See the theme's README for all available options
             options: {
                 mdx: false,
+                blogPath: '/all',
                 navigation: [
                     {
                         title: `Blog`,
-                        slug: `/`,
+                        slug: `/all`,
+                    },
+                    {
+                        title: `Tags`,
+                        slug: `/tags`,
                     },
                     {
                         title: `Rss`,
