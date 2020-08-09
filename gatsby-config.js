@@ -20,6 +20,10 @@ module.exports = {
                         title: `Blog`,
                         slug: `/`,
                     },
+                    {
+                        title: `Rss`,
+                        slug: `/rss.xml`,
+                    },
                 ],
                 externalLinks: [
                     {
