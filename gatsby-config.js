@@ -41,6 +41,12 @@ module.exports = {
                 ],
             },
         },
+        {
+            resolve: `gatsby-transformer-remark`,
+            options: {
+                plugins: [`gatsby-remark-autolink-headers`],
+            },
+        },
         `gatsby-plugin-sitemap`,
         {
             resolve: `gatsby-plugin-manifest`,
