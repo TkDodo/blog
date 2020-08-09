@@ -13,9 +13,49 @@ module.exports = {
     },
     plugins: [
         {
+            resolve: `gatsby-transformer-remark`,
+            options: {
+                plugins: [
+                    {
+                        resolve: `gatsby-remark-autolink-headers`,
+                    },
+                ],
+            },
+        },
+        {
+            resolve: `gatsby-plugin-mdx`,
+            options: {
+                extensions: [`.mdx`, `.md`],
+                gatsbyRemarkPlugins: [
+                    {
+                        resolve: `gatsby-remark-autolink-headers`,
+                    },
+                    {
+                        resolve: `gatsby-remark-images`,
+                        options: {
+                            maxWidth: 960,
+                            quality: 90,
+                            linkImagesToOriginal: false,
+                        },
+                    },
+                ],
+                plugins: [
+                    {
+                        resolve: `gatsby-remark-images`,
+                        options: {
+                            maxWidth: 960,
+                            quality: 90,
+                            linkImagesToOriginal: false,
+                        },
+                    },
+                ],
+            },
+        },
+        {
             resolve: `@lekoarts/gatsby-theme-minimal-blog`,
             // See the theme's README for all available options
             options: {
+                mdx: false,
                 navigation: [
                     {
                         title: `Blog`,
@@ -42,12 +82,6 @@ module.exports = {
                 ],
                 feed: true,
                 feedTitle: "TkDodo's blog",
-            },
-        },
-        {
-            resolve: `gatsby-transformer-remark`,
-            options: {
-                plugins: [`gatsby-remark-autolink-headers`],
             },
         },
         `gatsby-plugin-sitemap`,
