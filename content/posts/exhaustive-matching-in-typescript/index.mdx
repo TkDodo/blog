@@ -2,9 +2,9 @@
 title: Exhaustive matching in Typescript
 date: 2020-08-09
 tags:
+    - Scala
     - Typescript
     - React
-    - Scala
 ---
 
 It is already well known in the frontend development community that adopting Typescript is a good idea for (almost) every project that reaches a certain size.
@@ -95,7 +95,7 @@ Being able to utilize _compiler driven development_ (think: Fix everything that'
 
 So here is how the fixed scala code would look:
 
-```java:exhaustive-match {4,5}"
+```java:title=exhaustive-match {4,5}"
 def renderShape(shape: Shape): String = {
   shape match {
     case _:Rectangle => "I am a Rectangle!"
@@ -113,4 +113,86 @@ If we add a `Triangle` now, it will show us an error again.
 
 ### How can we do this in Typescript
 
+This is great and all, but `Typescript` doesn't support pattern matching, so how are we supposed to do this in TS?
+
+It turns out the Typescript compiler is actually pretty smart when it comes to matching exhaustively on union types.
+This is best done with tagged unions, which just means a union where each member define a discriminator of a literal type:
+
+```ts:title=tagged-union
+type Circle = {
+    kind: 'circle'
+    radius: number
+}
+
+type Rectangle = {
+    kind: 'rectangle'
+    width: number
+    height: number
+}
+
+type Shape = Circle | Rectangle
+
+const renderShape = (shape: Shape): string => {
+    switch (shape.kind) {
+        case 'circle':
+            return 'I am a circle'
+    }
+}
+```
+
+[Typescript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAwglgJwMYBtoF4oG8BQV9QDWcAdgCYBcUA5EoqhNXgQgIZlwCuAzlSZwFsARhAQ4AvjlCQoAJQhJgrEgHM0UTLgJFSlGggVLVaJtoDucMsAAWfQSLHbrEOCuvA7w0RKnhoAZWtWGUx4ZHUAHzlDZTUIHBwkAHsSbmAoA3JRQOCMKAAKbiDIKhzIAEoqNIRSFQ0APmxmfG4LYCRrAqLcgDpicnKm7W0kVm5oWnoTCmbh7QNgTgQSGgBJKFYBDag6cMZZyXEgA)
+
+In this example, the `kind` field serves as the discriminator: Every shape is uniquely identified by it.
+
+With the above code, you should now see the following error:
+
+> Function lacks ending return statement and return type does not include 'undefined'.(2366)
+
+Note that even if you remove the explicit return type,
+and if you have [noImplicitReturns](https://www.typescriptlang.org/tsconfig#noImplicitReturns) turned on in your `tsconfig.json`,
+you will _still_ get the error:
+
+> Not all code paths return a value.(7030)
+
+So the compiler _really_ wants to tell us that we forgot something here, which is great.
+
+Again, we should _not_ fall into the trap of adding a `default` case here.
+I would even disable the aforementioned eslint rule for Typescript files, because I don't think it adds a lot that the compiler won't catch for us anyways.
+
+The compiler will also narrow the type for us in the `case` block, so we _will_ have access to `shape.radius` inside the `case 'circle'`, but not outside of it.
+
+A small caveat seems to be that you cannot use object destructuring on the shape param.
+Even though all members of the union type contain a shape, Typescript won't accept this:
+
+```ts:title=no-destructuring {1, 4}
+const renderShape = ({ kind, ...shape }: Shape): string => {
+    switch (kind) {
+        case 'circle':
+            return `I am a circle with ${shape.radius}`
+    }
+}
+```
+
+[Typescript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAwglgJwMYBtoF4oG8BQV9QDWcAdgCYBcUA5EoqhNXgQgIZlwCuAzlSZwFsARhAQ4AvjlCQoAJQhJgrEgHM0UTLgJFSlGggVLVaJtoDucMsAAWfQSLHbrEOCuvA7w0RKnhoAZWtWGUx4ZHUAHzlDZTUIHBwkAHsSbmAoA3JRQOCMKAAKLB1yABooADpK7iCZcSocyABKKjSEUhUNAD5sZnxuC2AkawLickae7W0kVm5oWnoTCl7J7QNgTgQSKAADAEkoVgEDqDpw6AHhgBIsatzytg4ecW3lyXEgA)
+
+It is especially important to keep this in mind when working with React components, as their props tend to be destructured a lot.
+
+So with all the cases, our code would look like this:
+
+```ts:title=exhaustive-matching-in-ts
+const renderShape = (shape: Shape): string => {
+    switch (shape.kind) {
+        case 'circle':
+            return 'I am a circle'
+        case 'rectangle':
+            return 'I am a rectangle'
+    }
+}
+```
+
+[Typescript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAwglgJwMYBtoF4oG8BQV9QDWcAdgCYBcUA5EoqhNXgQgIZlwCuAzlSZwFsARhAQ4AvjlCQoAJQhJgrEgHM0UTLgJFSlGggVLVaJtoDucMsAAWfQSLHbrEOCuvA7w0RKnhoAZWtWGUx4ZHUAHzlDZTUIHBwkAHsSbmAoA3JRQOCMKAAKbiDIKhzIAEoqNIRSFQ0APmxmfG4LYCRrAqLcgDpicnKm7W0kVm5oWnoTCmbh7QNgTgQSGgBJKFYBDag6cMZZkbGJg0VY6YO5jIhF5bWNrdYr0+N97UlxIA)
+
+Typescript is happy with this, and we will get a compile time error when we add a new `Shape` 🎉
+
+### Runtime caveats
 
