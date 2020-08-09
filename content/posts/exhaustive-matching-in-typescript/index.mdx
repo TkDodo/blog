@@ -196,3 +196,112 @@ Typescript is happy with this, and we will get a compile time error when we add 
 
 ### Runtime caveats
 
+Types don't exist at runtime - all the safety that we have only exists at compile time.
+This is no problem as long as we, with our 100% typescript codebase, are the only callers of that function.
+In the real world, this is sometimes not the case. We might have some untyped javascript code that calls our function,
+or we are not in control at all where our input comes from.
+
+Let's assume for example that we call a rest service that delivers a couple of Shapes that we want to render,
+and we have established with the backend team that we will focus on `Circle` and `Rectangle` first and will add `Square` later.
+We will use `React` to render our little app:
+
+```tsx:title=react-shapes
+export const App = () => {
+    const [shapes, setShapes] = React.useState()
+
+    React.useEffect(() => {
+        getShapes().then(setShapes)
+    }, [])
+
+    if (!shapes) {
+        return <Loading />
+    }
+
+    return (
+        <Grid>
+            {shapes.map((shape) => (
+                <Shape {...shape} />
+            ))}
+        </Grid>
+    )
+}
+
+const Shape = (props: Shape): JSX.Element => {
+    switch (props.kind) {
+        case 'circle':
+            return <Circle radius={props.radius} />
+        case 'rectangle':
+            return <Rectangle width={props.width} height={props.height} />
+    }
+}
+```
+
+Great, this is future-proof, typescript will tell us what to do as soon as we add another `Shape`.
+
+Here, you can see the whole App in action:
+
+<iframe
+    src="https://codesandbox.io/embed/nostalgic-diffie-gush0?fontsize=14&hidenavigation=1&theme=dark&view=preview"
+    style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+    title="nostalgic-diffie-gush0"
+    allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+    sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+></iframe>
+
+### Undefined strikes back
+
+But then, something else happens: The backend team is _faster_ than expected 😮.
+Their sprint is running great, so they decide to implement the `Square` right away.
+It's a quick win on their part, and they ship a new minor version of the API.
+
+Guess what happens to our little App?
+
+It will die a horrible runtime death.
+A minor backend release makes our whole App crash because of this fancy typescript pattern 😢.
+This happens because now, we fall through our switch statement, and because we have no `default` branch, `undefined` is returned.
+`Undefined` is one of the few things that `React` _cannot_ render, so we die with the famous error:
+
+> Nothing was returned from render. This usually means a return statement is missing. Or, to render nothing, return null.
+
+See it live:
+
+<iframe
+    src="https://codesandbox.io/embed/sharp-mirzakhani-lenv3?fontsize=14&hidenavigation=1&theme=dark&view=preview"
+    style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+    title="sharp-mirzakhani-lenv3"
+    allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+    sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+></iframe>
+
+### Never to the rescue
+
+In Typescripts type system, never is it's [bottom type](https://en.wikipedia.org/wiki/Bottom_type).
+It denotes something that can never happen, for example, a function that always throws an Exception or has an infinite loop will return `never`.
+
+How is this helpful?
+
+If typescript narrows the type with each `case` in the `switch` statement, if all cases are covered, what remains must be of type `never`.
+We can assert that with a little helper:
+
+```tsx:title=never {1,9,10}
+const UnknownShape = ({ shape }: { shape: never }) => <div>Unknown Shape</div>
+
+const Shape = (props: Shape): JSX.Element => {
+    switch (props.kind) {
+        case 'circle':
+            return <Circle radius={props.radius} />
+        case 'rectangle':
+            return <Rectangle width={props.width} height={props.height} />
+        default:
+            return <UnknownShape shape={props} />
+    }
+}
+```
+
+This approach has two advantages:
+
+-   It will _not_ fail at runtime - it will still display all other shapes and display a little not-found helper for the newly added shape
+-   If we add `Square` to our `Shape` type, because we finally catch-up with the backend team and want to implement it as well, we will _still_ get a compile error from Typescript. You can see that [here](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAKjgQwM5wEoFNkGN4BmUEIcA5FDvmQFA0wCeYWcAQmlgMoAWyzcAXjgBvGnDjAAJgC44AOwCuIAEZYoAbhoBfTY34BhYFFwAbFkPaouvfgDIRYuAGtgcmXABEuI6awfN4lDIksAKqLKKKmqaOvRMLNj4yHIA5maCbBw8fCz2ouIubrIelEmpZv6OAO5SMNwRSqoajtxYwCncMA1RzbF6LJwAjgrIlBmW1jlweY4Fru4eqMOjfgA0s3BmqXWyAOzacfzZ-EKGxukAPphYZWksV0MjlJo0uBByqPBnvhkAFMJwIIhMJwLSyADyIGAMAAPN8zKtPIVJB44FcPFIPAA+ACUgixcF+jhhIQAbliAJJkUjIODec4sGp1QHBULoYRAtlaGEAejJWJoOJebw+8ESMGSdz+AJqkjqiNa7U6oIhUNh4slCKR81R6MxuPxhOJ-I2VJpgJuEvKjOh3DgsuZwgd3C0KDccEVHXgwk9nS0xL5wHJguF70+cAAqnInHIIFU5MdzISAagbCwwSI4KmchEsKS1KC8QICSSg1iozG43I4IneSbXmH4Im-mBiGBwjW0zjZAApTgADQAdABRMwgLByeDFhzicSoJm4O2-VsQduD5F4-Kz7e4Djkem+MjSDbb7eUGAKKDVuE+dKcsICYQrtf31CunkC0+z3dWcilK13EeJ5fhaF5XnAMIata9q1Nwj7Pqgg7Oq6vowPBbaIah76fiBkhYAQyAKCYXTAV+56XteFaxvGzbZsw6Grm+cAfhs-paEAA).
+    This is because now, the type is not narrowed to `never` (since `Square` is still left), so the type of `props` for `UnknownShape` does not match.
+
+### Conclusion
