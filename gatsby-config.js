@@ -7,6 +7,7 @@ const shouldAnalyseBundle = process.env.ANALYSE_BUNDLE
 module.exports = {
     pathPrefix: `/blog`,
     siteMetadata: {
+        author: 'TkDodo',
         siteTitle: "TkDodo's blog",
         siteTitleAlt: `TkDodo's blog`,
     },
@@ -39,6 +40,8 @@ module.exports = {
                         url: `https://www.dorfmeister.cc`,
                     },
                 ],
+                feed: true,
+                feedTitle: "TkDodo's blog",
             },
         },
         {
