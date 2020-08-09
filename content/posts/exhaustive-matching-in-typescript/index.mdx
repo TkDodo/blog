@@ -84,8 +84,8 @@ def renderShape(shape: Shape): String = {
 
 [Try me in scastie](https://scastie.scala-lang.org/gPHbnUrpTgyK0arINPP2cg)
 
-Right. The program will still work, but it will not work correctly. If we pass a `Square` to the `renderShape` method,
-it will identify as a `Circle`, which is certainly not what we would expect.
+Right. The program will still work, but it will not work correctly. If we pass a Square to the renderShape method,
+it will identify as a _Circle_, which is certainly not what we would expect.
 
 Sure, as long as the code is [co-located](https://kentcdodds.com/blog/colocation), this might be a non-issue.
 You will see that you have to adapt the code right below.
@@ -109,11 +109,11 @@ def renderShape(shape: Shape): String = {
 [Try me in scastie](https://scastie.scala-lang.org/KinShmJ1R3GyxyBR5POWSQ)
 
 Notice how we just got rid of the default case completely.
-If we add a `Triangle` now, it will show us an error again.
+If we add a _Triangle_ now, it will show us an error again.
 
 ### How can we do this in Typescript
 
-This is great and all, but `Typescript` doesn't support pattern matching, so how are we supposed to do this in TS?
+This is great and all, but Typescript doesn't support pattern matching, so how are we supposed to do this in TS?
 
 It turns out the Typescript compiler is actually pretty smart when it comes to matching exhaustively on union types.
 This is best done with tagged unions, which just means a union where each member define a discriminator of a literal type:
@@ -142,7 +142,7 @@ const renderShape = (shape: Shape): string => {
 
 [Typescript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAwglgJwMYBtoF4oG8BQV9QDWcAdgCYBcUA5EoqhNXgQgIZlwCuAzlSZwFsARhAQ4AvjlCQoAJQhJgrEgHM0UTLgJFSlGggVLVaJtoDucMsAAWfQSLHbrEOCuvA7w0RKnhoAZWtWGUx4ZHUAHzlDZTUIHBwkAHsSbmAoA3JRQOCMKAAKbiDIKhzIAEoqNIRSFQ0APmxmfG4LYCRrAqLcgDpicnKm7W0kVm5oWnoTCmbh7QNgTgQSGgBJKFYBDag6cMZZyXEgA)
 
-In this example, the `kind` field serves as the discriminator: Every shape is uniquely identified by it.
+In this example, the _kind_ field serves as the discriminator: Every shape is uniquely identified by it.
 
 With the above code, you should now see the following error:
 
@@ -156,10 +156,10 @@ you will _still_ get the error:
 
 So the compiler _really_ wants to tell us that we forgot something here, which is great.
 
-Again, we should _not_ fall into the trap of adding a `default` case here.
+Again, we should _not_ fall into the trap of adding a default case here.
 I would even disable the aforementioned eslint rule for Typescript files, because I don't think it adds a lot that the compiler won't catch for us anyways.
 
-The compiler will also narrow the type for us in the `case` block, so we _will_ have access to `shape.radius` inside the `case 'circle'`, but not outside of it.
+The compiler will also narrow the type for us in the case block, so we _will_ have access to `shape.radius` inside the `case 'circle'`, but not outside of it.
 
 A small caveat seems to be that you cannot use object destructuring on the shape param.
 Even though all members of the union type contain a shape, Typescript won't accept this:
@@ -192,7 +192,7 @@ const renderShape = (shape: Shape): string => {
 
 [Typescript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAwglgJwMYBtoF4oG8BQV9QDWcAdgCYBcUA5EoqhNXgQgIZlwCuAzlSZwFsARhAQ4AvjlCQoAJQhJgrEgHM0UTLgJFSlGggVLVaJtoDucMsAAWfQSLHbrEOCuvA7w0RKnhoAZWtWGUx4ZHUAHzlDZTUIHBwkAHsSbmAoA3JRQOCMKAAKbiDIKhzIAEoqNIRSFQ0APmxmfG4LYCRrAqLcgDpicnKm7W0kVm5oWnoTCmbh7QNgTgQSGgBJKFYBDag6cMZZkbGJg0VY6YO5jIhF5bWNrdYr0+N97UlxIA)
 
-Typescript is happy with this, and we will get a compile time error when we add a new `Shape` 🎉
+Typescript is happy with this, and we will get a compile time error when we add a new Shape 🎉
 
 ### Runtime caveats
 
@@ -202,7 +202,7 @@ In the real world, this is sometimes not the case. We might have some untyped ja
 or we are not in control at all where our input comes from.
 
 Let's assume for example that we call a rest service that delivers a couple of Shapes that we want to render,
-and we have established with the backend team that we will focus on `Circle` and `Rectangle` first and will add `Square` later.
+and we have established with the backend team that we will focus on Circle and Rectangle first and will add Square later.
 We will use `React` to render our little app:
 
 ```tsx:title=react-shapes
@@ -236,7 +236,7 @@ const Shape = (props: Shape): JSX.Element => {
 }
 ```
 
-Great, this is future-proof, typescript will tell us what to do as soon as we add another `Shape`.
+Great, this is future-proof, typescript will tell us what to do as soon as we add _another_ Shape.
 
 Here, you can see the whole App in action:
 
@@ -251,14 +251,14 @@ Here, you can see the whole App in action:
 ### Undefined strikes back
 
 But then, something else happens: The backend team is _faster_ than expected 😮.
-Their sprint is running great, so they decide to implement the `Square` right away.
+Their sprint is running great, so they decide to implement the Square right away.
 It's a quick win on their part, and they ship a new minor version of the API.
 
 Guess what happens to our little App?
 
 It will die a horrible runtime death.
 A minor backend release makes our whole App crash because of this fancy typescript pattern 😢.
-This happens because now, we fall through our switch statement, and because we have no `default` branch, `undefined` is returned.
+This happens because now, we fall through our switch statement, and because we have no default branch, `undefined` is returned.
 `Undefined` is one of the few things that `React` _cannot_ render, so we die with the famous error:
 
 > Nothing was returned from render. This usually means a return statement is missing. Or, to render nothing, return null.
@@ -276,11 +276,11 @@ See it live:
 ### Never to the rescue
 
 In Typescripts type system, never is it's [bottom type](https://en.wikipedia.org/wiki/Bottom_type).
-It denotes something that can never happen, for example, a function that always throws an Exception or has an infinite loop will return `never`.
+It denotes something that can never happen, for example, a function that always throws an Exception or has an infinite loop will return never.
 
 How is this helpful?
 
-If typescript narrows the type with each `case` in the `switch` statement, if all cases are covered, what remains must be of type `never`.
+If typescript narrows the type with each case in the switch statement, if all cases are covered, what remains must be of type _never_.
 We can assert that with a little helper:
 
 ```tsx:title=never {1,9,10}
@@ -301,7 +301,7 @@ const Shape = (props: Shape): JSX.Element => {
 This approach has two advantages:
 
 -   It will _not_ fail at runtime - it will still display all other shapes and display a little not-found helper for the newly added shape
--   If we add `Square` to our `Shape` type, because we finally catch-up with the backend team and want to implement it as well, we will _still_ get a compile error from Typescript. You can see that [here](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAKjgQwM5wEoFNkGN4BmUEIcA5FDvmQFA0wCeYWcAQmlgMoAWyzcAXjgBvGnDjAAJgC44AOwCuIAEZYoAbhoBfTY34BhYFFwAbFkPaouvfgDIRYuAGtgcmXABEuI6awfN4lDIksAKqLKKKmqaOvRMLNj4yHIA5maCbBw8fCz2ouIubrIelEmpZv6OAO5SMNwRSqoajtxYwCncMA1RzbF6LJwAjgrIlBmW1jlweY4Fru4eqMOjfgA0s3BmqXWyAOzacfzZ-EKGxukAPphYZWksV0MjlJo0uBByqPBnvhkAFMJwIIhMJwLSyADyIGAMAAPN8zKtPIVJB44FcPFIPAA+ACUgixcF+jhhIQAbliAJJkUjIODec4sGp1QHBULoYRAtlaGEAejJWJoOJebw+8ESMGSdz+AJqkjqiNa7U6oIhUNh4slCKR81R6MxuPxhOJ-I2VJpgJuEvKjOh3DgsuZwgd3C0KDccEVHXgwk9nS0xL5wHJguF70+cAAqnInHIIFU5MdzISAagbCwwSI4KmchEsKS1KC8QICSSg1iozG43I4IneSbXmH4Im-mBiGBwjW0zjZAApTgADQAdABRMwgLByeDFhzicSoJm4O2-VsQduD5F4-Kz7e4Djkem+MjSDbb7eUGAKKDVuE+dKcsICYQrtf31CunkC0+z3dWcilK13EeJ5fhaF5XnAMIata9q1Nwj7Pqgg7Oq6vowPBbaIah76fiBkhYAQyAKCYXTAV+56XteFaxvGzbZsw6Grm+cAfhs-paEAA).
-    This is because now, the type is not narrowed to `never` (since `Square` is still left), so the type of `props` for `UnknownShape` does not match.
+-   If we add Square to our Shape type, because we finally catch-up with the backend team and want to implement it as well, we will _still_ get a compile error from Typescript. You can see that [here](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAKjgQwM5wEoFNkGN4BmUEIcA5FDvmQFA0wCeYWcAQmlgMoAWyzcAXjgBvGnDjAAJgC44AOwCuIAEZYoAbhoBfTY34BhYFFwAbFkPaouvfgDIRYuAGtgcmXABEuI6awfN4lDIksAKqLKKKmqaOvRMLNj4yHIA5maCbBw8fCz2ouIubrIelEmpZv6OAO5SMNwRSqoajtxYwCncMA1RzbF6LJwAjgrIlBmW1jlweY4Fru4eqMOjfgA0s3BmqXWyAOzacfzZ-EKGxukAPphYZWksV0MjlJo0uBByqPBnvhkAFMJwIIhMJwLSyADyIGAMAAPN8zKtPIVJB44FcPFIPAA+ACUgixcF+jhhIQAbliAJJkUjIODec4sGp1QHBULoYRAtlaGEAejJWJoOJebw+8ESMGSdz+AJqkjqiNa7U6oIhUNh4slCKR81R6MxuPxhOJ-I2VJpgJuEvKjOh3DgsuZwgd3C0KDccEVHXgwk9nS0xL5wHJguF70+cAAqnInHIIFU5MdzISAagbCwwSI4KmchEsKS1KC8QICSSg1iozG43I4IneSbXmH4Im-mBiGBwjW0zjZAApTgADQAdABRMwgLByeDFhzicSoJm4O2-VsQduD5F4-Kz7e4Djkem+MjSDbb7eUGAKKDVuE+dKcsICYQrtf31CunkC0+z3dWcilK13EeJ5fhaF5XnAMIata9q1Nwj7Pqgg7Oq6vowPBbaIah76fiBkhYAQyAKCYXTAV+56XteFaxvGzbZsw6Grm+cAfhs-paEAA).
+    This is because now, the type is not narrowed to never (since Square is still left), so the type of props for UnknownShape does not match.
 
 ### Conclusion
