@@ -7,7 +7,7 @@
   "license": "MIT",
   "starter-name": "gatsby-starter-minimal-blog",
   "scripts": {
-    "build": "gatsby build --prefix-paths",
+    "build": "rm -rf ./public && gatsby build --prefix-paths",
     "develop": "gatsby develop",
     "develop:cypress": "cross-env CYPRESS_SUPPORT=y yarn develop",
     "build:cypress": "cross-env CYPRESS_SUPPORT=y yarn build",
