@@ -7,7 +7,8 @@ const shouldAnalyseBundle = process.env.ANALYSE_BUNDLE
 module.exports = {
     pathPrefix: `/blog`,
     siteMetadata: {
-        siteTitleAlt: `Minimal Blog - Gatsby Theme`,
+        siteTitle: "TkDodo's blog",
+        siteTitleAlt: `TkDodo's blog`,
     },
     plugins: [
         {
@@ -44,12 +45,12 @@ module.exports = {
         {
             resolve: `gatsby-plugin-manifest`,
             options: {
-                name: `minimal-blog - @lekoarts/gatsby-theme-minimal-blog`,
-                short_name: `minimal-blog`,
-                description: `Typography driven, feature-rich blogging theme with minimal aesthetics. Includes tags/categories support and extensive features for code blocks such as live preview, line numbers, and code highlighting.`,
+                name: `TkDodo's blog`,
+                short_name: `tkdodo-blog`,
+                description: `A technical blog about frontend-development, Typescript and React`,
                 start_url: `/`,
                 background_color: `#fff`,
-                theme_color: `#6B46C1`,
+                theme_color: `#a10f15`,
                 display: `standalone`,
                 icons: [
                     {
