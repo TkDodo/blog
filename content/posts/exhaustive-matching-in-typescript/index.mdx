@@ -1,5 +1,5 @@
 ---
-title: Exhaustive matching in TypesSript
+title: Exhaustive matching in TypeScript
 date: 2020-08-09
 tags:
     - Scala
@@ -8,7 +8,7 @@ tags:
 ---
 
 It is already well known in the frontend development community that adopting TypeScript is a good idea for (almost) every project that reaches a certain size.
-Advantages cited usually evolve around safety, clearly documented interface, finding errors before they go to production and being able to refactor safely.
+Advantages cited usually evolve around safety, clearly documented interfaces, finding errors before they go to production and being able to refactor safely.
 
 While I totally agree that these are great points in favor of TypeScript, I think there is one advantage that is criminally underrated:
 
@@ -17,17 +17,17 @@ While I totally agree that these are great points in favor of TypeScript, I thin
 Even though I firmly believe that deleting code is much more fun (and productive) than writing code, what we do most of the time, is adding code.
 
 Adding new features. Adding enhancements to existing features. Making a feature a bit more customizable. After all, it is mostly what customers want.
-So how come we never talk about how great typescript is, if used correctly, for _adding_ things.
+So how come we never talk about how great TypeScript is, if used correctly, for _adding_ things.
 
 Yes, moving and renaming things and having the compiler tell you where you forgot something is great,
-but IDEs are catching up and pretty good at these things for JavaScript files already.
+but IDEs are catching up and are pretty good at these things for JavaScript files already.
 But no Editor will tell you that you forgot to handle a new branch in your switch statement when you add a new feature.
 
 This is where exhaustive matching comes into play.
 
-### What is exhaustive matching
+### What is exhaustive matching?
 
-Some languages, like `OCaml`, `F#` or `Scala` support the concept of _pattern matching_.
+Some languages, like `OCaml`, `F#` or `scala` support the concept of _pattern matching_.
 It's a little bit like javascript's switch statement on steroids, as it allows matching a value not only against other values, but also against patterns.
 
 Exhaustive matching basically means that the compiler, given that he knows all the possible states,
@@ -84,7 +84,7 @@ def renderShape(shape: Shape): String = {
 
 [Try me in scastie](https://scastie.scala-lang.org/gPHbnUrpTgyK0arINPP2cg)
 
-Right. The program will still work, but it will not work correctly. If we pass a Square to the renderShape method,
+Right. The program will still work, but it will _not_ work correctly. If we pass a Square to the renderShape method,
 it will identify as a _Circle_, which is certainly not what we would expect.
 
 Sure, as long as the code is [co-located](https://kentcdodds.com/blog/colocation), this might be a non-issue.
@@ -111,11 +111,11 @@ def renderShape(shape: Shape): String = {
 Notice how we just got rid of the default case completely.
 If we add a _Triangle_ now, it will show us an error again.
 
-### How can we do this in TypeScript
+### How can we do this in TypeScript?
 
 This is great and all, but TypeScript doesn't support pattern matching, so how are we supposed to do this in TS?
 
-It turns out the TypeScript compiler is actually pretty smart when it comes to matching exhaustively on union types.
+It turns out that the TypeScript compiler is actually pretty smart when it comes to matching exhaustively on union types.
 This is best done with tagged unions, which just means a union where each member define a discriminator of a literal type:
 
 ```ts:title=tagged-union
@@ -164,7 +164,7 @@ The compiler will also narrow the type for us in the case block, so we _will_ ha
 A small caveat seems to be that you cannot use object destructuring on the shape param.
 Even though all members of the union type contain a shape, TypeScript won't accept this:
 
-```ts:title=no-destructuring {1, 4}
+```ts:title=❌-no-destructuring-😢 {1, 4}
 const renderShape = ({ kind, ...shape }: Shape): string => {
     switch (kind) {
         case 'circle':
@@ -177,7 +177,7 @@ const renderShape = ({ kind, ...shape }: Shape): string => {
 
 It is especially important to keep this in mind when working with React components, as their props tend to be destructured a lot.
 
-So with all the cases, our code would look like this:
+So with all this in mind, our code would look like this:
 
 ```ts:title=exhaustive-matching-in-ts
 const renderShape = (shape: Shape): string => {
@@ -198,7 +198,7 @@ Typescript is happy with this, and we will get a compile time error when we add 
 
 Types don't exist at runtime - all the safety that we have only exists at compile time.
 This is no problem as long as we, with our 100% typescript codebase, are the only callers of that function.
-In the real world, this is sometimes not the case. We might have some untyped javascript code that calls our function,
+In the real world, this is sometimes not the case. We might have some untyped JavaScript code that calls our function,
 or we are not in control at all where our input comes from.
 
 Let's assume for example that we call a rest service that delivers a couple of Shapes that we want to render,
