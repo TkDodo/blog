@@ -27,11 +27,15 @@ module.exports = {
                 externalLinks: [
                     {
                         name: `Twitter`,
-                        url: `https://twitter.com/lekoarts_de`,
+                        url: `https://twitter.com/tkdodo`,
                     },
                     {
-                        name: `Instagram`,
-                        url: `https://www.instagram.com/lekoarts.de/`,
+                        name: `Github`,
+                        url: `https://github.com/tkdodo`,
+                    },
+                    {
+                        name: `Home`,
+                        url: `https://www.dorfmeister.cc`,
                     },
                 ],
             },
