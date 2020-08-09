@@ -10,6 +10,10 @@ module.exports = {
         author: 'TkDodo',
         siteTitle: "TkDodo's blog",
         siteTitleAlt: `TkDodo's blog`,
+        siteHeadline: `TkDodo's blog`,
+        siteUrl: `https://www.dorfmeister.cc/blog`,
+        siteDescription: `A technical blog about frontend-development, Typescript and React`,
+        siteLanguage: `en`,
     },
     plugins: [
         {
