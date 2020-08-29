@@ -31,10 +31,10 @@ To comprehend this, we have to look no further than
 > Can you compute it based on any other state or props in your component? If so, it isn’t state.
 
 So far, so easy. Putting _props to state_ (1) is a whole other topic I will probably write about another time,
-and if you are not using the setter (2), then it it probably pretty obvious that we are _not_ dealing with state.
+and if you are not using the setter at all (2), then it is hopefully pretty obvious that we are _not_ dealing with state.
 
 That leaves the third question: _derived state_.
-It might seem pretty apparent that a value that can be computed from a state value is _not_ it's own state.
+It might seem quite apparent that a value that can be computed from a state value is _not_ it's own state.
 However, when I reviewed some code challenges for a client of mine lately, this is exactly the pattern I have seen a lot,
 even from senior candidates.
 
@@ -43,11 +43,11 @@ even from senior candidates.
 The exercise is pretty simple and goes something like this:
 Fetch some data from a remote endpoint (a list of items with categories) and let the user filter by the category.
 
-The way the state was managed mostly was something like this:
+The way the state was managed looked something like this most of the time:
 
 ```jsx:title=use-state
-import { fetchData } from 'api'
-import { computeCategories } from 'utils'
+import { fetchData } from './api'
+import { computeCategories } from './utils'
 
 const App = () => {
     const [data, setData] = React.useState(null)
@@ -83,9 +83,9 @@ The problem is that we have a "publicly" available function `setCategories` that
 
 If we intended our categories to be solely dependent on our data (like we expressed with our useEffect), this is bad news:
 
-```jsx:title=bad-news {2, 26}
-import { fetchData } from 'api'
-import { computeCategories, getMoreCategories } from 'utils'
+```jsx:title=bad-news {2,26}
+import { fetchData } from './api'
+import { computeCategories, getMoreCategories } from './utils'
 
 const App = () => {
     const [data, setData] = React.useState(null)
@@ -117,11 +117,11 @@ const App = () => {
 
 Now what? We have no predictable way of telling what "categories" are.
 
--   Your page loads, categories are _X_
--   You click the button, categories are _Y_
--   If your data fetching re-executes, say, because you are using [react-query](https://react-query.tanstack.com/),
+-   The page loads, categories are _X_
+-   User clicks the button, categories are _Y_
+-   If the data fetching re-executes, say, because we are using [react-query](https://react-query.tanstack.com/),
     which has features like automatic re-fetching when you focus your tab or when you re-connect to your network
-    (it's awesome, you should give it a try), your categories will be _X_ again.
+    (it's awesome, you should give it a try), the categories will be _X_ again.
 
 Inadvertently, we have now introduced a hard to track bug that will only occur every now and then.
 
@@ -143,15 +143,14 @@ https://twitter.com/sophiebits/status/1293710971274289152
 
 This is solid advice, and I'd go even further and suggest that unless we have proven that the calculation is expensive,
 I wouldn't even bother to memoize it. Don't prematurely optimize, always measure first.
-Or, as [@ryanflorence](https://cdb.reacttraining.com/react-inline-functions-and-performance-bdff784f5578) put it:
-
-> You need proof that something is fast, not that it is slow
+We want to have proof that something is slow before acting on it. For more on this topic, I highly recommend
+[this article by @ryanflorence](https://cdb.reacttraining.com/react-inline-functions-and-performance-bdff784f5578).
 
 In my world, the example would look just like this:
 
 ```diff:title=no-useless-state
-import { fetchData } from 'api'
-import { computeCategories } from 'utils'
+import { fetchData } from './api'
+import { computeCategories } from './utils'
 
 const App = () => {
     const [data, setData] = React.useState(null)
