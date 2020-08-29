@@ -1,17 +1,15 @@
 import baseTheme from '@lekoarts/gatsby-theme-minimal-blog/src/gatsby-plugin-theme-ui'
 
-const primary = '#a10f15'
-
 export default {
     ...baseTheme,
     colors: {
         ...baseTheme.colors,
-        primary,
+        primary: '#a10f15',
         modes: {
             ...baseTheme.colors.modes,
             dark: {
                 ...baseTheme.colors.modes.dark,
-                primary,
+                primary: '#D44248',
             },
         },
     },
