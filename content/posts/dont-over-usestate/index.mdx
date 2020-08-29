@@ -46,7 +46,7 @@ Fetch some data from a remote endpoint (a list of items with categories) and let
 The way the state was managed mostly was something like this:
 
 ```jsx:title=use-state
-import { getRemoteData } from 'api'
+import { fetchData } from 'api'
 import { getCategoriesFromData } from 'utils'
 
 const App = () => {
@@ -55,7 +55,7 @@ const App = () => {
 
     React.useEffect(() => {
         async function fetch() {
-            const response = await getRemoteData()
+            const response = await fetchData()
             setData(response.data)
         }
 
