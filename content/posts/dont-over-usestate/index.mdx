@@ -60,13 +60,13 @@ const App = () => {
         }
 
         fetch()
-    }, [getRemoteData])
+    }, [])
 
     React.useEffect(() => {
         if (data) {
             setCategories(computeCategories(data))
         }
-    }, [data, computeCategories])
+    }, [data])
 
     return <>...</>
 }
@@ -98,13 +98,13 @@ const App = () => {
         }
 
         fetch()
-    }, [getRemoteData])
+    }, [])
 
     React.useEffect(() => {
         if (data) {
             setCategories(computeCategories(data))
         }
-    }, [data, computeCategories])
+    }, [data])
 
     return (
         <>
@@ -165,13 +165,13 @@ const App = () => {
         }
 
         fetch()
-    }, [getRemoteData])
+    }, [])
 
 -    React.useEffect(() => {
 -        if (data) {
 -            setCategories(computeCategories(data))
 -        }
--    }, [data, computeCategories])
+-    }, [data])
 
     return <>...</>
 }
