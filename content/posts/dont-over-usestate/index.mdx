@@ -36,3 +36,43 @@ That leaves the third question: _derived state_.
 It might seem pretty apparent that a value that can be computed from a state value is _not_ it's own state.
 However, when I reviewed some code challenges for a client of mine lately, this is exactly the pattern I have seen a lot,
 even from senior candidates.
+
+### An example
+
+The exercise is pretty simple and goes something like this:
+Fetch some data from a remote endpoint (a list of items with categories) and let the user filter by the category.
+
+The way the state was managed mostly was something like this:
+
+```jsx:title=use-state
+import { getRemoteData } from 'api'
+import { getCategoriesFromData } from 'utils'
+
+const App = () => {
+    const [data, setData] = React.useState(null)
+    const [categories, setCategories] = React.useState([])
+
+    React.useEffect(() => {
+        async function fetch() {
+            const response = await getRemoteData()
+            setData(response.data)
+        }
+
+        fetch()
+    }, [getRemoteData])
+
+    React.useEffect(() => {
+        if (data) {
+            setCategories(getCategoriesFromData(data))
+        }
+    }, [data, getCategoriesFromData])
+
+    return <>...</>
+}
+```
+
+At first glance, this looks okay. You might be thinking:
+We have an effect that fetches the data for us, and another effect that keeps the categories _in sync_ with the data.
+This is exactly what the useEffect hook is for (keeping data in sync), so what is bad about this approach?
+
+### Getting out of sync
