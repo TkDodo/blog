@@ -23,6 +23,12 @@ module.exports = {
                     {
                         resolve: `gatsby-remark-autolink-headers`,
                     },
+                    {
+                        resolve: '@weknow/gatsby-remark-twitter',
+                        options: {
+                            theme: 'dark',
+                        },
+                    },
                 ],
             },
         },
@@ -33,6 +39,12 @@ module.exports = {
                 gatsbyRemarkPlugins: [
                     {
                         resolve: `gatsby-remark-autolink-headers`,
+                    },
+                    {
+                        resolve: '@weknow/gatsby-remark-twitter',
+                        options: {
+                            theme: 'dark',
+                        },
                     },
                     {
                         resolve: `gatsby-remark-images`,
