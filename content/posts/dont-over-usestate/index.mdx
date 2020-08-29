@@ -74,6 +74,54 @@ const App = () => {
 
 At first glance, this looks okay. You might be thinking:
 We have an effect that fetches the data for us, and another effect that keeps the categories _in sync_ with the data.
-This is exactly what the useEffect hook is for (keeping data in sync), so what is bad about this approach?
+This is exactly what the useEffect hook is for (keeping things in sync), so what is bad about this approach?
 
 ### Getting out of sync
+
+This will actually work fine, and it's also not totally unreadable or hard to reason about.
+The problem is that we have a "publicly" available function `setCategories` that future developers might use.
+
+If we intended our categories to be solely dependent on our data (like we expressed with our useEffect), this is bad news:
+
+```jsx:title=bad-news {2, 26}
+import { fetchData } from 'api'
+import { getCategoriesFromData, getMoreCategories } from 'utils'
+
+const App = () => {
+    const [data, setData] = React.useState(null)
+    const [categories, setCategories] = React.useState([])
+
+    React.useEffect(() => {
+        async function fetch() {
+            const response = await fetchData()
+            setData(response.data)
+        }
+
+        fetch()
+    }, [getRemoteData])
+
+    React.useEffect(() => {
+        if (data) {
+            setCategories(getCategoriesFromData(data))
+        }
+    }, [data, getCategoriesFromData])
+
+    return (
+        <>
+            ...
+            <Button onClick={() => setCategories(getMoreCategories())}>Get more</Button>
+        </>
+    )
+}
+```
+
+Now what? We have no predictable way of telling what "categories" are.
+
+-   Your page loads, categories are _X_
+-   You click the button, categories are _Y_
+-   If your data fetching re-executes, say, because you are using [react-query](https://react-query.tanstack.com/),
+    which has features like automatic re-fetching when you focus your tab or when you re-connect to your network
+    (it's awesome, you should give it a try), your categories will be _X_ again.
+
+Inadvertently, we have now introduced a hard to track bug that will only occur every now and then.
+
