@@ -1,11 +1,11 @@
 ---
-title: Don't over-useState
+title: Don't over useState
 description: Avoid using state too often - lots of things aren't even state at all...
 date: 2020-08-29
 banner: ./use-state-pitfalls.png
 tags:
     - React
-    - useState
+    - useState pitfalls
 ---
 
 `useState` is considered to be the most basic of all the hooks provided by React.
@@ -14,6 +14,25 @@ It is also the one you are most likely to use, alongside `useEffect`.
 Yet over the last couple of months, I have seen this hook being misused a lot.
 This has mostly nothing todo with the hook itself, but because state management is never easy.
 
-This is the first part of a series I'm calling useState pitfalls.
+This is the first part of a series I'm calling _useState pitfalls_.
 
-### Don't over useState
+### What is state?
+
+I think it all boils down to understanding what state is.
+Or more precisely, what state _isn't_.
+To comprehend this, we have to look no further than
+[the official react docs](https://reactjs.org/docs/thinking-in-react.html#step-3-identify-the-minimal-but-complete-representation-of-ui-state):
+
+> Ask three questions about each piece of data:
+
+> Is it passed in from a parent via props? If so, it probably isn’t state.
+> Does it remain unchanged over time? If so, it probably isn’t state.
+> Can you compute it based on any other state or props in your component? If so, it isn’t state.
+
+So far, so easy. Putting _props to state_ (1) is a whole other topic I will probably write about another time,
+and if you are not using the setter (2), then it it probably pretty obvious that we are _not_ dealing with state.
+
+That leaves the third question: _derived state_.
+It might seem pretty apparent that a value that can be computed from a state value is _not_ it's own state.
+However, when I reviewed some code challenges for a client of mine lately, this is exactly the pattern I have seen a lot,
+even from senior candidates.
