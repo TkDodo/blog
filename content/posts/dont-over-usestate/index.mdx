@@ -47,7 +47,7 @@ The way the state was managed mostly was something like this:
 
 ```jsx:title=use-state
 import { fetchData } from 'api'
-import { getCategoriesFromData } from 'utils'
+import { computeCategories } from 'utils'
 
 const App = () => {
     const [data, setData] = React.useState(null)
@@ -64,9 +64,9 @@ const App = () => {
 
     React.useEffect(() => {
         if (data) {
-            setCategories(getCategoriesFromData(data))
+            setCategories(computeCategories(data))
         }
-    }, [data, getCategoriesFromData])
+    }, [data, computeCategories])
 
     return <>...</>
 }
@@ -85,7 +85,7 @@ If we intended our categories to be solely dependent on our data (like we expres
 
 ```jsx:title=bad-news {2, 26}
 import { fetchData } from 'api'
-import { getCategoriesFromData, getMoreCategories } from 'utils'
+import { computeCategories, getMoreCategories } from 'utils'
 
 const App = () => {
     const [data, setData] = React.useState(null)
@@ -102,9 +102,9 @@ const App = () => {
 
     React.useEffect(() => {
         if (data) {
-            setCategories(getCategoriesFromData(data))
+            setCategories(computeCategories(data))
         }
-    }, [data, getCategoriesFromData])
+    }, [data, computeCategories])
 
     return (
         <>
@@ -125,3 +125,60 @@ Now what? We have no predictable way of telling what "categories" are.
 
 Inadvertently, we have now introduced a hard to track bug that will only occur every now and then.
 
+### No-useless-state
+
+Maybe this is not so much about useState after all, but more about a misconception with useEffect:
+It should be used to sync your state _with something outside of React_.
+Utilizing useEffect to sync _two react states_ is rarely right.
+
+So I'd like to postulate the following:
+
+> Whenever a state setter function is only used synchronously in an effect, get rid of the state!
+
+<p style="padding-left: 3rem; margin-top: -1rem">— TkDodo</p>
+
+This is loosely based on what @sophiebits posted recently on twitter:
+
+https://twitter.com/sophiebits/status/1293710971274289152
+
+This is solid advice, and I'd go even further and suggest that unless we have proven that the calculation is expensive,
+I wouldn't even bother to memoize it. Don't prematurely optimize, always measure first.
+Or, as [@ryanflorence](https://cdb.reacttraining.com/react-inline-functions-and-performance-bdff784f5578) put it:
+
+> You need proof that something is fast, not that it is slow
+
+In my world, the example would look just like this:
+
+```diff:title=no-useless-state
+import { fetchData } from 'api'
+import { computeCategories } from 'utils'
+
+const App = () => {
+    const [data, setData] = React.useState(null)
+-    const [categories, setCategories] = React.useState([])
++    const categories = data ? computeCategories(data) : []
+
+    React.useEffect(() => {
+        async function fetch() {
+            const response = await fetchData()
+            setData(response.data)
+        }
+
+        fetch()
+    }, [getRemoteData])
+
+-    React.useEffect(() => {
+-        if (data) {
+-            setCategories(computeCategories(data))
+-        }
+-    }, [data, computeCategories])
+
+    return <>...</>
+}
+```
+
+We've reduced complexity by halving the amount of effects and we can now clearly see that categories is _derived from_ data.
+If the next person wants to calculate categories differently, they have to do it from _within_ the `computeCategories` function.
+With that, we will always have a clear picture of what categories are and where they come from.
+
+A single source of truth.
