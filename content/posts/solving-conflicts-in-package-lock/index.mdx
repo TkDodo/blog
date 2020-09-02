@@ -1,0 +1,56 @@
+---
+title: Solving conflicts in package-lock.json
+description:
+date: 2020-09-02
+banner: ./lock.jpg
+tags:
+    - npm
+    - package-lock.json
+---
+
+import Attribution from 'components/Attribution'
+import Comments from 'components/Comments'
+
+<Image src="./lock.jpg" />
+
+<Attribution name="James Sutton" url="https://unsplash.com/@jamessutton_photography" />
+
+I wish I wouldn't spend as much time solving git conflicts as I currently am.
+
+It's cumbersome. It's error-prone. It is just not fun.
+
+One thing that I always found hard to get right is solving conflicts in generated files, like package-lock.json.
+It usually happens when two branches add or update a dependency.
+The result of package-lock then changes, and whoever gets their PR merged to main first is the lucky one who avoided those conflicts.
+It's almost like a race.
+
+So here you are updating your PR with the base branch, and git shows you this huge amount of conflicts in package-lock.json.
+The conflicts in package.json are usually easily solved (if there even are any), so I think it is tempting to just _delete_ package-lock.json and run `npm install`.
+After all, this will give you a brand new package-lock.json, which you can happily commit.
+
+### Why you should not delete package-lock.json
+
+When you install a dependency for the first time, it is usually automatically added to your dependencies or devDependencies with `^version`,
+which means "compatible with version, according to [semver](https://semver.org/)".
+You can try out what that means [here](https://semver.npmjs.com/).
+Enter, for example `lodash` as the package and `^4.2.1` as version, and you will see that you can get _anything_ from 4.2.1 to 4.17.20 (the latest version)
+
+This is where package-lock.json comes into play. Upon installing, it will "lock" you in on the version that you just installed.
+So if 4.2.1 is the latest version at the moment of your install, _this version_ will be written to package-lock and will, from there on, always be installed.
+Even if newer versions come out that are theoretically compatible with it.
+
+This is important because it guarantees that every developer in the team will have the same version on their machine, and it is equally important for CI/CD.
+I would not want to ship a _newer_ version to production than we tested with, even if it's just a patch version.
+
+So when you delete package-lock.json, all those consistency goes out the window.
+Every node_module you depend on will be updated to the latest version it is theoretically compatible with.
+This means no major changes, but minors and patches. I believe this is bad for two reasons:
+
+1. It trusts that everyone strictly adheres to semantic versioning, and I sincerely doubt that this is the case. There is also no way to enforce this.
+2. This _also_ applies to transitive dependencies. So even if you are using strict versions (without the `^`), the libraries you are using do not.
+
+If you delete package-lock.json now from any one of your projects and run `npm install` again, it will most certainly look completely different.
+
+Will your app be fine? Maybe, no one can tell. For me, this would usually mean: "regression test everything".
+
+<Comments />
