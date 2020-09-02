@@ -28,7 +28,7 @@ So here you are updating your PR with the base branch, and git shows you this hu
 The conflicts in package.json are usually easily solved (if there even are any), so I think it is tempting to just _delete_ package-lock.json and run `npm install`.
 After all, this will give you a brand new package-lock.json, which you can happily commit.
 
-### Why you should not delete package-lock.json
+### Why you should never delete package-lock.json
 
 When you install a dependency for the first time, it is usually automatically added to your dependencies or devDependencies with `^version`,
 which means "compatible with version, according to [semver](https://semver.org/)".
@@ -44,13 +44,40 @@ I would not want to ship a _newer_ version to production than we tested with, ev
 
 So when you delete package-lock.json, all those consistency goes out the window.
 Every node_module you depend on will be updated to the latest version it is theoretically compatible with.
-This means no major changes, but minors and patches. I believe this is bad for two reasons:
+This means no major changes, but minors and patches. I believe this is bad for three reasons:
 
 1. It trusts that everyone strictly adheres to semantic versioning, and I sincerely doubt that this is the case. There is also no way to enforce this.
-2. This _also_ applies to transitive dependencies. So even if you are using strict versions (without the `^`), the libraries you are using do not.
+2. Major version zero is exempt from the rules of semantic versioning. From [the semver spec](https://semver.org/#spec-item-4):
+    > Major version zero (0.y.z) is for initial development. Anything MAY change at any time. The public API SHOULD NOT be considered stable.
+
+Have a look at your package-lock.json and count how many dependencies with major version 0 you have.
+For this blog (made with [gatsby](https://www.gatsbyjs.com/)) I have 362!
+
+3. This _also_ applies to transitive dependencies. So even if you are using strict versions (without the `^`), the libraries you are using do not.
 
 If you delete package-lock.json now from any one of your projects and run `npm install` again, it will most certainly look completely different.
 
 Will your app be fine? Maybe, no one can tell. For me, this would usually mean: "regression test everything".
+
+### What you can do instead
+
+My usual approach was the following:
+
+-   Solve the conflicts in package.json
+-   Take package-lock.json from the base branch
+-   run npm install again
+
+This will then just re-install whatever changes we made in our branch.
+However, I recently learned about and even easier way:
+
+-   Solve the conflicts in package.json
+-   run `npm install --package-lock-only`
+
+npm can automatically detect conflicts in package-lock.json and resolve them for us.
+From the [npm docs](https://docs.npmjs.com/files/package-locks.html#resolving-lockfile-conflicts)
+
+> npm will automatically resolve any conflicts for you and write a merged package lock that includes all the dependencies from both branches in a reasonable tree.
+
+Agree? Disagree? Let me know in the comments below ⬇️
 
 <Comments />
