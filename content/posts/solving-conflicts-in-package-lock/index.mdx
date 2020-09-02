@@ -61,7 +61,8 @@ For this blog (made with [gatsby](https://www.gatsbyjs.com/)) I have 362!
 
 If you delete package-lock.json now from any one of your projects and run `npm install` again, it will most certainly look completely different.
 
-Will your app be fine? Maybe, no one can tell. For me, this would usually mean: "regression test everything".
+Will your app be fine? Maybe, maybe not. No one can tell.
+For me, this would usually mean: "regression test everything", which is certainly not what I have in mind when I am just solving a conflict.
 
 ### What you can do instead
 
@@ -75,7 +76,7 @@ This will then just re-install whatever changes we made in our branch.
 However, I recently learned about and even easier way:
 
 npm can automatically detect conflicts in package-lock.json and resolve them for us.
-From the [npm docs](https://docs.npmjs.com/files/package-locks.html#resolving-lockfile-conflicts)
+From the [npm docs](https://docs.npmjs.com/files/package-locks.html#resolving-lockfile-conflicts):
 
 > Occasionally, two separate npm install will create package locks that cause merge conflicts in source control systems. As of npm@5.7.0, these conflicts can be resolved by manually fixing any package.json conflicts, and then running npm install [--package-lock-only] again. npm will automatically resolve any conflicts for you and write a merged package lock that includes all the dependencies from both branches in a reasonable tree. If --package-lock-only is provided, it will do this without also modifying your local node_modules/.
 
