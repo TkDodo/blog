@@ -24,7 +24,7 @@ It usually happens when two branches add or update a dependency.
 The result of package-lock then changes, and whoever gets their PR merged to main first is the lucky one who avoided those conflicts.
 It's almost like a race.
 
-So here you are updating your PR with the base branch, and git shows you this huge amount of conflicts in package-lock.json.
+So here you are, updating your PR with the base branch, and git shows you this huge amount of conflicts in package-lock.json.
 The conflicts in package.json are usually easily solved (if there even are any), so I think it is tempting to just _delete_ package-lock.json and run `npm install`.
 After all, this will give you a brand new package-lock.json, which you can happily commit.
 
@@ -33,7 +33,11 @@ After all, this will give you a brand new package-lock.json, which you can happi
 When you install a dependency for the first time, it is usually automatically added to your dependencies or devDependencies with `^version`,
 which means "compatible with version, according to [semver](https://semver.org/)".
 You can try out what that means [here](https://semver.npmjs.com/).
-Enter, for example `lodash` as the package and `^4.2.1` as version, and you will see that you can get _anything_ from 4.2.1 to 4.17.20 (the latest version)
+
+Enter, for example, `lodash` as the package and `^4.2.1` as version,
+and you will see that you can get _anything_ from 4.2.1 to 4.17.20 (the latest version)
+
+<img src="./semver-calc.png" />
 
 This is where package-lock.json comes into play. Upon installing, it will "lock" you in on the version that you just installed.
 So if 4.2.1 is the latest version at the moment of your install, _this version_ will be written to package-lock and will, from there on, always be installed.
