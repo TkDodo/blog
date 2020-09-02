@@ -1,9 +1,13 @@
 import * as React from 'react'
-import { useColorMode } from 'theme-ui'
+import { useColorMode, Box, Divider } from 'theme-ui'
 
 const id = 'inject-comments'
 
-const Comments = () => {
+type Props = {
+    children: React.ReactNode
+}
+
+const Comments = ({ children }: Props) => {
     const [colorMode] = useColorMode()
 
     React.useEffect(() => {
@@ -25,7 +29,13 @@ const Comments = () => {
         }
     }, [colorMode])
 
-    return <div id={id} />
+    return (
+        <>
+            <Divider />
+            {children && <Box sx={{ fontSize: [1, 1, 2] }}>{children}</Box>}
+            <div id={id} />
+        </>
+    )
 }
 
 export default Comments
