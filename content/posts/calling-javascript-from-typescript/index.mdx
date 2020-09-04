@@ -59,8 +59,23 @@ The sum util will now be inferred to:
 export const sum: function({ first: any, second: any, third: any }): any
 ```
 
-Which is good enough for most cases, and we are all set-up. That wasn't hard, so where's the catch?
+Which is good enough, not type-safe at all, but that wasn't part of the requirement.
+With that, we are all set-up. That wasn't hard, so where's the catch?
 
 ### The catch
+
+Maybe you've already noticed: The third parameter is actually _optional_.
+So we would like to call our function like that:
+
+```ts
+sum({ first: 1, second: 2 })
+```
+
+Comparing this to be above inferred type, we will naturally get:
+
+```
+TS2345: Argument of type '{ first: number; second: number; }' is not assignable to parameter of type '{ first: any; second: any; third: any; }'.
+    Property 'third' is missing in type '{ first: number; second: number; }' but required in type '{ first: any; second: any; third: any; }'.
+```
 
 <Comments>If you like it or not, let me know in the comments below ⬇️</Comments>
