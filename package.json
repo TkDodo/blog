@@ -35,7 +35,7 @@
     "cross-env": "^5.2.0"
   },
   "prettier": {
-    "printWidth": 120,
+    "printWidth": 95,
     "tabWidth": 4,
     "singleQuote": true,
     "semi": false
