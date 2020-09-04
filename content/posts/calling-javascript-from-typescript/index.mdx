@@ -165,4 +165,13 @@ Adding JsDoc annotations to your JavaScript functions will:
 export const sum = ({ first, second, third }) => first + second + (third ?? 0)
 ```
 
-<Comments>If you like it or not, let me know in the comments below ⬇️</Comments>
+I used [JsDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) for the first time today when I had this exact problem.
+I chose it over the other options because:
+
+-   adding .d.ts files is tedious to maintain and will make my IDE stop navigating to the actual source 😒
+-   I wanted to keep the destructuring 😕
+-   Default parameters were hard to come up with as my case was much more complex 🧐
+-   The file in question had 120+ lines of code 🤨
+-   I wanted to make it easier for us to migrate when we fully convert that file 🚀
+
+<Comments>What would you do? Let me know in the comments below ⬇️</Comments>
