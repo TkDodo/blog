@@ -11,6 +11,7 @@ tags:
 
 import Attribution from 'components/Attribution'
 import Comments from 'components/Comments'
+import SpacingBox from 'components/SpacingBox'
 
 <img src="./call.jpg" />
 
@@ -107,6 +108,8 @@ Especially if you are working with React components, destructing props is very c
 
 #### Assign default parameters
 
+<SpacingBox />
+
 ```js:title=default-params
 export const sum = ({ first, second, third = 0 }) => first + second + third
 ```
@@ -118,8 +121,7 @@ This works well for variables where the default is clear, like booleans, where y
 If you don't now what a good default value would be, you could even cheat a bit and do this:
 
 ```js:title=cheating-default-params
-export const sum = ({ first, second, third = undefined }) =>
-    first + second + (params.third ?? 0)
+export const sum = ({ first, second, third = undefined }) => first + second + (third ?? 0)
 ```
 
 🤯
@@ -129,6 +131,38 @@ This is a non-invasive change, so if you have complex types where you can't easi
 
 #### Convert the file to TypeScript
 
+<SpacingBox />
+
+```ts:title=ts-all-the-things
+type Params = {
+    first: number
+    second: number
+    third?: number
+}
+export const sum = ({ first, second, third }: Params): number => first + second + (third ?? 0)
+```
+
+The long-term thing you probably want to do anyways - convert it to TypeScript.
+If it's feasible - go for this option.
+
 ### Use JsDoc
+
+This is the last option I have to offer, and I kinda like it because it represents the middle ground between things
+just being _any_ and converting the whole file to TypeScript right away.
+
+I never really understood why you would need this, but now I do.
+Adding JsDoc annotations to your JavaScript functions will:
+
+-   Help TypeScript with type inference, thus making your call sides more safe
+-   Give you IntelliSense in your IDE
+-   Make it easier to finally migrate to TypeScript when the time is right
+
+```js:title=with-js-docs
+/**
+ * @param {{ first: number, second: number, third?: number }} params
+ * @returns {number}
+ */
+export const sum = ({ first, second, third }) => first + second + (third ?? 0)
+```
 
 <Comments>If you like it or not, let me know in the comments below ⬇️</Comments>
