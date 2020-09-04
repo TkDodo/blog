@@ -145,7 +145,7 @@ export const sum = ({ first, second, third }: Params): number => first + second 
 The long-term thing you probably want to do anyways - convert it to TypeScript.
 If it's feasible - go for this option.
 
-### Use JsDoc
+#### Use JsDoc
 
 This is the last option I have to offer, and I kinda like it because it represents the middle ground between things
 just being _any_ and converting the whole file to TypeScript right away.
@@ -164,6 +164,10 @@ Adding JsDoc annotations to your JavaScript functions will:
  */
 export const sum = ({ first, second, third }) => first + second + (third ?? 0)
 ```
+
+Of course, you can also just type them to any or omit the return type. You can be as specific as you want.
+
+### What I ended up doing
 
 I used [JsDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) for the first time today when I had this exact problem.
 I chose it over the other options because:
