@@ -14,7 +14,7 @@ import Comments from 'components/Comments'
 
 <img src="./call.jpg" />
 
-<Attribution name="Antoine Barrès" url="https://unsplash.com/@antoinebarres" />
+<Attribution name="Antoine Barr&egrave;s" url="https://unsplash.com/@antoinebarres" />
 
 There is nothing better than starting a new project, on a green field.
 You can choose all the latest tech you want, and you can start with great types right from the start.
@@ -24,5 +24,43 @@ If you are lucky, the team started to gradually migrate the codebase to TypeScri
 
 But it will take some time to "get there".
 Until then, you will need some interoperability between JavaScript and TypeScript.
+
+Being in a Js file and calling a function defined in a .ts is trivial - it just works &trade;
+But what about the other way around? Turns out - that's not so easy.
+
+### Example
+
+Suppose you have a util function that you would like to import. It could be something as simple as:
+
+```js
+export const sum = ({ first, second, third }) => {
+    first + second + (third ?? 0)
+}
+```
+
+A stupid example, I know, but it'll do.
+
+### Setting up tsconfig.json
+
+You're gonna have to set `allowJs: true` in your tsconfig if you want to be able to import that file.
+Otherwise, your import will error with:
+
+```
+TS7016: Could not find a declaration file for module './utils'.
+'src/utils.js' implicitly has an 'any' type.
+```
+
+Of course, I am assuming here that you have `noImplicitAny` turned on as well :)
+
+So with allowJs, TypeScript will start to accept `.js` files, and perform a rudimentary type inference on them.
+The sum util will now be inferred to:
+
+```ts
+export const sum: function({ first: any, second: any, third: any }): any
+```
+
+Which is good enough for most cases, and we are all set-up. That wasn't hard, so where's the catch?
+
+### The catch
 
 <Comments>If you like it or not, let me know in the comments below ⬇️</Comments>
