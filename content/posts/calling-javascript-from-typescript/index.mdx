@@ -32,10 +32,8 @@ But what about the other way around? Turns out - that's not so easy.
 
 Suppose you have a util function that you would like to import. It could be something as simple as:
 
-```js
-export const sum = ({ first, second, third }) => {
-    first + second + (third ?? 0)
-}
+```js:title=utils.js
+export const sum = ({ first, second, third }) => first + second + (third ?? 0)
 ```
 
 A stupid example, I know, but it'll do.
@@ -67,15 +65,70 @@ With that, we are all set-up. That wasn't hard, so where's the catch?
 Maybe you've already noticed: The third parameter is actually _optional_.
 So we would like to call our function like that:
 
-```ts
+```ts:title=the-catch
 sum({ first: 1, second: 2 })
 ```
 
-Comparing this to be above inferred type, we will naturally get:
+Comparing this to the inferred type above, we will naturally get:
 
 ```
 TS2345: Argument of type '{ first: number; second: number; }' is not assignable to parameter of type '{ first: any; second: any; third: any; }'.
     Property 'third' is missing in type '{ first: number; second: number; }' but required in type '{ first: any; second: any; third: any; }'.
 ```
+
+### Solutions
+
+There are multiple solutions to this problem, so you'll have to decide for yourself which one is best suited for your specific case:
+
+#### use .d.ts files
+
+You can turn off `allowJs` and write [declaration files](https://www.typescriptlang.org/docs/handbook/declaration-files/introduction.html)
+for all your JavaScript files.
+Depending on the amount of files, this might be feasible, or not. It can be as easy as this any stub:
+
+```ts:title=utils.d.ts
+export const sum: any
+```
+
+This is substantially worse than the inferred version. You can of course be more specific than that, but you have to do it manually.
+And you have to remember to keep the both files in sync, so I'm not a big fan of this solution.
+
+#### Don't destruct
+
+The described problem is actually due to typescript performing better inference if you use destructuring.
+We could change the implementation to:
+
+```js:title=no-destruct-utils
+export const sum = (params) => params.first + params.second + (params.third ?? 0)
+```
+
+Now, TypeScript will just infer params as _any_, and we are again good to go.
+Especially if you are working with React components, destructing props is very common, so I'd also give this a pass.
+
+#### Assign default parameters
+
+```js:title=default-params
+export const sum = ({ first, second, third = 0 }) => first + second + third
+```
+
+I like this solution a lot, because the implementation is actually _easier_ than before.
+The function's _interface_ now shows what is optional, which is why TypeScript also knows that.
+This works well for variables where the default is clear, like booleans, where you can easily default to _false_.
+
+If you don't now what a good default value would be, you could even cheat a bit and do this:
+
+```js:title=cheating-default-params
+export const sum = ({ first, second, third = undefined }) =>
+    first + second + (params.third ?? 0)
+```
+
+🤯
+
+_undefined_ will also be the default value even if you don't explicitly specify it, but now, TypeScript will let you.
+This is a non-invasive change, so if you have complex types where you can't easily come up with a default value, this seems like a good alternative.
+
+#### Convert the file to TypeScript
+
+### Use JsDoc
 
 <Comments>If you like it or not, let me know in the comments below ⬇️</Comments>
