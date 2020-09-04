@@ -167,6 +167,12 @@ export const sum = ({ first, second, third }) => first + second + (third ?? 0)
 
 Of course, you can also just type them to any or omit the return type. You can be as specific as you want.
 
+##### Bonus: TypeChecking js files
+
+If you add the `// @ts-check` comment at the top of your js file,
+it will be type-checked _almost_ like all your typescript files, and JsDoc annotations will be honoured 😮.
+You can read more about the differences [here](https://github.com/Microsoft/TypeScript/wiki/Type-Checking-JavaScript-Files).
+
 ### What I ended up doing
 
 I used [JsDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) for the first time today when I had this exact problem.
