@@ -18,15 +18,15 @@ import SpacingBox from 'components/SpacingBox'
 <Attribution name="Antoine Barr&egrave;s" url="https://unsplash.com/@antoinebarres" />
 
 There is nothing better than starting a new project, on a green field.
-You can choose all the latest tech you want, and you can start with great types right from the start.
+You can choose all the latest tech you want, and you can begin with great types right from the start.
 
 Obviously, you then wake up from your dream and realise you have to maintain a project with 150k lines of legacy JavaScript code.
-If you are lucky, the team started to gradually migrate the codebase to TypeScript.
+If you are lucky, the team started to _gradually_ migrate the codebase to TypeScript.
 
 But it will take some time to "get there".
 Until then, you will need some interoperability between JavaScript and TypeScript.
 
-Being in a Js file and calling a function defined in a .ts is trivial - it just works &trade;
+Being in a JS file and calling a function defined in a .ts is trivial - it just works&trade;.
 But what about the other way around? Turns out - that's not so easy.
 
 ### Example
@@ -49,10 +49,10 @@ TS7016: Could not find a declaration file for module './utils'.
 'src/utils.js' implicitly has an 'any' type.
 ```
 
-Of course, I am assuming here that you have `noImplicitAny` turned on as well :)
+Of course, I am assuming here that you have `noImplicitAny` turned on as well 😊.
 
-So with allowJs, TypeScript will start to accept `.js` files, and perform a rudimentary type inference on them.
-The sum util will now be inferred to:
+So with allowJs, TypeScript will start to accept .js files, and perform rudimentary type inference on them.
+The sum util will now be inferred as:
 
 ```ts
 export const sum: function({ first: any, second: any, third: any }): any
@@ -118,7 +118,7 @@ I like this solution a lot, because the implementation is actually _easier_ than
 The function's _interface_ now shows what is optional, which is why TypeScript also knows that.
 This works well for variables where the default is clear, like booleans, where you can easily default to _false_.
 
-If you don't now what a good default value would be, you could even cheat a bit and do this:
+If you don't know what a good default value would be, you could even cheat a bit and do this:
 
 ```js:title=cheating-default-params
 export const sum = ({ first, second, third = undefined }) => first + second + (third ?? 0)
