@@ -1,0 +1,35 @@
+---
+title: Why I always flag reduce in code reviews
+description: I'm no fan of Array.reduce.
+date: 2020-09-05
+banner: ./call.jpg
+tags:
+    - JavaScript
+    - Array
+    - reduce
+---
+
+import Attribution from 'components/Attribution'
+import Comments from 'components/Comments'
+
+<img src="./call.jpg" />
+
+<Attribution name="Antoine Barr&egrave;s" url="https://unsplash.com/@antoinebarres" />
+
+### A swiss knife
+
+### Reimplement map with reduce
+
+```js:title=map-with-reduce
+const mapWithReduce = (array, callback) =>
+    array.reduce((accumulator, currentValue, index) => {
+        accumulator[index] = callback(currentValue, index, array)
+        return accumulator
+    }, [])
+
+mapWithReduce([1, 2, 3], (value) => value * 2) // 2, 4, 6
+```
+
+### Reduce performance pitfalls
+
+<Comments>Do you like reduce or not? Let me know in the comments below ⬇️</Comments>
