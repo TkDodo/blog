@@ -10,14 +10,45 @@ tags:
     - reduce
 ---
 
-import Attribution from 'components/Attribution'
 import Comments from 'components/Comments'
 
-<img src="./call.jpg" />
+<img src="./swiss-knife.png" />
 
-<Attribution name="Antoine Barr&egrave;s" url="https://unsplash.com/@antoinebarres" />
+The popular [eslint-plugin-unicorn](https://github.com/sindresorhus/eslint-plugin-unicorn) recently added a
+[no-reduce](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/master/docs/rules/no-reduce.md) rule, and it is set to _error_ per default.
+The argument is that Array.reduce will likely result in code that is hard to reason about, and can be replaced with other methods in most cases.
+Read [this twitter thread](https://twitter.com/jaffathecake/status/1213077702300852224) for a lengthy discussion if you like.
 
-### A swiss knife
+I have to say: I wholeheartedly agree, and I have personally turned on that rule in some projects.
+
+### What is wrong with reduce?
+
+For me, there are many reasons why I rarely like to see reduce when reviewing code.
+First and foremost, it is hard to grasp.
+I believe one of the reasons for this is that reduce can do _way too much_.
+
+-   Need to sum up values?
+-   Need to transform Array into Object?
+-   Need to build a string?
+
+Array.reduce can do it all.
+
+While it might sound nice to have such a tool at your disposal, when looking at something implemented with reduce,
+you don't immediately see what that code is for.
+
+What also adds to the confusion for me is that you cannot read reduce from left to right, top to bottom - at least not in JavaScript.
+Whenever I see reduce, I usually skim to the very end to get ahold of the _initial value_, because it will tell me what this reduce is trying to do.
+Then, I can go back to the beginning and try understand it.
+
+This is not the case in other languages, for example _scala_, where the initial value is the first parameter:
+
+```java:title=sum-a-list
+val numbers = List(1, 2, 3)
+
+numbers.fold(0)(_ + _) // 6
+```
+
+[Try me in scastie](https://scastie.scala-lang.org/UShgOD5BRd6ymtKr7VliUQ)
 
 ### Reimplement map with reduce
 
