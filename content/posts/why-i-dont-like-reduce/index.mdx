@@ -11,13 +11,16 @@ tags:
 ---
 
 import Comments from 'components/Comments'
+import { Divider } from '@theme-ui/components'
 
 <img src="./swiss-knife.png" />
 
+<Divider />
+
 The popular [eslint-plugin-unicorn](https://github.com/sindresorhus/eslint-plugin-unicorn) recently added a
 [no-reduce](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/master/docs/rules/no-reduce.md) rule, and it is set to _error_ per default.
-The argument is that Array.reduce will likely result in code that is hard to reason about, and can be replaced with other methods in most cases.
-Read [this twitter thread](https://twitter.com/jaffathecake/status/1213077702300852224) for a lengthy discussion if you like.
+The argument is that Array.reduce will likely result in code that is hard to reason about, and can be replaced with other methods in most cases
+(Read [this twitter thread](https://twitter.com/jaffathecake/status/1213077702300852224) for a lengthy discussion if you like).
 
 I have to say: I wholeheartedly agree, and I have personally turned on that rule in some projects.
 
@@ -28,7 +31,7 @@ First and foremost, it is hard to grasp.
 I believe one of the reasons for this is that reduce can do _way too much_.
 
 -   Need to sum up values?
--   Need to transform Array into Object?
+-   Need to transform Arrays into Objects?
 -   Need to build a string?
 
 Array.reduce can do it all.
@@ -38,7 +41,7 @@ you don't immediately see what that code is for.
 
 What also adds to the confusion for me is that you cannot read reduce from left to right, top to bottom - at least not in JavaScript.
 Whenever I see reduce, I usually skim to the very end to get ahold of the _initial value_, because it will tell me what this reduce is trying to do.
-Then, I can go back to the beginning and try understand it.
+Then, I can go back to the beginning and try to understand it.
 
 This is not the case in other languages, for example _scala_, where the initial value is the first parameter:
 
@@ -82,7 +85,11 @@ The question is: why would you? For almost all cases, there are methods that:
 -   have a good name, so you know what it is doing
 
 _Array.join_ is a very good example of such a limited method.
-Everyone understands what is going on when we read `values.join(';')`. Compare that to the above implementation - I think we can agree that the simplicity is preferred.
+Everyone understands what is going on when we read:
+
+`values.join(';')`
+
+Compare that to the above implementation - I think we can agree that the simplicity is preferred.
 
 ### When is it okay to reduce?
 
@@ -94,10 +101,10 @@ Most usages of reduce I was reviewing lately fall in one of three categories:
 
 #### 1. Transforming Arrays to Objects
 
-Yes, there is no easy native way to do that, and not even popular util libraries like _lodash_ have a good way of achieving this
+Yes, there is no easy native way to do that, and not even popular util libraries like _lodash_ have no good way of achieving this
 ([keyBy](https://lodash.com/docs/4.17.15#keyBy) is okay, but doesn't transform values).
 
-In one project I am working, we frequently found the for such transformations, so we made our own util for it.
+In one project, we frequently had the need for such transformations, so we made our own util for it.
 The implementation is something like this:
 
 ```ts:title=to-object
@@ -132,7 +139,7 @@ The truth is: usually, _it doesn't matter_.
 Even when working with very large lists (tens of thousands of entries),
 I have made the experience that performance is rarely negatively impacted as long as you keep iterations linear.
 
-If your toObject does _one_ iteration with a reduce or _two_ iterations with a _map_ followed by _Object.fromEntries_ is irrelevant,
+If your toObject util does _one_ iteration with a reduce or _two_ iterations with a _map_ followed by _Object.fromEntries_ is irrelevant,
 _unless_ you have [measured it](https://cdb.reacttraining.com/react-inline-functions-and-performance-bdff784f5578)
 and found it to be a bottleneck.
 
@@ -154,7 +161,7 @@ export const toObject = <T, K extends string | number | symbol, V>(
     }, {} as Record<K, V>)
 ```
 
-Why should I be _dirty_ and mutate the result, when I can be super fancy instead and create a new object every time 🤦‍.
+Why should I be _dirty_ and mutate the result, when I can be super fancy instead and create a new object every time 🤔🤦‍.
 
 [Here](https://jsbench.me/svkevt492x/1) is a perf analysis how the two compare when run over an Array with 10k entries:
 
@@ -162,8 +169,8 @@ Why should I be _dirty_ and mutate the result, when I can be super fancy instead
 
 Yes, it's _that_ slow, because it has to re-create an ever-growing object with every iteration.
 It will get exponentially slower the more entries the array has.
-Mutation is not the root of all evil, it has _not_ have to be avoided at all costs.
-If the scope is small, the intent is clear - mutate away 🚀
+Mutation is not the root of all evil, it does _not_ have to be avoided at all costs.
+If the scope is small, and the intent is clear - mutate away 🚀.
 
 But still - avoid reduce
 
