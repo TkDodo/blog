@@ -138,4 +138,33 @@ and found it to be a bottleneck.
 
 ### Reduce performance pitfalls
 
+Talking about performance and linear iterations, I've learned the hard way _not_ to do this when working with reduce:
+
+```ts:title=immutability-🎉 {7-10}
+export const toObject = <T, K extends string | number | symbol, V>(
+    array: ReadonlyArray<T>,
+    iteratee: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
+): Record<K, V> =>
+    array.reduce((result, element, index) => {
+        const [key, value] = iteratee(element, index, array)
+        return {
+            ...result,
+            [key]: value,
+        }
+    }, {} as Record<K, V>)
+```
+
+Why should I be _dirty_ and mutate the result, when I can be super fancy instead and create a new object every time 🤦‍.
+
+[Here](https://jsbench.me/svkevt492x/1) is a perf analysis how the two compare when run over an Array with 10k entries:
+
+1.700 operations per second vs. 47 operations per second
+
+Yes, it's _that_ slow, because it has to re-create an ever-growing object with every iteration.
+It will get exponentially slower the more entries the array has.
+Mutation is not the root of all evil, it has _not_ have to be avoided at all costs.
+If the scope is small, the intent is clear - mutate away 🚀
+
+But still - avoid reduce
+
 <Comments>Do you like reduce or not? Let me know in the comments below ⬇️</Comments>
