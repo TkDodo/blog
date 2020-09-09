@@ -50,7 +50,7 @@ numbers.fold(0)(_ + _) // 6
 
 [Try me in scastie](https://scastie.scala-lang.org/UShgOD5BRd6ymtKr7VliUQ)
 
-### Reimplement map with reduce
+Reduce is so mighty, you can implement all the other Array functions you are using on a daily basis with it:
 
 ```js:title=map-with-reduce
 const mapWithReduce = (array, callback) =>
@@ -61,6 +61,80 @@ const mapWithReduce = (array, callback) =>
 
 mapWithReduce([1, 2, 3], (value) => value * 2) // 2, 4, 6
 ```
+
+I have even seen people re-implement _join_ with reduce:
+
+```js:title=join-with-reduce
+const joinWithReduce = (array, delimiter) =>
+    array.reduce(
+        (accumulator, currentValue, index) =>
+            accumulator + currentValue + (index === array.length - 1 ? '' : delimiter),
+        ''
+    )
+
+joinWithReduce(['foo', 'bar', 'baz'], ';') //foo;bar;baz
+```
+
+The question is: why would you? For almost all cases, there are methods that:
+
+-   are not as powerful, with a limited scope
+-   have a clear API
+-   have a good name, so you know what it is doing
+
+_Array.join_ is a very good example of such a limited method.
+Everyone understands what is going on when we read `values.join(';')`. Compare that to the above implementation - I think we can agree that the simplicity is preferred.
+
+### When is it okay to reduce?
+
+For me, (mostly) only when implementing reusable util methods.
+It usually doesn't matter _how_ they are implemented.
+You give them a good name, a clear purpose, write some tests and that's it.
+
+Most usages of reduce I was reviewing lately fall in one of three categories:
+
+#### 1. Transforming Arrays to Objects
+
+Yes, there is no easy native way to do that, and not even popular util libraries like _lodash_ have a good way of achieving this
+([keyBy](https://lodash.com/docs/4.17.15#keyBy) is okay, but doesn't transform values).
+
+In one project I am working, we frequently found the for such transformations, so we made our own util for it.
+The implementation is something like this:
+
+```ts:title=to-object
+export const toObject = <T, K extends string | number | symbol, V>(
+    array: ReadonlyArray<T>,
+    iteratee: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
+): Record<K, V> =>
+    array.reduce((result, element, index) => {
+        const [key, value] = iteratee(element, index, array)
+        result[key] = value
+        return result
+    }, {} as Record<K, V>)
+
+toObject(['foo', 'bar', 'baz'], (element) => ['key-' + element, 'value-' + element])
+```
+
+Good name, strong types, ease of use. The rest is implementation detail (including the type cast for the initial value).
+
+#### 2. Grouping Arrays
+
+Again, pick a util library (
+[lodash](https://lodash.com/docs/4.17.15#groupBy),
+[ramda](https://ramdajs.com/docs/#groupBy),
+[remeda](https://remedajs.com/docs#groupBy), ...)
+or write your own util. Encapsulate that complex reduce so that you don't have to re-implement it every time you need it.
+
+#### 3. Do many things at once
+
+Iterating over big lists many times _can_ be costly, so people often fallback to reduce because it can do everything in one go.
+
+The truth is: usually, _it doesn't matter_.
+Even when working with very large lists (tens of thousands of entries),
+I have made the experience that performance is rarely negatively impacted as long as you keep iterations linear.
+
+If your toObject does _one_ iteration with a reduce or _two_ iterations with a _map_ followed by _Object.fromEntries_ is irrelevant,
+_unless_ you have [measured it](https://cdb.reacttraining.com/react-inline-functions-and-performance-bdff784f5578)
+and found it to be a bottleneck.
 
 ### Reduce performance pitfalls
 
