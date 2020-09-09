@@ -165,7 +165,7 @@ Why should I be _dirty_ and mutate the result, when I can be super fancy instead
 
 [Here](https://jsbench.me/svkevt492x/1) is a perf analysis how the two compare when run over an Array with 10k entries:
 
-1.700 operations per second vs. 47 operations per second
+1.700 operations per second vs. 47 operations per second.
 
 Yes, it's _that_ slow, because it has to re-create an ever-growing object with every iteration.
 It will get exponentially slower the more entries the array has.
