@@ -25,6 +25,82 @@ whenever I can.
 
 ### What is wrong with index signatures
 
+If you add an _index signature_ to an object, you tell TypeScript that you don't know exactly which keys will be in that object,
+you only know which _type_ the key will have.
+This is very useful if you build objects where you really don't know the keys, for example normalized objects where the keys are ids of database records:
 
+```ts:title=index-signagure
+type Widget = {
+    id: string
+    title: string
+}
+
+type WidgetIndex = Record<UUID, Widget>
+
+// alternate syntax:
+type WidgetIndex = {
+    [id: string]: Widget
+}
+```
+
+So naturally, when you try to retrieve a Widget from that index via it's id, the access _should_ yield `Widget | undefined`.
+But alas, it does not:
+
+```ts:title=unsafe-access {7-12}
+type UUID = string
+type Widget = {
+    id: UUID
+    title: string
+}
+
+const widgetIndex: Record<UUID, Widget> = {
+    widget1: { id: 'widget1', title: 'Foo' },
+    widget2: { id: 'widget2', title: 'Bar' },
+}
+
+widgetIndex['helloWorld'].title.toUpperCase()
+```
+
+[TypeScript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAqjCSARKBeKBnYAnAlgOwHMAoUSKAdRwBMCJhUoBvIqVqagLlgURbeBzAANhC6ZchIgF8iRAMYB7PJigB3arWDw8VCAA8uAJQiKsVADxwkAGgoa6APgbM2a+8ACMXRuypcA5Oo0dB7+tgLColD+AGIKCv5QUtZ8rEGaAEzevgHpdBlhUBEiAQBCAIZYicnSsnlaOvoA2v4AFhBCQgrkClhCVP4AugB0xRCjCjBgkFgAwuXoEAAUAJRAA)
+
+Yes, TypesScript is perfectly fine with that code, even though this will clearly err at runtime.
+This is _not_ what I expect from a static type checker that aims at giving you safety at runtime,
+and I was really surprised when I found out that TypeScript behaves like that (and dare I say: a bit disappointed as well).
+
+And it gets worse. Even if you, as a responsible developer, anticipate that the index access might give you _undefined_ at runtime,
+and thus implement a fallback, TypeScript will completely ignore it and _not_ type check it at all, because on type level, the index
+access will _always_ return a value:
+
+```ts:title=unsafe-fallback {12}
+type UUID = string
+type Widget = {
+    id: UUID
+    title: string
+}
+
+const widgetIndex: Record<UUID, Widget> = {
+    widget1: { id: 'widget1', title: 'Foo' },
+    widget2: { id: 'widget2', title: 'Bar' },
+}
+
+const title: string = widgetIndex['helloWorld']?.title ?? { thisIs: 'completely Untyped' }
+```
+
+[TypeScript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAqjCSARKBeKBnYAnAlgOwHMAoUSKAdRwBMCJhUoBvIqVqagLlgURbeBzAANhC6ZchIgF8iRAMYB7PJigB3arWDw8VCAA8uAJQiKsVADxwkAGgoa6APgbM2a+8ACMXRuypcA5Oo0dB7+tgLColD+AGIKCv5QUtZ8rEGaAEzevgHpdBlhUBEiAQBCAIZYicnSsorK9MVR4vgEDHlaOvoA2v4AFhBCQgrkClhCVP4AugD8AHRNUDMzTEV9OOjw6AGKALZgIsCDILB4pBCTSUA)
+
+### SafeRecord to the rescue
+
+Like many others, I believe this to be a big flaw of the language itself.
+But luckily, you can always implement your own types and use them instead of _Record_:
+
+```ts:title=safe-record
+type SafeRecord<Key extends string | number, Value> = Record<Key, Value | undefined>
+```
+
+With that type, all values will also include _undefined_, so whenever you retrieve a value from a _SafeRecord_, you have
+to check for undefined first.
+This is a fine solution to the problem, but it has some other drawbacks.
+For example, calling _Object.values_ on a SafeRecord will now give you an `Array<T | undefined>`, even though it's really impossible for the
+values to actually be undefined. I still advocate for using SafeRecords whenever an index access is involved.
 
 <Comments>Let me know in the comments below ⬇️</Comments>
