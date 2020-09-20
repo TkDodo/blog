@@ -94,7 +94,7 @@ Like many others, I believe this to be a big flaw of the language itself.
 But luckily, you can always implement your own types and use them instead of _Record_:
 
 ```ts:title=safe-record
-type SafeRecord<Key extends string | number, Value> = Record<Key, Value | undefined>
+type SafeRecord<Key extends string | number | symbol, Value> = Record<Key, Value | undefined>
 ```
 
 With that type, all values will also include _undefined_, so whenever you retrieve a value from a _SafeRecord_, you have
