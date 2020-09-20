@@ -103,4 +103,66 @@ This is a fine solution to the problem, but it has some other drawbacks.
 For example, calling _Object.values_ on a SafeRecord will now give you an `Array<T | undefined>`, even though it's really impossible for the
 values to actually be undefined. I still advocate for using SafeRecords whenever an index access is involved.
 
+### What about Arrays?
+
+Well, Arrays are just as affected. After all, Arrays are (mostly) just objects where the index is a number.
+
+```ts:title=unsafe-arrays
+const strings: Array<string> = ['one', 'two', 'three']
+
+strings[999].toUpperCase()
+```
+
+[TypeScript playground](https://www.typescriptlang.org/play?#code/MYewdgzgLgBNBOBLMBzCAuGBBe8CGAngDwLIoB8MAvDANoDk4ApvQDQz1QDuIbHUAC3hMWAXQBQ40qgi0AnAtEA6KCACqABw1N4AYTwQmACgCUQA)
+
+Oh boy, we should just go back to plain ES6 :(
+
+At least, we are not going to directly access index 999 in Arrays that often.
+In practice, I have found that when Arrays of variable length are involved, accessing the first element is usually what is done.
+If I find myself needing to access [1] or [2] a lot, I can usually use [Tuples](https://www.typescriptlang.org/docs/handbook/basic-types.html#tuple).
+
+So how can we fix accessing strings[0]? Yes, we can do a manual length check, but no one will force us to.
+Having to think about this every single time is quite brittle and error prone, so can we enforce it on type level?
+
+### NonEmptyList
+
+The concept of a non empty list exists in many programming languages,
+e.g. [Haskell](http://hackage.haskell.org/package/NonEmptyList) or [Scala](https://typelevel.org/cats/datatypes/nel.html).
+It basically means: A list with a length of at least one, so accessing the first element of that list will never fail.
+
+TypeScript 4.0 introduced [variadic tuple types](https://devblogs.microsoft.com/typescript/announcing-typescript-4-0/#variadic-tuple-types),
+which lets us tackle that specific problem:
+
+```ts:title=non-empty-array
+type NonEmptyArray<T> = [T, ...Array<T>]
+const isNonEmpty = <T extends unknown>(array: Array<T>): array is NonEmptyArray<T> =>
+    array.length > 0
+```
+
+This basically gives u sa variadic tuple type where the first element is always defined, and a
+[use-defined type guard](https://www.typescriptlang.org/docs/handbook/advanced-types.html#user-defined-type-guards)
+that assures an Array is really non-empty.
+So if you want to force people to give you a non-empty Array so that you can safely access the first value,
+just type your function with a _NonEmptyArray_:
+
+```ts:title=forced-empty-check {7-15}
+type NonEmptyArray<T> = [T, ...Array<T>]
+const isNonEmpty = <T extends unknown>(array: Array<T>): array is NonEmptyArray<T> =>
+    array.length > 0
+
+const strings: Array<string> = ['one', 'two', 'three']
+
+const firstToUpper = (list: NonEmptyArray<string>) => list[0].toUpperCase()
+
+// this will type-err
+firstToUpper(strings)
+
+// this is fine
+if (isNonEmpty(strings)) {
+    firstToUpper(strings)
+}
+```
+
+[TypeScript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAcg9gOwKIFsygIICcsEMQA8AKgHxQC8UA2kQDRQB0T2ehpAugFADGiAzsCgBLPvGRpQFKMSgQAHsAgIAJnygBXBAGsEcAO4ISAClw58ALigt8xEgEpLp1sLVjU6ENbZlyZJ-gYAGyUAc2AACygyAAZOHn5BASwhBBC+Sy8CJJSQn2oAckQIfPp84D04Eqgy8KwIYq54hAEoADMhLAEiOABVMEgsKSNAkWBLNwlPM0Js1PsKMhGBKmj2BmBe-ogsAGFcPggjOziAehOoCJEoPSFAwIvwCABabaxOds7gbr6Bo1m046cM4XcJXK7tBAQThCVpQIwiCYeP7AZKpPh2OxQADenCgeLaHS6m1+-3RnAAvkA)
+
 <Comments>Let me know in the comments below ⬇️</Comments>
