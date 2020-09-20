@@ -18,6 +18,7 @@ TypeScript 4.1 beta was [announced recently](https://devblogs.microsoft.com/type
 and it introduces many new and exciting features.
 While I won't pretend to understand (yet) what you will be able to do with
 [template literal types](https://devblogs.microsoft.com/typescript/announcing-typescript-4-1-beta/#template-literal-types)
+(people have built a [JSON parser](https://twitter.com/buildsghost/status/1301976526603206657) _on type level_ with this already 🤯)
 or [recursive conditional types](https://devblogs.microsoft.com/typescript/announcing-typescript-4-1-beta/#recursive-conditional-types),
 I'm pretty sure I will be using [pedantic index signature checks](https://devblogs.microsoft.com/typescript/announcing-typescript-4-1-beta/#no-unchecked-indexed-access)
 whenever I can.
@@ -26,15 +27,15 @@ whenever I can.
 
 If you add an _index signature_ to an object, you tell TypeScript that you don't know exactly which keys will be in that object,
 you only know which _type_ the key will have.
-This is very useful if you build objects where you really don't know the keys, for example normalized objects where the keys are ids of database records:
+This is very useful if you build objects where you really don't know the keys, for example, normalized objects where the keys are ids of database records:
 
-```ts:title=index-signagure
+```ts:title=index-signature
 type Widget = {
     id: string
     title: string
 }
 
-type WidgetIndex = Record<UUID, Widget>
+type WidgetIndex = Record<string, Widget>
 
 // alternate syntax:
 type WidgetIndex = {
@@ -45,14 +46,13 @@ type WidgetIndex = {
 So naturally, when you try to retrieve a Widget from that index via it's id, the access _should_ yield `Widget | undefined`.
 But alas, it does not:
 
-```ts:title=unsafe-access {7-12}
-type UUID = string
+```ts:title=unsafe-access {6-11}
 type Widget = {
-    id: UUID
+    id: string
     title: string
 }
 
-const widgetIndex: Record<UUID, Widget> = {
+const widgetIndex: Record<string, Widget> = {
     widget1: { id: 'widget1', title: 'Foo' },
     widget2: { id: 'widget2', title: 'Bar' },
 }
@@ -60,7 +60,7 @@ const widgetIndex: Record<UUID, Widget> = {
 widgetIndex['helloWorld'].title.toUpperCase()
 ```
 
-[TypeScript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAqjCSARKBeKBnYAnAlgOwHMAoUSKAdRwBMCJhUoBvIqVqagLlgURbeBzAANhC6ZchIgF8iRAMYB7PJigB3arWDw8VCAA8uAJQiKsVADxwkAGgoa6APgbM2a+8ACMXRuypcA5Oo0dB7+tgLColD+AGIKCv5QUtZ8rEGaAEzevgHpdBlhUBEiAQBCAIZYicnSsnlaOvoA2v4AFhBCQgrkClhCVP4AugB0xRCjCjBgkFgAwuXoEAAUAJRAA)
+[TypeScript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBA6glgEwOYWFAvFA3gKCvqRALigGdgAnOAOyTwODmABsITyracBfHHAYwD21clADuiFMACS1BBAAeJAEoQhFBAB4ONJABpYk1AD4M2evgnJUARhJZCCEgHIrUm84OMWbKM4BigoLOUNx6FuJGwABM9o4ubqjRnlDerC4AQgCGFCFhPHyJMnKKANrOABYQzMyCMIIUzAjOALoAdGkQHYIAqmCQFADCWaQQABQAlEA)
 
 Yes, TypesScript is perfectly fine with that code, even though this will clearly err at runtime.
 This is _not_ what I expect from a static type checker that aims at giving you safety at runtime,
@@ -70,14 +70,13 @@ And it gets worse. Even if you, as a responsible developer, anticipate that the 
 and thus implement a fallback, TypeScript will completely ignore it and _not_ type check it at all, because on type level, the index
 access will _always_ return a value:
 
-```ts:title=unsafe-fallback {12}
-type UUID = string
+```ts:title=unsafe-fallback {11}
 type Widget = {
-    id: UUID
+    id: string
     title: string
 }
 
-const widgetIndex: Record<UUID, Widget> = {
+const widgetIndex: Record<string, Widget> = {
     widget1: { id: 'widget1', title: 'Foo' },
     widget2: { id: 'widget2', title: 'Bar' },
 }
@@ -85,7 +84,7 @@ const widgetIndex: Record<UUID, Widget> = {
 const title: string = widgetIndex['helloWorld']?.title ?? { thisIs: 'completely Untyped' }
 ```
 
-[TypeScript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAqjCSARKBeKBnYAnAlgOwHMAoUSKAdRwBMCJhUoBvIqVqagLlgURbeBzAANhC6ZchIgF8iRAMYB7PJigB3arWDw8VCAA8uAJQiKsVADxwkAGgoa6APgbM2a+8ACMXRuypcA5Oo0dB7+tgLColD+AGIKCv5QUtZ8rEGaAEzevgHpdBlhUBEiAQBCAIZYicnSsorK9MVR4vgEDHlaOvoA2v4AFhBCQgrkClhCVP4AugD8AHRNUDMzTEV9OOjw6AGKALZgIsCDILB4pBCTSUA)
+[TypeScript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBA6glgEwOYWFAvFA3gKCvqRALigGdgAnOAOyTwODmABsITyracBfHHAYwD21clADuiFMACS1BBAAeJAEoQhFBAB4ONJABpYk1AD4M2evgnJUARhJZCCEgHIrUm84OMWbKM4BigoLOUNx6FuJGwABM9o4ubqjRnlDerC4AQgCGFCFhPHxCImhpvjq0ZokycooA2s4AFhDMzIIwghTMCM4AugD8AHSlUH192KkNcKTSpC5CALZgrMDNIFAAqtSgkN2hQA)
 
 ### SafeRecord to the rescue
 
@@ -117,10 +116,10 @@ strings[999].toUpperCase()
 Oh boy, we should just go back to plain ES6 :(
 
 At least, we are not going to directly access index 999 in Arrays that often.
-In practice, I have found that when Arrays of variable length are involved, accessing the first element is usually what is done.
+In practice, I have found that when an Array has a variable length, we often want to access the first element of that Array.
 If I find myself needing to access [1] or [2] a lot, I can usually use [Tuples](https://www.typescriptlang.org/docs/handbook/basic-types.html#tuple).
 
-So how can we fix accessing strings[0]? Yes, we can do a manual length check, but no one will force us to.
+So how can we fix accessing _strings[0]_? Yes, we can do a manual length check upfront, but no one will force us to.
 Having to think about this every single time is quite brittle and error prone, so can we enforce it on type level?
 
 ### NonEmptyList
@@ -130,7 +129,7 @@ e.g. [Haskell](http://hackage.haskell.org/package/NonEmptyList) or [Scala](https
 It basically means: A list with a length of at least one, so accessing the first element of that list will never fail.
 
 TypeScript 4.0 introduced [variadic tuple types](https://devblogs.microsoft.com/typescript/announcing-typescript-4-0/#variadic-tuple-types),
-which lets us tackle that specific problem:
+which let us tackle that specific problem:
 
 ```ts:title=non-empty-array
 type NonEmptyArray<T> = [T, ...Array<T>]
@@ -139,7 +138,7 @@ const isNonEmpty = <T extends unknown>(array: Array<T>): array is NonEmptyArray<
 ```
 
 This basically gives u sa variadic tuple type where the first element is always defined, and a
-[use-defined type guard](https://www.typescriptlang.org/docs/handbook/advanced-types.html#user-defined-type-guards)
+[user-defined type guard](https://www.typescriptlang.org/docs/handbook/advanced-types.html#user-defined-type-guards)
 that assures an Array is really non-empty.
 So if you want to force people to give you a non-empty Array so that you can safely access the first value,
 just type your function with a _NonEmptyArray_:
@@ -164,4 +163,18 @@ if (isNonEmpty(strings)) {
 
 [TypeScript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAcg9gOwKIFsygIICcsEMQA8AKgHxQC8UA2kQDRQB0T2ehpAugFADGiAzsCgBLPvGRpQFKMSgQAHsAgIAJnygBXBAGsEcAO4ISAClw58ALigt8xEgEpLp1sLVjU6ENbZlyZJ-gYAGyUAc2AACygyAAZOHn5BASwhBBC+Sy8CJJSQn2oAckQIfPp84D04Eqgy8KwIYq54hAEoADMhLAEiOABVMEgsKSNAkWBLNwlPM0Js1PsKMhGBKmj2BmBe-ogsAGFcPggjOziAehOoCJEoPSFAwIvwCABabaxOds7gbr6Bo1m046cM4XcJXK7tBAQThCVpQIwiCYeP7AZKpPh2OxQADenCgeLaHS6m1+-3RnAAvkA)
 
-<Comments>Let me know in the comments below ⬇️</Comments>
+### --noUncheckedIndexedAccess
+
+What does all of this have to do with TypeScript 4.1 you might ask?
+Well, as this has been a feature request of many developers over the course of the years, but the change is also quite breaking for many existing apps,
+the TypeScript team has decided to introduce a new compiler flag with version 4.1.
+The flag is called [noUncheckedIndexedAccess](https://github.com/microsoft/TypeScript/pull/39560)
+and it is going to solve the problem for Objects and Arrays alike by making sure that an index access will always return a possibly undefined value.
+Mapping over an Array or using _Object.values_ will still be safe, so this doesn't suffer from the same drawbacks as the _SafeRecord_ type.
+
+Here is a [link](https://www.typescriptlang.org/play?noUncheckedIndexedAccess=true&ts=4.1.0-dev.20200920#code/PTACDsHsFVwYwBYFM4GskBMCS4NIB6YCCccSAzuQFBVyTjkAuABEwE4CW4A5uQFzMibNgEMAngB52XbgD5mAXmYBtAOT0kqgDTNVjAO6RtuxgjZJNAXRrSe5ZQE4nlgHSMYABw9I2AYRHkSAAUAJRAA)
+to the latest TypeScript playground beta with that flag enabled so you can play around if you want.
+
+It will still take about two months until that version is released, but I am _really_ looking forward to it 🎉.
+
+<Comments>Let me know how you like the new TypeScript beta in the comments below ⬇️</Comments>
