@@ -166,12 +166,93 @@ Because you are signalling TypeScript that your object is _really_ constant, the
 
 -   strings and numbers can be inferred as their literal counterparts
 -   arrays become tuples with a fixed length
--   everything is readonly
+-   everything is readonly, so you cannot accidentally mutate it afterwards (looking at you, Array.sort)
 
 This will give you a ton of flexibility when working with that constant on type level.
 
 ### Extracting Types from Objects or Arrays
 
+Consider the following example:
+
+```ts:title=constant-options-array
+type Variant = 'primary' | 'secondary'
+type Option = { id: Variant; label: string }
+
+const options: Array<Option> = [
+    {
+        id: 'primary',
+        label: 'The primary option',
+    },
+    {
+        id: 'secondary',
+        label: 'The seondary option',
+    },
+]
+```
+
+[TypeScript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAaghgJwJZwHbCgXigcjMgW0RBygB9cBnCAYwHtUATYnAWAChRIoB5MYJAyxQA3lCSMAXLEQp0AbigAbOACMIS6ZWDJUAcygBfDh3qptUOv0HnpAQQQI4IADx8BDAHzCA2hygBov6BIRLSeIQsADTBIQEq6pq4ACoAFtD4SEQIIJbWDDgx7CGGRSEisXFhVLQMzDmFlSEJGuFp0NR1xHkeqI3FgaUcALpAA)
+
+So far, so easy. If we want to add another variant, we just have to add it to the Variant type _and_ to the options Array.
+This is fine as long as the code is co-located, and because we have explicitly annotated the options Array,
+but it can also become quite boilerplaty pretty fast.
+With const assertions, you can just grab the type from the options Array:
+
+```ts:title=extract-it
+const options = [
+    {
+        id: 'primary',
+        label: 'The primary option',
+    },
+    {
+        id: 'secondary',
+        label: 'The seondary option',
+    },
+] as const
+
+type Variant = typeof options[number]['id']
+```
+
+[TypeScript playground](https://www.typescriptlang.org/play?#code/MYewdgzgLgBCAOUCW4IwLwwNoFgBQMhMA3vkeTEgCYBcMA5PAE5IC2AhkwJ70A0ZFQgBt2AIwCmQuvQAqAC3ExmbTlziIUYPgMIBffgSKlDg6tIjjQYKqu0mKIiVIbzFF8De7rk4O+X34ALow7GhW0Pj4UFzwigBqnEjsYLCY0bEgAGbemhBYYACurBJMgVj01PSBQA)
+
+We are basically telling the compiler: Walk through every item of options and give me the type of the id.
+Much terser syntax, the type will still be correctly inferred to `primary | secondary`, and we now have one single source of truth.
+
+Of course, this only works because of the const assertions, and if you remove it or forget it, _Variant_ will just be of type number.
+This is a problem because it relies on developers not making mistakes, and if we wanted to rely on that, we could also just write JavaScript.
+
+Luckily, we can also tell the compiler to only make this work with readonly Arrays:
+
+```ts:title=ensure-readonly {12-22}
+const options = [
+    {
+        id: 'primary',
+        label: 'The primary option',
+    },
+    {
+        id: 'secondary',
+        label: 'The seondary option',
+    },
+] as const
+
+type EnsureReadonlyArray<T> = T extends Array<any>
+    ? never
+    : T extends ReadonlyArray<any>
+    ? T
+    : never
+export type Extract<
+    T extends ReadonlyArray<any>,
+    K extends keyof T[number]
+> = EnsureReadonlyArray<T>[number][K]
+
+type Variant = Extract<typeof options, 'id'>
+```
+
+[TypeScript playground](https://www.typescriptlang.org/play?#code/MYewdgzgLgBCAOUCW4IwLwwNoFgBQMhMA3vkeTEgCYBcMA5PAE5IC2AhkwJ70A0ZFQgBt2AIwCmQuvQAqAC3ExmbTlziIUYPgMIBffgSKlDg6tIjjQYKqu0mKIiVIbzFF8De7rk4O+X34ALow7GhW0Pj4UFzwigCikACuTOIASuLsVOBCXACCTEzsXAA8MgB8GDAyMOIAHlDi1mj5hSXsYFxlOjAA-DBg4gBu4kzddNV1DU0w6ZnZeQVFxe2d3X0yY-1DI-h18CBMsNGxMHH1hcBQxd0T9Y1UaLNZYDktSytlBuQA0jV30wBrcRcEAAMyqWDAiVYEiYgXwFUwCQgyTSGWer0WJXKkOhsMCWG+8LwURiigAapwkO1YEjzuxLsVjuIwd5NBBeAxqPQykA)
+
+This is admittedly a bit hackish, as it relies on the fact that const assertions make everything readonly.
+But it will make sure that Variant is inferred to _never_ if you forget the const assertion, and that means you won't be able to use it anywhere.
+I'll take that safety any day (and tuck _Extract_ away in a util).
+
 ### A note to library authors
 
-<Comments>Leave a comment below ⬇️</Comments>
+<Comments>Do you also prefer const assertions? Leave a comment below ⬇️</Comments>
