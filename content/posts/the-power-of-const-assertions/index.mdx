@@ -15,14 +15,14 @@ import Comments from 'components/Comments'
 <Attribution name="Jack B" url="https://unsplash.com/@nervum" />
 
 [const assertions](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions)
-were introduced in TypeScript 3.4, so they are not exactly new (March 2019),
+were introduced in TypeScript 3.4 (March 2019), so they are not exactly new,
 yet I have seen that many developers are still unaware of that feature.
 
-Maybe it's the syntax that makes it a bit weird sometimes (writing `const something = ... as const`),
-or maybe it's the resemblance to type casts that make people afraid of using them.
-Or maybe you just got some weird errors regarding _readonly_, so you decided to not dig deeper.
+Maybe it's the syntax that makes it a bit weird sometimes (writing `const something = ... as const`).
+It might also be it's the resemblance to type casts that make people afraid of using them.
+Or possibly, you just got some weird errors regarding _readonly_, so you decided to not dig deeper.
 
-In this Article, I'd like clear up the confusion and crush all doubts about const assertions.
+In this article, I'd like to clear up the confusion and crush all doubts about const assertions.
 
 ### const assertions are _not_ type casts
 
@@ -44,7 +44,7 @@ const obj = {} as Obj
 
 [TypeScript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAYg9nKBeKByAZg1BYAUAYzgDsBnYKTRFVAIwEMAnVKOk2BPPUSKAeRoBWyKAG8KCAFztEAXzyFS5OIOEiZLNvwF4gA)
 
-TypeScript is fine with that, because the type sufficiently overlap (string with 'foo' and object with Obj).
+TypeScript is fine with that, because the types sufficiently overlap (string with 'foo' and object with Obj).
 Of course, that is just false, but by using type casts, the compiler will yield to you.
 
 This can be troublesome, even in cases where you think you are right. Consider the following example:
@@ -166,7 +166,7 @@ Because you are signalling TypeScript that your object is _really_ constant, the
 
 -   strings and numbers can be inferred as their literal counterparts
 -   arrays become tuples with a fixed length
--   everything is readonly, so you cannot accidentally mutate it afterwards (looking at you, Array.sort)
+-   everything is readonly, so you cannot accidentally mutate it afterwards (looking at you, _Array.sort_)
 
 This will give you a ton of flexibility when working with that constant on type level.
 
@@ -194,7 +194,7 @@ const options: Array<Option> = [
 
 So far, so easy. If we want to add another variant, we just have to add it to the Variant type _and_ to the options Array.
 This is fine as long as the code is co-located, and because we have explicitly annotated the options Array,
-but it can also become quite boilerplaty pretty fast.
+but it can also become quite boilerplate-y pretty fast.
 With const assertions, you can just grab the type from the options Array:
 
 ```ts:title=extract-it
@@ -217,7 +217,7 @@ type Variant = typeof options[number]['id']
 We are basically telling the compiler: Walk through every item of options and give me the type of the id.
 Much terser syntax, the type will still be correctly inferred to `primary | secondary`, and we now have one single source of truth.
 
-Of course, this only works because of the const assertions, and if you remove it or forget it, _Variant_ will just be of type number.
+Of course, this only works because of the const assertion, and if you remove it or forget it, _Variant_ will just be of type number.
 This is a problem because it relies on developers not making mistakes, and if we wanted to rely on that, we could also just write JavaScript.
 
 Luckily, we can also tell the compiler to only make this work with readonly Arrays:
@@ -261,11 +261,28 @@ Finally, I'd like to point out something that became more apparent to me since I
 
 <p style="padding-left: 3rem; margin-top: -1rem">— TkDodo</p>
 
-The thing is: You _can_ pass a mutable Array or Object into a method that takes a readonly Array or Object, but not the other way around.
-The reason is quite simple: if my function accepts an _Array_, the function might sort it, so you cannot pass a ReadonlyArray to it.
+The thing is: You _can_ pass a mutable Array or Object into a method that takes a readonly Array or Object, but _not_ the other way around.
+The reason is quite simple: if my function accepts an _Array_, the function might mutate / sort it, so you cannot pass a ReadonlyArray to it.
 
-By making the parameter readonly, you just guarantee that you are not mutating it (which is always good - don't mess with function parameters)
-and you make people's lives easier if they are using const assertions in the process.
+```ts:title=prefer-readonly
+const getFirst = (param: Array<string>): string => param.sort()[0]
+
+const strings = ['foo', 'bar', 'baz'] as const
+
+getFirst(strings)
+```
+
+[TypeScript playground](https://www.typescriptlang.org/play?#code/MYewdgzgLgBA5gUygMQJYCdowLwwBQAOAhukQLYBcMAguqQJ4A806qYcAfAJRUttw4OMYqTIA6CCHRQ8XANoAGALoBYAFDrQkWH3YQcMOQHIAZiBBGANDCMAjElZv2AXkaUwi+rdHXrEKDGg8XTgILiA)
+
+Even if you wouldn't sort the Array, it would still error with:
+
+```
+Argument of type 'readonly ["foo", "bar", "baz"]' is not assignable to parameter of type 'string[]'.
+  The type 'readonly ["foo", "bar", "baz"]' is 'readonly' and cannot be assigned to the mutable type 'string[]'.(2345)
+```
+
+By making the parameter readonly, we just guarantee that we are not mutating it (which is always good - don't mess with function parameters)
+and we make people's lives easier if they are using const assertions in the process.
 
 If you are a library author, I strongly recommend making all inputs to your functions readonly.
 
