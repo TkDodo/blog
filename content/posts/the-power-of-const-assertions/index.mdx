@@ -253,6 +253,20 @@ This is admittedly a bit hackish, as it relies on the fact that const assertions
 But it will make sure that Variant is inferred to _never_ if you forget the const assertion, and that means you won't be able to use it anywhere.
 I'll take that safety any day (and tuck _Extract_ away in a util).
 
-### A note to library authors
+### Use readonly everywhere
+
+Finally, I'd like to point out something that became more apparent to me since I am constantly using const assertions:
+
+> Make everything readonly per default
+
+<p style="padding-left: 3rem; margin-top: -1rem">— TkDodo</p>
+
+The thing is: You _can_ pass a mutable Array or Object into a method that takes a readonly Array or Object, but not the other way around.
+The reason is quite simple: if my function accepts an _Array_, the function might sort it, so you cannot pass a ReadonlyArray to it.
+
+By making the parameter readonly, you just guarantee that you are not mutating it (which is always good - don't mess with function parameters)
+and you make people's lives easier if they are using const assertions in the process.
+
+If you are a library author, I strongly recommend making all inputs to your functions readonly.
 
 <Comments>Do you also prefer const assertions? Leave a comment below ⬇️</Comments>
