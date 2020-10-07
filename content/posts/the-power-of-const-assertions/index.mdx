@@ -142,4 +142,36 @@ This is likely what most of you are doing right now, and it is perfectly fine re
 
 ### Using const assertions
 
+I still think that fixing the issue with const assertions is the preferred way of doing it:
+
+```ts:title=const-assertions {9}
+type Variant = 'primary' | 'secondary'
+
+type Props = {
+    variant: Variant
+}
+
+const Component = (props: Props) => void 0
+
+const props = { variant: 'primary' } as const
+
+Component(props)
+```
+
+[TypeScript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAaghgJwJZwHbCgXigcjMgW0RBygB9cBnCAYwHtUATYnAWACgPRIoAFBOmEpYoAbw5RJUAG6IU6AFyw5aYBwC+HDvVSUMAYToEwDCOhEAKfIMpL+NgJRYAfDLpJGUAAxb2OvVDWQiKiMiqKuPhIRAgkUOpQcML+apzshsam6FYCQg5AA)
+
+This comes in handy if you don't have the type available for annotation, for example, because it has not been exported from a library you are using.
+The syntax is also more terse, and using const assertions has other benefits as well.
+Because you are signalling TypeScript that your object is _really_ constant, the compiler can make better assumptions about your intentions:
+
+-   strings and numbers can be inferred as their literal counterparts
+-   arrays become tuples with a fixed length
+-   everything is readonly
+
+This will give you a ton of flexibility when working with that constant on type level.
+
+### Extracting Types from Objects or Arrays
+
+### A note to library authors
+
 <Comments>Leave a comment below ⬇️</Comments>
