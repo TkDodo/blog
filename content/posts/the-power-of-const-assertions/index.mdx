@@ -1,7 +1,7 @@
 ---
 title: The power of const assertions
 description: const assertions are a criminally underused TypeScript feature - learn all about them here, now
-date: 2020-10-07
+date: 2020-10-08
 banner: ./power.jpg
 tags:
     - TypeScript
@@ -262,7 +262,7 @@ Finally, I'd like to point out something that became more apparent to me since I
 <p style="padding-left: 3rem; margin-top: -1rem">— TkDodo</p>
 
 The thing is: You _can_ pass a mutable Array or Object into a method that takes a readonly Array or Object, but _not_ the other way around.
-The reason is quite simple: if my function accepts an _Array_, the function might mutate / sort it, so you cannot pass a ReadonlyArray to it.
+The reason is quite simple: if my function accepts an _Array_, the function might mutate it, so you cannot pass a _ReadonlyArray_ to it.
 
 ```ts:title=prefer-readonly
 const getFirst = (param: Array<string>): string => param.sort()[0]
