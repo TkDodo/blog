@@ -27,7 +27,7 @@ I will use a classic list / detail use-case as example.
 We have a list of users, and selecting one of them will result in a detail form being filled.
 We want to show the users' email address in the detail form, and also have an apply button that will update that data.
 
-It's an interactive example, so feel free to click around (the code is also editable):
+It's an interactive example, so feel free to click around (the code is also editable 🚀):
 
 ```js react-live
 const users = [
@@ -95,5 +95,102 @@ Bummer, because we still need the local state to edit the email address (to keep
 We don't want to update the user Array directly, because we might never click Apply.
 
 I know three ways to handle this and similar use-cases:
+
+### Artificially re-mount the component
+
+Whoops, this sounds bad, but it's not what you might think. Think more about _Modals_.
+
+Showing the DetailView in a _Modal_ will magically make our code above work, because Modals are usually rendered conditionally.
+When we click on _John_, we mount a Modal, thus the useState initial value will be respected.
+When the user closes the Modal, it will be _unmounted_, and the next time a user is selected it will be _mounted_ again.
+
+Here is how that might look:
+
+```js react-live
+const users = [
+    {
+        id: 1,
+        name: 'Dominik',
+        email: 'dominik@dorfmeister.cc',
+    },
+    {
+        id: 2,
+        name: 'John',
+        email: 'john@doe.com',
+    },
+]
+
+function App() {
+    const [selected, setSelected] = React.useState()
+
+    const close = () => setSelected(undefined)
+
+    return (
+        <div>
+            {users.map((user) => (
+                <button type="button" key={user.id} onClick={() => setSelected(user)}>
+                    {user.name}
+                </button>
+            ))}
+            {selected && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: '0',
+                        left: '0',
+                        paddingTop: '100px',
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0,0,0,0.4)',
+                    }}
+                >
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            width: '80%',
+                            height: '50vh',
+                            margin: 'auto',
+                            backgroundColor: 'white',
+                        }}
+                    >
+                        <DetailView user={selected} close={close} />
+                        <span style={{ cursor: 'pointer' }} onClick={close}>
+                            &times;
+                        </span>
+                    </div>
+                </div>
+            )}
+        </div>
+    )
+}
+
+function DetailView({ user, close }) {
+    const [email, setEmail] = React.useState(user.email)
+
+    return (
+        <div>
+            <input
+                type="text"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+            />
+            <button
+                type="button"
+                onClick={() => {
+                    alert(email)
+                    close()
+                }}
+            >
+                Apply
+            </button>
+        </div>
+    )
+}
+
+render(<App />)
+```
+
+Excuse my css, I suck at this part of web development 😅
 
 <Comments>Leave a comment below ⬇️</Comments>
