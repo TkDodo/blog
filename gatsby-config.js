@@ -11,7 +11,7 @@ module.exports = {
         siteTitle: "TkDodo's blog",
         siteTitleAlt: `TkDodo's blog`,
         siteHeadline: `TkDodo's blog`,
-        siteUrl: `https://www.dorfmeister.cc/blog`,
+        siteUrl: `https://tkdodo.eu/blog`,
         siteDescription: `A technical blog about frontend-development, Typescript and React`,
         siteLanguage: `en`,
     },
