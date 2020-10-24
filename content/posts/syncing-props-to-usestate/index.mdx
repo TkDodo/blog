@@ -262,4 +262,76 @@ function DetailView({ email, setEmail }) {
 render(<App />)
 ```
 
+Now, the App has full control over all the state, and the DetailView is just a so-called "dummy" component.
+This approach is feasible for many use-cases, but it's not without drawbacks.
+
+Typing in the input field will now re-render the whole App with every key-stroke.
+While this is not a problem for this small example, it might be a problem for bigger Apps.
+People often resort to global state managers because they promise to re-render efficiently.
+
+Once could also argue that the scope of the draft email state is too big.
+Why does the App even care about that, it probably only cares about it once the user hits Apply.
+
+The third approach is kind of the middle ground between the two:
+Keep the same ux but still re-mount your form when you need to.
+
+### Fully uncontrolled with a key
+
+```js react-live
+const users = [
+    {
+        id: 1,
+        name: 'Dominik',
+        email: 'dominik@dorfmeister.cc',
+    },
+    {
+        id: 2,
+        name: 'John',
+        email: 'john@doe.com',
+    },
+]
+
+function App() {
+    const [selected, setSelected] = React.useState(users[0])
+
+    return (
+        <div>
+            {users.map((user) => (
+                <button type="button" key={user.id} onClick={() => setSelected(user)}>
+                    {user.id === selected.id ? user.name.toUpperCase() : user.name}
+                </button>
+            ))}
+            <DetailView key={selected.id} user={selected} />
+        </div>
+    )
+}
+
+function DetailView({ user }) {
+    const [email, setEmail] = React.useState(user.email)
+
+    return (
+        <div>
+            <input
+                type="text"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+            />
+            <button type="button" onClick={() => alert(email)}>
+                Apply
+            </button>
+        </div>
+    )
+}
+
+render(<App />)
+```
+
+This is exactly like the first example, with just one minor change:
+
+```diff
+- <DetailView user={selected} />
++ <DetailView key={selected.id} user={selected} />
+```
+
 <Comments>Leave a comment below ⬇️</Comments>
+```
