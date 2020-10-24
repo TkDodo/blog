@@ -23,4 +23,61 @@ This is something we probably do a lot, and it's not per-se wrong, but it has so
 
 ### The example
 
+I will use a classic list / detail use-case as example.
+We have a list of users, and selecting one of them will result in a detail form being filled.
+We want to show the users' email address in the detail form, and also have an apply button that will update that data.
+
+It's an interactive example, so feel free to click around (the code is also editable):
+
+```js react-live
+const users = [
+    {
+        id: 1,
+        name: 'Dominik',
+        email: 'dominik@dorfmeister.cc',
+    },
+    {
+        id: 2,
+        name: 'John',
+        email: 'john@doe.com',
+    },
+]
+
+function App() {
+    const [selected, setSelected] = React.useState(users[0])
+
+    return (
+        <div>
+            {users.map((user) => (
+                <button type="button" key={user.id} onClick={() => setSelected(user)}>
+                    {user.id === selected.id ? user.name.toUpperCase() : user.name}
+                </button>
+            ))}
+            <DetailView user={selected} />
+        </div>
+    )
+}
+
+function DetailView({ user }) {
+    const [email, setEmail] = React.useState(user.email)
+
+    return (
+        <div>
+            <input
+                type="text"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+            />
+            <button type="button" onClick={() => alert(email)}>
+                Apply
+            </button>
+        </div>
+    )
+}
+
+render(<App />)
+```
+
+### useState initial value
+
 <Comments>Leave a comment below ⬇️</Comments>
