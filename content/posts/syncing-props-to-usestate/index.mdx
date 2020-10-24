@@ -193,4 +193,73 @@ render(<App />)
 
 Excuse my css, I suck at this part of web development 😅
 
+But the example works now. That is because the Modal conditionally renders our DetailView, which will make it mount again.
+
+I'm sure many of you have done that a lot, and it's a valid solution.
+But be aware that this only works because you are rendering the DetailView in the Modal.
+If you want the DetailView to be renderable everywhere, we would need a different solution.
+
+### Lifting state up
+
+You've probably heard this phrase before, the official React docs also have [a section on that topic](https://reactjs.org/docs/lifting-state-up.html).
+
+For this example, it basically just means to take the draft state and move it further up the tree,
+thus making our DetailView a fully controlled component.
+Since the DetailView then doesn't need any local state at all, we won't have the problem of putting props into state.
+
+```js react-live
+const users = [
+    {
+        id: 1,
+        name: 'Dominik',
+        email: 'dominik@dorfmeister.cc',
+    },
+    {
+        id: 2,
+        name: 'John',
+        email: 'john@doe.com',
+    },
+]
+
+function App() {
+    const [selected, setSelected] = React.useState(users[0])
+    const [email, setEmail] = React.useState(selected.email)
+
+    return (
+        <div>
+            {users.map((user) => (
+                <button
+                    type="button"
+                    key={user.id}
+                    onClick={() => {
+                        setSelected(user)
+                        setEmail(user.email)
+                    }}
+                >
+                    {user.id === selected.id ? user.name.toUpperCase() : user.name}
+                </button>
+            ))}
+            <DetailView email={email} setEmail={setEmail} />
+        </div>
+    )
+}
+
+function DetailView({ email, setEmail }) {
+    return (
+        <div>
+            <input
+                type="text"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+            />
+            <button type="button" onClick={() => alert(email)}>
+                Apply
+            </button>
+        </div>
+    )
+}
+
+render(<App />)
+```
+
 <Comments>Leave a comment below ⬇️</Comments>
