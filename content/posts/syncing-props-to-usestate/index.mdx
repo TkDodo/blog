@@ -53,13 +53,13 @@ function App() {
                     {user.id === selected.id ? user.name.toUpperCase() : user.name}
                 </button>
             ))}
-            <DetailView user={selected} />
+            <DetailView email={selected.email} />
         </div>
     )
 }
 
-function DetailView({ user }) {
-    const [email, setEmail] = React.useState(user.email)
+function DetailView({ initialEmail }) {
+    const [email, setEmail] = React.useState(initialEmail)
 
     return (
         <div>
@@ -154,7 +154,7 @@ function App() {
                             backgroundColor: 'white',
                         }}
                     >
-                        <DetailView user={selected} close={close} />
+                        <DetailView email={selected.email} close={close} />
                         <span style={{ cursor: 'pointer' }} onClick={close}>
                             &times;
                         </span>
@@ -165,8 +165,8 @@ function App() {
     )
 }
 
-function DetailView({ user, close }) {
-    const [email, setEmail] = React.useState(user.email)
+function DetailView({ initialEmail, close }) {
+    const [email, setEmail] = React.useState(initialEmail)
 
     return (
         <div>
@@ -301,13 +301,13 @@ function App() {
                     {user.id === selected.id ? user.name.toUpperCase() : user.name}
                 </button>
             ))}
-            <DetailView key={selected.id} user={selected} />
+            <DetailView key={selected.id} email={selected.email} />
         </div>
     )
 }
 
-function DetailView({ user }) {
-    const [email, setEmail] = React.useState(user.email)
+function DetailView({ initialEmail }) {
+    const [email, setEmail] = React.useState(initialEmail)
 
     return (
         <div>
@@ -329,9 +329,68 @@ render(<App />)
 This is exactly like the first example, with just one minor change:
 
 ```diff
-- <DetailView user={selected} />
-+ <DetailView key={selected.id} user={selected} />
+- <DetailView email={selected.email} />
++ <DetailView key={selected.id} email={selected.email} />
 ```
+
+#### React keys
+
+The `key` attribute on a React component is a special thing.
+Keys are mostly used for lists to signalise stability to React,
+so that the Reconciler knows which elements can be re-used, and thus re-rendered.
+
+However, you can also just put a key attribute on any component to tell React:
+"Please mount this whenever the key changes. As long as the key is the same, please re-render".
+
+This can be seen a little bit like the dependency array in effects.
+If it changes, compared to the previous render, React will re-run the "mounting" of the component.
+
+If you want to know more, please read this [in-depth explanation about why keys are necessary](https://reactjs.org/docs/reconciliation.html#recursing-on-children)
+
+### The non-solution
+
+You might be tempted to solve the problem with an effect that "syncs" the props to the state:
+
+```ts:title=syncing-props-and-state
+function DetailView({ initialEmail }) {
+    const [email, setEmail] = React.useState(initialEmail)
+
+    React.useEffect(() => {
+        setEmail(initialEmail)
+    }, [initialEmail])
+
+    return (...)
+}
+
+```
+
+I would consider effects like this generally an anti-pattern.
+Effects should be used to sync React state with something _outside_ of React, e.g. with localstorage.
+
+But here, we are syncing something that already lives inside React with React state.
+Further, the condition on which we sync does not really reflect what we want to achive:
+We want to reset the state whenever another user is selected.
+
+The first solution does this via conditional rendering,
+the second one by setting the state explicitly when the button that selects a user is clicked,
+and the third one by providing a stable key (the user id).
+
+Emails might be a weird example, because they are generally also unique,
+but what if two users have the same data (e.g. a firstName)?
+The effect won't re-run, even though we click on a different user, and thus the draft state stays the same.
+
+Similarly, what if the data changes in the parent component
+(e.g. because of a re-fetch by [react-query](https://react-query.tanstack.com/docs/guides/window-focus-refetching)),
+but our user has already changed the value in the input field?
+Would we really want to override the user input in these cases?
+
+So, effects like these open you up to a bunch of hard-to-track errors in corner cases that you'd better avoid.
+
+### Takeaways
+
+I don't have a preferred solution, I have used all three approaches occasionally.
+The detail view owning the draft state has some advantages, but unmounting comes with a bit of a cost.
+Lifting state up also has advantages, as fully controlled components are easy to reason about.
 
 <Comments>Leave a comment below ⬇️</Comments>
 ```
