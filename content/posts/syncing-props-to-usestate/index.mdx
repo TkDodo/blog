@@ -80,4 +80,20 @@ render(<App />)
 
 ### useState initial value
 
+You might notice right away that the example is _not_ working.
+You can edit the email address and click _Apply_, but if you click on _John_, the input field will not update.
+
+As much as React wants us to [think in hooks](https://wattenberger.com/blog/react-hooks) rather than in lifecycles,
+when it comes to state, there is a big difference between the first render (also known as _mount_) and further renders
+(better known as re-renders).
+
+The initial value of a useState hook is always _discarded_ on re-renders - it only has an effect when the component _mounts_.
+
+When you click on _John_, the DetailView component will be re-rendered (because it already exists on the screen),
+which means that John's email will not be put into our state.
+Bummer, because we still need the local state to edit the email address (to keep the draft changes).
+We don't want to update the user Array directly, because we might never click Apply.
+
+I know three ways to handle this and similar use-cases:
+
 <Comments>Leave a comment below ⬇️</Comments>
