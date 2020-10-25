@@ -101,7 +101,7 @@ I know three ways to handle this and similar use-cases:
 
 We do this a lot when we are using Modals or other components that appear on screen.
 
-Showing the DetailView in a _Modal_ will magically make our code above work, because Modals are usually rendered conditionally.
+Showing the DetailView in a Modal will magically make our code above work, because Modals are usually rendered conditionally.
 When we click on _John_, we mount a Modal, thus the useState initial value will be respected.
 When the user closes the Modal, it will be _unmounted_, and the next time a person is selected it will be _mounted_ again.
 
@@ -266,7 +266,7 @@ render(<App />)
 Now, the App has full control over all the state, and the DetailView is just a so-called "dumb component".
 This approach is feasible for many use-cases, but it's not without drawbacks.
 
-Typing in the input field will now re-render the whole App with every key-stroke.
+Typing in the input field will now re-render the whole App with every keystroke.
 While this is not a problem for this small example, it might be a problem for bigger Apps.
 People often resort to global state managers because they promise to re-render efficiently.
 
@@ -337,7 +337,7 @@ This is exactly the same code as in the first example, with just one small chang
 #### React keys
 
 The `key` attribute on a React component is a special thing.
-Keys are mostly used for lists to signalise stability to React,
+Keys are mostly used for lists to signalize stability to React,
 so that the reconciler knows which elements can be re-used, and thus re-rendered.
 
 However, you can also just put a key attribute on any component to tell React:
@@ -365,8 +365,8 @@ function DetailView({ initialEmail }) {
 
 ```
 
-I would consider effects like this generally an anti-pattern.
-Effects should be used to sync React state with something _outside_ of React, e.g. with localstorage.
+I would consider effects like these generally an anti-pattern.
+If effects are used for syncing, they should be used to sync React state with something _outside_ of React, e.g. with localstorage.
 
 But here, we are syncing something that already lives inside React with React state.
 Further, the condition on which we sync does not really reflect what we want to achieve:
@@ -397,7 +397,7 @@ and you don't always have a stable key or a clear indication when a component sh
 Lifting state up also has advantages, as fully controlled components are usually easier to reason about,
 but it might not always be easily doable in large applications.
 
-But please, don't use the syncing state "solution".
+Whatever you decide, please, don't use the syncing state "solution".
 To me, this approach is similar to the old _componentWillReceiveProps_ lifecycle, which was also used to sync props with state.
 I don't recall that ending well. [Here](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html)
 is a very good article from 2018 by [Brian Vaughn](https://twitter.com/brian_d_vaughn) on that anti-pattern,
