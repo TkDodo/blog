@@ -183,7 +183,7 @@ And I have seen this happen time and time again, especially with functions that 
 
 -   You write the function and add some comment: "This function does XYZ".
 -   Someone changes the implementation of the function. Now the function does "ABC".
--   No one touches the comment. The function is long so I don't even blame the person who updated the function -
+-   No one touches the comment. The function is long, so I don't even blame the person who updated the function -
     they probably didn't even notice the comment.
     Same for the reviewers:
     We are not gonna check the function signature every single time if there is a comment that now doesn't match the implementation anymore.
@@ -196,6 +196,47 @@ So is there a better way to document your intent without cluttering up the code 
 Of course there is, and we use it every day.
 
 ### Commit messages
+
+Writing commit messages can be a super-power.
+I see commit messages as comments-in-time.
+Navigating the git log is like time travelling, and reading the commit messages
+
+#### Good commit message structure
+
+Here is my rule of thumb for a good commit messages structure:
+
+-   Start with a commit message header, consisting of one line, where you document _WHAT_ is being done in this commit.
+    Try to find a good, concise summary of what this commit does.
+-   Continue with a newline, followed by the commit message body, where you can be as verbose as you like.
+
+This will allow you to use `git log --pretty=oneline` to get a good overview of what happened when.
+GitHub also displays the first line completely and collapses the rest automatically.
+
+#### A real world example
+
+Last week, I got a bug report for a feature I added to a product back in mid 2018 - it doesn't work with the new ios14 (something camera related).
+Great, who doesn't love a nice little ios bug.
+Googling shows a potential fix, remove some _aspectRatio setting_ and it will all be fine, they say.
+Of course, I have no idea why we even have this specific setting.
+
+-   Is there a comment? No, there is not.
+-   Is there a test? You're kidding, right... 🤣.
+-   Let's look at the issue then: It's about adding the feature, nothing about this specific setting, obviously.
+
+Right, so let's take a look at the commit message that introduced that setting, it will tell us everything.
+After all, I'm the author!
+
+🥁🥁🥁
+
+> feature/436: fix camera conf
+
+Well, thanks for nothing, TkDodo from 2 1/2 years ago.
+I am none the wiser, so the bottom line is:
+
+Document your code!
+
+At the end of the day, it doesn't matter how you do it. I do have my preference (commit messages),
+but literally any documentation is better than nothing.
 
 <Comments>
     How do you prefer to document your code? Let me know in the comments below ⬇️
