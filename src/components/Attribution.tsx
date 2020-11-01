@@ -4,12 +4,13 @@ import { Box, Divider, Link } from '@theme-ui/components'
 type Props = {
     name: string
     url: string
+    prefix?: string
 }
 
-const Attribution = ({ name, url }: Props) => (
+const Attribution = ({ name, url, prefix = 'Photo by' }: Props) => (
     <>
         <Box style={{ fontSize: 'smaller', textAlign: 'center' }}>
-            Photo by{' '}
+            {prefix}{' '}
             <Link href={url} target="blank" rel="noreferrer noopener">
                 {name}
             </Link>

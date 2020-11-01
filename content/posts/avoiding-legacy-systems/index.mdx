@@ -11,7 +11,7 @@ tags:
 ---
 
 import Comments from 'components/Comments'
-import { Divider } from '@theme-ui/components'
+import Attribution from 'components/Attribution'
 
 <img src="./legacy.jpg" />
 
@@ -197,9 +197,26 @@ Of course there is, and we use it every day.
 
 ### Commit messages
 
-Writing commit messages can be a super-power.
 I see commit messages as comments-in-time.
-Navigating the git log is like time travelling, and reading the commit messages
+Navigating the git log is like time travelling,
+and reading a good commit messages will put you right into the head of the person who wrote it.
+They can also never be outdated, because they are directly associated with how the code was _at that time_.
+
+Take a look at how [Andrew Clark](https://twitter.com/acdlite), co-inventor of [Redux](https://redux.js.org/),
+writes commit messages:
+
+<img src="./commit.jpeg" />
+
+<Attribution
+    prefix="Source:"
+    name="Twitter"
+    url="https://twitter.com/acdlite/status/1251169389564407809"
+/>
+
+What I like most about this is that you can fit as much text in there as you want.
+It can literally be a brain dump of what you currently know about the situation.
+And no one, _no one_, will ever have as much information about a problem as the developer at the time of writing / committing the code.
+To me, that makes writing commit messages a super-power.
 
 #### Good commit message structure
 
