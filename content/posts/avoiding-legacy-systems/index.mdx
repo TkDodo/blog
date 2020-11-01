@@ -7,6 +7,7 @@ tags:
     - principles
     - documentation
     - git
+    - z-index
 ---
 
 import Comments from 'components/Comments'
@@ -124,6 +125,37 @@ Using good names, strong types and a good amount of tests go a long way, but it 
 though we need to ask the right question when we talk about comments.
 
 ### _WHY_
+
+As I said before, I think people focus too much on documenting the _WHAT_, even though that is rarely the problem.
+It might take a developer some time to debug complex code, but they will eventually figure out what is going on,
+and the techniques above will make finding that out even easier.
+
+The one thing that is very hard to find out is the _WHY_. _WHY_ are we even doing this?
+And this is way more subtle than documenting what a function / a module / an if branch does.
+It's the little things that will often give us a headache:
+
+-   _WHY_ the early return in that function?
+-   _WHY_ do we need an extra negative margin here??
+-   _WHY_ z-index: 999 ???
+
+What was the intent of the developer who wrote that code when they wrote that code?
+Usually, you can't tell. I rarely know _WHY_ I did something the way I did it a couple of weeks later,
+unless I write it down immediately.
+
+If you are lucky, you can track a change back to an issue or a PR, and you have more information there.
+But sometimes, you just don't.
+Even if you do, the PR that added that feature will likely not tell you _WHY_ we had to add z-index: 999... 🤷‍♂️
+
+Unless of course, you added a comment that explains your intent.
+
+_We need the z-index to be 999 so that our Modal stays above the BannerMessages that we also display on the Dashboard in case the user has not yet subscribed to our newsletter. Also, it conflicts with the CookieNotice if we keep the value any lower._
+
+Thank you, thoughtful developer. Now I know!
+And now that I know, I will have more confidence touching this part of the code.
+
+#### Comments in code
+
+
 
 <Comments>
     How do you prefer to document your code? Let me know in the comments below ⬇️
