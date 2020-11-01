@@ -78,6 +78,53 @@ There is however one thing that I always put emphasis on when it comes to this t
 
 ### Documentation
 
+Generally speaking, we don't document enough, and if we do, it tends to be the wrong things that get documented.
+People focus a lot on the _WHAT_. What does this function do? What is its interface?
+This code block here looks complicated, so I better write a comment to explain what it does.
+
+The truth is, the _WHAT_ can almost always be figured out by someone reading the code.
+If we cannot figure out what a code is doing, there is probably something wrong with it.
+I understand that it might not always be obvious, so here are four things that can help document the _WHAT_:
+
+#### 1. Naming
+
+Naming is hard. Naming is subjective.
+Yet I believe that extracting objectively complex code (code where people often ask: _WHAT_ is this even doing?)
+to a separate function with a name that explains _WHAT_ is going on, or even into multiple functions if necessary,
+is going to help a lot. I will probably write a separate blog post about this topic.
+
+This will also help with the second suggestion:
+
+#### 2. Tests
+
+I don't like (writing) tests. There, I said it. Never have, probably never will.
+But I do understand the value of good tests.
+
+They will give you the confidence to touch existing code, without the fear of breaking anything,
+which is one of the most feared traits of legacy systems: Nobody dares to touch anything.
+
+Second of all, tests can also be seen as documentation.
+By looking at the tests, you can see all the cases the developer who wrote the code thought about at the time of writing.
+This doesn't mean that tests are exhaustive, almost no one has 100% branch coverage.
+Usually, when a bug emerges, people write another test case, which is good, because it adds more documentation.
+
+#### 3. Use a statically typed language
+
+Static type checkers will not only give you confidence when touching / refactoring existing code,
+they also help to document function interfaces.
+When looking at a function for the first time, it helps tremendously to know what can be put into a function and
+what the expected return value is.
+
+#### 4. Comments
+
+> Good code needs to be self-documenting
+
+Well, no.
+Using good names, strong types and a good amount of tests go a long way, but it does _not_ replace the need for writing comments,
+though we need to ask the right question when we talk about comments.
+
+### _WHY_
+
 <Comments>
     How do you prefer to document your code? Let me know in the comments below ⬇️
 </Comments>
