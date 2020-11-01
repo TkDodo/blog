@@ -2,12 +2,10 @@
 title: Avoiding legacy systems
 description:
 date: 2020-11-01
-banner: ./swiss-knife.png
+banner: ./legacy.png
 tags:
     - principles
     - documentation
-    - git
-    - z-index
 ---
 
 import Comments from 'components/Comments'
@@ -17,12 +15,12 @@ import Attribution from 'components/Attribution'
 
 <Attribution name="Sergiu Vălenaș" url="https://unsplash.com/@svalenas" />
 
-No one likes working with legacy software.
+No one likes working with legacy systems.
 They are hard to maintain.
 They are not fun to work with.
 Every bug report you get, you feel like: "Oh god please no"!
 You don't want to touch _anything_ there.
-Adding features? Haven't dared to do that for a long time, because you don't know what will break if you do.
+Adding features? Haven't dared to do that in a long time, because you don't know what will break if you do.
 
 > Never touch a running system
 
@@ -31,6 +29,10 @@ Adding features? Haven't dared to do that for a long time, because you don't kno
 Famous quotes every developer knows, because legacy software is _everywhere_.
 
 ### What is legacy software?
+
+For this article, I don't necessarily mean "old" software when talking about _legacy_ code.
+I am primarily focussing on software that is hard to maintain because it has organically grown.
+We could also just call it _software_.
 
 We rarely get the chance to bootstrap something from scratch.
 Something brand new. A green field.
@@ -43,7 +45,7 @@ Since no one likes legacy systems, no one creates them on purpose.
 
 They usually derive from incidental complexity, time constraints and shortcuts that we take because we have to.
 We are not proud of that code, but it fixes the bug, so let's ship it.
-Yes, the customer really wanted that feature, and it needed to be done yesterday (my favourite deadline),
+Yes, the customer really wants that feature, and it needs to be done yesterday (my favourite deadline),
 so let's please just make it "quick and dirty" and "refactor it later".
 
 Of course, later is just an anagram for never.
@@ -69,23 +71,26 @@ Some companies just don't care, some managers just don't see the benefit of inve
 
 Personally, I constantly try to talk people out of features.
 To me, it is not the duty of developers to "produce features" or even "write code".
-Our job is to produce quality.
+Our job is to produce _quality_.
 If that means deleting code, all the better - fewer lines of code to maintain are always a win.
 There are enough other involved parties eager to get developers to add features, so I am more reluctant about it.
 
-When it comes to what we _can do_ to avoid legacy software, there is obviously no easy answer.
+When it comes to what we _can do_ to avoid that our software becomes "legacy", there is obviously no easy answer.
 It's a complex topic that you cannot solve with one simple trick.
 There is however one thing that I always put emphasis on when it comes to this topic:
 
 ### Documentation
 
 Generally speaking, we don't document enough, and if we do, it tends to be the wrong things that get documented.
-People focus a lot on the _WHAT_. What does this function do? What is its interface?
+People focus a lot on the _WHAT_.
+
+What does this function do? What is its interface?
 This code block here looks complicated, so I better write a comment to explain what it does.
 
 The truth is, the _WHAT_ can almost always be figured out by someone reading the code.
-If we cannot figure out what a code is doing, there is probably something wrong with it.
-I understand that it might not always be obvious, so here are four things that can help document the _WHAT_:
+If I don't understand what code is doing during a PR review, I _always_ ask.
+Mostly, there is something that can be done to make the code more understandable.
+Here are my four pillars of how to achieve that:
 
 #### 1. Naming
 
@@ -103,6 +108,7 @@ But I do understand the value of good tests.
 
 They will give you the confidence to touch existing code, without the fear of breaking anything,
 which is one of the most feared traits of legacy systems: Nobody dares to touch anything.
+You touch it and it explodes left and right.
 
 Second of all, tests can also be seen as documentation.
 By looking at the tests, you can see all the cases the developer who wrote the code thought about at the time of writing.
@@ -121,10 +127,10 @@ what the expected return value is.
 > Good code needs to be self-documenting
 
 Well, no.
-Using good names, strong types and a good amount of tests go a long way, but it does _not_ replace the need for writing comments,
-though we need to ask the right question when we talk about comments.
+Using good names, strong types and quality tests go a long way, but that does _not_ replace the need for writing comments,
+though we need to ask the right question when we talk about comments, and that is:
 
-### _WHY_
+### _WHY_?
 
 As I said before, I think people focus too much on documenting the _WHAT_, even though that is rarely the problem.
 It might take a developer some time to debug complex code, but they will eventually figure out what is going on,
@@ -148,7 +154,8 @@ Even if you do, the PR that added that feature will likely not tell you _WHY_ we
 
 Unless of course, you added a comment that explains your intent.
 
-_We need the z-index to be 999 so that our Modal stays above the BannerMessages that we also display on the Dashboard in case the user has not yet subscribed to our newsletter. Also, it conflicts with the CookieNotice if we keep the value any lower._
+> We need the z-index to be 999 so that our Modal stays above the BannerMessages that we also display on the Dashboard
+> in case the user has not yet subscribed to our newsletter. Also, it conflicts with the CookieNotice if we keep the value any lower.
 
 Thank you, thoughtful developer. Now I know!
 And now that I know, I will have more confidence touching this part of the code.
@@ -176,21 +183,21 @@ so I'd rather have this information as comments in code than _not_ having it at 
 In addition to cluttering up the code, there is another thing I don't like about comments in code.
 Let's go back to my z-index example.
 When we adjust the code, we find out that we don't even have BannerMessages anymore.
-They were a thing 6 months ago, but they are long gone.
+They were a thing six months ago, but they are long gone.
 
 So the comment isn't even accurate anymore.
 And I have seen this happen time and time again, especially with functions that have a description at the top:
 
--   You write the function and add some comment: "This function does XYZ".
--   Someone changes the implementation of the function. Now the function does "ABC".
--   No one touches the comment. The function is long, so I don't even blame the person who updated the function -
+-   You write the function and add some comment: _This function does XYZ_.
+-   Someone changes the implementation of the function. Now the function does _AYZ_.
+-   No one touches the comment. The function is long, so I don't even blame the person who updated it -
     they probably didn't even notice the comment.
     Same for the reviewers:
     We are not gonna check the function signature every single time if there is a comment that now doesn't match the implementation anymore.
     It probably didn't even show up in the PR!
 
 To me, it's just the nature of code comments that they are frequently outdated.
-And the only thing worse than no comments are _wrong_ comments.
+And the only thing worse than no documentation is _wrong_ documentation.
 
 So is there a better way to document your intent without cluttering up the code with outdated comments?
 Of course there is, and we use it every day.
@@ -276,6 +283,7 @@ Document your code!
 
 At the end of the day, it doesn't matter how you do it. I do have my preference (commit messages),
 but literally any documentation is better than nothing.
+Your future self will definitely thank you 🙏.
 
 <Comments>
     How do you prefer to document your code? Let me know in the comments below ⬇️
