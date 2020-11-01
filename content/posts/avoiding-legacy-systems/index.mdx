@@ -229,7 +229,29 @@ Here is my rule of thumb for a good commit messages structure:
 This will allow you to use `git log --pretty=oneline` to get a good overview of what happened when.
 GitHub also displays the first line completely and collapses the rest automatically.
 
-#### A real world example
+#### A note on squashing
+
+I am aware of the fact that many open-source project maintainers squash all commits when accepting a PR.
+I have witnessed this first hand, and I think a lot of information gets lost when doing this.
+
+I haven't really understood why that is necessary, or why having a "clean" or "linear" history is important
+(or more important than the information you get from good commit messages).
+Maybe it is done because most commit messages aren't really that good or informative.
+If you do this - maybe you can enlighten me in the [comments below](#inject-comments)?
+
+I see the git history more like an attic.
+It doesn't have to be beautiful or tidied up.
+I'm not going to show it to my guests when they come visit me.
+
+But when I really need something that I stowed away years ago, I know where to look.
+Yes, it might take some time, but it's better than having a clean attic with beautiful boxes that are all empty when you open them.
+
+The good news is: Not all is lost. The messages are still there if you take a look at the commits of the PR.
+It's just a little harder to backtrack.
+[Here](https://github.com/remeda/remeda/pull/95/commits/8b02e05d520676b70799b0c7a33611c50cec508f)
+is one example of a commit I made that has tons of information, (even with a link!) that got squashed away.
+
+#### The real world example
 
 Last week, I got a bug report for a feature I added to a product back in mid 2018 - it doesn't work with the new ios14 (something camera related).
 Great, who doesn't love a nice little ios bug.
