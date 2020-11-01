@@ -1,0 +1,55 @@
+---
+title: Avoiding legacy systems
+description:
+date: 2020-11-01
+banner: ./swiss-knife.png
+tags:
+    - principles
+    - documentation
+    - git
+---
+
+import Comments from 'components/Comments'
+import { Divider } from '@theme-ui/components'
+
+<img src="./legacy.jpg" />
+
+<Attribution name="Sergiu Vălenaș" url="https://unsplash.com/@svalenas" />
+
+No one likes working with legacy software.
+They are hard to maintain.
+They are not fun to work with.
+Every bug report you get, you feel like: "Oh god please no"!
+You don't want to touch _anything_ there.
+Adding features? Haven't dared to do that for a long time, because you don't know what will break if you do.
+
+> Never touch a running system
+
+> If it ain't broke, don't fix it
+
+Famous quotes every developer knows, because legacy software is _everywhere_.
+
+### What is legacy software?
+
+We rarely get the chance to bootstrap something from scratch.
+Something brand new. A green field.
+A place where we will never make the mistakes of the past again.
+
+Except that we will.
+
+Every software project started out on a green field once, where the architects had the best of intentions.
+Since no one likes legacy systems, no one creates them on purpose.
+
+They usually derive from incidental complexity, time constraints and shortcuts that we take because we have to.
+We are not proud of that code, but it fixes the bug, so let's ship it.
+Yes, the customer really wanted that feature, and it needed to be done yesterday (my favourite deadline),
+so let's please just make it "quick and dirty" and "refactor it later".
+
+Of course, later is just an anagram for never.
+
+We add a `todo` in the code, or we create a follow-up issue in our favourite backlog,
+which already has 500+ issues no one ever looks at.
+
+<Comments>
+    How do you prefer to document your code? Let me know in the comments below ⬇️
+</Comments>
