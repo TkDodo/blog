@@ -155,7 +155,47 @@ And now that I know, I will have more confidence touching this part of the code.
 
 #### Comments in code
 
+If you follow this through, it will become quite excessive really fast.
+Do we really want to add 3 lines of documentation to every css property?
+To every if statement that we write? Before every null check?
 
+I reckon that not many people do that, and I totally agree that it will likely make your code unreadable,
+which will in turn make it actually harder to find out _WHAT_ is going on.
+
+I opened a random file in the ReactJs code base, and they actually do this a lot, e.g.
+[here](https://github.com/facebook/react/blob/56e9feead0f91075ba0a4f725c9e4e343bca1c67/packages/react-dom/src/client/ReactDOMComponent.js#L125-L140),
+[here](https://github.com/facebook/react/blob/56e9feead0f91075ba0a4f725c9e4e343bca1c67/packages/react-dom/src/client/ReactDOMComponent.js#L231-L235)
+or
+[here](https://github.com/facebook/react/blob/56e9feead0f91075ba0a4f725c9e4e343bca1c67/packages/react-dom/src/client/ReactDOMComponent.js#L299-L303).
+Is this easy to read?
+I don't know, but the comments describe very well _WHY_ something is happening, not only _WHAT_ is happening,
+so I'd rather have this information as comments in code than _not_ having it at all.
+
+#### Outdated comments
+
+In addition to cluttering up the code, there is another thing I don't like about comments in code.
+Let's go back to my z-index example.
+When we adjust the code, we find out that we don't even have BannerMessages anymore.
+They were a thing 6 months ago, but they are long gone.
+
+So the comment isn't even accurate anymore.
+And I have seen this happen time and time again, especially with functions that have a description at the top:
+
+-   You write the function and add some comment: "This function does XYZ".
+-   Someone changes the implementation of the function. Now the function does "ABC".
+-   No one touches the comment. The function is long so I don't even blame the person who updated the function -
+    they probably didn't even notice the comment.
+    Same for the reviewers:
+    We are not gonna check the function signature every single time if there is a comment that now doesn't match the implementation anymore.
+    It probably didn't even show up in the PR!
+
+To me, it's just the nature of code comments that they are frequently outdated.
+And the only thing worse than no comments are _wrong_ comments.
+
+So is there a better way to document your intent without cluttering up the code with outdated comments?
+Of course there is, and we use it every day.
+
+### Commit messages
 
 <Comments>
     How do you prefer to document your code? Let me know in the comments below ⬇️
