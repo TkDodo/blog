@@ -1,5 +1,5 @@
 ---
-title: Practical react-query
+title: Practical React Query
 description:
 date: 2020-11-14
 banner: ./react-query.png
@@ -24,10 +24,28 @@ Why would some data fetching library replace your global state manager? What doe
 
 I was under the impression that GraphQl clients like Apollo would only fetch the data for you,
 like for example [axios](https://github.com/axios/axios) does for REST,
-and that you would still obviously need some way of making that data accessible to your appliation.
+and that you would still obviously need some way of making that data accessible to your application.
 
 I couldn't have been more wrong.
 
 ### Client State vs. Server State
 
-<Comments>Have you worked with react-query yet? Let me know in the comments below ⬇️</Comments>
+What Apollo gives you is not just the ability to fetch data, it also comes with a _cache_ for that server data.
+This means that you can just use the same `useQuery` hook in multiple components,
+and it will only fetch the data once and then subsequently return the data from the cache.
+
+This sounds _very_ familiar with what we, and probably many other teams as well, have mainly been using _redux_ for:
+Fetch the data from the server and make it available everywhere.
+
+So it seems that we have always been treating this _server state_ like any other _client state_.
+Except that when it comes to _server state_ (think: A list of articles that you fetch,
+the details of a User you want to display, ...), your app does not own it.
+We have only borrowed it to display the most recent version of it on the screen for the user.
+It is the server who owns the data.
+
+To me, that introduced a paradigm shift in how to think about data.
+If we can leverage the cache to display data that we do not own,
+there isn't really much left that is real client state that _also_ needs to be made available to the whole app.
+That made me understand why many think that Apollo can replace redux in lots of instances.
+
+<Comments>Have you worked with React Query yet? Let me know in the comments below ⬇️</Comments>
