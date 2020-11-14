@@ -15,4 +15,19 @@ import { Divider } from '@theme-ui/components'
 
 <Divider />
 
+When GraphQL and especially [Apollo Client](https://www.apollographql.com/docs/react/)
+became popular in ca. 2018, there was a lot of fuss about it completely replacing redux, and the question
+[Is Redux dead yet?](https://dev.to/markerikson/redux---not-dead-yet-1d9k) has been asked a lot.
+
+I distinctly remember not understand what this was all about.
+Why would some data fetching library replace your global state manager? What does one even have todo with the other?
+
+I was under the impression that GraphQl clients like Apollo would only fetch the data for you,
+like for example [axios](https://github.com/axios/axios) does for REST,
+and that you would still obviously need some way of making that data accessible to your appliation.
+
+I couldn't have been more wrong.
+
+### Client State vs. Server State
+
 <Comments>Have you worked with react-query yet? Let me know in the comments below ⬇️</Comments>
