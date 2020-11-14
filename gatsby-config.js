@@ -51,6 +51,7 @@ module.exports = {
                         options: {
                             maxWidth: 960,
                             quality: 90,
+                            backgroundColor: 'transparent',
                             linkImagesToOriginal: false,
                         },
                     },
@@ -61,6 +62,7 @@ module.exports = {
                         options: {
                             maxWidth: 960,
                             quality: 90,
+                            backgroundColor: 'transparent',
                             linkImagesToOriginal: false,
                         },
                     },
