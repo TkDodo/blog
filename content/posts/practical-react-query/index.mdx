@@ -77,6 +77,48 @@ and Tanner has a React Query [Essentials Course](https://learn.tanstack.com/) yo
 
 I want to focus more on some practical tips that go beyond the docs that might be useful when you are trying out the library.
 These are things I have picked up over the last couple of months when I was not only actively using the library at work,
-but also became involved in the React Query community, answering questions on Discord and in GitHub discussions.
+but also became involved in the React Query community, answering questions on Discord and in GitHub Discussions.
+
+#### The Defaults explained
+
+I believe the React Query [Defaults](https://react-query.tanstack.com/docs/guides/important-defaults)
+to be very well chosen, but they can catch you off guard from time to time, especially at the beginning.
+
+First of all: React Query does _not_ invoke the queryFn on every re-render, even with the default _staleTime_ of zero.
+Your app can re-render for various reasons at any time, so fetching every time would be insane!
+
+> Always code for re-renders, and a lot of them. I like to call it render resiliency.
+
+<p style="padding-left: 3rem; margin-top: -1rem">— Tanner Linsley</p>
+
+If you see a re-fetch that you are not expecting, it is likely because you just focused the window
+and React Query is doing a _refetchOnWindowFocus_, which is a great feature for production:
+If the user goes to a different browser tab, and then comes back to your app,
+a background refetch will be triggered automatically,
+and data on the screen will be updated if something has changed on the server in the meantime.
+All of this happens without a loading spinner being shown,
+and your component will not re-render if the data is the same as you currently have in the cache.
+
+During development, this will probably be triggered more frequently,
+especially because focussing between the Browser DevTools and your app will also cause a fetch, so be aware of that.
+
+Secondly, there seems to be a bit of confusion between _cacheTime_ and _staleTime_, so let me try to clear that up:
+
+-   StaleTime: The duration until a query transitions from fresh to stale.
+    As long as the query is fresh, the data will always be read from the cache only - no network request will happen.
+    If the query is stale (which per default is: instantly), you will still get the data from the cache,
+    but a background can happen _under certain conditions_, like:
+    -   the window is focussed,
+    -   the user lost and re-gains his network connection,
+    -   the query key changes,
+    -   and most prominently: A new _observer_ (i.e. a new component which does `useQuery`) mounts
+-   CacheTime: The duration until inactive queries will be removed from the cache. This defaults to 5 minutes.
+    Queries transition to the inactive state as soon as there are no active observers,
+    so when all components which use that query have unmounted.
+
+There is a good [explanation by example](https://react-query.tanstack.com/docs/guides/caching#a-detailed-caching-example)
+in the docs as well.
+
+
 
 <Comments>Have you worked with React Query yet? Let me know in the comments below ⬇️</Comments>
