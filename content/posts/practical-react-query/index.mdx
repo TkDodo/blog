@@ -48,4 +48,35 @@ If we can leverage the cache to display data that we do not own,
 there isn't really much left that is real client state that _also_ needs to be made available to the whole app.
 That made me understand why many think that Apollo can replace redux in lots of instances.
 
+### React Query
+
+I have never had the chance to use GraphQL.
+As far as I'm aware, it requires a GraphQL Server, it's not the simplest thing to set up (schemas, resolvers, ...)
+and we've just never gotten around to adopt that.
+
+There is an existing REST API, we don't really experience problems with over-fetching, it just works,
+and clearly, there weren't enough pain points to warrant a switch.
+
+But I still envied the simplicity of how data fetching can look like on the client,
+including the handling of loading and error states. If only there were something similar in React for REST APIs...
+
+Enter [React Query](https://react-query.tanstack.com/).
+
+Innovated by the open sourcerer [Tanner Linsley](https://github.com/tannerlinsley) in late 2019,
+React Query takes the good parts of Apollo and brings them to REST.
+It works with any function that returns a Promise and embraces the _stale-while-revalidate_ caching strategy.
+It operates on sane defaults that try to keep your data as fresh as possible
+while at the same time showing data to the user as early as possible,
+making it feel near instant at times and thus providing a great UX.
+On top of that, it is also very flexible and lets you customize various settings for when the defaults are not enough.
+
+This is not going to be an introduction to React Query though.
+I think the docs are great at explaining Guides & Concepts,
+there are [Videos](https://react-query.tanstack.com/docs/videos) from various Talks that you can watch,
+and Tanner has a React Query [Essentials Course](https://learn.tanstack.com/) you can take if you want to get familiar with the library.
+
+I want to focus more on some practical tips that go beyond the docs that might be useful when you are trying out the library.
+These are things I have picked up over the last couple of months when I was not only actively using the library at work,
+but also became involved in the React Query community, answering questions on Discord and in GitHub discussions.
+
 <Comments>Have you worked with React Query yet? Let me know in the comments below ⬇️</Comments>
