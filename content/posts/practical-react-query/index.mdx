@@ -127,5 +127,13 @@ In addition to that, I have found that it helps to throttle your network connect
 if you want to better recognize background refetches, since dev-servers are usually pretty fast.
 
 
+#### Don't use the queryCache as a local state manager
+
+If you temper with the queryCache (_queryCache.setData_), it should only be for optimistic updates
+or for writing data that you receive from the backend after a mutation.
+Remember that every background refetch might override that data, so
+[use](https://reactjs.org/docs/hooks-state.html)
+[something](https://zustand.surge.sh/)
+[else](https://redux.js.org/) for local state.
 
 <Comments>Have you worked with React Query yet? Let me know in the comments below ⬇️</Comments>
