@@ -19,11 +19,11 @@ When GraphQL and especially [Apollo Client](https://www.apollographql.com/docs/r
 became popular in ca. 2018, there was a lot of fuss about it completely replacing redux, and the question
 [Is Redux dead yet?](https://dev.to/markerikson/redux---not-dead-yet-1d9k) has been asked a lot.
 
-I distinctly remember not understand what this was all about.
+I distinctly remember not understanding what this was all about.
 Why would some data fetching library replace your global state manager? What does one even have to do with the other?
 
-I was under the impression that GraphQl clients like Apollo would only fetch the data for you,
-like for example [axios](https://github.com/axios/axios) does for REST,
+I was under the impression that GraphQL clients like Apollo would only fetch the data for you,
+similar to what e.g. [axios](https://github.com/axios/axios) does for REST,
 and that you would still obviously need some way of making that data accessible to your application.
 
 I couldn't have been more wrong.
@@ -52,16 +52,16 @@ That made me understand why many think that Apollo can replace redux in lots of 
 ### React Query
 
 I have never had the chance to use GraphQL.
-We have an existing REST API, don't really experience problems with over-fetching, it just works,
-and clearly, there weren't enough pain points to warrant a switch,
-given that you have to also adapt your backend, which isn't quite so simple.
+We have an existing REST API, don't really experience problems with over-fetching, it just works, etc.
+Clearly, there aren't enough pain points for us to warrant a switch,
+especially given that you'd also have to adapt the backend, which isn't quite so simple.
 
-Yet I still envied the simplicity of how data fetching can look like on the client,
+Yet I still envied the simplicity of how data fetching can look like on the frontend,
 including the handling of loading and error states. If only there were something similar in React for REST APIs...
 
 Enter [React Query](https://react-query.tanstack.com/).
 
-Innovated by the open sourcerer [Tanner Linsley](https://github.com/tannerlinsley) in late 2019,
+Devised by the open sourcerer [Tanner Linsley](https://github.com/tannerlinsley) in late 2019,
 React Query takes the good parts of Apollo and brings them to REST.
 It works with any function that returns a Promise and embraces the _stale-while-revalidate_ caching strategy.
 It operates on sane defaults that try to keep your data as fresh as possible
@@ -75,9 +75,9 @@ I think the docs are great at explaining Guides & Concepts,
 there are [Videos](https://react-query.tanstack.com/docs/videos) from various Talks that you can watch,
 and Tanner has a React Query [Essentials Course](https://learn.tanstack.com/) you can take if you want to get familiar with the library.
 
-I want to focus more on some practical tips that go beyond the docs that might be useful when you are already working with the library.
+I want to focus more on some practical tips that go beyond the docs, which might be useful when you are already working with the library.
 These are things I have picked up over the last couple of months when I was not only actively using the library at work,
-but also became involved in the React Query community, answering questions on Discord and in GitHub Discussions.
+but also got involved in the React Query community, answering questions on Discord and in GitHub Discussions.
 
 #### The Defaults explained
 
@@ -105,11 +105,11 @@ especially because focusing between the Browser DevTools and your app will also 
 Secondly, there seems to be a bit of confusion between _cacheTime_ and _staleTime_, so let me try to clear that up:
 
 -   StaleTime: The duration until a query transitions from fresh to stale.
-    As long as the query is fresh, the data will always be read from the cache only - no network request will happen!
-    If the query is stale (which per default is: instantly), you will still get the data from the cache,
+    As long as the query is fresh, data will always be read from the cache only - no network request will happen!
+    If the query is stale (which per default is: instantly), you will still get data from the cache,
     but a background refetch can happen [under certain conditions](https://react-query.tanstack.com/docs/guides/caching).
 -   CacheTime: The duration until inactive queries will be removed from the cache. This defaults to 5 minutes.
-    Queries transition to the inactive state as soon as there are no active observers,
+    Queries transition to the inactive state as soon as there are no observers registered,
     so when all components which use that query have unmounted.
 
 Most of the time, if you want to change one of these settings, it's the _staleTime_ that needs adjusting.
@@ -155,10 +155,11 @@ export const useTodosQuery = (state: State) =>
 
 Here, imagine that our ui displays a list of todos along with a filter option.
 We would have some local state to store that filtering,
-and as soon as the user changes his selection, we would update that local state,
+and as soon as the user changes their selection, we would update that local state,
 and React Query will automatically trigger the refetch for us, because the query key changes.
 We are thus keeping the user's filter selection _in sync_ with the query function,
 which is very similar to what a dependency array represents for useEffect.
+I don't think I have ever passed a variable to the queryFn that was _not_ part of the queryKey, too.
 
 ##### A new cache entry
 
@@ -207,7 +208,7 @@ I think this is a good ux improvement with just a few lines of code.
 This goes hand in hand with [putting-props-to-use-state](./putting-props-to-use-state),
 an article I have written last month:
 If you get data from _useQuery_, try not to put that data into local state.
-The main reason for that is that you implicitly opt out of all background updates that React Query does for you,
+The main reason is that you implicitly opt out of all background updates that React Query does for you,
 because the state "copy" will not update with it.
 
 This is fine if you want to e.g. fetch some default values for a Form,
