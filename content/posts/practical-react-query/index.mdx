@@ -20,7 +20,7 @@ became popular in ca. 2018, there was a lot of fuss about it completely replacin
 [Is Redux dead yet?](https://dev.to/markerikson/redux---not-dead-yet-1d9k) has been asked a lot.
 
 I distinctly remember not understand what this was all about.
-Why would some data fetching library replace your global state manager? What does one even have todo with the other?
+Why would some data fetching library replace your global state manager? What does one even have to do with the other?
 
 I was under the impression that GraphQl clients like Apollo would only fetch the data for you,
 like for example [axios](https://github.com/axios/axios) does for REST,
@@ -30,7 +30,8 @@ I couldn't have been more wrong.
 
 ### Client State vs. Server State
 
-What Apollo gives you is not just the ability to fetch data, it also comes with a _cache_ for that server data.
+What Apollo gives you is not just the ability to describe which data you want and to fetch that data,
+it also comes with a _cache_ for that server data.
 This means that you can just use the same `useQuery` hook in multiple components,
 and it will only fetch the data once and then subsequently return the data from the cache.
 
@@ -51,13 +52,11 @@ That made me understand why many think that Apollo can replace redux in lots of 
 ### React Query
 
 I have never had the chance to use GraphQL.
-As far as I'm aware, it requires a GraphQL Server, it's not the simplest thing to set up (schemas, resolvers, ...)
-and we've just never gotten around to adopt that.
+We have an existing REST API, don't really experience problems with over-fetching, it just works,
+and clearly, there weren't enough pain points to warrant a switch,
+given that you have to also adapt your backend, which isn't quite so simple.
 
-There is an existing REST API, we don't really experience problems with over-fetching, it just works,
-and clearly, there weren't enough pain points to warrant a switch.
-
-But I still envied the simplicity of how data fetching can look like on the client,
+Yet I still envied the simplicity of how data fetching can look like on the client,
 including the handling of loading and error states. If only there were something similar in React for REST APIs...
 
 Enter [React Query](https://react-query.tanstack.com/).
@@ -71,18 +70,19 @@ making it feel near instant at times and thus providing a great UX.
 On top of that, it is also very flexible and lets you customize various settings for when the defaults are not enough.
 
 This is not going to be an introduction to React Query though.
+
 I think the docs are great at explaining Guides & Concepts,
 there are [Videos](https://react-query.tanstack.com/docs/videos) from various Talks that you can watch,
 and Tanner has a React Query [Essentials Course](https://learn.tanstack.com/) you can take if you want to get familiar with the library.
 
-I want to focus more on some practical tips that go beyond the docs that might be useful when you are trying out the library.
+I want to focus more on some practical tips that go beyond the docs that might be useful when you are already working with the library.
 These are things I have picked up over the last couple of months when I was not only actively using the library at work,
 but also became involved in the React Query community, answering questions on Discord and in GitHub Discussions.
 
 #### The Defaults explained
 
 I believe the React Query [Defaults](https://react-query.tanstack.com/docs/guides/important-defaults)
-to be very well chosen, but they can catch you off guard from time to time, especially at the beginning.
+are very well chosen, but they can catch you off guard from time to time, especially at the beginning.
 
 First of all: React Query does _not_ invoke the queryFn on every re-render, even with the default _staleTime_ of zero.
 Your app can re-render for various reasons at any time, so fetching every time would be insane!
@@ -91,7 +91,7 @@ Your app can re-render for various reasons at any time, so fetching every time w
 
 <p style="padding-left: 3rem; margin-top: -1rem">— Tanner Linsley</p>
 
-If you see a re-fetch that you are not expecting, it is likely because you just focused the window
+If you see a refetch that you are not expecting, it is likely because you just focused the window
 and React Query is doing a _refetchOnWindowFocus_, which is a great feature for production:
 If the user goes to a different browser tab, and then comes back to your app,
 a background refetch will be triggered automatically,
@@ -100,22 +100,20 @@ All of this happens without a loading spinner being shown,
 and your component will not re-render if the data is the same as you currently have in the cache.
 
 During development, this will probably be triggered more frequently,
-especially because focussing between the Browser DevTools and your app will also cause a fetch, so be aware of that.
+especially because focusing between the Browser DevTools and your app will also cause a fetch, so be aware of that.
 
 Secondly, there seems to be a bit of confusion between _cacheTime_ and _staleTime_, so let me try to clear that up:
 
 -   StaleTime: The duration until a query transitions from fresh to stale.
-    As long as the query is fresh, the data will always be read from the cache only - no network request will happen.
+    As long as the query is fresh, the data will always be read from the cache only - no network request will happen!
     If the query is stale (which per default is: instantly), you will still get the data from the cache,
-    but a background can happen _under certain conditions_, like:
-    -   the window is focussed,
-    -   the user lost and re-gains his network connection,
-    -   the query key changes,
-    -   and most prominently: A new _observer_ (i.e. a new component which does `useQuery`) mounts
+    but a background refetch can happen [under certain conditions](https://react-query.tanstack.com/docs/guides/caching).
 -   CacheTime: The duration until inactive queries will be removed from the cache. This defaults to 5 minutes.
     Queries transition to the inactive state as soon as there are no active observers,
     so when all components which use that query have unmounted.
 
+Most of the time, if you want to change one of these settings, it's the _staleTime_ that needs adjusting.
+I have rarely ever needed to temper with the _cacheTime_.
 There is a good [explanation by example](https://react-query.tanstack.com/docs/guides/caching#a-detailed-caching-example)
 in the docs as well.
 
@@ -157,5 +155,7 @@ const fetchWidget = async (id: number): Promise<Widget> => {
 
 export const useWidgetQuery = (id: number) => useQuery(['widgets', id], () => fetchWidget(id))
 ```
+
+I hope that these practical tips will make it even easier for you to get started with React Query, so go check it out :)
 
 <Comments>Have you worked with React Query yet? Let me know in the comments below ⬇️</Comments>
