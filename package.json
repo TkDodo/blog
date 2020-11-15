@@ -25,6 +25,7 @@
     "gatsby-plugin-sitemap": "^2.2.19",
     "gatsby-plugin-webpack-bundle-analyser-v2": "^1.1.10",
     "gatsby-remark-autolink-headers": "^2.3.11",
+    "gatsby-remark-external-links": "^0.0.4",
     "gatsby-transformer-remark": "^2.8.28",
     "prettier": "^2.0.5",
     "react": "^16.13.1",

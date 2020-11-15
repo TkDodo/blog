@@ -29,6 +29,13 @@ module.exports = {
                             theme: 'dark',
                         },
                     },
+                    {
+                        resolve: 'gatsby-remark-external-links',
+                        options: {
+                            target: '_blank',
+                            rel: 'noreferrer noopener',
+                        },
+                    },
                 ],
             },
         },
@@ -44,6 +51,13 @@ module.exports = {
                         resolve: '@weknow/gatsby-remark-twitter',
                         options: {
                             theme: 'dark',
+                        },
+                    },
+                    {
+                        resolve: 'gatsby-remark-external-links',
+                        options: {
+                            target: '_blank',
+                            rel: 'noreferrer noopener',
                         },
                     },
                     {
