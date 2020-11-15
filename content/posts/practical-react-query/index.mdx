@@ -1,7 +1,7 @@
 ---
 title: Practical React Query
 description:
-date: 2020-11-14
+date: 2020-11-15
 banner: ./react-query.png
 tags:
     - react
@@ -124,6 +124,85 @@ The DevTools will also tell you what data is currently in the cache, so you'll h
 In addition to that, I have found that it helps to throttle your network connection in the browser DevTools
 if you want to better recognize background refetches, since dev-servers are usually pretty fast.
 
+#### Treat the query key like a dependency array
+
+I am referring to the dependency array of the
+[useEffect](https://reactjs.org/docs/hooks-reference.html#conditionally-firing-an-effect) hook here,
+which I assume you are familiar with.
+
+Why are these two similar?
+
+Because React Query will trigger a refetch whenever the query key changes.
+So when we pass a variable parameter to our queryFn, we almost always want to fetch data when that value changes.
+Instead of orchestrating complex effects to manually trigger a refetch, we can utilize the query key:
+
+```ts:title=feature/todos/queries.ts
+type State = 'all' | 'open' | 'done'
+type Todo = {
+    id: number
+    state: State
+}
+type Todos = ReadonlyArray<Todo>
+
+const fetchTodos = async (state: State): Promise<Todos> => {
+    const response = await axios.get(`todos/${state}`)
+    return response.data
+}
+
+export const useTodosQuery = (state: State) =>
+    useQuery(['todos', state], () => fetchTodos(state))
+```
+
+Here, imagine that our ui displays a list of todos along with a filter option.
+We would have some local state to store that filtering,
+and as soon as the user changes his selection, we would update that local state,
+and React Query will automatically trigger the refetch for us, because the query key changes.
+We are thus keeping the user's filter selection _in sync_ with the query function,
+which is very similar to what a dependency array represents for useEffect.
+
+##### A new cache entry
+
+Because the quey key is used as a key for the cache, you will get a new cache entry when you switch from
+'all' to 'done', and that will result in a hard loading state (probably showing a loading spinner)
+when you switch for the first time.
+This is certainly not ideal, so you can either use the _keepPreviousData_ option for these cases,
+or, if possible, pre-fill the newly created cache entry with
+[initialData](https://react-query.tanstack.com/docs/guides/initial-query-data#initial-data-from-cache).
+The above example is perfect for that, because we can do some client side pre-filtering on our todos:
+
+```ts:title=pre-filtering {15-20}
+type State = 'all' | 'open' | 'done'
+type Todo = {
+    id: number
+    state: State
+}
+type Todos = ReadonlyArray<Todo>
+
+const fetchTodos = async (state: State): Promise<Todos> => {
+    const response = await axios.get(`todos/${state}`)
+    return response.data
+}
+
+export const useTodosQuery = (state: State) =>
+    useQuery(['todos', state], () => fetchTodos(state), {
+        initialData: () => {
+            const allTodos = queryCache.getQuery<Todos>(['todos', 'all'])
+            const filteredData = allTodos?.filter((todo) => todo.state === state) ?? []
+
+            return filteredData.length > 0 ? filteredData : undefined
+        },
+    })
+```
+
+Now, every time the user switches between states, if we don't have data yet,
+we try to pre-fill it with data from the 'all todos' cache.
+We can instantly show the 'done' todos that we have to the user,
+and they will still see the updated list once the background refetch finishes.
+Please note that prior to v3, you would also need to set the _initialStale_ property to actually trigger a refetch.
+
+I think this is a good ux improvement with just a few lines of code.
+
+#### Keep server and client state separate
 
 #### Don't use the queryCache as a local state manager
 
@@ -139,22 +218,10 @@ Remember that every background refetch might override that data, so
 Even if it's only for wrapping one _useQuery_ call, creating a custom hook usually pays off because:
 
 -   You can keep the actual data fetching out of the ui, but co-located with your _useQuery_ call.
--   You can keep all usages of one queryKey (and potentially type definitions) in one file.
+-   You can keep all usages of one query key (and potentially type definitions) in one file.
 -   If you need to tweak some settings or add some data transformation, you can do that in one place.
 
-```ts:title=feature/widget/queries.ts
-type Widget = {
-    id: string
-    title: string
-}
-
-const fetchWidget = async (id: number): Promise<Widget> => {
-    const response = await axios.get(`widget/${id}`)
-    return response.data
-}
-
-export const useWidgetQuery = (id: number) => useQuery(['widgets', id], () => fetchWidget(id))
-```
+You have already seen an example of that in the [todos queries above](#treat-the-query-key-like-a-dependency-array).
 
 I hope that these practical tips will make it even easier for you to get started with React Query, so go check it out :)
 
