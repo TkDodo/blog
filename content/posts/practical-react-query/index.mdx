@@ -204,6 +204,30 @@ I think this is a good ux improvement with just a few lines of code.
 
 #### Keep server and client state separate
 
+This goes hand in hand with [putting-props-to-use-state](./putting-props-to-use-state),
+an article I have written last month:
+If you get data from _useQuery_, try not to put that data into local state.
+The main reason for that is that you implicitly opt out of all background updates that React Query does for you,
+because the state "copy" will not update with it.
+
+This is fine if you want to e.g. fetch some default values for a Form,
+and render your Form once you have data.
+Background updates are very unlikely to yield something new, and even if, your Form has already been initialized.
+So if you do that on purpose, make sure to _not_ fire off unnecessary background refetches by setting _staleTime_:
+
+```js:title=initial-form-data
+const App = () => {
+    const { data } = useQuery(key, queryFn, { staleTime: Infinity })
+
+    return data ? <MyForm initialData={data} /> : null
+}
+
+const MyForm = ({ initialData} ) => {
+    const [data, setData] = React.useState(initialData)
+    ...
+}
+```
+
 #### Don't use the queryCache as a local state manager
 
 If you temper with the queryCache (_queryCache.setData_), it should only be for optimistic updates
@@ -223,6 +247,11 @@ Even if it's only for wrapping one _useQuery_ call, creating a custom hook usual
 
 You have already seen an example of that in the [todos queries above](#treat-the-query-key-like-a-dependency-array).
 
+<Divider />
+
 I hope that these practical tips will make it even easier for you to get started with React Query, so go check it out :)
 
-<Comments>Have you worked with React Query yet? Let me know in the comments below ⬇️</Comments>
+<Comments>
+    Have you worked with React Query yet? Do you have further questions? Let me know in the
+    comments below ⬇️
+</Comments>
