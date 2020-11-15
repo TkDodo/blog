@@ -136,4 +136,26 @@ Remember that every background refetch might override that data, so
 [something](https://zustand.surge.sh/)
 [else](https://redux.js.org/) for local state.
 
+#### Create custom hooks
+
+Even if it's only for wrapping one _useQuery_ call, creating a custom hook usually pays off because:
+
+-   You can keep the actual data fetching out of the ui, but co-located with your _useQuery_ call.
+-   You can keep all usages of one queryKey (and potentially type definitions) in one file.
+-   If you need to tweak some settings or add some data transformation, you can do that in one place.
+
+```ts:title=feature/widget/queries.ts
+type Widget = {
+    id: string
+    title: string
+}
+
+const fetchWidget = async (id: number): Promise<Widget> => {
+    const response = await axios.get(`widget/${id}`)
+    return response.data
+}
+
+export const useWidgetQuery = (id: number) => useQuery(['widgets', id], () => fetchWidget(id))
+```
+
 <Comments>Have you worked with React Query yet? Let me know in the comments below ⬇️</Comments>
