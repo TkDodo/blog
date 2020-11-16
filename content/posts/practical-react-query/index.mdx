@@ -61,15 +61,15 @@ including the handling of loading and error states. If only there were something
 
 Enter [React Query](https://react-query.tanstack.com/).
 
-Devised by the open sourcerer [Tanner Linsley](https://github.com/tannerlinsley) in late 2019,
+Made by the open sourcerer [Tanner Linsley](https://github.com/tannerlinsley) in late 2019,
 React Query takes the good parts of Apollo and brings them to REST.
 It works with any function that returns a Promise and embraces the _stale-while-revalidate_ caching strategy.
-It operates on sane defaults that try to keep your data as fresh as possible
+The library operates on sane defaults that try to keep your data as fresh as possible
 while at the same time showing data to the user as early as possible,
 making it feel near instant at times and thus providing a great UX.
 On top of that, it is also very flexible and lets you customize various settings for when the defaults are not enough.
 
-This is not going to be an introduction to React Query though.
+This article is not going to be an introduction to React Query though.
 
 I think the docs are great at explaining Guides & Concepts,
 there are [Videos](https://react-query.tanstack.com/docs/videos) from various Talks that you can watch,
@@ -216,9 +216,9 @@ and render your Form once you have data.
 Background updates are very unlikely to yield something new, and even if, your Form has already been initialized.
 So if you do that on purpose, make sure to _not_ fire off unnecessary background refetches by setting _staleTime_:
 
-```js:title=initial-form-data
+```jsx:title=initial-form-data
 const App = () => {
-    const { data } = useQuery(key, queryFn, { staleTime: Infinity })
+    const { data } = useQuery('key', queryFn, { staleTime: Infinity })
 
     return data ? <MyForm initialData={data} /> : null
 }
@@ -228,6 +228,37 @@ const MyForm = ({ initialData} ) => {
     ...
 }
 ```
+
+This concept will be a bit harder to follow through when you display data that you also want to allow the user to edit,
+but it has many advantages.
+I have prepared a little codesandbox example:
+
+<iframe
+    src="https://codesandbox.io/embed/inspiring-mayer-rp3jx?fontsize=14&hidenavigation=1&theme=dark&view=preview"
+    style="width:100%; height:600px; border:0; border-radius: 4px; overflow:hidden;"
+    title="separate-server-and-client-state"
+    allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+    sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+></iframe>
+
+The important part of that demo is that we never put the value that we get from React Query into local state.
+This makes sure that we always see the latest data, because there is no local "copy" of it.
+
+#### The enabled option is very powerful
+
+The _useQuery_ hook has many options that you can pass in to customize its behaviour,
+and the _enabled_ option is a very powerful one that _enables_ you to do many cool things (pun intended).
+Here is a short list of things that we were able to accomplish thanks to this option:
+
+-   [Dependent Queries](https://react-query.tanstack.com/docs/guides/queries#dependent-queries)<br />
+    Fetch data in one query and have a second query only run once we have successfully obtained data from the first query.
+-   Turn queries on and off<br />
+    We have one query that polls data regularly thanks to _refetchInterval_, but we can turn it off if a Modal is open to avoid
+    updates in the back of the screen.
+-   Wait for user input<br />
+    Have some filter criteria in the query key, but disable it for as long as the user has not applied their filters.
+-   Disable a query after some user input<br/>
+    See the example above
 
 #### Don't use the queryCache as a local state manager
 
@@ -248,11 +279,8 @@ Even if it's only for wrapping one _useQuery_ call, creating a custom hook usual
 
 You have already seen an example of that in the [todos queries above](#treat-the-query-key-like-a-dependency-array).
 
-<Divider />
-
-I hope that these practical tips will make it even easier for you to get started with React Query, so go check it out :)
-
 <Comments>
-    Have you worked with React Query yet? Do you have further questions? Let me know in the
+    I hope that these practical tips will make it even easier for you to get started with React
+    Query, so go check it out :) If you have any further questions, please let me know in the
     comments below ⬇️
 </Comments>
