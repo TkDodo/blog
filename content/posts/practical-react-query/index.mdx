@@ -33,10 +33,10 @@ I couldn't have been more wrong.
 What Apollo gives you is not just the ability to describe which data you want and to fetch that data,
 it also comes with a _cache_ for that server data.
 This means that you can just use the same `useQuery` hook in multiple components,
-and it will only fetch the data once and then subsequently return the data from the cache.
+and it will only fetch data once and then subsequently return it from the cache.
 
 This sounds _very_ familiar with what we, and probably many other teams as well, have mainly been using _redux_ for:
-Fetch the data from the server and make it available everywhere.
+Fetch data from the server and make it available everywhere.
 
 So it seems that we have always been treating this _server state_ like any other _client state_.
 Except that when it comes to _server state_ (think: A list of articles that you fetch,
@@ -241,7 +241,7 @@ I have prepared a little codesandbox example:
     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
 ></iframe>
 
-The important part of that demo is that we never put the value that we get from React Query into local state.
+The important part of this demo is that we never put the value that we get from React Query into local state.
 This makes sure that we always see the latest data, because there is no local "copy" of it.
 
 #### The enabled option is very powerful
@@ -253,12 +253,12 @@ Here is a short list of things that we were able to accomplish thanks to this op
 -   [Dependent Queries](https://react-query.tanstack.com/docs/guides/queries#dependent-queries)<br />
     Fetch data in one query and have a second query only run once we have successfully obtained data from the first query.
 -   Turn queries on and off<br />
-    We have one query that polls data regularly thanks to _refetchInterval_, but we can turn it off if a Modal is open to avoid
+    We have one query that polls data regularly thanks to _refetchInterval_, but we can temporarily pause it if a Modal is open to avoid
     updates in the back of the screen.
 -   Wait for user input<br />
     Have some filter criteria in the query key, but disable it for as long as the user has not applied their filters.
 -   Disable a query after some user input<br/>
-    See the above example
+    e.g. if we then have a draft value that should take precedence over the server data. See the above example.
 
 #### Don't use the queryCache as a local state manager
 
@@ -280,7 +280,7 @@ Even if it's only for wrapping one _useQuery_ call, creating a custom hook usual
 You have already seen an example of that in the [todos queries above](#treat-the-query-key-like-a-dependency-array).
 
 <Comments>
-    I hope that these practical tips will make it even easier for you to get started with React
-    Query, so go check it out :) If you have any further questions, please let me know in the
-    comments below ⬇️
+    I hope that these practical tips will help you getting started with React Query, so go
+    check it out :) If you have any further questions, please let me know in the comments below
+    ⬇️
 </Comments>
