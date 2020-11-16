@@ -1,7 +1,7 @@
 ---
 title: Practical React Query
-description:
-date: 2020-11-15
+description: Let me share with you the experiences I have made lately with React Query. Fetching data in React has never been this delightful...
+date: 2020-11-16
 banner: ./react-query.png
 tags:
     - react
@@ -198,10 +198,10 @@ export const useTodosQuery = (state: State) =>
 Now, every time the user switches between states, if we don't have data yet,
 we try to pre-fill it with data from the 'all todos' cache.
 We can instantly show the 'done' todos that we have to the user,
-and they will still see the updated list once the background refetch finishes.
-Please note that prior to v3, you would also need to set the _initialStale_ property to actually trigger a refetch.
+and they will still see the updated list once the background fetch finishes.
+Please note that prior to v3, you would also need to set the _initialStale_ property to actually trigger a background fetch.
 
-I think this is a good ux improvement with just a few lines of code.
+I think this is a great ux improvement for just a few lines of code.
 
 #### Keep server and client state separate
 
@@ -258,7 +258,7 @@ Here is a short list of things that we were able to accomplish thanks to this op
 -   Wait for user input<br />
     Have some filter criteria in the query key, but disable it for as long as the user has not applied their filters.
 -   Disable a query after some user input<br/>
-    See the example above
+    See the above example
 
 #### Don't use the queryCache as a local state manager
 
