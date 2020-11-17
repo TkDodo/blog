@@ -113,7 +113,7 @@ Secondly, there seems to be a bit of confusion between _cacheTime_ and _staleTim
     so when all components which use that query have unmounted.
 
 Most of the time, if you want to change one of these settings, it's the _staleTime_ that needs adjusting.
-I have rarely ever needed to temper with the _cacheTime_.
+I have rarely ever needed to tamper with the _cacheTime_.
 There is a good [explanation by example](https://react-query.tanstack.com/docs/guides/caching#a-detailed-caching-example)
 in the docs as well.
 
@@ -262,7 +262,7 @@ Here is a short list of things that we were able to accomplish thanks to this op
 
 #### Don't use the queryCache as a local state manager
 
-If you temper with the queryCache (_queryCache.setData_), it should only be for optimistic updates
+If you tamper with the queryCache (_queryCache.setData_), it should only be for optimistic updates
 or for writing data that you receive from the backend after a mutation.
 Remember that every background refetch might override that data, so
 [use](https://reactjs.org/docs/hooks-state.html)
