@@ -93,7 +93,7 @@ I think it's just easier to go with conventions and "common sense" here.
 
 ### Inline
 
-Inlining functions, as in, moving them to the place where they are used, has a couple of advantages.
+Inlining functions, as in moving them to the place where they are used, has a couple of advantages.
 First, you don't need to come up with a name at all, which is great, as naming is hard :)
 
 Second, in most of the situations where I would like to inline functions,
@@ -153,7 +153,7 @@ This is the same as _inlining_. Only extract it to a constant if you need the _r
 not the _value_. Don't create abstractions over things just because they look similar -
 they actually need to be the same thing.
 
-A good constant name would for example be:
+I think this would be a much better name:
 
 ```js:title=sales-tax
 const SALES_TAX = 20
@@ -207,27 +207,39 @@ This is the clear winner for me.
 It describes very well what is happening, but we can do / render whatever we want if we are initializing,
 and we can also change what it means to be initializing without having to change the name.
 
+#### React event handlers
+
 The same applies when you create an event handler, and you call it _handleClick_:
 
 ```jsx:title=the-condition
-
 const handleClick = () => {
-    ...
+    login(
+        { userName, password },
+        {
+            onSuccess: (url) => routes.push(url),
+            onError: () => showToast('Could not login'),
+        }
+    )
 }
 
-<button onClick={handleClick}>Click me</button>
+...
+
+<button onClick={handleClick}>Login</button>
 ```
 
-It's the same problem. _handleClick_ doesn't tell us anything about what is going to happen,
+I have been doing this for years, but it's just the same problem as above:
+_handleClick_ doesn't tell us anything about what is going to happen,
 and it also couples it to a click event of some sort.
 
-If we change the UI from a button to some other component that has an _onChange_ event,
-we would now have to re-name our event handler, unless we are fine with `onChange={handleClick}` (probably not)
+If we change the UX and want to login when a form is submitted,
+we would now have to re-name our event handler, unless we are fine with `onSubmit={handleClick}` (probably not).
+
+#### Takeaways
 
 The two important takeaways are:
 
 -   Would the name change if the implementation changes (a)?
--   Would the name change if the usage of the function changes (b)?
+-   Would the name change if the usage changes (b)?
 
 If so, it's probably not a very good name.
 
