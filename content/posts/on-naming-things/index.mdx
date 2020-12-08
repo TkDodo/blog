@@ -148,8 +148,21 @@ const sessionTimeout = minutes(TWENTY)
 ```
 
 So dry! I've used the same constant, isn't that great.
+It's obviously not. Here, the magic number would actually be fine.
+This is the same as _inlining_. Only extract it to a constant if you need the _representation_ more than once,
+not the _value_. Don't create abstractions over things just because they look similar -
+they actually need to be the same thing.
 
-Let me try to explain why it's _not_ great with a different example.
+A good constant name would for example be:
+
+```js:title=sales-tax
+const SALES_TAX = 20
+const calculateTaxes = (amount) => amount * percentage(SALES_TAX)
+```
+
+Now we know what this one twenty means.
+
+Let's take a different example.
 Assume we have the following condition that we want to name:
 
 ```jsx:title=the-condition
@@ -169,10 +182,11 @@ a) `showLoading`<br />b) `isFetchingAndHasNoData`<br />c) `isInitializing`
 This is what a) does.
 We show a loading spinner, so let's call the condition _showLoading_, _renderLoader_ or _hasLoadingSpinner_.
 
-But maybe, in the future, we will do something else, or something additional, like showing an _Overlay_.
-Do we want to read `showLoading && <Overlay/>` in our code?
+But maybe, in the future, we will do something else, or something additional, if we are in this state.
+What if we want to show an _Overlay_ or a _Button_ as well?
+The name doesn't fit anymore!
 
-Additionally, if we only take a look at our JSX (for example, because that condition is imported from somewhere) ,
+Additionally, if we only take a look at our JSX (for example, because that condition is imported from somewhere),
 we have no way of knowing when the Spinner is actually shown.
 
 _If we should show the loading spinner, we show the loading spinner._
@@ -185,6 +199,7 @@ We don't know without looking at the implementation, which makes this a bad name
 b) is the most obvious candidate for a bad name.
 _And_ has no place in a variable name if you ask me.
 Every time we change the implementation of this condition, we have to adapt the name and all the usages.
+This is very similar to the twenty example from before.
 
 #### isInitializing
 
