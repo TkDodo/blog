@@ -240,8 +240,11 @@ I have been doing this for years, but it's just the same problem as above:
 _handleClick_ doesn't tell us anything about what is going to happen,
 and it also couples it to a click event of some sort.
 
-If we change the UX and want to login when a form is submitted,
+If we change the UX and want to log in when a form is submitted,
 we would now have to re-name our event handler, unless we are fine with `onSubmit={handleClick}` (probably not).
+
+Naming the event handler something like _loginUser_ or _performLogin_ seems like a minor difference,
+but it's a lot more accurate, descriptive and future proof.
 
 #### Takeaways
 
