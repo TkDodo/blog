@@ -45,12 +45,14 @@ Bundle size and stuff.
 
 Computers don't need to understand the code, they just need to interpret it.
 We humans however need to fix the bugs, or add new features.
-So understanding what is actually going on is vital to our daily life.
+So understanding what is actually going on is vital in our daily life.
 
 So what can we do?
+
 I think every team has to come up with a naming scheme that they feel comfortable with,
-and then enforce it as good as possible, if striving for a coherent code base is desirable
-(which I think it is).
+and then enforce it as good as possible, if striving for a coherent codebase is desirable (which I think it is).
+A homogenous codebase will be much easier to read, and it is well known that we read code many more times than we write it.
+So I want to always optimize first and foremost for readability and maintainability.
 
 I can only give you the rules that I personally like a lot.
 They might not work for you. They also might 🤷‍♂️.
@@ -70,10 +72,10 @@ I have a postulation:
 
 <p style="padding-left: 3rem; margin-top: -1rem">— TkDodo, 2020</p>
 
-I recently learned what _OTOH_ means. You don't know what people don't know :)
+I recently learned what _OTOH_ means. You don't know what people don't know 🙃.
+So if you want to optimize for readability, try to avoid abbreviations whenever possible.
 
-So try to avoid abbreviations whenever possible.
-It is fine if the scope is small:
+It's fine if the scope is small:
 
 ```ts:title=small-scope-abbreviation
 posts.map((p) => p.id)
@@ -82,7 +84,7 @@ posts.map((p) => p.id)
 Personally, I don't even do that, because there is no harm in writing _post_ instead of _p_.
 But I wouldn't insist on a rename here.
 
-I also try to avoid abbreviations whenever possible because there will be situations when you _have to_ use them anyways.
+I also try to avoid abbreviations as much as possible because there will be situations when you _have to_ use them anyways.
 Most companies have business relevant abbreviations that they insist on being used.
 You might also need to use external libraries which force a certain name on you.
 Even React has `props`, which is technically speaking an abbreviation.
@@ -98,8 +100,9 @@ First, you don't need to come up with a name at all, which is great, as naming i
 
 Second, in most of the situations where I would like to inline functions,
 giving them a name is more chore than joy and doesn't really improve readability.
+If you cannot come up with a name, prefer inlining.
 
-Lastly, if you are using _TypeScript_, types will nicely be inferred for you.
+Lastly, if you are using _TypeScript_, types will nicely be inferred for you, which takes away a bunch of complexity.
 Let's take the above map example:
 
 ```ts:title=extracted-mapping function
@@ -118,12 +121,13 @@ I would recommend inlining functions if:
 
 -   they are not used often
 -   they are rather small
+-   you cannot come up with a meaningful name
 
 This comes up a lot with event handlers in React.
 And no, inline functions are _not_ bad for performance.
 
 ```jsx:title=inlined-event-handler
-<button onClick={() => login(username, password)}>Login</button>
+<button onClick={() => login({ username, password })}>Login</button>
 ```
 
 ### Name things for what they represent
@@ -147,8 +151,9 @@ const calculateTaxes = (amount) => amount * percentage(TWENTY)
 const sessionTimeout = minutes(TWENTY)
 ```
 
-So dry! I've used the same constant, isn't that great.
-It's obviously not. Here, the magic number would actually be fine.
+So dry, I've used the same constant, isn't that great!
+
+Here, the magic number would actually be fine.
 This is the same as _inlining_. Only extract it to a constant if you need the _representation_ more than once,
 not the _value_. Don't create abstractions over things just because they look similar -
 they actually need to be the same thing.
@@ -160,7 +165,7 @@ const SALES_TAX = 20
 const calculateTaxes = (amount) => amount * percentage(SALES_TAX)
 ```
 
-Now we know what this one twenty means.
+Now we know what this one twenty means 🥳.
 
 Let's take a different example.
 Assume we have the following condition that we want to name:
@@ -182,12 +187,14 @@ a) `showLoading`<br />b) `isFetchingAndHasNoData`<br />c) `isInitializing`
 This is what a) does.
 We show a loading spinner, so let's call the condition _showLoading_, _renderLoader_ or _hasLoadingSpinner_.
 
-But maybe, in the future, we will do something else, or something additional, if we are in this state.
+But maybe, we will someday do something else, or something additional, if we are in this state.
 What if we want to show an _Overlay_ or a _Button_ as well?
 The name doesn't fit anymore!
+Of course, we can't predict the future, but being a bit resilient to change is a good thing.
 
-Additionally, if we only take a look at our JSX (for example, because that condition is imported from somewhere),
+Additionally, if we only take a look at our JSX (for example, because that condition is imported from another file),
 we have no way of knowing when the Spinner is actually shown.
+The code basically reads:
 
 _If we should show the loading spinner, we show the loading spinner._
 
@@ -197,15 +204,16 @@ We don't know without looking at the implementation, which makes this a bad name
 #### Tying the name to the implementation
 
 b) is the most obvious candidate for a bad name.
-_And_ has no place in a variable name if you ask me.
+"_And_" has no place in a variable name if you ask me.
 Every time we change the implementation of this condition, we have to adapt the name and all the usages.
 This is very similar to the twenty example from before.
 
 #### isInitializing
 
 This is the clear winner for me.
-It describes very well what is happening, but we can do / render whatever we want if we are initializing,
-and we can also change what it means to be initializing without having to change the name.
+It describes very well what is happening, but we can do / render whatever we want if we are initializing.
+The name is therefore not tied to a usage, and we can also change what it means to be initializing
+without having to change the name.
 
 #### React event handlers
 
