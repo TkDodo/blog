@@ -90,8 +90,43 @@ Even React has `props`, which is technically speaking an abbreviation.
 has a rule that tries to tackle this, but I've always needed an extensive whitelist.
 I think it's just easier to go with conventions and "common sense" here.
 
-### Name things for what they _represent_, not for what they _are_
-
 ### Inline
+
+Inlining functions, as in, moving them to the place where they are used, has a couple of advantages.
+First, you don't need to come up with a name at all, which is great, as naming is hard :)
+
+Second, in most of the situations where I would like to inline functions,
+giving them a name is more chore than joy and doesn't really improve readability.
+
+Lastly, if you are using _TypeScript_, types will nicely be inferred for you.
+Let's take the above map example:
+
+```ts:title=extracted-mapping function
+type Post = { id: string; title: string }
+
+const getPostId = (post: Post) => post.id
+
+// extracted
+posts.map(getPostId)
+
+// inlined
+posts.map((post) => post.id)
+```
+
+I would recommend inlining functions if:
+
+-   they are not used often
+-   they are rather small
+
+This comes up a lot with event handlers in React.
+And no, inline functions are _not_ bad for performance.
+
+```jsx:title=inlined-event-handler
+<button onClick={() => login(username, password)}>Login</button>
+```
+
+This example brings me to the next topic:
+
+### Name things for what they _represent_, not for what they _are_
 
 <Comments>Leave a comment below ⬇️</Comments>
