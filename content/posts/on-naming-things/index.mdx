@@ -11,6 +11,7 @@ tags:
 
 import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
+import SpacingBox from 'components/SpacingBox'
 
 <img src="./naming.jpg" />
 
@@ -125,8 +126,94 @@ And no, inline functions are _not_ bad for performance.
 <button onClick={() => login(username, password)}>Login</button>
 ```
 
-This example brings me to the next topic:
+### Name things for what they represent
 
-### Name things for what they _represent_, not for what they _are_
+<SpacingBox />
 
-<Comments>Leave a comment below ⬇️</Comments>
+```js:title=twenty
+export const TWENTY = 20
+```
+
+Beginners are often told to _not_ use magic numbers.
+Keep everything [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) (ha, an abbreviation 😅).
+If you use a magic number in code, make sure to extract it to a constant.
+A single source of truth, so that you only have one place to change if you need to change it.
+
+The problem is that the above constant is named after what it _is_, not what it _represents_.
+We cannot just use it for various functions, because the twenties might have different meanings:
+
+```js:title=multiple-twenties
+const calculateTaxes = (amount) => amount * percentage(TWENTY)
+const sessionTimeout = minutes(TWENTY)
+```
+
+So dry! I've used the same constant, isn't that great.
+
+Let me try to explain why it's _not_ great with a different example.
+Assume we have the following condition that we want to name:
+
+```jsx:title=the-condition
+const ??? = status === 'fetching' && !!data
+
+...
+
+??? && <LoadingSpinner />
+```
+
+How would you name this condition?
+
+a) `showLoading`<br />b) `isFetchingAndHasNoData`<br />c) `isInitializing`
+
+#### Tying the name to the current usage
+
+This is what a) does.
+We show a loading spinner, so let's call the condition _showLoading_, _renderLoader_ or _hasLoadingSpinner_.
+
+But maybe, in the future, we will do something else, or something additional, like showing an _Overlay_.
+Do we want to read `showLoading && <Overlay/>` in our code?
+
+Additionally, if we only take a look at our JSX (for example, because that condition is imported from somewhere) ,
+we have no way of knowing when the Spinner is actually shown.
+
+_If we should show the loading spinner, we show the loading spinner._
+
+Great, when is that please?
+We don't know without looking at the implementation, which makes this a bad name for me.
+
+#### Tying the name to the implementation
+
+b) is the most obvious candidate for a bad name.
+_And_ has no place in a variable name if you ask me.
+Every time we change the implementation of this condition, we have to adapt the name and all the usages.
+
+#### isInitializing
+
+This is the clear winner for me.
+It describes very well what is happening, but we can do / render whatever we want if we are initializing,
+and we can also change what it means to be initializing without having to change the name.
+
+The same applies when you create an event handler, and you call it _handleClick_:
+
+```jsx:title=the-condition
+
+const handleClick = () => {
+    ...
+}
+
+<button onClick={handleClick}>Click me</button>
+```
+
+It's the same problem. _handleClick_ doesn't tell us anything about what is going to happen,
+and it also couples it to a click event of some sort.
+
+If we change the UI from a button to some other component that has an _onChange_ event,
+we would now have to re-name our event handler, unless we are fine with `onChange={handleClick}` (probably not)
+
+The two important takeaways are:
+
+-   Would the name change if the implementation changes (a)?
+-   Would the name change if the usage of the function changes (b)?
+
+If so, it's probably not a very good name.
+
+<Comments>What are your favorite rules on naming things? Leave a comment below ⬇️</Comments>
