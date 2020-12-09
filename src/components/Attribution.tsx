@@ -9,7 +9,14 @@ type Props = {
 
 const Attribution = ({ name, url, prefix = 'Photo by' }: Props) => (
     <>
-        <Box style={{ fontSize: 'smaller', textAlign: 'center' }}>
+        <Box
+            sx={{
+                fontSize: 'smaller',
+                textAlign: 'center',
+                marginTop: ['-1rem', '-1rem', '-3rem'],
+                marginBottom: '1rem',
+            }}
+        >
             {prefix}{' '}
             <Link href={url} target="blank" rel="noreferrer noopener">
                 {name}
