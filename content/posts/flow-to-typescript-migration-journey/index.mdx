@@ -1,7 +1,7 @@
 ---
 title: Flow to TypeScript migration journey
 description: How we migrated over 100k lines of code from Flow to TypeScript. A Journey.
-date: 2020-09-17
+date: 2020-12-27
 banner: ./flow-to-ts.png
 tags:
     - JavaScript
@@ -15,6 +15,36 @@ import Comments from 'components/Comments'
 <img src="./race.jpg" />
 
 <Attribution name="Jan Starek" url="https://unsplash.com/@janstarek" />
+
+It's the end of 2020, and it's hard to imagine frontend development without static types. It is very convenient to start a project without types, because you can allegedly move much faster. For personal projects, or for trying out new things, it also makes perfect sense: Probably, no one else will need to read it or work with it.
+
+But for a professional setting, code readability and maintainability are a must. In that sense, static types fall in the same category as tests:
+
+-   They help document the code
+-   They make everyone trust the code more and give safety during refactoring
+-   They catch bugs before they hit production
+
+Most people don't write tests for personal projects either (if you do: good for you, I don't 😜), but they very much write them at work. So no matter if you love types or not, I think we can agree that they do provide value in the long run the bigger the project gets and the more people work on it. Also, more and more projects adopt types, so there is really no working around them anymore.
+
+### Our journey
+
+Out Journey started somewhere in February 2017. We were a young and small team working on a small-to-medium sized JavaScript codebase for the last couple of years. The team was growing and things were naturally becoming harder to maintain. Our codebase was mostly React with some "legacy" Angular 1 code. The idea was to re-write some of the existing React code with a statically typed language, and to also add types to all new code that was written.
+
+### The type wars
+
+Even if you cannot imagine it right now, at that time, [TypeScript](https://www.typescriptlang.org/) was _not_ the clear go-to technology when it comes to static typing. Much like the browser wars, there were rivaling products seeking for adoption. As far as I remember, there were three main competitors:
+
+#### [CoffeeScript](https://coffeescript.org/)
+
+I'm a bit too young to talk about that one, because when I started to take frontend development seriously, this language was already on the decline. I think what people dislike the most is that it's _not_ JustJavaScript™️, because the syntax is vastly different. It compiles to JavaScript, and interoperability with JavaScript is certainly possible, but I cannot imagine how to call a 3rd party library in a type-safe way with it 🤷‍♂️.
+
+#### [TypeScript](https://www.typescriptlang.org/)
+
+TypeScript was somewhere around version 2.2 at that time, so it didn't have many of the great features we now love about it. If I remember correctly, the ReactJs integration was not that good. Maybe we judged that wrong at the time, but it felt like TypeScript was for Angular, so we put our attention towards:
+
+#### [Flow](https://flow.org/)
+
+Maintained by the same company that made ReactJs, this static type checker seemed like a very good alternative. The `//@flow` pragma made it easy to gradually adopt it, and Facebook was dogfooding it a lot, so it seemed like the "safer choice" - or at least the one that plays better with React.
 
 <Divider />
 
