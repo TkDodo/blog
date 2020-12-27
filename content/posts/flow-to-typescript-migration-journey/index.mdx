@@ -6,7 +6,8 @@ banner: ./flow-to-ts.png
 tags:
     - JavaScript
     - TypeScript
-    - FlowJs
+    - Flow
+    - ReactJs
 ---
 
 import Attribution from 'components/Attribution'
@@ -31,9 +32,9 @@ Most people don't write tests for personal projects either (if you do: good for 
 
 Out Journey started somewhere in February 2017. We were a young and small team working on a small-to-medium sized JavaScript codebase for the last couple of years. The team was growing and things were naturally becoming harder to maintain. Our codebase was mostly React with some "legacy" Angular 1 code. The idea was to re-write some existing React code with a statically typed language, and to also add types to all new code that was written.
 
-### The type wars
+### The type race
 
-Even if you cannot imagine it right now, at that time, [TypeScript](https://www.typescriptlang.org/) was _not_ the clear go-to technology when it comes to static typing. Much like the browser wars, there were rivaling products seeking for adoption. As far as I remember, there were three main competitors:
+Even if you cannot imagine it right now, at that time, [TypeScript](https://www.typescriptlang.org/) was _not_ the clear go-to technology when it comes to static typing. Much like during the browser wars, there were rivaling products seeking for adoption. As far as I remember, there were three main competitors:
 
 #### [ReasonML](https://reasonml.github.io/)
 
@@ -73,8 +74,56 @@ Upgrading flow was always a real pain. We hadn't upgraded much because of it, an
 
 #### Move to TypeScript
 
-We evaluated [flow-to-ts](https://github.com/Khan/flow-to-ts), which could automatically migrate existing flow types to TypeScript. It worked quite well, but a lot of syntax errors remained. After fixing them with search-and-replace, about 5200 real type errors were left. In fact, allowing [implicitAny](https://www.typescriptlang.org/tsconfig#noImplicitAny) instantly lowered our type errors to 3200. Now we're talking! We thought that making the compiler options a bit more relaxed / less strict could help us get the errors down, and we could always strive for better types as we go.
+We evaluated [flow-to-ts](https://github.com/Khan/flow-to-ts), which could automatically migrate existing flow types to TypeScript. It worked quite well, but a lot of syntax errors remained. After fixing them with search-and-replace, about 5200 real type errors were left. In fact, allowing [implicitAny](https://www.typescriptlang.org/tsconfig#noImplicitAny) instantly lowered our type errors to 3200. Now we're talking! We thought that making the compiler options a bit more relaxed / less strict could help us get the errors down, and we could always strive for better types as we go (Spoiler: This was a mistake. Don't try this at home!).
 
 ### 👋 TypeScript
 
-<Comments>Flow, TypeScript or ES6? Let me know in the comments below ⬇️</Comments>
+We picked up the issue _Switch to TypeScript_ in March 2020. We had one developer working on it mostly full time, and I joined after about 2 months to help with the migration. The errors were not unfixable, but we wanted to strive towards few runtime changes to minimize the amount of regressions.
+
+Keeping up-to-date with _develop_ was a real challenge. Every time an epic was merged, we had to integrate it to our long-running migration branch. Newly added flow files had to be re-written again, and files that were touched would only show up as _deleted by us_ in git - which meant we had to re-do the adaptions in TypeScript.
+
+As we saw some light at the end of the tunnel, we decided to have new features branch off the TS branch. This meant we couldn't merge them to develop (they were now dependent on TypeScript), which was a bit of a gamble, but we were confident that we could merge the migration faster than the others could finish their features. It also made our live a lot easier, and we got some beta-testers as well.
+
+A draft PR was opened on June 3rd, and we finally merged it almost 3 months later:
+
+<img src="merged.png" />
+
+### Case closed?
+
+On September 1st, I opened a follow-up issue: `no-implicit-any`. We cheated a bit in the beginning by allowing implicit any to quickly work around ~2000 type errors. I soon realised that this was likely a mistake when the first TypeScript based PRs came in. I thought that we will be able to fix the implicit anys over time when we see them and could easily live with the lax setting until then, but I drastically underestimated the fact that new code would also lack type safety because of this.
+
+The reason for this is quite simple: If the compiler doesn't scream at you, you might not notice that you need to add types unless you are very familiar with TypeScript. Consider the following React event handler:
+
+```tsx:title=implicit-any
+const loginUser = (event) => {
+    event.preventDefault()
+    axios.post('/login', ...)
+}
+
+return <form onSubmit={loginUser}>...</form>
+```
+
+This works, and event is just _any_ here - not what we want for new, type-safe code. I thought this issue could be avoided by just communicating that you have to be careful with things like that, but on a team of ~30 developers with various TypeScript experience, having a tool tell you what to do seemed like the better approach.
+
+### [ts-migrate](https://github.com/airbnb/ts-migrate)
+
+We found ts-migrate, which allowed us to convert most the of implicit anys to explicit anys, turning the above code to:
+
+```tsx:title=explicit-any {1}
+const loginUser = (event: any) => {
+    event.preventDefault()
+    axios.post('/login', ...)
+}
+
+return <form onSubmit={loginUser}>...</form>
+```
+
+While it doesn't make this particular, existing code any better (pun intended), we can now disallow implicitAny via _tsconfig_ to avoid such code in the future, and gradually cleanup the explicit anys. I just counted 575 usages of `: any` in our code base today, so we still have some miles to go.
+
+### Takeaways
+
+I don't regret the move to TypeScript at all. TypeScript has emerged as the clear winner for static typing in the frontend world. Most libraries are now written in TypeScript, and if not, it's effectively a must to ship with TypeScript types, either natively or via [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) if you are seeking adoption. The unified developer experience over all our products makes it a breeze to switch context, so it was definitely worth the troubles.
+
+<Comments>
+    Flow, TypeScript or plain ES6? Let me know in the comments below what you prefer ⬇️
+</Comments>
