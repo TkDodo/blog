@@ -11,6 +11,7 @@ tags:
 
 import Attribution from 'components/Attribution'
 import Comments from 'components/Comments'
+import { Divider } from '@theme-ui/components'
 
 <img src="./race.jpg" />
 
@@ -28,7 +29,7 @@ Most people don't write tests for personal projects either (if you do: good for 
 
 ### Our journey
 
-Out Journey started somewhere in February 2017. We were a young and small team working on a small-to-medium sized JavaScript codebase for the last couple of years. The team was growing and things were naturally becoming harder to maintain. Our codebase was mostly React with some "legacy" Angular 1 code. The idea was to re-write some of the existing React code with a statically typed language, and to also add types to all new code that was written.
+Out Journey started somewhere in February 2017. We were a young and small team working on a small-to-medium sized JavaScript codebase for the last couple of years. The team was growing and things were naturally becoming harder to maintain. Our codebase was mostly React with some "legacy" Angular 1 code. The idea was to re-write some existing React code with a statically typed language, and to also add types to all new code that was written.
 
 ### The type wars
 
@@ -47,5 +48,33 @@ TypeScript was somewhere around version 2.2 at that time, so it didn't have many
 Maintained by the same company that made ReactJs, this static type checker seemed like a very good alternative. The `//@flow` pragma made it easy to gradually adopt it, and Facebook was dogfooding it a lot, so it seemed like the "safer choice" - or at least the one that plays better with React.
 
 <Divider />
+
+So we chose Flow and started with version 0.39. We began gradually adding flow types to our existing ES6 codebase, which meant reverse-engineering what could actually be passed to functions, and what they should return in which cases. This wasn't easy, and it became apparent that we were making lots of assumptions, or only coding for sunshine cases.
+
+Things were working well, and we were not unhappy with our choice for quite some time. Here and there, flow was not catching bugs that we expected from a static type checker. We also accumulated lots of `//@flowignore` or `//@flowfixme` annotations where things just didn't seem to work. Typing higher order components (which were everywhere) was a real pain, and after about two years, our happiness started shift:
+
+-   We had about 70% of our codebase written with flow types, but only about 15% of our third party libraries were actively shipping flow-type-definitions: The rest was just any stubs! This seems to have been a direct result of the community shifting to TypeScript.
+-   The flow version we were using did support optional chaining (one of the best additions to EcmaScript), but it didn't yet _type narrow_ when you used optional chaining, making it kinda useless:
+
+```js
+if (foo?.bar) {
+    // nope, not with flow
+    doSomething(foo.bar)
+}
+```
+
+### The final nail in the coffin
+
+_"Thanks for nothing, flow"_ became a meme in the dev department that was used every other day. On top of that, we had launched two other products in the last years which were betting on TypeScript. Satisfaction was very high in those teams, and when our design-system team announced that they would also convert to TypeScript and _not_ ship flow types as a result, we knew we had to act. We investigated two paths:
+
+#### Upgrade to the latest flow version.
+
+Upgrading flow was always a real pain. We hadn't upgraded much because of it, and the latest version was already 0.119 (srsly, no v1 after 5 years), while we were still on 0.109. Upgrading yielded 2500 new errors and absolute imports didn't work anymore. The flow upgrade tool was of no help to us either.
+
+#### Move to TypeScript
+
+We evaluated [flow-to-ts](https://github.com/Khan/flow-to-ts), which could automatically migrate existing flow types to TypeScript. It worked quite well, but a lot of syntax errors remained. After fixing them with search-and-replace, about 5200 real type errors were left. In fact, allowing [implicitAny](https://www.typescriptlang.org/tsconfig#noImplicitAny) instantly lowered our type errors to 3200. Now we're talking! We thought that making the compiler options a bit more relaxed / less strict could help us get the errors down, and we could always strive for better types as we go.
+
+### 👋 TypeScript
 
 <Comments>Flow, TypeScript or ES6? Let me know in the comments below ⬇️</Comments>
