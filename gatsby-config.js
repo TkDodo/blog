@@ -11,7 +11,7 @@ module.exports = {
         siteTitle: "TkDodo's blog",
         siteTitleAlt: `TkDodo's blog`,
         siteHeadline: `TkDodo's blog`,
-        siteUrl: `https://www.dorfmeister.cc/blog`,
+        siteUrl: `https://tkdodo.eu/blog`,
         siteDescription: `A technical blog about frontend-development, Typescript and React`,
         siteLanguage: `en`,
     },
@@ -27,6 +27,13 @@ module.exports = {
                         resolve: '@weknow/gatsby-remark-twitter',
                         options: {
                             theme: 'dark',
+                        },
+                    },
+                    {
+                        resolve: 'gatsby-remark-external-links',
+                        options: {
+                            target: '_blank',
+                            rel: 'noreferrer noopener',
                         },
                     },
                 ],
@@ -47,10 +54,18 @@ module.exports = {
                         },
                     },
                     {
+                        resolve: 'gatsby-remark-external-links',
+                        options: {
+                            target: '_blank',
+                            rel: 'noreferrer noopener',
+                        },
+                    },
+                    {
                         resolve: `gatsby-remark-images`,
                         options: {
                             maxWidth: 960,
                             quality: 90,
+                            backgroundColor: 'transparent',
                             linkImagesToOriginal: false,
                         },
                     },
@@ -61,6 +76,7 @@ module.exports = {
                         options: {
                             maxWidth: 960,
                             quality: 90,
+                            backgroundColor: 'transparent',
                             linkImagesToOriginal: false,
                         },
                     },

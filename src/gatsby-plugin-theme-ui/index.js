@@ -7,6 +7,10 @@ export default {
         primary: '#a10f15',
         modes: {
             ...baseTheme.colors.modes,
+            light: {
+                ...baseTheme.colors.modes.light,
+                background: '#F5F5F5',
+            },
             dark: {
                 ...baseTheme.colors.modes.dark,
                 primary: '#D44248',
