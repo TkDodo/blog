@@ -1,7 +1,7 @@
 ---
 title: Flow to TypeScript migration journey
 description: How we migrated over 100k lines of code from Flow to TypeScript. A Journey.
-date: 2020-12-27
+date: 2020-12-29
 banner: ./flow-to-ts.png
 tags:
     - JavaScript
@@ -30,7 +30,7 @@ Most people don't write tests for personal projects either (if you do: good for 
 
 ### Our journey
 
-Out Journey started somewhere in February 2017. We were a young and small team working on a small-to-medium sized JavaScript codebase for the last couple of years. The team was growing and things were naturally becoming harder to maintain. Our codebase was mostly React with some "legacy" Angular 1 code. The idea was to re-write some existing React code with a statically typed language, and to also add types to all new code that was written.
+Our Journey started somewhere in February 2017. We were a young and small team working on a small-to-medium sized JavaScript codebase for the last couple of years. The team was growing and things were naturally becoming harder to maintain. Our codebase was mostly React with some "legacy" Angular 1 code. The idea was to re-write some existing React code with a statically typed language, and to also add types to all new code that was written.
 
 ### The type race
 
@@ -52,14 +52,16 @@ Maintained by the same company that made ReactJs, this static type checker seeme
 
 So we chose Flow and started with version 0.39. We began gradually adding flow types to our existing ES6 codebase, which meant reverse-engineering what could actually be passed to functions, and what they should return in which cases. This wasn't easy, and it became apparent that we were making lots of assumptions, or only coding for sunshine cases.
 
-Things were working well, and we were not unhappy with our choice for quite some time. Here and there, flow was not catching bugs that we expected from a static type checker. We also accumulated lots of `//@flowignore` or `//@flowfixme` annotations where things just didn't seem to work. Typing higher order components (which were everywhere) was a real pain, and after about two years, our happiness started shift:
+It also turned out that it's not always possible to "just add types later": Some design decisions (like: having discriminators for your union types) work out differently if you _think in types_ from the beginning. This turned out to be a lesson learned the hard way for future products.
+
+Nevertheless, things were working well, and we were not unhappy with our choice for quite some time. Here and there, flow was not catching bugs that we expected from a static type checker. We also accumulated lots of `//@flowignore` or `//@flowfixme` annotations where things just didn't seem to work. Typing higher order components (which were everywhere) was a real pain, and after about two years, our happiness started shift:
 
 -   We had about 70% of our codebase written with flow types, but only about 15% of our third party libraries were actively shipping flow-type-definitions: The rest was just any stubs! This seems to have been a direct result of the community shifting to TypeScript.
 -   The flow version we were using did support optional chaining (one of the best additions to EcmaScript), but it didn't yet _type narrow_ when you used optional chaining, making it kinda useless:
 
 ```js
 if (foo?.bar) {
-    // nope, not with flow
+    // nope, not with flow 🚫
     doSomething(foo.bar)
 }
 ```
@@ -74,15 +76,15 @@ Upgrading flow was always a real pain. We hadn't upgraded much because of it, an
 
 #### Move to TypeScript
 
-We evaluated [flow-to-ts](https://github.com/Khan/flow-to-ts), which could automatically migrate existing flow types to TypeScript. It worked quite well, but a lot of syntax errors remained. After fixing them with search-and-replace, about 5200 real type errors were left. In fact, allowing [implicitAny](https://www.typescriptlang.org/tsconfig#noImplicitAny) instantly lowered our type errors to 3200. Now we're talking! We thought that making the compiler options a bit more relaxed / less strict could help us get the errors down, and we could always strive for better types as we go (Spoiler: This was a mistake. Don't try this at home!).
+We evaluated [flow-to-ts](https://github.com/Khan/flow-to-ts), which could automatically migrate existing flow types to TypeScript. It worked quite well, but a lot of syntax errors remained. After fixing them with search-and-replace, about 5200 real type errors were left. Oof, that's still a ton! We thought that making the compiler options a bit more relaxed / less strict could help us get the errors down, and we could always strive for better types as we go (Spoiler: This was a mistake. Don't try this at home!). Allowing [implicitAny](https://www.typescriptlang.org/tsconfig#noImplicitAny) instantly lowered our type errors to 3200. Now we're talking!
 
 ### 👋 TypeScript
 
-We picked up the issue _Switch to TypeScript_ in March 2020. We had one developer working on it mostly full time, and I joined after about 2 months to help with the migration. The errors were not unfixable, but we wanted to strive towards few runtime changes to minimize the amount of regressions.
+We picked up the issue _Switch to TypeScript_ in March 2020. We had one developer working on it mostly full time, and I joined after about 2 months to help with the migration. We progressed slowly because we also wanted to strive towards few runtime changes to minimize the amount of regressions.
 
-Keeping up-to-date with _develop_ was a real challenge. Every time an epic was merged, we had to integrate it to our long-running migration branch. Newly added flow files had to be re-written again, and files that were touched would only show up as _deleted by us_ in git - which meant we had to re-do the adaptions in TypeScript.
+Keeping up-to-date with our _main_ branch was a real challenge. Every time an epic was merged, we had to integrate it to our long-running migration branch. Newly added flow files had to be re-written again, and files that were touched would only show up as _deleted by us_ in git - which meant we had to re-do the adaptions in TypeScript.
 
-As we saw some light at the end of the tunnel, we decided to have new features branch off the TS branch. This meant we couldn't merge them to develop (they were now dependent on TypeScript), which was a bit of a gamble, but we were confident that we could merge the migration faster than the others could finish their features. It also made our live a lot easier, and we got some beta-testers as well.
+As we saw some light at the end of the tunnel, we decided to have new features branch off the TS branch. This meant we couldn't merge them to _main_ (they were now dependent on TypeScript), which was a bit of a gamble, but we were confident that we could merge the migration before those features were finished. It also made our live a lot easier, and we got some beta-testers as well.
 
 A draft PR was opened on June 3rd, and we finally merged it almost 3 months later:
 
@@ -90,7 +92,7 @@ A draft PR was opened on June 3rd, and we finally merged it almost 3 months late
 
 ### Case closed?
 
-On September 1st, I opened a follow-up issue: `no-implicit-any`. We cheated a bit in the beginning by allowing implicit any to quickly work around ~2000 type errors. I soon realised that this was likely a mistake when the first TypeScript based PRs came in. I thought that we will be able to fix the implicit anys over time when we see them and could easily live with the lax setting until then, but I drastically underestimated the fact that new code would also lack type safety because of this.
+Not quite. On September 1st, I opened a follow-up issue: _no-implicit-any_. We cheated a bit in the beginning by allowing implicit any to quickly work around ~2000 type errors. I soon realised that this was likely a mistake when the first TypeScript based PRs came in. I thought that we will be able to fix the implicit anys over time when we see them and could easily live with the lax setting until then, but I drastically underestimated the fact that new code would also lack type safety because of this.
 
 The reason for this is quite simple: If the compiler doesn't scream at you, you might not notice that you need to add types unless you are very familiar with TypeScript. Consider the following React event handler:
 
@@ -118,11 +120,11 @@ const loginUser = (event: any) => {
 return <form onSubmit={loginUser}>...</form>
 ```
 
-While it doesn't make this particular, existing code any better (pun intended), we can now disallow implicitAny via _tsconfig_ to avoid such code in the future, and gradually cleanup the explicit anys. I just counted 575 usages of `: any` in our code base today, so we still have some miles to go.
+While it doesn't make this particular, existing code any better (pun intended), we could now disallow implicitAny via _tsconfig_ to avoid such code in the future, and gradually cleanup the explicit anys. I just counted 575 usages of `: any` in our code base today, so we still have some miles to go.
 
 ### Takeaways
 
-I don't regret the move to TypeScript at all. TypeScript has emerged as the clear winner for static typing in the frontend world. Most libraries are now written in TypeScript, and if not, it's effectively a must to ship with TypeScript types, either natively or via [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) if you are seeking adoption. The unified developer experience over all our products makes it a breeze to switch context, so it was definitely worth the troubles.
+I don't regret the move to TypeScript at all. TypeScript has emerged as the clear winner for static typing in the frontend world. Most libraries are now written in TypeScript, and if not, it's effectively a must to ship with TypeScript types, either natively or via [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped), if you are seeking adoption. The unified developer experience over all our products makes it a breeze to switch context, so it was definitely worth the troubles.
 
 <Comments>
     Flow, TypeScript or plain ES6? Let me know in the comments below what you prefer ⬇️
