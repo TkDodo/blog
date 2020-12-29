@@ -5,9 +5,10 @@ const id = 'inject-comments'
 
 type Props = {
     children: React.ReactNode
+    withSeparator: boolean
 }
 
-const Comments = ({ children }: Props) => {
+const Comments = ({ children, withSeparator = true }: Props) => {
     const [colorMode] = useColorMode()
 
     React.useEffect(() => {
@@ -31,7 +32,7 @@ const Comments = ({ children }: Props) => {
 
     return (
         <>
-            <Divider />
+            {withSeparator && <Divider />}
             {children && <Box sx={{ fontSize: [1, 1, 2] }}>{children}</Box>}
             <div id={id} />
         </>

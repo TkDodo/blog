@@ -56,7 +56,7 @@ It also turned out that it's not always possible to "just add types later": Some
 
 Nevertheless, things were working well, and we were not unhappy with our choice for quite some time. Here and there, flow was not catching bugs that we expected from a static type checker. We also accumulated lots of `//@flowignore` or `//@flowfixme` annotations where things just didn't seem to work. Typing higher order components (which were everywhere) was a real pain, and after about two years, our happiness started shift:
 
--   We had about 70% of our codebase written with flow types, but only about 15% of our third party libraries were actively shipping flow-type-definitions: The rest was just any stubs! This seems to have been a direct result of the community shifting to TypeScript.
+-   We had about 50% of our codebase written with flow types, but only about 15% of our third party libraries were actively shipping flow-type-definitions: The rest was just any stubs! This seems to have been a direct result of the community shifting to TypeScript.
 -   The flow version we were using did support optional chaining (one of the best additions to EcmaScript), but it didn't yet _type narrow_ when you used optional chaining, making it kinda useless:
 
 ```js
@@ -82,9 +82,9 @@ We evaluated [flow-to-ts](https://github.com/Khan/flow-to-ts), which could autom
 
 We picked up the issue _Switch to TypeScript_ in March 2020. We had one developer working on it mostly full time, and I joined after about 2 months to help with the migration. We progressed slowly because we also wanted to strive towards few runtime changes to minimize the amount of regressions.
 
-Keeping up-to-date with our _main_ branch was a real challenge. Every time an epic was merged, we had to integrate it to our long-running migration branch. Newly added flow files had to be re-written again, and files that were touched would only show up as _deleted by us_ in git - which meant we had to re-do the adaptions in TypeScript.
+Keeping up-to-date with our _develop_ branch was a real challenge. Every time an epic was merged, we had to integrate it to our long-running migration branch. Newly added flow files had to be re-written again, and files that were touched would only show up as _deleted by us_ in git - which meant we had to re-do the adaptions in TypeScript.
 
-As we saw some light at the end of the tunnel, we decided to have new features branch off the TS branch. This meant we couldn't merge them to _main_ (they were now dependent on TypeScript), which was a bit of a gamble, but we were confident that we could merge the migration before those features were finished. It also made our live a lot easier, and we got some beta-testers as well.
+As we saw some light at the end of the tunnel, we decided to have new features branch off the TS branch. This meant we couldn't merge them to _develop_ (they were now dependent on TypeScript), which was a bit of a gamble, but we were confident that we could merge the migration before those features were finished. It also made our live a lot easier, and we got some beta-testers as well.
 
 A draft PR was opened on June 3rd, and we finally merged it almost 3 months later:
 
@@ -126,6 +126,14 @@ While it doesn't make this particular, existing code any better (pun intended), 
 
 I don't regret the move to TypeScript at all. TypeScript has emerged as the clear winner for static typing in the frontend world. Most libraries are now written in TypeScript, and if not, it's effectively a must to ship with TypeScript types, either natively or via [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped), if you are seeking adoption. The unified developer experience over all our products makes it a breeze to switch context, so it was definitely worth the troubles.
 
-<Comments>
+#### Stats
+
+|                        |         |
+| ---------------------- | ------: |
+| Lines of Code migrated | 119,389 |
+| Number of commits      |   1,799 |
+| Files changed          |   2,568 |
+
+<Comments withSeparator={false}>
     Flow, TypeScript or plain ES6? Let me know in the comments below what you prefer ⬇️
 </Comments>
