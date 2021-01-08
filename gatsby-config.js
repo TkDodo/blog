@@ -113,8 +113,8 @@ module.exports = {
                         url: `https://github.com/tkdodo`,
                     },
                     {
-                        name: `Home`,
-                        url: `https://www.dorfmeister.cc`,
+                        name: `dev.to`,
+                        url: `https://dev.to/tkdodo`,
                     },
                 ],
                 feed: true,
