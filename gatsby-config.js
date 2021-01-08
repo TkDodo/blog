@@ -143,6 +143,12 @@ module.exports = {
         },
         `gatsby-plugin-offline`,
         `gatsby-plugin-netlify`,
+        {
+            resolve: `gatsby-plugin-canonical-urls`,
+            options: {
+                siteUrl: `https://tkdodo.eu/blog`,
+            },
+        },
         shouldAnalyseBundle && {
             resolve: `gatsby-plugin-webpack-bundle-analyser-v2`,
             options: {
