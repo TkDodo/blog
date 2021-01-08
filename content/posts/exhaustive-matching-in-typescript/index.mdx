@@ -1,11 +1,19 @@
 ---
 title: Exhaustive matching in TypeScript
 date: 2020-08-09
+banner: ./exhaustive-matching.jpg
 tags:
     - Scala
     - TypeScript
     - React
 ---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+
+<img src="./exhaustive-matching.jpg" />
+
+<Attribution name="Sheri Hooley" url="https://unsplash.com/@sherihoo" />
 
 It is already well known in the frontend development community that adopting TypeScript is a good idea for (almost) every project that reaches a certain size.
 Advantages cited usually evolve around safety, clearly documented interfaces, finding errors before they go to production and being able to refactor safely.
@@ -309,7 +317,5 @@ This approach has two advantages:
 Exhaustive matches are a great tool in any language to make your code safer for additions.
 When you have full control over the input, omitting the default branch seems like a good choice.
 If that is not the case, and because TypeScript is in the end just JavaScript, protection at runtime with a never guard is a good alternative.
-
-import Comments from 'components/Comments'
 
 <Comments />
