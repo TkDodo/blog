@@ -35,9 +35,97 @@ Data fetching is a very common side effect that is typically managed with _useEf
 
 I'm obviously going to recommend my favourite open source library, [react-query](https://react-query.tanstack.com/) (I doubt that I will be able to write another article without mentioning it 😅), but [SWR](https://swr.vercel.app/), [Apollo](https://apollographql.com/client) and also [RTK-Query](https://rtk-query-docs.netlify.app/) are great as well. The point is: don't try and re-invent the wheel. Some problems have been solved before and are worth abstracting away. The amount of useEffects that I've had to write has been drastically reduced since I'm using react-query.
 
+### Singe Responsibility Principle
+
+A function should do one thing, and one thing only, and it should do it well. The same applies to the function that you pass to _useEffect_. There is no need to tuck everything in one _useEffect_
+
+```js:title=one-effect-two-responsibilities
+const [data, setData] = React.useState()
+
+React.useEffect(() => {
+    document.title = 'hello world'
+    localForage.getItem('data').then(setData)
+}, [])
+```
+
+Here, we want to perform some operations, like setting the document title and reading from an offline storage, when the component "mounts". While it may seem minor at first glance, we are doing two very different things in this one effect, and it could easily be split into two effects. The advantage becomes more apparent as dependencies of the effect change over time.
+
+Suppose we now want to add a feature that syncs the document title to some local state:
+
+```js:title=sync-title {2,5,7}
+const [data, setData] = React.useState()
+const [title, setTitle] = React.useState('hello world')
+
+React.useEffect(() => {
+    document.title = title
+    localForage.getItem('data').then(setData)
+}, [title])
+```
+
+Can you spot the bug? Every time the title changes, we are also re-loading our data from the offline storage, which is probably not what we intended. Spitting it into two effects from the beginning solves the problem:
+
+```js:title=single-responsibility
+const [data, setData] = React.useState()
+const [title, setTitle] = React.useState('hello world')
+
+React.useEffect(() => {
+    document.title = title
+}, [title])
+
+React.useEffect(() => {
+    localForage.getItem('data').then(setData)
+}, [])
+```
+
+Not only is the code now less buggy, it is also easier to reason about. We have twice the amount of effects with half the size, and you can look at each one in isolation.
+
+### Hide them with custom hooks
+
+I really don't like components where 50% of their code is hook calls. It usually shows that we are mixing our logic with our markup. Tucking them away in a custom hook has multiple advantages:
+
+-   You can name them
+-   You can test them in isolation, without needing to test the component
+-   You can encapsulate logic and only expose what you need
+
+```js:title=useTitle
+const useTitle = (initialTitle) => {
+    const [title, setTitle] = React.useState(initialTitle)
+
+    React.useEffect(() => {
+        document.title = title
+    }, [title])
+
+    return [title, setTitle]
+}
+```
+
+Everything title related is now in that custom hook, and the effect is completely hidden. Also, you don't have to expose everything from your hook. For example, if the data that you get from the localForage should be readonly, you can just keep the setter in the hook:
+
+```js:title=readonly-useData
+const useData = () => {
+    const [data, setData] = React.useState()
+
+    React.useEffect(() => {
+        localForage.getItem('data').then(setData)
+    }, [])
+
+    return data
+}
+```
+
+Our component will now have two lines of hook calls instead of eight lines, which means the component is more focussed on its main responsibility: producing markup.
+
 ### Give them names
 
-### Singe Responsibility
+The function passed to useEffect can have a name, so if you cannot or don't wat to extract it to a custom hook for whatever reason, consider naming your effects:
+
+```js:title=named-effect
+const [title, setTitle] = React.useState('hello world')
+
+React.useEffect(fuction syncTitle() {
+    document.title = title
+}, [title])
+```
 
 ### Dependencies
 
