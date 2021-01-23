@@ -12,7 +12,6 @@ tags:
 
 import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
-import SpacingBox from 'components/SpacingBox'
 
 <img src="./effect.jpg" />
 
@@ -24,10 +23,10 @@ useEffect is about as complicated as it can get in ReactJs, and it is very unlik
 
 ### Write fewer effects
 
-I've already written about a couple of ways to reduce the amount of effects in [don't over useState](./dont-over-use-state) and [putting props to useState](./putting-props-to-use-state). Them management summary would be:
+I've already written about a couple of ways to reduce the amount of effects in the [useState pitfalls series](./tags/use-state-pitfalls):
 
--   Some effects can be replaced with _useMemo_ or even just normal function executions.
--   Don't try and sync different react states with _useEffect_.
+-   In [part 1](./dont-over-use-state), we've established that some effects can be replaced with _useMemo_ or even just normal function executions.
+-   In [part 2](./putting-props-to-use-state), I've outlined why trying to sync different react states with _useEffect_ is likely an anti-pattern and what you can do instead.
 
 #### Data fetching
 
@@ -37,35 +36,31 @@ I'm obviously going to recommend my favourite open source library, [react-query]
 
 ### Singe Responsibility Principle
 
-A function should do one thing, and one thing only, and it should do it well. The same applies to the function that you pass to _useEffect_. There is no need to tuck everything in one _useEffect_
+A function or a class should do one thing, and one thing only. Your `processPayment` function is hopefully only going to process the payment and not additionally redirecting the user somewhere, because that is not it's responsibility. The same principle applies to the function that you pass to _useEffect_. There is no need to tuck everything in one _useEffect_:
 
 ```js:title=one-effect-two-responsibilities
-const [data, setData] = React.useState()
-
 React.useEffect(() => {
     document.title = 'hello world'
-    localForage.getItem('data').then(setData)
+    trackPageVisit()
 }, [])
 ```
 
-Here, we want to perform some operations, like setting the document title and reading from an offline storage, when the component "mounts". While it may seem minor at first glance, we are doing two very different things in this one effect, and it could easily be split into two effects. The advantage becomes more apparent as dependencies of the effect change over time.
+Here, we want to perform some operations, like setting the document title and tracking a page visit with some analytics tool, when the component "mounts". While it may seem minor at first glance, we are doing two very different things in this one effect, and it could easily be split into two effects. The advantage becomes more apparent as dependencies of the effect change over time.
 
-Suppose we now want to add a feature that syncs the document title to some local state:
+Suppose we now want to add a feature that syncs some local state with the document title:
 
-```js:title=sync-title {2,5,7}
-const [data, setData] = React.useState()
+```js:title=sync-title {1,4,6}
 const [title, setTitle] = React.useState('hello world')
 
 React.useEffect(() => {
     document.title = title
-    localForage.getItem('data').then(setData)
+    trackPageVisit()
 }, [title])
 ```
 
-Can you spot the bug? Every time the title changes, we are also re-loading our data from the offline storage, which is probably not what we intended. Spitting it into two effects from the beginning solves the problem:
+Can you spot the bug? Every time the title changes, we are also tracking a page visit, which is probably not what we intended. Spitting it into two effects solves the problem, and I believe we should have done so right from the beginning:
 
 ```js:title=single-responsibility
-const [data, setData] = React.useState()
 const [title, setTitle] = React.useState('hello world')
 
 React.useEffect(() => {
@@ -73,51 +68,77 @@ React.useEffect(() => {
 }, [title])
 
 React.useEffect(() => {
-    localForage.getItem('data').then(setData)
+    trackPageVisit()
 }, [])
 ```
 
-Not only is the code now less buggy, it is also easier to reason about. We have twice the amount of effects with half the size, and you can look at each one in isolation.
+Not only is the code now less buggy, it is also easier to reason about. Each effect is now half the size, so you can look at each one in isolation to better grasp what it is doing.
 
-### Hide them with custom hooks
+### Hide effects with custom hooks
 
-I really don't like components where 50% of their code is hook calls. It usually shows that we are mixing our logic with our markup. Tucking them away in a custom hook has multiple advantages:
+I really don't like components where 50% of the code is hook calls. It usually shows that we are mixing our logic with our markup. Tucking them away in a custom hook has multiple advantages, apart from the obvious "you can reuse them":
 
--   You can name them
--   You can test them in isolation, without needing to test the component
--   You can encapsulate logic and only expose what you need
+#### You can name them
 
-```js:title=useTitle
-const useTitle = (initialTitle) => {
+Giving things a good name is like writing documentation, and the same applies to hooks. If you are using TypeScript, you will also benefit from a clearly defined interface:
+
+```ts:title=useTitle
+const useTitle = (initialTitle: string) => {
     const [title, setTitle] = React.useState(initialTitle)
 
     React.useEffect(() => {
         document.title = title
     }, [title])
 
-    return [title, setTitle]
+    return [title, setTitle] as const
+}
+
+const useTrackVisit = () => {
+    React.useEffect(() => {
+        trackPageVisit()
+    }, [])
 }
 ```
 
-Everything title related is now in that custom hook, and the effect is completely hidden. Also, you don't have to expose everything from your hook. For example, if the data that you get from the localForage should be readonly, you can just keep the setter in the hook:
+Everything title related is now in _useTitle_, and all effects are completely hidden. Our component will now have two lines of hook calls instead of six lines, which means the component is more focussed on its main responsibility: producing markup.
 
-```js:title=readonly-useData
-const useData = () => {
-    const [data, setData] = React.useState()
+#### You can encapsulate logic
+
+You don't have to expose everything from your hook. For example, if you only intend to show the title in the document title and nowhere else, you can just keep the value in the hook, only exposing what consumers really require:
+
+```ts:title=encapsulated-value {8}
+const useTitle = (initialTitle: string) => {
+    const [title, setTitle] = React.useState(initialTitle)
 
     React.useEffect(() => {
-        localForage.getItem('data').then(setData)
-    }, [])
+        document.title = title
+    }, [title])
 
-    return data
+    return setTitle
 }
 ```
 
-Our component will now have two lines of hook calls instead of eight lines, which means the component is more focussed on its main responsibility: producing markup.
+#### You can test them in isolation
+
+Testing the useTitle hook without having to test the component where it's being used has the advantage that you don't have to think about all the other things that are going on in that component, like page tracking. Testing custom hooks is very similar to testing any other util function:
+
+```js:title=testing-custom-hooks
+import { act, renderHook } from '@testing-library/react-hooks'
+
+describe('useTitle', () => {
+    test('sets the document title', () => {
+        const { result } = renderHook(() => useTitle('hello'))
+        expect(document.title).toEqual('hello')
+
+        act(() => result.current('world'))
+        expect(document.title).toEqual('world')
+    })
+})
+```
 
 ### Give them names
 
-The function passed to useEffect can have a name, so if you cannot or don't wat to extract it to a custom hook for whatever reason, consider naming your effects:
+All the above reasons make me want to write custom hooks even if I only use them once. But if you cannot or don't want to extract it to a custom hook for whatever reason, the function passed to useEffect can still have a name, so consider naming your effects:
 
 ```js:title=named-effect
 const [title, setTitle] = React.useState('hello world')
@@ -144,9 +165,9 @@ const useInitializePayload = () => {
 }
 ```
 
-The dependency array for this effect would probably be large, or we could try to cheat with just `[payload]` as dependency. I find both ways to be inferior to just always running the effect and aborting if necessary.
+The dependency array for this effect would probably be quite large, or we could try to cheat with just `[payload]` as dependency. I find both ways to be inferior to just always running the effect and aborting if necessary.
 
 <Comments>
-    I hope these tips will make it a bit easier for you to work with <i>useEffect</i>. Let me
+    I hope these tips will reduce complexity for you when working with <i>useEffect</i>. Let me
     know in the comments below how you prefer to organize your effects ⬇️
 </Comments>
