@@ -129,4 +129,24 @@ React.useEffect(fuction syncTitle() {
 
 ### Dependencies
 
-<Comments>Leave a comment below ⬇️</Comments>
+Don't lie about dependencies, not even (actually, especially not) for functions. I will just defer to Dan here, because I cannot describe it better than he already does in his [complete guide](https://overreacted.io/a-complete-guide-to-useeffect/#dont-lie-to-react-about-dependencies).
+
+One additional thing that I think is worth mentioning is: not every effect needs dependencies. I've seen effects with 8+ dependencies, some of them being objects that are not memoized, so they will trigger the effect in every render anyways. So why bother, the second argument of _useEffect_ is optional after all. This comes in handy if your effect uses early returns to abort or runs conditionally within your effect:
+
+```js:use-initialize-payload
+const useInitializePayload = () => {
+    const payload = usePayload()
+    React.useEffect(() => {
+        if (payload === null) {
+            performSomeSideEffectThatInitializesPayload(value1, value2, ...valueN)
+        }
+    })
+}
+```
+
+The dependency array for this effect would probably be large, or we could try to cheat with just `[payload]` as dependency. I find both ways to be inferior to just always running the effect and aborting if necessary.
+
+<Comments>
+    I hope these tips will make it a bit easier for you to work with <i>useEffect</i>. Let me
+    know in the comments below how you prefer to organize your effects ⬇️
+</Comments>
