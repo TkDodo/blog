@@ -160,7 +160,7 @@ React.useEffect(fuction syncTitle() {
 
 ### 5. Don't lie about dependencies
 
-Not even, or actually, especially not, for functions. I will just defer to Dan here, because I cannot describe it better than he already does in his [complete guide](https://overreacted.io/a-complete-guide-to-useeffect/#dont-lie-to-react-about-dependencies).
+Not even, or actually especially not, for functions. I will just defer to Dan here, because I cannot describe it better than he already does in his [complete guide](https://overreacted.io/a-complete-guide-to-useeffect/#dont-lie-to-react-about-dependencies).
 
 One additional thing that I think is worth mentioning is: not every effect needs dependencies. I've seen effects with 8+ dependencies, some of them being objects that are not memoized, so they will trigger the effect in every render anyways. So why bother, the second argument of _useEffect_ is optional after all. This comes in handy if your effect uses early returns or executes the side effect conditionally:
 
