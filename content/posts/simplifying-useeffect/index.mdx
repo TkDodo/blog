@@ -18,11 +18,22 @@ import SpacingBox from 'components/SpacingBox'
 
 <Attribution name="Christopher Burns" url="https://unsplash.com/@christopher__burns" />
 
-[useEffect](https://reactjs.org/docs/hooks-reference.html#useeffect). The hook everybody needs, but nobody wants. According to the official react docs, it's an "escape hatch from React’s purely functional world into the imperative world." The [complete guide to useEffect](https://overreacted.io/a-complete-guide-to-useeffect/) by Redux author and React core team member [Dan Abramov](https://twitter.com/dan_abramov) is a 49 minute read - and it takes at least twice the time to _really_ comprehend it.
+[useEffect](https://reactjs.org/docs/hooks-reference.html#useeffect). The hook everybody needs, but nobody wants. According to the official react docs, it's "_an escape hatch from React’s purely functional world into the imperative world_". The [complete guide to useEffect](https://overreacted.io/a-complete-guide-to-useeffect/) by Redux author and React core team member [Dan Abramov](https://twitter.com/dan_abramov) is a 49 minute read - and it takes at least twice the time to _really_ comprehend it.
 
 useEffect is about as complicated as it can get in ReactJs, and it is very unlikely that you can write an application without it. So let's try and apply some good principles to working with useEffect:
 
 ### Write fewer effects
+
+I've already written about a couple of ways to reduce the amount of effects in [don't over useState](./dont-over-use-state) and [putting props to useState](./putting-props-to-use-state). Them management summary would be:
+
+-   Some effects can be replaced with _useMemo_ or even just normal function executions.
+-   Don't try and sync different react states with _useEffect_.
+
+#### Data fetching
+
+Data fetching is a very common side effect that is typically managed with _useEffect_. After all, most apps need to fetch data from somewhere. The scenario is so common that there are some very good libraries out there that will not only help you to make the complex logic more declarative, they will also give you a bunch of great additional features.
+
+I'm obviously going to recommend my favourite open source library, [react-query](https://react-query.tanstack.com/) (I doubt that I will be able to write another article without mentioning it 😅), but [SWR](https://swr.vercel.app/), [Apollo](https://apollographql.com/client) and also [RTK-Query](https://rtk-query-docs.netlify.app/) are great as well. The point is: don't try and re-invent the wheel. Some problems have been solved before and are worth abstracting away. The amount of useEffects that I've had to write has been drastically reduced since I'm using react-query.
 
 ### Give them names
 
