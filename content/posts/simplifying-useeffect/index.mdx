@@ -74,7 +74,7 @@ React.useEffect(() => {
 
 Not only is the code now less buggy, it is also easier to reason about. Each effect is now half the size, so you can look at each one in isolation to better grasp what it is doing.
 
-### Hide effects with custom hooks
+### Write custom hooks
 
 I really don't like components where 50% of the code is hook calls. It usually shows that we are mixing our logic with our markup. Tucking them away in a custom hook has multiple advantages, apart from the obvious "you can reuse them":
 
@@ -82,15 +82,11 @@ I really don't like components where 50% of the code is hook calls. It usually s
 
 Giving things a good name is like writing documentation, and the same applies to hooks. If you are using TypeScript, you will also benefit from a clearly defined interface:
 
-```ts:title=useTitle
-const useTitle = (initialTitle: string) => {
-    const [title, setTitle] = React.useState(initialTitle)
-
+```ts:title=named-hooks
+const useTitleSync = (title: string) => {
     React.useEffect(() => {
         document.title = title
     }, [title])
-
-    return [title, setTitle] as const
 }
 
 const useTrackVisit = () => {
@@ -100,11 +96,27 @@ const useTrackVisit = () => {
 }
 ```
 
-Everything title related is now in _useTitle_, and all effects are completely hidden. Our component will now have two lines of hook calls instead of six lines, which means the component is more focussed on its main responsibility: producing markup.
+All our effects are now nicely hidden inside custom hooks with descriptive names. Our component will only have two lines of hook calls instead of six, which means it is more focussed on its main responsibility: producing markup.
 
 #### You can encapsulate logic
 
-You don't have to expose everything from your hook. For example, if you only intend to show the title in the document title and nowhere else, you can just keep the value in the hook, only exposing what consumers really require:
+This is probably the biggest advantage of custom hooks for me: We can tie things together that belong together, and we don't have to expose everything. The _useTitleSync_ hook is not ideal: it only covers the effect, and each component still needs to manage that title manually. So why don't we put everything title related in the custom hook:
+
+```ts:title=useTitle {1-2,8}
+const useTitle = (initialTitle: string) => {
+    const [title, setTitle] = React.useState(initialTitle)
+
+    React.useEffect(() => {
+        document.title = title
+    }, [title])
+
+    return [title, setTitle] as const
+}
+```
+
+Now _everything_ title related is in _useTitle_, encapsulating all the logic with it.
+
+We can take this one step further: If we only intend to show the title in the document title and nowhere else, we can keep the title value in the hook and expose only the setter, producing a minimal interface:
 
 ```ts:title=encapsulated-value {8}
 const useTitle = (initialTitle: string) => {
@@ -120,7 +132,7 @@ const useTitle = (initialTitle: string) => {
 
 #### You can test them in isolation
 
-Testing the useTitle hook without having to test the component where it's being used has the advantage that you don't have to think about all the other things that are going on in that component, like page tracking. Testing custom hooks is very similar to testing any other util function:
+Testing the _useTitle_ hook without having to test the component where it's being used has the advantage that you don't have to think about all the other things that are going on in that component, like page tracking. Testing custom hooks is very similar to testing any other util function:
 
 ```js:title=testing-custom-hooks
 import { act, renderHook } from '@testing-library/react-hooks'
@@ -138,7 +150,7 @@ describe('useTitle', () => {
 
 ### Give them names
 
-All the above reasons make me want to write custom hooks even if I only use them once. But if you cannot or don't want to extract it to a custom hook for whatever reason, the function passed to useEffect can still have a name, so consider naming your effects:
+All the above reasons make me want to write custom hooks even if I only use them once. But if you cannot or don't want to extract it to a custom hook for whatever reason, the function passed to _useEffect_ can still have a name, so consider naming your effects:
 
 ```js:title=named-effect
 const [title, setTitle] = React.useState('hello world')
