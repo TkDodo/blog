@@ -26,6 +26,16 @@ import { Divider } from '@theme-ui/components'
 
 ### 2: The lazy initializer
 
+When we pass an initial value to _useState_, the initial variable is always created, but React will only use it for the first render. This is totally irrelevant for most use cases, e.g. when you pass a string as initial value. In rare cases, we have to do a complex calculation to initialize our state. In these cases, we can pass a function as initial value to _useState_. React will only invoke this function when it really needs the result (= when the component mounts):
+
+```js:title=lazy-initializer
+// 🚨 will unnecessarily be computed on every render
+const [value, setValue] = React.useState(calculateExpensiveInitialValue(props))
+
+// ✅ looks like a small difference, but the function is only called once
+const [value, setValue] = React.useState(() => calculateExpensiveInitialValue(props))
+```
+
 ### 3: The update bailout
 
 When you call the updater function, React will not always re-render your component. It will bail out of rendering if you try to update to the same value that your state is currently holding. React uses [Object.is](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is#description) to determine if the values are different. See for yourself in this live example:
@@ -72,6 +82,6 @@ _useState_ is (kinda) implemented with _useReducer_ under the hood. You can see 
 
 ### Conclusion
 
-The first 3 of those 5 things are actually mentioned directly in the Hooks API Reference of the official React docs I linked to at the very beginning 😉. But if you didn't know about these things - now you do!
+The first 3 of those 5 things are actually mentioned directly in the Hooks API Reference of the official React docs I linked to at the very beginning 😉. Kent C. Dodds has also written about [2 of them](https://kentcdodds.com/blog/use-state-lazy-initialization-and-function-updates). But if you didn't know about these things before - now you do!
 
 <Comments>How many of these things did you know? Leave a comment below ⬇️</Comments>
