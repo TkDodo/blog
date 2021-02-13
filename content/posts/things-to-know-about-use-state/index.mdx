@@ -1,11 +1,12 @@
 ---
 title: Things to know about useState
-description:
+description: 5 things you need to know about useState
 date: 2021-02-13
 banner: ../dont-over-usestate/use-state-pitfalls.png
 tags:
     - React
     - useState pitfalls
+    - JavaScript
     - TypeScript
 ---
 
@@ -20,26 +21,69 @@ import { Divider } from '@theme-ui/components'
 -   [#2: Putting props to useState](putting-props-to-use-state)
 -   <b>#3: Things to know about useState</b>
 
-[useState](https://reactjs.org/docs/hooks-reference.html#usestate) is pretty straight forward to use. A value, a setter function, an initial state. What hidden gems could possibly be there to know about? Well, here are 5 things you can profit from on a daily basis that you might not have known about:
+[useState](https://reactjs.org/docs/hooks-reference.html#usestate) is pretty straight forward to use. A value, a setter function, an initial state. What hidden gems could possibly be there to know about? Well, here are 5 things you can profit from on a daily basis that you might not have known:
 
 ### 1: The functional updater
 
-_setState_ had it, and _useState_ has it, too: The functional updater. Whenever you calculate the new result depending on the _previousValue_ of your state, you should use the functional updater:
+_setState_ had it, and _useState_ has it, too: The functional updater. Whenever you calculate a new result depending on the _previousValue_ of your state, you should use the functional updater:
 
 ```js:title=functional-updater
-const [value, setValue] = React.useState(0)
+const [count, setCount] = React.useState(0)
 
-// 🚨 depends on the current value to calculate the next value
-<button onClick={() => setValue(value + 1)}>Increment</button>
+// 🚨 depends on the current count value to calculate the next value
+<button onClick={() => setCount(count + 1)}>Increment</button>
 
-// ✅ uses previousValue to calculate next value
-<button onClick={() => setValue(previousValue => previousValue + 1)}>Increment</button>
+// ✅ uses previousCount to calculate next value
+<button onClick={() => setCount(previousCount => previousCount + 1)}>Increment</button>
 ```
 
-This might be totally irrelevant, but it might also introduce subtle bugs:
+This might be totally irrelevant, but it might also introduce subtle bugs in some situations:
 
--   when you call the same setter multiple times in the same function.
--   when async setters are involved.
+#### Calling the same setter multiple times
+
+Live example:
+
+```js react-live
+function App() {
+    const [count, setCount] = React.useState(0)
+
+    return (
+        <button
+            onClick={() => {
+                setCount(count + 1)
+                setCount(count + 1)
+            }}
+        >
+            🚨 This will not work as expected, count is: {count}
+        </button>
+    )
+}
+
+render(<App />)
+```
+
+Each click will only increment the count once, because both calls to _setCount_ closure over the same value (_count_). It's important to know that _setCount_ will _not_ immediately set the count. The useState updater only schedules an update. It basically tells react: Please set this value to the new value, somewhen. And we are telling React twice: Please set the count to two. React does so, but it is probably not what we intended to say. What we wanted to say is: Please _increment_ the value. The functional updater form ensures this:
+
+```js react-live
+function App() {
+    const [count, setCount] = React.useState(0)
+
+    return (
+        <button
+            onClick={() => {
+                setCount((previousCount) => previousCount + 1)
+                setCount((previousCount) => previousCount + 1)
+            }}
+        >
+            ✅ Increment by 2, count is: {count}
+        </button>
+    )
+}
+
+render(<App />)
+```
+
+#### When async actions are involved
 
 Kent C. Dodds has written a lengthy post about this [here](https://kentcdodds.com/blog/use-state-lazy-initialization-and-function-updates), and the conclusion is:
 
@@ -47,7 +91,24 @@ Kent C. Dodds has written a lengthy post about this [here](https://kentcdodds.co
 
 <p style="padding-left: 3rem; margin-top: -1rem">— Kent C. Dodds</p>
 
-#### Bonus: Toggling state with useReducer
+#### Bonus: Avoiding dependencies
+
+The functional updater form can also help you to avoid dependencies for _useEffect_, _useMemo_ or _useCallback_. Suppose you want to pass an incrementBy function to a memoized child component. We can make sure the function doesn't change too often with _useCallback_, but if we closure over _count_, we will still create a new reference whenever count changes. The functional updater avoids this problem altogether:
+
+```js:title=avoiding-dependencies
+const [count, setCount] = React.useState(0)
+
+// 🚨 will create a new function whenever count changes because we closure over it
+const inremenctBy = React.useCallback((value) => setCount(count + value), [count])
+
+// ✅ avoids this problem by not using count at all
+const inremenctBy = React.useCallback(
+    (value) => setCount((previousCount) => previousCount + value),
+    []
+)
+```
+
+#### Bonus2: Toggling state with useReducer
 
 Toggling a Boolean state value is likely something that you've done once or twice before. Judging by the above rule, it becomes a bit boilerplate-y:
 
