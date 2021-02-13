@@ -1,6 +1,6 @@
 ---
 title: Things to know about useState
-description: 5 things you need to know about useState
+description: 5 things everyone needs to know about useState
 date: 2021-02-13
 banner: ../dont-over-usestate/use-state-pitfalls.png
 tags:
@@ -21,11 +21,11 @@ import { Divider } from '@theme-ui/components'
 -   [#2: Putting props to useState](putting-props-to-use-state)
 -   <b>#3: Things to know about useState</b>
 
-[useState](https://reactjs.org/docs/hooks-reference.html#usestate) is pretty straight forward to use. A value, a setter function, an initial state. What hidden gems could possibly be there to know about? Well, here are 5 things you can profit from on a daily basis that you might not have known:
+[React.useState](https://reactjs.org/docs/hooks-reference.html#usestate) is pretty straightforward to use. A value, a setter function, an initial state. What hidden gems could possibly be there to know about? Well, here are 5 things you can profit from on a daily basis that you might not have known:
 
 ### 1: The functional updater
 
-_setState_ had it, and _useState_ has it, too: The functional updater. Whenever you calculate a new result depending on the _previousValue_ of your state, you should use the functional updater:
+Good old _setState_ (in React class components) had it, and _useState_ has it, too: The functional updater! Instead of passing a new value to the setter that we get from _useState_, we can also pass a function to it. React will call that function and gives us the _previousValue_, so that we can calculate a new result depending on it:
 
 ```js:title=functional-updater
 const [count, setCount] = React.useState(0)
@@ -62,7 +62,21 @@ function App() {
 render(<App />)
 ```
 
-Each click will only increment the count once, because both calls to _setCount_ closure over the same value (_count_). It's important to know that _setCount_ will _not_ immediately set the count. The useState updater only schedules an update. It basically tells react: Please set this value to the new value, somewhen. And we are telling React twice: Please set the count to two. React does so, but it is probably not what we intended to say. What we wanted to say is: Please _increment_ the value. The functional updater form ensures this:
+Each click will only increment the count once, because both calls to _setCount_ closure over the same value (_count_). It's important to know that _setCount_ will _not_ immediately set the count. The useState updater only schedules an update. It basically tells React:
+
+> Please set this value to the new value, somewhen.
+
+And in our example, we are telling React the same thing twice:
+
+> Please set the count to two<br/>
+> Please set the count to two
+
+React does so, but this is probably not what we intended to say. We wanted to express:
+
+> Please increment the current value<br/>
+> Please increment the current value (again)
+
+The functional updater form ensures this:
 
 ```js react-live
 function App() {
@@ -90,6 +104,8 @@ Kent C. Dodds has written a lengthy post about this [here](https://kentcdodds.co
 > Any time I need to compute new state based on previous state, I use a function update.
 
 <p style="padding-left: 3rem; margin-top: -1rem">— Kent C. Dodds</p>
+
+I can second that conclusion and encourage you to read that article thoroughly.
 
 #### Bonus: Avoiding dependencies
 
@@ -125,9 +141,9 @@ const [value, setValue] = React.useState(true)
 
 If the only thing you want to do is toggle the state value, maybe even multiple times in one component, _useReducer_ might be the better choice, as it:
 
--   shifts the toggling logic from your component to the hook call
+-   shifts the toggling logic from the setter invocation to the hook call
 -   allows you to name your toggle function, as it's not just a setter
--   reduces boilerplate if you use the toggle function more than once
+-   reduces repetitive boilerplate if you use the toggle function more than once
 
 ```js:title=✅-toggle-with-use-reducer
 const [value, toggleValue] = React.useReducer(previousValue => !previousValue, true)
@@ -135,7 +151,7 @@ const [value, toggleValue] = React.useReducer(previousValue => !previousValue, t
 <button onClick={toggleValue}>Toggle</button>
 ```
 
-I think this shows quite well that reducers don't have to be "complex", and you don't need to dispatch events with it at all costs. It all depends on the use case.
+I think this shows quite well that reducers are not only good for handling "complex" state, and you don't need to dispatch events with it at all costs.
 
 ### 2: The lazy initializer
 
@@ -195,6 +211,6 @@ _useState_ is (kinda) implemented with _useReducer_ under the hood. You can see 
 
 ### Conclusion
 
-The first 3 of those 5 things are actually mentioned directly in the Hooks API Reference of the official React docs I linked to at the very beginning 😉. But if you didn't know about these things before - now you do!
+The first 3 of those 5 things are actually mentioned directly in the Hooks API Reference of the official React docs I linked to at the very beginning 😉. If you didn't know about these things before - now you do!
 
-<Comments>How many of these things did you know? Leave a comment below ⬇️</Comments>
+<Comments>How many of these points did you know? Leave a comment below ⬇️</Comments>
