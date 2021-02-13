@@ -134,7 +134,7 @@ I think this shows quite well that reducers don't have to be "complex", and you 
 
 ### 2: The lazy initializer
 
-When we pass an initial value to _useState_, the initial variable is always created, but React will only use it for the first render. This is totally irrelevant for most use cases, e.g. when you pass a string as initial value. In rare cases, we have to do a complex calculation to initialize our state. In these cases, we can pass a function as initial value to _useState_. React will only invoke this function when it really needs the result (= when the component mounts):
+When we pass an initial value to _useState_, the initial variable is always created, but React will only use it for the first render. This is totally irrelevant for most use cases, e.g. when you pass a string as initial value. In rare cases, we have to do a complex calculation to initialize our state. For these situations, we can pass a function as initial value to _useState_. React will only invoke this function when it really needs the result (= when the component mounts):
 
 ```js:title=lazy-initializer
 // 🚨 will unnecessarily be computed on every render
@@ -150,11 +150,11 @@ When you call the updater function, React will not always re-render your compone
 
 ```js react-live
 function App() {
-    const [name, setName] = React.useState('Dominik')
+    const [name, setName] = React.useState('Elias')
 
     // 🤯 clicking this button will not re-render the component
     return (
-        <button onClick={() => setName('Dominik')}>
+        <button onClick={() => setName('Elias')}>
             Name is: {name}, Date is: {new Date().getTime()}
         </button>
     )
@@ -165,7 +165,7 @@ render(<App />)
 
 ### 4: The convenience overload
 
-This one is for all TypeScript users out there. Type inference for _useState_ usually works great, but if you want to initialize your value with _undefined_ or _null_, you usually need to explicitly specify the generic parameter, because otherwise, TypeScript will not have enough information:
+This one is for all TypeScript users out there. Type inference for _useState_ usually works great, but if you want to initialize your value with _undefined_ or _null_, you need to explicitly specify the generic parameter, because otherwise, TypeScript will not have enough information:
 
 ```ts:title=use-state-type-inferrence
 // 🚨 age will be inferred to `undefined` which is kinda useless
