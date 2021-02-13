@@ -1,0 +1,44 @@
+---
+title: Dreadful boolean parameters
+description:
+date: 2021-02-13
+banner: ./boolean.jpg
+tags:
+    - JavaScript
+    - TypeScript
+    - React
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+
+<img src="./boolean.jpg" />
+
+<Attribution name="Alexander Sinn" url="https://unsplash.com/@swimstaralex" />
+
+Ah, booleans. 0 or 1, true or false. Always either one of them, never something in between. So simple and predictable. At the end of the day, every code we write winds up in lots of zeros and ones.
+
+There is nothing wrong with booleans per se. We use them for conditions every day:
+
+```js:title=boolean-condition
+// ✅ boolean condition
+if (person.age() < legalAge) {
+    return 'Sorry, you are too young to use this service'
+}
+```
+
+I just don't like them for function parameters. Consider the above example where we extract the condition to their own function:
+
+```ts:title=boolean-paramters
+// 🚨 booleans as a function parameter
+function getErrorMessage(isOfLegalAge: boolean): string | undefined => {
+  if (!isOfLegalAge) {
+    return 'Sorry, you are too young to use this service'
+  }
+  return undefined
+}
+```
+
+### Flags
+
+<Comments>Leave a comment below ⬇️</Comments>
