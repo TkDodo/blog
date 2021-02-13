@@ -30,9 +30,28 @@ import { Divider } from '@theme-ui/components'
 
 ### 4: The convenience overload
 
+This one is for all TypeScript users out there. Type inference for _useState_ usually works great, but if you want to initialize your value with _undefined_ or _null_, you usually need to explicitly specify the generic parameter, because otherwise, TypeScript will not have enough information:
+
+```ts:title=use-state-type-inferrence
+// 🚨 age will be inferred to `undefined` which is kinda useless
+const [age, setAge] = React.useState(undefined)
+
+// 🆗 but a bit lengthy
+const [age, setAge] = React.useState<number | null>(null)
+```
+
+Luckily, there is a [convenience overload](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/7a0d9c019f2b48b36b88691247870e6885b97a02/types/react/v16/index.d.ts#L921-L928) of _useState_ that will add _undefined_ to our passed type if we completely omit the initial value. It will also be _undefined_ at runtime, because not passing a parameter at all is equivalent to passing _undefined_ explicitly:
+
+```ts:title=use-state-convenience-overload
+// ✅ age will be `number | undefined`
+const [age, setAge] = React.useState<number>()
+```
+
+Of course, if you absolutely have to initialize with _null_, you need the lengthy version.
+
 ### 5: The implementation detail
 
-_useState_ is (kinda) implemented with _useReducer_ under the hood. You can see this in [the source code here](https://github.com/facebook/react/blob/1a7472624661270008011fd77f097d71e6249de9/packages/react-reconciler/src/ReactFiberHooks.new.js#L1242-L1246). article by Kent C. Dodds on [how to implement useState with useReducer](https://kentcdodds.com/blog/how-to-implement-usestate-with-usereducer).
+_useState_ is (kinda) implemented with _useReducer_ under the hood. You can see this in [the source code here](https://github.com/facebook/react/blob/1a7472624661270008011fd77f097d71e6249de9/packages/react-reconciler/src/ReactFiberHooks.new.js#L1242-L1246). There is also a great article by Kent C. Dodds on [how to implement useState with useReducer](https://kentcdodds.com/blog/how-to-implement-usestate-with-usereducer).
 
 ### Conclusion
 
