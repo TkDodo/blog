@@ -20,13 +20,30 @@ import { Divider } from '@theme-ui/components'
 -   [#2: Putting props to useState](putting-props-to-use-state)
 -   <b>#3: Things to know about useState</b>
 
-[useState](https://reactjs.org/docs/hooks-reference.html#usestate) is pretty straight forward to use. A value, a setter function, an initial state. What hidden gems could possibly be there to know about? Well, I've seen many developers not knowing about these 5 things:
+[useState](https://reactjs.org/docs/hooks-reference.html#usestate) is pretty straight forward to use. A value, a setter function, an initial state. What hidden gems could possibly be there to know about? Well, here are 5 things you can profit from on a daily basis that you might not have known about:
 
 ### 1: The functional updater
 
 ### 2: The lazy initializer
 
 ### 3: The update bailout
+
+When you call the updater function, React will not always re-render your component. It will bail out of rendering if you try to update to the same value that your state is currently holding. React uses [Object.is](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is#description) to determine if the values are different. See for yourself in this live example:
+
+```js react-live
+function App() {
+    const [name, setName] = React.useState('Dominik')
+
+    // 🤯 clicking this button will not re-render the component
+    return (
+        <button onClick={() => setName('Dominik')}>
+            Name is: {name}, Date is: {new Date().getTime()}
+        </button>
+    )
+}
+
+render(<App />)
+```
 
 ### 4: The convenience overload
 
