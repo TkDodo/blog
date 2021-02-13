@@ -20,4 +20,22 @@ import { Divider } from '@theme-ui/components'
 -   [#2: Putting props to useState](putting-props-to-use-state)
 -   <b>#3: Things to know about useState</b>
 
-<Comments>Leave a comment below ⬇️</Comments>
+[useState](https://reactjs.org/docs/hooks-reference.html#usestate) is pretty straight forward to use. A value, a setter function, an initial state. What hidden gems could possibly be there to know about? Well, I've seen many developers not knowing about these 5 things:
+
+### 1: The functional updater
+
+### 2: The lazy initializer
+
+### 3: The update bailout
+
+### 4: The convenience overload
+
+### 5: The implementation detail
+
+_useState_ is (kinda) implemented with _useReducer_ under the hood. You can see this in [the source code here](https://github.com/facebook/react/blob/1a7472624661270008011fd77f097d71e6249de9/packages/react-reconciler/src/ReactFiberHooks.new.js#L1242-L1246). article by Kent C. Dodds on [how to implement useState with useReducer](https://kentcdodds.com/blog/how-to-implement-usestate-with-usereducer).
+
+### Conclusion
+
+The first 3 of those 5 things are actually mentioned directly in the Hooks API Reference of the official React docs I linked to at the very beginning 😉. But if you didn't know about these things - now you do!
+
+<Comments>How many of these things did you know? Leave a comment below ⬇️</Comments>
