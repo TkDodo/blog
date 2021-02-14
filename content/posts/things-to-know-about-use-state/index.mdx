@@ -1,0 +1,216 @@
+---
+title: Things to know about useState
+description: 5 things everyone needs to know about useState
+date: 2021-02-13
+banner: ../dont-over-usestate/use-state-pitfalls.png
+tags:
+    - React
+    - useState pitfalls
+    - JavaScript
+    - TypeScript
+---
+
+import Comments from 'components/Comments'
+import { Divider } from '@theme-ui/components'
+
+<img src="../dont-over-usestate/use-state-pitfalls.png" />
+
+<Divider />
+
+-   [#1: Don't over useState](dont-over-use-state)
+-   [#2: Putting props to useState](putting-props-to-use-state)
+-   <b>#3: Things to know about useState</b>
+
+[React.useState](https://reactjs.org/docs/hooks-reference.html#usestate) is pretty straightforward to use. A value, a setter function, an initial state. What hidden gems could possibly be there to know about? Well, here are 5 things you can profit from on a daily basis that you might not have known:
+
+### 1: The functional updater
+
+Good old _setState_ (in React class components) had it, and _useState_ has it, too: The functional updater! Instead of passing a new value to the setter that we get from _useState_, we can also pass a function to it. React will call that function and gives us the _previousValue_, so that we can calculate a new result depending on it:
+
+```js:title=functional-updater
+const [count, setCount] = React.useState(0)
+
+// 🚨 depends on the current count value to calculate the next value
+<button onClick={() => setCount(count + 1)}>Increment</button>
+
+// ✅ uses previousCount to calculate next value
+<button onClick={() => setCount(previousCount => previousCount + 1)}>Increment</button>
+```
+
+This might be totally irrelevant, but it might also introduce subtle bugs in some situations:
+
+#### Calling the same setter multiple times
+
+Live example:
+
+```js react-live
+function App() {
+    const [count, setCount] = React.useState(0)
+
+    return (
+        <button
+            onClick={() => {
+                setCount(count + 1)
+                setCount(count + 1)
+            }}
+        >
+            🚨 This will not work as expected, count is: {count}
+        </button>
+    )
+}
+
+render(<App />)
+```
+
+Each click will only increment the count once, because both calls to _setCount_ closure over the same value (_count_). It's important to know that _setCount_ will _not_ immediately set the count. The useState updater only schedules an update. It basically tells React:
+
+> Please set this value to the new value, somewhen.
+
+And in our example, we are telling React the same thing twice:
+
+> Please set the count to two<br/>
+> Please set the count to two
+
+React does so, but this is probably not what we intended to say. We wanted to express:
+
+> Please increment the current value<br/>
+> Please increment the current value (again)
+
+The functional updater form ensures this:
+
+```js react-live
+function App() {
+    const [count, setCount] = React.useState(0)
+
+    return (
+        <button
+            onClick={() => {
+                setCount((previousCount) => previousCount + 1)
+                setCount((previousCount) => previousCount + 1)
+            }}
+        >
+            ✅ Increment by 2, count is: {count}
+        </button>
+    )
+}
+
+render(<App />)
+```
+
+#### When async actions are involved
+
+Kent C. Dodds has written a lengthy post about this [here](https://kentcdodds.com/blog/use-state-lazy-initialization-and-function-updates), and the conclusion is:
+
+> Any time I need to compute new state based on previous state, I use a function update.
+
+<p style="padding-left: 3rem; margin-top: -1rem">— Kent C. Dodds</p>
+
+I can second that conclusion and encourage you to read that article thoroughly.
+
+#### Bonus: Avoiding dependencies
+
+The functional updater form can also help you to avoid dependencies for _useEffect_, _useMemo_ or _useCallback_. Suppose you want to pass an increment function to a memoized child component. We can make sure the function doesn't change too often with _useCallback_, but if we closure over _count_, we will still create a new reference whenever count changes. The functional updater avoids this problem altogether:
+
+```js:title=avoiding-dependencies
+function Counter({ incrementBy = 1 }) {
+    const [count, setCount] = React.useState(0)
+
+    // 🚨 will create a new function whenever count changes because we closure over it
+    const increment = React.useCallback(() => setCount(count + incrementBy), [
+        incrementBy,
+        count,
+    ])
+
+    // ✅ avoids this problem by not using count at all
+    const increment = React.useCallback(
+        () => setCount((previousCount) => previousCount + incrementBy),
+        [incrementBy]
+    )
+}
+```
+
+#### Bonus2: Toggling state with useReducer
+
+Toggling a Boolean state value is likely something that you've done once or twice before. Judging by the above rule, it becomes a bit boilerplate-y:
+
+```js:title=🚨-toggle-with-use-state
+const [value, setValue] = React.useState(true)
+
+<button onClick={() => setValue(perviousValue => !previousValue)}>Toggle</button>
+```
+
+If the only thing you want to do is toggle the state value, maybe even multiple times in one component, _useReducer_ might be the better choice, as it:
+
+-   shifts the toggling logic from the setter invocation to the hook call
+-   allows you to name your toggle function, as it's not just a setter
+-   reduces repetitive boilerplate if you use the toggle function more than once
+
+```js:title=✅-toggle-with-use-reducer
+const [value, toggleValue] = React.useReducer(previousValue => !previousValue, true)
+
+<button onClick={toggleValue}>Toggle</button>
+```
+
+I think this shows quite well that reducers are not only good for handling "complex" state, and you don't need to dispatch events with it at all costs.
+
+### 2: The lazy initializer
+
+When we pass an initial value to _useState_, the initial variable is always created, but React will only use it for the first render. This is totally irrelevant for most use cases, e.g. when you pass a string as initial value. In rare cases, we have to do a complex calculation to initialize our state. For these situations, we can pass a function as initial value to _useState_. React will only invoke this function when it really needs the result (= when the component mounts):
+
+```js:title=lazy-initializer
+// 🚨 will unnecessarily be computed on every render
+const [value, setValue] = React.useState(calculateExpensiveInitialValue(props))
+
+// ✅ looks like a small difference, but the function is only called once
+const [value, setValue] = React.useState(() => calculateExpensiveInitialValue(props))
+```
+
+### 3: The update bailout
+
+When you call the updater function, React will not always re-render your component. It will bail out of rendering if you try to update to the same value that your state is currently holding. React uses [Object.is](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is#description) to determine if the values are different. See for yourself in this live example:
+
+```js react-live
+function App() {
+    const [name, setName] = React.useState('Elias')
+
+    // 🤯 clicking this button will not re-render the component
+    return (
+        <button onClick={() => setName('Elias')}>
+            Name is: {name}, Date is: {new Date().getTime()}
+        </button>
+    )
+}
+
+render(<App />)
+```
+
+### 4: The convenience overload
+
+This one is for all TypeScript users out there. Type inference for _useState_ usually works great, but if you want to initialize your value with _undefined_ or _null_, you need to explicitly specify the generic parameter, because otherwise, TypeScript will not have enough information:
+
+```ts:title=use-state-type-inferrence
+// 🚨 age will be inferred to `undefined` which is kinda useless
+const [age, setAge] = React.useState(undefined)
+
+// 🆗 but a bit lengthy
+const [age, setAge] = React.useState<number | null>(null)
+```
+
+Luckily, there is a [convenience overload](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/7a0d9c019f2b48b36b88691247870e6885b97a02/types/react/v16/index.d.ts#L921-L928) of _useState_ that will add _undefined_ to our passed type if we completely omit the initial value. It will also be _undefined_ at runtime, because not passing a parameter at all is equivalent to passing _undefined_ explicitly:
+
+```ts:title=use-state-convenience-overload
+// ✅ age will be `number | undefined`
+const [age, setAge] = React.useState<number>()
+```
+
+Of course, if you absolutely have to initialize with _null_, you need the lengthy version.
+
+### 5: The implementation detail
+
+_useState_ is (kinda) implemented with _useReducer_ under the hood. You can see this in [the source code here](https://github.com/facebook/react/blob/1a7472624661270008011fd77f097d71e6249de9/packages/react-reconciler/src/ReactFiberHooks.new.js#L1242-L1246). There is also a great article by Kent C. Dodds on [how to implement useState with useReducer](https://kentcdodds.com/blog/how-to-implement-usestate-with-usereducer).
+
+### Conclusion
+
+The first 3 of those 5 things are actually mentioned directly in the Hooks API Reference of the official React docs I linked to at the very beginning 😉. If you didn't know about these things before - now you do!
+
+<Comments>How many of these points did you know? Leave a comment below ⬇️</Comments>
