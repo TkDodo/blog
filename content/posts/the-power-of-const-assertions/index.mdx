@@ -19,22 +19,22 @@ were introduced in TypeScript 3.4 (March 2019), so they are not exactly new,
 yet I have seen that many developers are still unaware of that feature.
 
 Maybe it's the syntax that makes it a bit weird sometimes (writing `const something = ... as const`).
-It might also be it's the resemblance to type casts that make people afraid of using them.
+It might also be it's the resemblance to type assertions that make people afraid of using them.
 Or possibly, you just got some weird errors regarding _readonly_, so you decided to not dig deeper.
 
 In this article, I'd like to clear up the confusion and crush all doubts about const assertions.
 
-### const assertions are _not_ type casts
+### const assertions are _not_ type assertions
 
-Type casts are, simply put, evil.
+Type assertions are, simply put, evil.
 They are meant to tell the compiler: "I know what I am doing, and I know it better than you".
 
 Frankly, most of the time, developers _do not_ know better than the compiler.
-So unless there is a really good reason, do not use type casts.
+So unless there is a really good reason, do not use type assertions.
 
-Here are some examples of what type casts allow you to do:
+Here are some examples of what type assertions allow you to do:
 
-```ts:title=type-casts
+```ts:title=type-assertions
 type Foo = 'foo'
 const foo = 'bar' as Foo
 
@@ -45,7 +45,7 @@ const obj = {} as Obj
 [TypeScript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAYg9nKBeKByAZg1BYAUAYzgDsBnYKTRFVAIwEMAnVKOk2BPPUSKAeRoBWyKAG8KCAFztEAXzyFS5OIOEiZLNvwF4gA)
 
 TypeScript is fine with that, because the types sufficiently overlap (string with 'foo' and object with Obj).
-Of course, that is just false, but by using type casts, the compiler will yield to you.
+Of course, that is just false, but by using type assertions, the compiler will yield to you.
 
 This can be troublesome, even in cases where you think you are right. Consider the following example:
 
@@ -94,9 +94,9 @@ Component(props)
 [TypeScript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAaghgJwJZwHbCgXigcjMgW0RBygB9cBnCAYwHtUATYnAWACgPRIoAFBOmEpYoAbw5RJUAG6IU6AFyw5aYBwC+HDvVSUMAYToEwDCOhEAKfIMpL+NgJRYAfDLpJGUAAxb2OvVDWQiKiMiqKuPhIRAgkUJrsQZQAdLLIqiI4lEYQwAAWSKgA5gCiADbUbJzshsam6FYCQg5AA)
 
 Even though we define a _const_, objects in JavaScript are still mutable, so inferring the string literal 'primary' would be wrong.
-A type cast would solve this:
+A type assertion would solve this:
 
-```ts:title=casting-props {9}
+```ts:title=type-asserting-props {9}
 type Variant = 'primary' | 'secondary'
 
 type Props = {
@@ -117,10 +117,10 @@ For the same reasons I mentioned earlier, if we remove primary from our _Variant
 This means that, like many solutions, this is something that works now, but is not very future proof.
 
 Making your software resilient to change is, in my opinion, one of the true benefits of using TypeScript.
-Achieving resilience requires the right mindset, which includes abandoning type casts.
+Achieving resilience requires the right mindset, which includes abandoning type assertions.
 
 For this scenario, the easiest solution (assuming that inlining the object is not an option)
-would be to use an explicit type annotation rather than a type cast:
+would be to use an explicit type annotation rather than a type assertion:
 
 ```ts:title=annotating-props {9}
 type Variant = 'primary' | 'secondary'
