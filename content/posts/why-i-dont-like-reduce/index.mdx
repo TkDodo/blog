@@ -121,7 +121,7 @@ export const toObject = <T, K extends string | number | symbol, V>(
 toObject(['foo', 'bar', 'baz'], (element) => ['key-' + element, 'value-' + element])
 ```
 
-Good name, strong types, ease of use. The rest is implementation detail (including the type cast for the initial value).
+Good name, strong types, ease of use. The rest is implementation detail (including the type assertion for the initial value).
 
 #### 2. Grouping Arrays
 
