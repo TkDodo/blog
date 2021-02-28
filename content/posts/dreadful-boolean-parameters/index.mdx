@@ -31,16 +31,34 @@ But using them for parameters to a function can be an indication of bad software
 
 ### Single responsibility principle
 
-A function should do one thing, and one thing only. Passing a "flag" to it might make a function do two things at once, thus violating [this principle](https://en.wikipedia.org/wiki/Single-responsibility_principle). Take for example this signature from the Kotlin standard library of [equals](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/equals.html):
+A function should do one thing, and one thing only. Passing a "flag" to it often indicates that a function does two things at once, thus violating [this principle](https://en.wikipedia.org/wiki/Single-responsibility_principle). For example:
 
-```kt:title=single-responsibility
+```ts:title=single-responsibility
 // 🚨 booleans as a function parameter
+function createReport(user: User, sendEmail: boolean) {
+    // create the report here
+    const reportData = ...
+
+    if (sendEmail) {
+        sendReport(user.email, reportData)
+    }
+    return reportData
+}
+```
+
+There seem to be some cases where we want to send the report as email directlyv after creating it, and some cases where we don't. But why entangle this in the _createReport_ function? That function should only create the report, and nothing else. The caller can decide what they want to do with it.
+
+### They are confusing
+
+Flags can be confusing, especially in languages where you don't have named parameters. Take for example this signature from the Kotlin standard library of [equals](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/equals.html):
+
+```kt:title=equals-with-ignore-case-flag
 fun String?.equals(other: String?, ignoreCase: Boolean): Boolean
 
 // Returns true if this string is equal to other, optionally ignoring character case.
 ```
 
-Here, one function does essentially two very different things, depending on a flag passed in. This can be highly confusing when you have to read the call-side that looks something like this:
+As opposed to the first example, the function doesn't do two things at once, it does one thing in two different _variations_ - an important difference. This can be highly confusing when you have to read the call-side that looks something like this:
 
 ```kt:title=???
 "foo".equals("bar", true)
@@ -68,7 +86,7 @@ Totally logical and intuitive api 🤷‍♂️
 Suppose you have a _metric_ of some sorts, and you want to format that. It might be a "normal" number, but it might also be a percentage value. So you decide to model the formatting function like this:
 
 ```ts:title=format-metric
-function formatMetric(value: number, isPerent: boolean): string {
+function formatMetric(value: number, isPercent: boolean): string {
     if (isPercent) {
         return `${value * 100}%`
     }
@@ -76,19 +94,19 @@ function formatMetric(value: number, isPerent: boolean): string {
 }
 ```
 
-This is rather rudimentary number formatting function, but apart from that, it doesn't look too bad. Frankly, the first "flag" you add to a function looks _very innocent_. As opposed to the above example, the function also doesn't do two different things at once, it does one thing with two different _variations_ - an important difference.
+This is rather rudimentary number formatting function, but apart from that, it doesn't look too bad. Frankly, the first "flag" you add to a function looks _very innocent_.
 
 #### The second flag
 
 Requirements change over time (as they tend to do), and now we have to support currencies for some of our metrics as well. Starting from the above formatting function, we are tempted to add _another_ flag, `isCurrency`
 
-```ts:title=🚨-currency-formatting{1, 5-7}
+```ts:title=🚨-currency-formatting {1,5-7}
 function formatMetric(value: number, isPercent: boolean, isCurrency: boolean): string {
     if (isPercent) {
         return `${value * 100}%`
     }
     if (isCurrency) {
-        // imagine some currency formatting is returned here
+        return // imagine some currency formatting is returned here
     }
     return String(metric)
 }
@@ -100,7 +118,7 @@ Except it isn't.
 
 Adding one boolean doesn't add _one more state_ - the amount of states grow exponentially. Two booleans means four states, three booleans means eight possible states etc. What happens if we call our above function with:
 
-```
+```ts
 formatMetric(100, true, true)
 ```
 
@@ -110,7 +128,7 @@ The answer is: you can't know. It's an implementation detail which flag is check
 
 To avoid impossible states, resist the urge of adding the _first_ boolean parameter. It is infinitely easier for humans to extend existing patterns instead of recognizing anti-patterns and refactoring them. If there is one boolean, there will be a second. If we start of with an enumeration of possible states, it is much more likely that this will be extended instead:
 
-```ts:title=✅-metric-variant
+```ts:title=✅-metric-variant {1,2}
 function formatMetric(value: number, variant?: 'percent'): string {
     if (variant === 'percent') {
         return `${value * 100}%`
@@ -125,15 +143,11 @@ Now we can extend the variant to `'percent' | 'currency'`, and only have three s
 
 Further advantages of a single variant property include:
 
--   Better readability<br />
-    reading `formatMetric(100, true, false)` makes it impossible to know what these flags are for. It's also very easy to mix them up, and the compiler won't tell you about it. You can work around this by using a single options object, which is quite popular in JavaScript:
-
-`formatMetric(100, { isPercent: true })`
-Writing it like this makes it even more obvious that boolean are the wrong interface here.
+-   Better type safety<br />
+    We've already covered readability, but it's also very easy to mix flags up, and because they have the same type (boolean), the compiler won't tell you about it. You can work around this by using a single options object, which is quite popular in JavaScript.
 
 -   Exhaustive matching <br />
-
-I've written about [exhaustive matching in TypeScript](./exhaustive-matching-in-typescript) before, and it also comes in very handy in this example. The compiler will then tell us where we need to adapt our code when we add a new variant. CDD, compiler-driven-development:
+    I've written about [exhaustive matching in TypeScript](./exhaustive-matching-in-typescript) before, and it also comes in very handy in this example. The compiler will then tell us where we need to adapt our code when we add a new variant. CDD, compiler-driven-development:
 
 ```ts:title=exhaustive-variants
 type MetricVariant = 'standard' | 'percent' | 'currency'
@@ -149,9 +163,32 @@ function formatMetric(value: number, variant: MetricVariant = 'standard'): strin
 }
 ```
 
-We are also seeing _variants_ often on React components.
+We also do the same when creating React components, or have you seen a Button with an _isPrimary_ and and _isSecondary_ flag? Of course not - because how can they be both at the same time?
 
-isPrimary
-isSecondary
+```tsx:title=button-variants
+// 🚨 Don't do this
+<Button isPrimary isSecondary />
 
-<Comments>Leave a comment below ⬇️</Comments>
+// ✅ Do this
+<Button variant="primary" />
+```
+
+### The wrong abstraction
+
+Oftentimes, flags are added because we see similarities to existing code, and we don't want to repeat ourselves, keeping everything [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself).
+
+-   Here is a function that looks almost like what I want, I just need to add this one flag, because it's slightly different.
+-   This component looks like I could use it for my case as well, I just need a _withPadding_ property added so that it fits.
+
+There is lots of good literature available on that topic, showing why we shouldn't do this and what we could do instead:
+
+-   [The wet codebase](https://www.deconstructconf.com/2019/dan-abramov-the-wet-codebase)
+-   [The wrong abstraction](https://sandimetz.com/blog/2016/1/20/the-wrong-abstraction)
+-   [AHA programming](https://kentcdodds.com/blog/aha-programming)
+-   [Inversion of control](https://kentcdodds.com/blog/inversion-of-control)
+
+I can recommend them all, but for starters, resist the urge of adding the next boolean parameter to your codebase
+
+<Comments>
+    No matter if you like booleans, or not, or both at the same time, leave a comment below ⬇️
+</Comments>
