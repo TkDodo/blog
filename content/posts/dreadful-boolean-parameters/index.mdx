@@ -16,7 +16,7 @@ import Attribution from 'components/Attribution'
 
 <Attribution name="Alexander Sinn" url="https://unsplash.com/@swimstaralex" />
 
-Ah, booleans. 0 or 1, true or false. Always either one of them, never something in between. So simple and predictable. At the end of the day, every code we write winds up in lots of zeros and ones.
+Ah, booleans. 0 or 1, true or false. Always either one of them, never something in between. So simple and predictable. At the end of the day, all code we write winds up in lots of zeros and ones.
 
 There is nothing wrong with booleans per se. We use them for conditions every day:
 
@@ -27,7 +27,7 @@ if (user.age() < legalAge) {
 }
 ```
 
-But using them for parameters to a function can be an indication of bad software design for various reasons:
+But using them for parameters to a function can be an indication of bad design for various reasons:
 
 ### Single responsibility principle
 
@@ -46,11 +46,11 @@ function createReport(user: User, sendEmail: boolean) {
 }
 ```
 
-There seem to be some cases where we want to send the report as email directlyv after creating it, and some cases where we don't. But why entangle this in the _createReport_ function? That function should only create the report, and nothing else. The caller can decide what they want to do with it.
+There seem to be some cases where we want to send the report as email directly after creating it, and some cases where we don't. But why entangle this in the _createReport_ function? That function should only create the report, and nothing else. The caller can decide what they want to do with it.
 
 ### They are confusing
 
-Flags can be confusing, especially in languages where you don't have named parameters. Take for example this signature from the Kotlin standard library of [equals](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/equals.html):
+Flags can be confusing, especially in languages where you don't have named parameters. Take for example this signature of [equals](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/equals.html) from the Kotlin standard library:
 
 ```kt:title=equals-with-ignore-case-flag
 fun String?.equals(other: String?, ignoreCase: Boolean): Boolean
@@ -79,11 +79,11 @@ In case it isn't obvious to everyone:
 
 -   `mutate` - false will always cause a new list to be created, true will mutate lists in place
 
-Totally logical and intuitive api 🤷‍♂️
+Totally logical and intuitive api, not confusing at all 🤷‍♂️
 
 ### Impossible states
 
-Suppose you have a _metric_ of some sorts, and you want to format that. It might be a "normal" number, but it might also be a percentage value. So you decide to model the formatting function like this:
+Booleans make it easy to create impossible states. Suppose you have a _metric_ of some sorts, and you want to format that. It might be a "normal" number, but it might also be a percentage value. So you decide to model the formatting function like this:
 
 ```ts:title=format-metric
 function formatMetric(value: number, isPercent: boolean): string {
@@ -94,7 +94,7 @@ function formatMetric(value: number, isPercent: boolean): string {
 }
 ```
 
-This is rather rudimentary number formatting function, but apart from that, it doesn't look too bad. Frankly, the first "flag" you add to a function looks _very innocent_.
+This is rather rudimentary number formatting function, but apart from that, it doesn't look too bad. Frankly, the first "flag" you add to a function usually looks _very innocent_.
 
 #### The second flag
 
@@ -122,7 +122,7 @@ Adding one boolean doesn't add _one more state_ - the amount of states grow expo
 formatMetric(100, true, true)
 ```
 
-The answer is: you can't know. It's an implementation detail which flag is checked first. It's also an _impossible state_: A metric cannot be _percent_ and _currency_ at the same time. Such impossible states are frequently introduced with boolean parameters. I recently refactored a function with 8 booleans as input - turns out, it only had 3 actual states, the rest were variations thereof.
+The answer is: you can't know. It's an implementation detail which flag is checked first. It's also an _impossible state_: A metric cannot be _percent_ and _currency_ at the same time. Such impossible states are frequently introduced with boolean parameters. I recently encountered a function with 8 booleans as input - turns out, it only had 3 actual states, the rest were variations thereof.
 
 #### Resist the urge
 
@@ -183,11 +183,11 @@ Oftentimes, flags are added because we see similarities to existing code, and we
 There is lots of good literature available on that topic, showing why we shouldn't do this and what we could do instead:
 
 -   [The wet codebase](https://www.deconstructconf.com/2019/dan-abramov-the-wet-codebase)
--   [The wrong abstraction](https://sandimetz.com/blog/2016/1/20/the-wrong-abstraction)
--   [AHA programming](https://kentcdodds.com/blog/aha-programming)
 -   [Inversion of control](https://kentcdodds.com/blog/inversion-of-control)
+-   [AHA programming](https://kentcdodds.com/blog/aha-programming)
+-   [The wrong abstraction](https://sandimetz.com/blog/2016/1/20/the-wrong-abstraction)
 
-I can recommend them all, but for starters, resist the urge of adding the next boolean parameter to your codebase
+I can recommend them all, and for starters, resist the urge of adding the next boolean parameter to your codebase.
 
 <Comments>
     No matter if you like booleans, or not, or both at the same time, leave a comment below ⬇️
