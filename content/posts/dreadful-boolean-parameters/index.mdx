@@ -147,7 +147,7 @@ Further advantages of a single variant property include:
     We've already covered readability, but it's also very easy to mix flags up, and because they have the same type (boolean), the compiler won't tell you about it. You can work around this by using a single options object, which is quite popular in JavaScript.
 
 -   Exhaustive matching <br />
-    I've written about [exhaustive matching in TypeScript](./exhaustive-matching-in-typescript) before, and it also comes in very handy in this example. The compiler will then tell us where we need to adapt our code when we add a new variant. CDD, compiler-driven-development:
+    I've written about [exhaustive matching in TypeScript](./exhaustive-matching-in-type-script) before, and it also comes in very handy in this example. The compiler will then tell us where we need to adapt our code when we add a new variant. CDD, compiler-driven-development:
 
 ```ts:title=exhaustive-variants
 type MetricVariant = 'standard' | 'percent' | 'currency'
