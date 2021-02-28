@@ -27,18 +27,112 @@ if (person.age() < legalAge) {
 }
 ```
 
-I just don't like them for function parameters. Consider the above example where we extract the condition to their own function:
+But using them for parameters to a function can be an indication of a bad software design for various reasons:
 
-```ts:title=boolean-paramters
+### Violation of single responsibility principle
+
+A function should do one thing, and one thing only. Passing a "flag" to it makes a function do two things at once, for example:
+
+```ts:title=single-responsibility
 // 🚨 booleans as a function parameter
-function getErrorMessage(isOfLegalAge: boolean): string | undefined => {
-  if (!isOfLegalAge) {
-    return 'Sorry, you are too young to use this service'
-  }
-  return undefined
+function processPayment(user: User, amount: number, sendEmail: boolean) {
+    // do the payment processing here
+
+    if (sendEmail) {
+        sendPaymentMail(user.email)
+    }
 }
 ```
 
-### Flags
+### Impossible states
+
+Suppose you have a _metric_ of some sorts, and you want to format that. It might be a "normal" number, but it might also be a percentage value. So you decide to model the formatting function like this:
+
+```ts:title=format-metric
+function formatMetric(value: number, isPerent: boolean): string {
+    if (isPercent) {
+        return `${value * 100}%`
+    }
+    return String(metric)
+}
+```
+
+This is rather rudimentary number formatting function, but apart from that, it doesn't look too bad. Frankly, the first "flag" you add to a function looks _very innocent_. As opposed to the above example, the function also doesn't do two different things at once, it does one thing with two different _variations_ - an important difference.
+
+#### The second flag
+
+Requirements change over time (as they tend to do), and now we have to support currencies for some of our metrics as well. Starting from the above formatting function, we are tempted to add _another_ flag, `isCurrency`
+
+```ts:title=🚨-currency-formatting{1, 5-7}
+function formatMetric(value: number, isPercent: boolean, isCurrency: boolean): string {
+    if (isPercent) {
+        return `${value * 100}%`
+    }
+    if (isCurrency) {
+        // imagine some currency formatting is returned here
+    }
+    return String(metric)
+}
+```
+
+Our code works, we write tests, add the currency flag if we have a currency metric, and all is well.
+
+Except it isn't.
+
+Adding one boolean doesn't add _one more state_ - the amount of states grow exponentially. Two booleans means four states, three booleans means eight possible states etc. What happens if we call our above function with:
+
+```
+formatMetric(100, true, true)
+```
+
+The answer is: you can't know. It's an implementation detail which flag is checked first. It's also an _impossible state_: A metric cannot be _percent_ and _currency_ at the same time. Such impossible states are frequently introduced with boolean parameters. I recently refactored a function with 8 booleans as input - turns out, it only had 3 actual states, the rest were variations thereof.
+
+#### Resist the urge
+
+To avoid impossible states, resist the urge of adding the _first_ boolean parameter. It is infinitely easier for humans to extend existing patterns instead of recognizing anti-patterns and refactoring them. If there is one boolean, there will be a second. If we start of with an enumeration of possible states, it is much more likely that this will be extended instead:
+
+```ts:title=✅-metric-variant
+function formatMetric(value: number, variant?: 'percent'): string {
+    if (variant === 'percent') {
+        return `${value * 100}%`
+    }
+    return String(metric)
+}
+```
+
+Now we can extend the variant to `'percent' | 'currency'`, and only have three states to work with instead of four. Of course, you can also explicitly include the default (_standard_) variant instead of using _undefined_.
+
+#### Moar advantages
+
+Further advantages of a single variant property include:
+
+-   Better readability<br />
+    reading `formatMetric(100, true, false)` makes it impossible to know what these flags are for. It's also very easy to mix them up, and the compiler won't tell you about it. You can work around this by using a single options object, which is quite popular in JavaScript:
+
+`formatMetric(100, { isPercent: true })`
+Writing it like this makes it even more obvious that boolean are the wrong interface here.
+
+-   Exhaustive matching <br />
+
+I've written about [exhaustive matching in TypeScript](./exhaustive-matching-in-typescript) before, and it also comes in very handy in this example. The compiler will then tell us where we need to adapt our code when we add a new variant. CDD, compiler-driven-development:
+
+```ts:title=exhaustive-variants
+type MetricVariant = 'standard' | 'percent' | 'currency'
+function formatMetric(value: number, variant: MetricVariant = 'standard'): string {
+    switch (variant) {
+        case 'percent':
+            return `${value * 100}%`
+        case 'currency':
+            return // imagine some currency formatting is returned here
+        case 'standard':
+            return String(metric)
+    }
+}
+```
+
+We are also seeing _variants_ often on React components.
+
+isPrimary
+isSecondary
 
 <Comments>Leave a comment below ⬇️</Comments>
