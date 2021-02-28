@@ -1,7 +1,7 @@
 ---
 title: No love for boolean parameters
 description:
-date: 2021-02-13
+date: 2021-02-28
 banner: ./boolean.jpg
 tags:
     - JavaScript
@@ -22,27 +22,46 @@ There is nothing wrong with booleans per se. We use them for conditions every da
 
 ```js:title=boolean-condition
 // ✅ boolean condition
-if (person.age() < legalAge) {
+if (user.age() < legalAge) {
     return 'Sorry, you are too young to use this service'
 }
 ```
 
-But using them for parameters to a function can be an indication of a bad software design for various reasons:
+But using them for parameters to a function can be an indication of bad software design for various reasons:
 
-### Violation of single responsibility principle
+### Single responsibility principle
 
-A function should do one thing, and one thing only. Passing a "flag" to it makes a function do two things at once, for example:
+A function should do one thing, and one thing only. Passing a "flag" to it might make a function do two things at once, thus violating [this principle](https://en.wikipedia.org/wiki/Single-responsibility_principle). Take for example this signature from the Kotlin standard library of [equals](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/equals.html):
 
-```ts:title=single-responsibility
+```kt:title=single-responsibility
 // 🚨 booleans as a function parameter
-function processPayment(user: User, amount: number, sendEmail: boolean) {
-    // do the payment processing here
+fun String?.equals(other: String?, ignoreCase: Boolean): Boolean
 
-    if (sendEmail) {
-        sendPaymentMail(user.email)
-    }
-}
+// Returns true if this string is equal to other, optionally ignoring character case.
 ```
+
+Here, one function does essentially two very different things, depending on a flag passed in. This can be highly confusing when you have to read the call-side that looks something like this:
+
+```kt:title=???
+"foo".equals("bar", true)
+"foo".equals("bar", false)
+```
+
+How should we know what `true` means in this context. Even worse, what would `false` mean? Does it maybe negate the equals comparison? _Scala_ has solved this differently with two methods: [equals](<https://www.scala-lang.org/api/2.12.3/scala/collection/immutable/StringOps.html#equals(x$1:Any):Boolean>) and [equalsIgnoreCase](<https://www.scala-lang.org/api/2.12.3/scala/collection/immutable/StringOps.html#equalsIgnoreCase(x$1:String):Boolean>). Each does one only one thing - no guesswork here.
+
+#### More guesswork
+
+Before you look it up [here](<http://docs.groovy-lang.org/latest/html/groovy-jdk/java/lang/Iterable.html#sort(boolean,%20groovy.lang.Closure)>) - what do you think this boolean flag on Groovy's `List.sort` method means:
+
+```groovy:title=sort
+["hello","hi","hey"].sort(false) { it.length() }
+```
+
+In case it isn't obvious to everyone:
+
+-   `mutate` - false will always cause a new list to be created, true will mutate lists in place
+
+Totally logical and intuitive api 🤷‍♂️
 
 ### Impossible states
 
