@@ -239,19 +239,19 @@ type EnsureReadonlyArray<T> = T extends Array<any>
     : T extends ReadonlyArray<any>
     ? T
     : never
-export type Extract<
+export type ExtractValue<
     T extends ReadonlyArray<any>,
     K extends keyof T[number]
 > = EnsureReadonlyArray<T>[number][K]
 
-type Variant = Extract<typeof options, 'id'>
+type Variant = ExtractValue<typeof options, 'id'>
 ```
 
-[TypeScript playground](https://www.typescriptlang.org/play?#code/MYewdgzgLgBCAOUCW4IwLwwNoFgBQMhMA3vkeTEgCYBcMA5PAE5IC2AhkwJ70A0ZFQgBt2AIwCmQuvQAqAC3ExmbTlziIUYPgMIBffgSKlDg6tIjjQYKqu0mKIiVIbzFF8De7rk4O+X34ALow7GhW0Pj4UFzwigCikACuTOIASuLsVOBCXACCTEzsXAA8MgB8GDAyMOIAHlDi1mj5hSXsYFxlOjAA-DBg4gBu4kzddNV1DU0w6ZnZeQVFxe2d3X0yY-1DI-h18CBMsNGxMHH1hcBQxd0T9Y1UaLNZYDktSytlBuQA0jV30wBrcRcEAAMyqWDAiVYEiYgXwFUwCQgyTSGWer0WJXKkOhsMCWG+8LwURiigAapwkO1YEjzuxLsVjuIwd5NBBeAxqPQykA)
+[TypeScript playground](https://www.typescriptlang.org/play?#code/MYewdgzgLgBCAOUCW4IwLwwNoFgBQMhMA3vkeTEgCYBcMA5PAE5IC2AhkwJ70A0ZFQgBt2AIwCmQuvQAqAC3ExmbTlziIUYPgMIBffgSKlDg6tIjjQYKqu0mKIiVIbzFF8De7rk4O+X34ALow7GhW0Pj4UFzwigCikACuTOIASuLsVOBCXACCTEzsXAA8MgB8GDAyMOIAHlDi1mj5hSXsYFxlOjAA-DBg4gBu4kzddNV1DU0w6ZnZeQVFxe2d3X0yY-1DI-h18CBMsNGxMHH1hcBQAGrsQonixd0T9Y1UaLNZYDktSytlBuQANI1F7TADW4i4IAAZlUsGBEqwJExAvgKpgEhBkmkMp9vosSuV4YjkYEsIDUXgojFFDcWO1YBjzuxLjc7g9juIYd5NBBeAxqPQykA)
 
 This is admittedly a bit hackish, as it relies on the fact that const assertions make everything readonly.
 But it will make sure that Variant is inferred to _never_ if you forget the const assertion, and that means you won't be able to use it anywhere.
-I'll take that safety any day (and tuck _Extract_ away in a util).
+I'll take that safety any day (and tuck _ExtractValue_ away in a util).
 
 ### Use readonly everywhere
 
