@@ -28,6 +28,11 @@ an introduction to the react-query basics, please read the [official docs](https
 first, especially the Guides & Concepts section. Come back after that and [#1: Practical React Query](practical-react-query)
 before continuing here :)
 
+_Edit_: After writing this, I realized that I've taken a lot of time to cover _render optimizations_. So I wanted to point out, once again, that usually, for most apps, render optimizations probably don't matter as much as you'd think. Re-renders are a good thing. They make sure your app is up-to-date. I'd take an "unnecessary re-render" over a "missing render-that-should-have-been-there" all day every day. For more on this topic, please read:
+
+-   [Fix the slow render before you fix the re-render](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render) by Kent C. Dodds.
+-   [this article by @ryanflorence about premature optimizations](https://cdb.reacttraining.com/react-inline-functions-and-performance-bdff784f5578)
+
 ### Data Transformation
 
 Let's face it - most of us are _not_ using GraphQL. If you do, then you can most likely skip this section entirely, because you have the luxury of requesting your data in the format that you desire.
@@ -122,7 +127,57 @@ Especially if you have additional logic in your custom hook to combine with your
 
 #### 3. using the select option
 
+v3 introduced built-in selectors, which can also be used to transform data:
+
+```ts:title=select-transformation
+export const useTodosQuery = () =>
+    useQuery(['todos'], fetchTodos, {
+        select: (data) => data.map((todo) => todo.name.toUpperCase()),
+    })
+```
+
+selectors will only be called if _data_ exists, so you don't have to care about _undefined_ here. Selectors like the one above will also run on every render, because the functional identity changes (it's an inline function). If your transformation is expensive, you can memoize it either with useCallback, or by extracting it to a stable function reference:
+
+```ts:title=select-memoizations
+const transformTodoNames = (data: Todos) => data.map((todo) => todo.name.toUpperCase())
+
+export const useTodosQuery = () =>
+    useQuery(['todos'], fetchTodos, {
+        // ✅ uses a stable function reference
+        select: transformTodoNames,
+    })
+
+export const useTodosQuery = () =>
+    useQuery(['todos'], fetchTodos, {
+        // ✅ memoizes with useCallback
+        select: React.useCallback(
+            (data: Todos) => data.map((todo) => todo.name.toUpperCase()),
+            []
+        ),
+    })
+```
+
+Further, the select option can also be used to subscribe to only parts of the data. This is what makes this approach truly unique. Consider the following example:
+
+```js:title=select-partial-subscriptions
+export const useTodosQuery = (select) => useQuery(['todos'], fetchTodos, { select })
+
+export const useTodosCount = () => useTodosQuery((data) => data.length)
+export const useTodo = (id) => useTodosQuery((data) => data.find((todo) => todo.id === id))
+```
+
+Here, we've created a [useSelector](https://react-redux.js.org/api/hooks#useselector) like API by passing a custom selector to our _useTodosQuery_. The custom hooks still works like before, as _select_ will be _undefined_ if you don't pass it, so the whole state will be returned.
+
+But if you pass a selector, you are now only subscribed to the result of the selector function. This is quite powerful, because it means that even if we update the name of a todo, our component that only subscribes to the count via _useTodosCount_ will _not_ rerender. The count hasn't changed, so react-query can bail out of rendering here 🥳.
+
+-   🟢 best optimizations
+-   🟢 allows for partial subscriptions
+-   🟡 structure can be different for every observer
+-   🟡 structual sharing is performed twice (read on for more info)
+
 ### Render optimizations
+
+I've already written quite a bit about render optimizations when describing the select option. However, "Why does react-query re-render two times even though nothing changed in my data" is the question I probably needed to answer the most (apart from maybe: "where can I find the v2 docs" 😅).
 
 ### Global error handling
 
