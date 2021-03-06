@@ -212,6 +212,72 @@ export const useTodosCount = () => useTodosQuery((data) => data.length, ['data']
 
 You can see this in action in the [optimistic-updates-typescript](https://github.com/tannerlinsley/react-query/blob/master/examples/optimistic-updates-typescript/pages/index.tsx#L35-L48) example in the docs.
 
+The above code is a little bit troublesome, and can get out-of-sync quite easily. What if we want to react to the _error_, too? Or we start to use the _isLoading_ flag? We have to keep the _notifyOnChangeProps_ list in-sync with whichever props we are actually using in our components. Is there a way to do this automatically? Turns out, there is:
+
+#### Tracked Queries
+
+I'm quite proud of this feature, given it's my first major contribution to the library. If you set _notifyOnChangeProps_ to `'tracked'`, react-query will keep track of the props you are using during render, and will use this to compute the list. This will optimize exactly the same way as specifying the list manually, except that you don't have to think about it. You can also turn this on globally for all your queries:
+
+```tsx:title=tracked-queries
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            notifyOnChangeProps: 'tracked',
+        },
+    },
+})
+function App() {
+    return (
+        <QueryClientProvider client={queryClient}>
+            <Example />
+        </QueryClientProvider>
+    )
+}
+```
+
+There are some limitations to tracked queries:
+
+-   If you use rest spread during destructuring, you are effectively observing all properties. Normal destructuring is fine, just don't do this:
+
+```ts:title=problematic-rest-spread
+// 🚨 will track all properties
+const { isLoading, ...queryInfo } = useQuery(...)
+
+// ✅ this is totally fine
+const { isLoading, data } = useQuery(...)
+```
+
+-   Tracked queries only work "during render". If you only access properties during effects, they will not be tracked. This is quite the edge case though because of dependency arrays:
+
+```ts:title=tracking-effects
+const queryInfo = useQuery(...)
+
+// 🚨 will not corectly track data
+React.useEffect(() => {
+    console.log(queryInfo.data)
+})
+
+// ✅ fine because the dependency array is accessed during render
+React.useEffect(() => {
+    console.log(queryInfo.data)
+}, [queryInfo.data])
+```
+
+-   Tracked queries don't reset on each render, so if you track a field once, you'll track it for the lifetime of the observer:
+
+```ts:title=no-reset
+const queryInfo = useQuery(...)
+
+if (someCondition()) {
+    // 🟡 we will track the data prop if someCondition was true in any previous render cycle
+    return <div>{queryInfo.data}</div>
+}
+```
+
+If you think this is complicated stuff - I think you're right. But hey, this is "advanced react-query" after all 😜.
+
+### Status check render order
+
 ### Global error handling
 
 ### Type Inference
