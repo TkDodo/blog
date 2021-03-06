@@ -177,10 +177,44 @@ But if you pass a selector, you are now only subscribed to the result of the sel
 
 ### Render optimizations
 
-I've already written quite a bit about render optimizations when describing the select option. However, "Why does react-query re-render two times even though nothing changed in my data" is the question I probably needed to answer the most (apart from maybe: "where can I find the v2 docs" 😅).
+I've already written quite a bit about render optimizations when describing the select option. However, "Why does react-query re-render two times even though nothing changed in my data" is the question I probably needed to answer the most (apart from maybe: "Where can I find the v2 docs" 😅).
+
+#### isFetching transition
+
+I haven't been entirely honest in the above example when I said that this component will only re-render if the length of todos change:
+
+```tsx:title=count-component
+
+function TodosCount() {
+    const todosCount = useTodosCount()
+
+    return <div>{todosCount.data}</data>
+}
+```
+
+Every time you make a background refetch, this component will re-render twice with the following query info:
+
+```
+{ status: 'success', data: [...], isFetching: true }
+{ status: 'success', data: [...], isFetching: false }
+```
+
+That is because react-query exposes a lot of meta information for each query, and _isFetching_ is one of them. This flag will always be true when a request is in-flight. This is quite useful if you want to display a background loading indicator. But it's also kinda unnecessary if you don't do that.
+
+#### notifyOnChangeProps
+
+For this use-case, react-query has the _notifyOnChangeProps_ option. It can be set on a per-observer level to tell react-query: Please only inform this observer about changes if one of these props change. By setting this prop to `['data']`, we will find the optimized version we seek:
+
+```
+export const useTodosQuery = (select, notifyOnChangeProps) => useQuery(['todos'], fetchTodos, { select, notifyOnChangeProps })
+export const useTodosCount = () => useTodosQuery((data) => data.length, ['data'])
+```
+
+You can see this in action in the [optimistic-updates-typescript](https://github.com/tannerlinsley/react-query/blob/master/examples/optimistic-updates-typescript/pages/index.tsx#L35-L48) example in the docs.
 
 ### Global error handling
 
 ### Type Inference
 
 <Comments>Leave a comment below ⬇️</Comments>
+```
