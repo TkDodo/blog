@@ -24,6 +24,26 @@ Welcome to Part 2 of "Things I have to say about react-query". As I've become mo
 
 ### Data Transformation
 
+Let's face it - most of us are _not_ using GraphQL. If you do, then you can most likely skip this section entirely, because you have the luxury of requesting your data in the format that you desire.
+
+If you are working with REST though, you are constrained by what the backend returns. So how and where do you best transform data when working with react-query? The only answer worth a damn in software development applies here as well:
+
+> It depends.
+
+<p style="padding-left: 3rem; margin-top: -1rem">— Every developer, always</p>
+
+Here are 3+1 approaches on where you _can_ transform data with their respective pros and cons.
+
+#### 0. On the backend
+
+This is my favourite approach, if you can afford it. If the backend returns data in exactly the structure we want, there is nothing we need to do. While this might sound unrealistic in many cases, e.g. when working with public REST APIs, it is also quite possible to achieve in enterprise applications. If you are in control of the backend and have an endpoint that returns data for your exact use-case, prefer to deliver the data the way you expect it.
+
+#### 1. In the queryFn
+
+#### 2. In the render function
+
+#### 3. using the select option
+
 ### Render optimizations
 
 ### Global error handling
