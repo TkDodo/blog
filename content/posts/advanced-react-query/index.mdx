@@ -311,7 +311,43 @@ As I've hinted before, for selectors, structural sharing will be done twice: Onc
 
 Have a look at the [replaceEqualDeep tests](https://github.com/tannerlinsley/react-query/blob/80cecef22c3e088d6cd9f8fbc5cd9e2c0aab962f/src/core/tests/utils.test.tsx#L97-L304) if you want to learn more about what happens under the hood.
 
-### Status check render order
+### Status check order
+
+Most examples look something like this:
+
+```jsx:title=simple-example
+const todos = useTodos()
+
+if (todos.isLoading) return 'Loading...'
+if (todos.error) return 'An error has occurred: ' + error.message
+
+return <div>{todos.data.map(renderTodo)}</div>
+```
+
+Here, we check for loading and error first, and then display our data. This is probably fine for some use-cases, but not for others.
+
+#### Background errors
+
+In many situations, if a background refetch fails, it could be silently ignored. But the code above does not do that. Suppose the initial fetch succeeds, and we render our data. Now the user switches tabs, and they come back some minutes later. React-Query will do a background refetch, which fails. In this case, react-query will be in the following state:
+
+```json
+{ "status": "error", "error": "Something went wrong", "data": [{ ... }] }
+```
+
+As you can see, we will have _both_ an error _and_ the stale data available. Now it's up to us to decide what we display. Is it important to show the error? Is it enough to show the stale data only, if we have any? Should we show both?
+
+There is no clear answer to this question - it depends on your exact use-case. But if you prefer displaying data when you have any in the cache, check for data-availability first:
+
+```jsx:title=data-first
+const todos = useTodos()
+
+if (todos.data) {
+    return <div>{todos.data.map(renderTodo)}</div>
+}
+if (todos.error) return 'An error has occurred: ' + error.message
+
+return 'Loading...'
+```
 
 ### Global error handling
 
