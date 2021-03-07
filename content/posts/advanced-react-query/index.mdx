@@ -276,11 +276,46 @@ if (someCondition()) {
 
 If you think this is complicated stuff - I think you're right. But hey, this is "advanced react-query" after all 😜.
 
+#### Structural sharing
+
+A different, but no less important render optimization that react-query has turned on out of the box is _structural sharing_. This feature makes sure that we keep referential identity of our _data_ on every level. As an example, suppose you have the following structure:
+
+```json
+[
+    { "id": 1, "name": "Learn React", "status": "active" },
+    { "id": 2, "name": "Learn react-query", "status": "todo" }
+]
+```
+
+No suppose we transition our first todo into the _done_ state, and we make a background refetch. We'll get a completely new json from our backend:
+
+```diff
+[
+-    { "id": 1, "name": "Learn React", "status": "active" },
++    { "id": 1, "name": "Learn React", "status": "done" },
+    { "id": 2, "name": "Learn react-query", "status": "todo" }
+]
+```
+
+Now react-query will attempt to compare the old state and the new and keep as much reference of the previous state as possible. In our example, the todos array will be new, because we updated a todo. The object with id 1 will also be new, but the object for id 2 will be the same reference as the one in the previous state - react-query will just copy it over to the new result because nothing has changed in it.
+
+This comes in very handy when using selectors because of partial subscriptions:
+
+```ts:title=optimized-selectors
+// ✅ will only re-render if _something_ within todo with id:2 changes
+// thanks to structural sharing
+const { data } = useTodo(2)
+```
+
+As I've hinted before, for selectors, structural sharing will be done twice: Once on the result returned from the queryFn to determine if anything changed at all, and then once more on the _result_ of the selector function to determine if the component needs to be re-rendered. In some instance, especially when having very large datasets, structural sharing _can_ be a bottleneck. It also only works on json-serializable structures. If you don't need this optimization, you can turn it off by setting _structuralSharing: false_ on any query.
+
+Have a look at the [replaceEqualDeep tests](https://github.com/tannerlinsley/react-query/blob/80cecef22c3e088d6cd9f8fbc5cd9e2c0aab962f/src/core/tests/utils.test.tsx#L97-L304) if you want to learn more about what happens under the hood.
+
 ### Status check render order
 
 ### Global error handling
 
-### Type Inference
+### Type Inference and Type Narrowing
 
 <Comments>Leave a comment below ⬇️</Comments>
 ```
