@@ -346,7 +346,77 @@ if (todos.error) return 'An error has occurred: ' + error.message
 return 'Loading...'
 ```
 
-### Type Inference and Type Narrowing
+### Type Inference
 
-<Comments>Leave a comment below ⬇️</Comments>
+React Query is written in TypeScript, so there is very good support for TypeScript consumers. The official docs recommend to annotate the types of _useQuery_ when writing custom hooks:
+
+```ts:title=type-annotation
+const useTodos = useQuery<Todos, Error>('groups', fetchTodos)
 ```
+
+I've made the experience that this is rarely needed. React Query can nicely _infer_ the types if the function that fetches the data is strictly typed. Of course, if you inline that function, you will have _any_ - because that's what _axios_ or _fetch_ give you. So the generics are definitely needed in this case:
+
+```ts:title=inline-fetch
+export const useTodosQuery = () =>
+    // 🚨 data will be any here
+    useQuery(['todos'], () => axios.get('todos).then(response => respone.data))
+```
+
+If you like to keep your api layer separated from your queries, you'll need to add type definitions anyways to avoid _implicit any_, so react-query can infer the rest:
+
+```ts:title=inferred-types
+const fetchTodos = async (): Promise<Todos> =>
+    axios.get(['todos']).then((response) => response.data)
+
+// ✅ data will be Todos | undefined here
+export const useTodosQuery = () => useQuery(['todos'], fetchTodos)
+```
+
+#### What about error?
+
+What about error, you might ask? Per default, without any generics, error will be inferred to _unknown_. This might sound like a bug, why is it not _Error_? But it is actually on purpose, because in JavaScript, you can throw _anything_ - it doesn't have to be of type `Error`:
+
+```ts:title=totally-legit-throw-statements
+throw 5
+throw undefined
+throw Symbol('foo')
+```
+
+Since react-query is not in charge of the function that returns the Promise, it also can't know what type of errors it might produce. So _unknown_ is correct. Once TypeScript allows skipping some generics when calling a function with multiple generics (see [this issue for more information](https://github.com/microsoft/TypeScript/issues/10571)), we could handle this better, but for now, if we need to work with errors and don't want to resort to passing generics, we can narrow the type with an instanceof check:
+
+```ts:title=narrow-with-instanceof
+const todos = useTodos()
+
+// 🚨 this doesn't work because error is unknown
+if (todos.error) {
+    return <div>An error occurred: {error.message}</div>
+}
+
+// ✅ the instanceOf check narrows to type Error
+if (todos.error instanceof Error) {
+    return <div>An error occurred: {error.message}</div>
+}
+```
+
+Since we need to make some kind of check anyways to see if we have an error, the instanceof check doesn't look like a bad idea at all.
+
+### Type Narrowing
+
+I rarely use destructuring when working with react-query. First of all, names like _data_ and _error_ are quite generic (purposefully so), so you'll likely rename them anyway. Keeping the whole object will keep the context of what data it is or where the error is coming from. It will further help TypeScript to narrow types when using the status field or one of the status booleans, which it cannot do if you use destructuring:
+
+```ts:title=type-narrowing
+const { data, isSuccess } = useTodos()
+if (isSuccess) {
+    // 🚨 data will still be `Todos | undefined` here
+}
+
+const todos = useTodos()
+if (todos.isSuccess) {
+    // ✅ todos.data will now be `Todos`
+}
+```
+
+<Comments>
+    Phew, congratulations, you made it this far. I'm sure this wasn't easy to digest, so now
+    all that is left is leaving a comment below ⬇️
+</Comments>
