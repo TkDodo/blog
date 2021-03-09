@@ -410,8 +410,8 @@ if (isSuccess) {
     // 🚨 data will still be `Todos | undefined` here
 }
 
-const todos = useTodos()
-if (todos.isSuccess) {
+const todosQuery = useTodos()
+if (todosQuery.isSuccess) {
     // ✅ todos.data will now be `Todos`
 }
 ```
