@@ -213,7 +213,7 @@ While he above code works well, it is a little bit troublesome and can get out-o
 
 #### Tracked Queries
 
-I'm quite proud of this feature, given it's my first major contribution to the library. If you set _notifyOnChangeProps_ to `'tracked'`, react-query will keep track of the props you are using during render, and will use this to compute the list. This will optimize exactly the same way as specifying the list manually, except that you don't have to think about it. You can also turn this on globally for all your queries:
+I'm quite proud of this feature, given that it was my first major contribution to the library. If you set _notifyOnChangeProps_ to `'tracked'`, react-query will keep track of the props you are using during render, and will use this to compute the list. This will optimize exactly the same way as specifying the list manually, except that you don't have to think about it. You can also turn this on globally for all your queries:
 
 ```tsx:title=tracked-queries
 const queryClient = new QueryClient({
@@ -415,6 +415,10 @@ if (todosQuery.isSuccess) {
     // ✅ todos.data will now be `Todos`
 }
 ```
+
+This has nothing to do with react-query, this is just how TypeScript works. [@danvdk](https://twitter.com/danvdk) has a good explanation for this behaviour
+
+https://twitter.com/danvdk/status/1363614288103964672
 
 <Comments>
     Phew, congratulations, you made it this far. I'm sure this wasn't easy to digest, so now
