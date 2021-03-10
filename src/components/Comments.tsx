@@ -4,7 +4,7 @@ import { useColorMode, Box, Divider } from 'theme-ui'
 const id = 'inject-comments'
 
 type Props = {
-    children: React.ReactNode
+    children?: React.ReactNode
     withSeparator: boolean
 }
 
