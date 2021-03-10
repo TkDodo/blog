@@ -6,6 +6,8 @@ banner: ./transformations.jpeg
 tags:
     - react
     - react-query
+    - JavaScript
+    - TypeScript
 ---
 
 import Comments from 'components/Comments'
@@ -157,7 +159,7 @@ export const useTodo = (id) => useTodosQuery((data) => data.find((todo) => todo.
 
 Here, we've created a [useSelector](https://react-redux.js.org/api/hooks#useselector) like API by passing a custom selector to our _useTodosQuery_. The custom hooks still works like before, as _select_ will be _undefined_ if you don't pass it, so the whole state will be returned.
 
-But if you pass a selector, you are now only subscribed to the result of the selector function. This is quite powerful, because it means that even if we update the name of a todo, our component that only subscribes to the count via _useTodosCount_ will _not_ rerender. The count hasn't changed, so react-query can chose to _not_ inform this observer about the update 🥳. (Please note that this is a bit simplified here adn technically not entirely true - I will talk in more detail about render optimizations in Part 3)
+But if you pass a selector, you are now only subscribed to the result of the selector function. This is quite powerful, because it means that even if we update the name of a todo, our component that only subscribes to the count via _useTodosCount_ will _not_ rerender. The count hasn't changed, so react-query can chose to _not_ inform this observer about the update 🥳 (Please note that this is a bit simplified here and technically not entirely true - I will talk in more detail about render optimizations in Part 3).
 
 🟢 &nbsp; best optimizations<br/>
 🟢 &nbsp; allows for partial subscriptions<br/>
