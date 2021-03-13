@@ -103,8 +103,8 @@ I think you can achieve the same with [useRef](https://reactjs.org/docs/hooks-re
 ```jsx:title=use-ref
 const Component = () => {
     // ✅ also works, but meh
-    const resource = React.useSRef(null)
-    if (!resource) {
+    const resource = React.useRef(null)
+    if (!resource.current) {
         resource.current = new Resource()
     }
     return (
