@@ -7,13 +7,14 @@
   "license": "MIT",
   "starter-name": "gatsby-starter-minimal-blog",
   "scripts": {
-    "build": "gatsby clean && gatsby build",
+    "build": "gatsby clean && gatsby build --prefix-paths",
     "develop": "gatsby develop",
     "develop:cypress": "cross-env CYPRESS_SUPPORT=y yarn develop",
     "build:cypress": "cross-env CYPRESS_SUPPORT=y yarn build",
     "start": "gatsby develop",
-    "serve": "gatsby serve",
-    "clean": "gatsby clean"
+    "serve": "gatsby serve --prefix-paths",
+    "clean": "gatsby clean",
+    "postbuild": "mv public build && mkdir public && mv build public/blog"
   },
   "dependencies": {
     "@lekoarts/gatsby-theme-minimal-blog": "^2.4.0",
