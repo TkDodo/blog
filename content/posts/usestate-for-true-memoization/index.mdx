@@ -1,0 +1,124 @@
+---
+title: useState for one-time initializations
+description: Why you shouldn't rely on useMemo for guaranteed referential stability but prefer useState instead
+date: 2021-03-12
+banner: ../dont-over-usestate/use-state-pitfalls.png
+tags:
+    - React
+    - useState pitfalls
+    - useMemo
+---
+
+import Comments from 'components/Comments'
+import { Divider } from '@theme-ui/components'
+
+<img src="../dont-over-usestate/use-state-pitfalls.png" />
+
+<Divider />
+
+-   [#1: Don't over useState](dont-over-use-state)
+-   [#2: Putting props to useState](putting-props-to-use-state)
+-   [#3: Things to know about useState](things-to-know-about-use-state)
+-   <b>useState for one-time initializations</b>
+
+<Divider />
+
+When we talk about memoization and keeping references stable, _useMemo_ is usually the first thing that comes to mind. I'm not in the mood for writing much text today,so I'm just gonna lead with a (real-world) example that happened to me this week:
+
+### The Example
+
+Suppose you have a resource that you only want to initialize once per life-time of your app. The recommended pattern is usually to create the instance _outside_ of the component:
+
+```tsx:title=static-instance
+// ✅ static instance is only created once
+const resource = new Resource()
+
+const Component = () => (
+    <ResourceProvider resource={resource}>
+        <App />
+    </ResourceProvider>
+)
+```
+
+The _const resource_ is created once when the js bundle is evaluated, and then made available to our app via the _ResourceProvider_. So far, so good. This usually works well for resources that you need once per App, like [redux stores](https://react-redux.js.org/api/provider#example-usage).
+
+In our case however, we were mounting the Component (a [micro-frontend](https://micro-frontends.org/)) multiple times, and each one needs their own _resource_. All hell breaks loose if two of those share the same resource. So we needed to move it _into_ the _Component_:
+
+```tsx:title=create-in-component
+const Component = () => {
+    // 🚨 be aware: new instance is created every render
+    const resource = new Resource()
+    return (
+        <ResourceProvider resource={new Resource()}>
+            <App />
+        </ResourceProvider>
+    )
+}
+```
+
+I think it is rather obvious that this is not a good idea. The render function now creates a new Resource on every render! This will coincidentally work if we only render our _Component_ once, but this is nothing you should ever rely on. Re-renders can (and likely will) happen, so be prepared!
+
+The first solution that came to our mind was to _useMemo_. After all, _useMemo_ is for only re-computing values if dependencies change, and we don't have a dependency here, so this looked wonderful:
+
+```tsx:title=use-memo
+const Component = () => {
+    // 🚨 still not truly stable
+    const resource = React.useMemo(() => new Resource(), [])
+    return (
+        <ResourceProvider resource={resource}>
+            <App />
+        </ResourceProvider>
+    )
+}
+```
+
+Again, this might coincidentally work for some time, but let's have a look at what the [react docs](https://reactjs.org/docs/hooks-reference.html#usememo) have to say about _useMemo_:
+
+> You may rely on useMemo as a performance optimization, not as a semantic guarantee. In the future, React may choose to “forget” some previously memoized values and recalculate them on next render, e.g. to free memory for offscreen components. Write your code so that it still works without useMemo — and then add it to optimize performance.
+
+Wait, what? If we should write our code in a way that it still works without _useMemo_, we are basically not making our code any better by adding it. We are not really concerned about performance here, we want true referential stability please. What's the best way to achieve this?
+
+#### state to the rescue
+
+Turns out, it's _state_. State is guaranteed to only update if you call the setter. So all we need to do is _not_ call the setter, and since it's the second part of the returned tuple, we can just _not_ destruct it. We can even combine this very well with the [lazy initializer](things-to-know-about-use-state#2-the-lazy-initializer) to make sure the resource constructor is only invoked once:
+
+```tsx:title=use-state
+const Component = () => {
+    // ✅ truly stable
+    const [resource] = React.useState(() => new Resource())
+    return (
+        <ResourceProvider resource={resource}>
+            <App />
+        </ResourceProvider>
+    )
+}
+```
+
+With this trick, we will make sure that our resource is truly only created once per component lifecycle 🚀.
+
+#### what about refs?
+
+I think you can achieve the same with [useRef](https://reactjs.org/docs/hooks-reference.html#useref), and according to the [rules of react](https://gist.github.com/sebmarkbage/75f0838967cd003cd7f9ab938eb1958f), this wouldn't even break purity of the render function:
+
+```jsx:title=use-ref
+const Component = () => {
+    // ✅ also works, but meh
+    const resource = React.useRef(null)
+    if (!resource.current) {
+        resource.current = new Resource()
+    }
+    return (
+        <ResourceProvider resource={resource.current}>
+            <App />
+        </ResourceProvider>
+    )
+}
+```
+
+Honestly, I don't know why you should do it this way - I think this looks rather convoluted, and TypeScript will also not like it, because _resource.current_ can technically be _null_. I prefer to just _useState_ for these cases.
+
+<Divider />
+
+Leave a comment below ⬇️ or reach out to me on [twitter](https://twitter.com/tkdodo) if you have any questions
+
+<Comments withSeparator={false} />
