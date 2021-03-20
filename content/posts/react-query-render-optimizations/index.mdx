@@ -1,6 +1,6 @@
 ---
 title: React Query Render Optimizations
-description:
+description: An advanced guide to minimize component re-renderings when using React Query
 date: 2021-03-20
 banner: ./optimizations.jpeg
 tags:
@@ -24,7 +24,7 @@ import { Divider } from '@theme-ui/components'
 
 <Divider />
 
-**Disclaimer**: Render optimizations are an advanced concept for any app. React Query already comes with very good optimizations and defaults out-of-the-box, and most of the time, no further optimizations are needed. "Unneeded re-renders" is a topic that many people tend to put a lot of focus on, which is why I've decided to cover it. But I wanted to point out once again, that usually, for most apps, render optimizations probably don't matter as much as you'd think. Re-renders are a good thing. They make sure your app is up-to-date. I'd take an "unnecessary re-render" over a "missing render-that-should-have-been-there" all day every day. For more on this topic, please read:
+**Disclaimer**: Render optimizations are an advanced concept for any app. React Query already comes with very good optimizations and defaults out of the box, and most of the time, no further optimizations are needed. "Unneeded re-renders" is a topic that many people tend to put a lot of focus on, which is why I've decided to cover it. But I wanted to point out once again, that usually, for most apps, render optimizations probably don't matter as much as you'd think. Re-renders are a good thing. They make sure your app is up-to-date. I'd take an "unnecessary re-render" over a "missing render-that-should-have-been-there" all day every day. For more on this topic, please read:
 
 -   [Fix the slow render before you fix the re-render](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render) by Kent C. Dodds
 -   [this article by @ryanflorence about premature optimizations](https://cdb.reacttraining.com/react-inline-functions-and-performance-bdff784f5578)
@@ -51,8 +51,8 @@ function TodosCount() {
 Every time you make a background refetch, this component will re-render twice with the following query info:
 
 ```
-{ status: 'success', data: [...], isFetching: true }
-{ status: 'success', data: [...], isFetching: false }
+{ status: 'success', data: 2, isFetching: true }
+{ status: 'success', data: 2, isFetching: false }
 ```
 
 That is because React Query exposes a lot of meta information for each query, and _isFetching_ is one of them. This flag will always be true when a request is in-flight. This is quite useful if you want to display a background loading indicator. But it's also kinda unnecessary if you don't do that.
