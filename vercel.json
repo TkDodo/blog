@@ -1,5 +1,6 @@
 {
   "redirects": [
+    { "source": "/profile-pic.jpg", "destination": "/blog/profile-pic.jpg", "permanent": true },
     { "source": "/", "destination": "/blog", "permanent": true }
   ]
 }
