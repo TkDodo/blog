@@ -142,7 +142,7 @@ module.exports = {
             },
         },
         `gatsby-plugin-offline`,
-        `gatsby-plugin-netlify`,
+        `gatsby-plugin-vercel`,
         {
             resolve: `gatsby-plugin-canonical-urls`,
             options: {
