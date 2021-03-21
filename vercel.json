@@ -1,6 +1,7 @@
 {
   "redirects": [
     { "source": "/profile-pic.jpg", "destination": "/blog/profile-pic.jpg", "permanent": true },
-    { "source": "/", "destination": "/blog", "permanent": true }
+    { "source": "/favicon.ico", "destination": "/blog/favicon.ico", "permanent": true },
+    { "source": "/", "destination": "/blog/", "permanent": true }
   ]
 }
