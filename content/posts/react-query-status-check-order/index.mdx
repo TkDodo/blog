@@ -1,0 +1,67 @@
+---
+title: React Query Status Check Order
+description:
+date: 2021-03-27
+banner: ./status-order.jpeg
+tags:
+    - react
+    - react-query
+    - JavaScript
+    - TypeScript
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+import { Divider } from '@theme-ui/components'
+
+<img src="./status-order.jpeg" />
+
+<Attribution name="Kyndall Ramirez" url="https://unsplash.com/@kyndallramirez" />
+
+-   [#1: Practical React Query](practical-react-query)
+-   [#2: React Query Data Transformations](react-query-data-transformations)
+-   [#3: React Query Render Optimizations](react-query-render-optimizations)
+
+<Divider />
+
+Most examples look something like this:
+
+```jsx:title=simple-example
+const todos = useTodos()
+
+if (todos.isLoading) return 'Loading...'
+if (todos.error) return 'An error has occurred: ' + error.message
+
+return <div>{todos.data.map(renderTodo)}</div>
+```
+
+Here, we check for loading and error first, and then display our data. This is probably fine for some use-cases, but not for others.
+
+#### Background errors
+
+In many situations, if a background refetch fails, it could be silently ignored. But the code above does not do that. Suppose the initial fetch succeeds, and we render our data. Now the user switches tabs, and they come back some minutes later. React-Query will do a background refetch, which fails. In this case, react-query will be in the following state:
+
+```json
+{ "status": "error", "error": "Something went wrong", "data": [{ ... }] }
+```
+
+As you can see, we will have _both_ an error _and_ the stale data available. Now it's up to us to decide what we display. Is it important to show the error? Is it enough to show the stale data only, if we have any? Should we show both?
+
+There is no clear answer to this question - it depends on your exact use-case. But if you prefer displaying data when you have any in the cache, check for data-availability first:
+
+```jsx:title=data-first
+const todos = useTodos()
+
+if (todos.data) {
+    return <div>{todos.data.map(renderTodo)}</div>
+}
+if (todos.error) return 'An error has occurred: ' + error.message
+
+return 'Loading...'
+```
+
+<Divider />
+
+Feel free to reach out to me on [twitter](https://twitter.com/tkdodo) if you have any questions, or just leave a comment below ⬇️
+
+<Comments withSeparator={false} />
