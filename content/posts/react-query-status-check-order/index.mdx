@@ -24,9 +24,20 @@ import { Divider } from '@theme-ui/components'
 
 <Divider />
 
-Most examples look something like this:
+One advantage of React Query is the easy access to status fields of the query. You instantly know if your query is loading or if it's erroneous. For this, the library exposes a bunch of boolean flags, which are mostly derived from the internal state machine. Looking at [the types](https://github.com/tannerlinsley/react-query/blob/f2137dc4e4553256c4ebc1891b548fe35efe9231/src/core/types.ts#L250), your query can be in one of the following states:
 
-```jsx:title=simple-example
+-   `success`: Your query was successful and you have _data_ for it
+-   `error`: Your query did not work, and an _error_ is set
+-   `loading`: Your query has no data and is currently _loading_ for the first time
+-   `idle`: Your query has never run because it's not _enabled_
+
+Note that the `isFetching` flag is _not_ part of the internal state machine - it is an additional flag that will be true whenever a request is in-flight.
+
+### The standard example
+
+The _idle_ state is mostly left out, because it's an edge case for disabled queries. So most examples look something like this:
+
+```jsx:title=standard-example
 const todos = useTodos()
 
 if (todos.isLoading) return 'Loading...'
@@ -35,19 +46,30 @@ if (todos.error) return 'An error has occurred: ' + error.message
 return <div>{todos.data.map(renderTodo)}</div>
 ```
 
-Here, we check for loading and error first, and then display our data. This is probably fine for some use-cases, but not for others.
+Here, we check for loading and error first, and then display our data. This is probably fine for some use-cases, but not for others. Many data fetching solutions, especially hand-crafted ones, have no refetch mechanism, or only refetch on explicit user interactions.
+
+But React Query does. And it refetches quite aggressively per default, and also without the user actively requesting a refetch. The concepts of _refetchOnMount_, _refetchOnWindowFocus_ and _refetchOnReconnect_ are great for keeping your data accurate, but they might cause a confusing ux if such an automatic background refetch fails.
 
 #### Background errors
 
-In many situations, if a background refetch fails, it could be silently ignored. But the code above does not do that. Suppose the initial fetch succeeds, and we render our data. Now the user switches tabs, and they come back some minutes later. React-Query will do a background refetch, which fails. In this case, react-query will be in the following state:
+In many situations, if a background refetch fails, it could be silently ignored. But the code above does not do that. Let's look at two examples:
+
+-   The user opens a page, and the initial query loads successfully. They are working on the page for some time, then switch browser tabs to check emails. They come back some minutes later, and React Query will do a background refetch. Now that fetch fails.
+-   Our user is on page with a list view, and they click on one item to drill down to the detail view. This works fine, so they go back to the list view. Once they go to the detail view again, they will see data from the cache. This is great - except if the background refetch fails.
+
+In both situations, our query will be in the following state:
 
 ```json
-{ "status": "error", "error": "Something went wrong", "data": [{ ... }] }
+{ "status": "error", "error": { "message": "Something went wrong" }, "data": [{ ... }] }
 ```
 
-As you can see, we will have _both_ an error _and_ the stale data available. Now it's up to us to decide what we display. Is it important to show the error? Is it enough to show the stale data only, if we have any? Should we show both?
+As you can see, we will have _both_ an error _and_ the stale data available. This is what makes React Query great - it embraces the stale-while-revalidate caching mechanism, which means it will always give you data if it exists, even if it's stale.
 
-There is no clear answer to this question - it depends on your exact use-case. But if you prefer displaying data when you have any in the cache, check for data-availability first:
+Now it's up to us to decide what we display. Is it important to show the error? Is it enough to show the stale data only, if we have any? Should we show both, maybe with a little _background error_ indicator?
+
+There is no clear answer to this question - it depends on your exact use-case. However, given the two above examples, I think it would be a somewhat confusing user experience if data would be replaced with an error screen - especially if this takes places after a couple of seconds where the user has already seen the data.
+
+This is why I usually check for data-availability first:
 
 ```jsx:title=data-first
 const todos = useTodos()
@@ -59,6 +81,8 @@ if (todos.error) return 'An error has occurred: ' + error.message
 
 return 'Loading...'
 ```
+
+Again, there is no clear principle of what is right, as it is highly dependent on the use-case. Everyone should be aware of the consequences that aggressive refetching has, and we have to structure our code accordingly rather than strictly following the simple todo-examples 😉.
 
 <Divider />
 
