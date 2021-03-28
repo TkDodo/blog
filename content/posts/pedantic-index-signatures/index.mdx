@@ -137,7 +137,7 @@ const isNonEmpty = <T extends unknown>(array: Array<T>): array is NonEmptyArray<
     array.length > 0
 ```
 
-This basically gives u sa variadic tuple type where the first element is always defined, and a
+This basically gives us a variadic tuple type where the first element is always defined, and a
 [user-defined type guard](https://www.typescriptlang.org/docs/handbook/advanced-types.html#user-defined-type-guards)
 that assures an Array is really non-empty.
 So if you want to force people to give you a non-empty Array so that you can safely access the first value,
