@@ -32,7 +32,7 @@ One advantage of React Query is the easy access to status fields of the query. Y
 -   `loading`: Your query has no data and is currently _loading_ for the first time
 -   `idle`: Your query has never run because it's not _enabled_
 
-Note that the `isFetching` flag is _not_ part of the internal state machine - it is an additional flag that will be true whenever a request is in-flight.
+Note that the `isFetching` flag is _not_ part of the internal state machine - it is an additional flag that will be true whenever a request is in-flight. You can be fetching and success, you can be fetching and error - but you cannot be loading and success at the same time. The state machine makes sure of that.
 
 ### The standard example
 
@@ -49,7 +49,9 @@ return <div>{todos.data.map(renderTodo)}</div>
 
 Here, we check for loading and error first, and then display our data. This is probably fine for some use-cases, but not for others. Many data fetching solutions, especially hand-crafted ones, have no refetch mechanism, or only refetch on explicit user interactions.
 
-But React Query does. And it refetches quite aggressively per default, and also without the user actively requesting a refetch. The concepts of _refetchOnMount_, _refetchOnWindowFocus_ and _refetchOnReconnect_ are great for keeping your data accurate, but they might cause a confusing ux if such an automatic background refetch fails.
+But React Query does.
+
+It refetches quite aggressively per default, and does so without the user actively requesting a refetch. The concepts of _refetchOnMount_, _refetchOnWindowFocus_ and _refetchOnReconnect_ are great for keeping your data accurate, but they might cause a confusing ux if such an automatic background refetch fails.
 
 #### Background errors
 
@@ -68,7 +70,9 @@ As you can see, we will have _both_ an error _and_ the stale data available. Thi
 
 Now it's up to us to decide what we display. Is it important to show the error? Is it enough to show the stale data only, if we have any? Should we show both, maybe with a little _background error_ indicator?
 
-There is no clear answer to this question - it depends on your exact use-case. However, given the two above examples, I think it would be a somewhat confusing user experience if data would be replaced with an error screen - especially if this takes places after a couple of seconds where the user has already seen the data.
+There is no clear answer to this question - it depends on your exact use-case. However, given the two above examples, I think it would be a somewhat confusing user experience if data would be replaced with an error screen.
+
+This is even more relevant when we take into account that React Query will retry failed queries three times per default with exponential backoff, so it might take a couple of seconds until the stale data is replaced with the error screen. If you also have no background fetching indicator, this can be really perplexing.
 
 This is why I usually check for data-availability first:
 
