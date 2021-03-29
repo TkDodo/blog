@@ -41,8 +41,12 @@ The _idle_ state is mostly left out, because it's an edge case for disabled quer
 ```jsx:title=standard-example
 const todos = useTodos()
 
-if (todos.isLoading) return 'Loading...'
-if (todos.error) return 'An error has occurred: ' + error.message
+if (todos.isLoading) {
+    return 'Loading...'
+}
+if (todos.error) {
+    return 'An error has occurred: ' + todoes.error.message
+}
 
 return <div>{todos.data.map(renderTodo)}</div>
 ```
@@ -53,7 +57,7 @@ But React Query does.
 
 It refetches quite aggressively per default, and does so without the user actively requesting a refetch. The concepts of _refetchOnMount_, _refetchOnWindowFocus_ and _refetchOnReconnect_ are great for keeping your data accurate, but they might cause a confusing ux if such an automatic background refetch fails.
 
-#### Background errors
+### Background errors
 
 In many situations, if a background refetch fails, it could be silently ignored. But the code above does not do that. Let's look at two examples:
 
@@ -63,7 +67,11 @@ In many situations, if a background refetch fails, it could be silently ignored.
 In both situations, our query will be in the following state:
 
 ```json
-{ "status": "error", "error": { "message": "Something went wrong" }, "data": [{ ... }] }
+{
+    "status": "error",
+    "error": { "message": "Something went wrong" },
+    "data": [{ ... }]
+}
 ```
 
 As you can see, we will have _both_ an error _and_ the stale data available. This is what makes React Query great - it embraces the stale-while-revalidate caching mechanism, which means it will always give you data if it exists, even if it's stale.
@@ -82,7 +90,9 @@ const todos = useTodos()
 if (todos.data) {
     return <div>{todos.data.map(renderTodo)}</div>
 }
-if (todos.error) return 'An error has occurred: ' + error.message
+if (todos.error) {
+    return 'An error has occurred: ' + todos.error.message
+}
 
 return 'Loading...'
 ```
