@@ -41,8 +41,12 @@ The _idle_ state is mostly left out, because it's an edge case for disabled quer
 ```jsx:title=standard-example
 const todos = useTodos()
 
-if (todos.isLoading) return 'Loading...'
-if (todos.error) return 'An error has occurred: ' + todoes.error.message
+if (todos.isLoading) {
+    return 'Loading...'
+}
+if (todos.error) {
+    return 'An error has occurred: ' + todoes.error.message
+}
 
 return <div>{todos.data.map(renderTodo)}</div>
 ```
@@ -86,7 +90,9 @@ const todos = useTodos()
 if (todos.data) {
     return <div>{todos.data.map(renderTodo)}</div>
 }
-if (todos.error) return 'An error has occurred: ' + todos.error.message
+if (todos.error) {
+    return 'An error has occurred: ' + todos.error.message
+}
 
 return 'Loading...'
 ```
