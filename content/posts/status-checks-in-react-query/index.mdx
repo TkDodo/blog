@@ -45,7 +45,7 @@ if (todos.isLoading) {
     return 'Loading...'
 }
 if (todos.error) {
-    return 'An error has occurred: ' + todoes.error.message
+    return 'An error has occurred: ' + todos.error.message
 }
 
 return <div>{todos.data.map(renderTodo)}</div>
