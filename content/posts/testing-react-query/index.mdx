@@ -64,6 +64,7 @@ If you are testing custom hooks, I'm quite certain you're using [react-hooks-tes
 
 ```tsx:title=wrapper
 const createWrapper = () => {
+    // ✅ creates a new QueryClient for each test
     const queryClient = new QueryClient()
     return ({ children }) => (
         <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
@@ -71,15 +72,93 @@ const createWrapper = () => {
 }
 
 test("my first test", async () => {
-  const { result } = renderHook(() => useCustomHook(), {
-    wrapper: createWrapper()
-  })
+    const { result } = renderHook(() => useCustomHook(), {
+        wrapper: createWrapper()
+    })
 }
 ```
 
 #### For components
 
-If you want to test a Component that uses a _useQuery_ hook, you also need to wrap that Component in QueryClientProvider. A shallow wrapper around _render_ from [react-testing-library](https://testing-library.com/docs/react-testing-library/intro/) seems like a good choice. Have a look at how React Query does it [internally for their tests](https://github.com/tannerlinsley/react-query/blob/ead2e5dd5237f3d004b66316b5f36af718286d2d/src/react/tests/utils.tsx#L6-L17)
+If you want to test a Component that uses a _useQuery_ hook, you also need to wrap that Component in QueryClientProvider. A shallow wrapper around _render_ from [react-testing-library](https://testing-library.com/docs/react-testing-library/intro/) seems like a good choice. Have a look at how React Query does it [internally for their tests](https://github.com/tannerlinsley/react-query/blob/ead2e5dd5237f3d004b66316b5f36af718286d2d/src/react/tests/utils.tsx#L6-L17).
+
+### Turn off retries
+
+It's one of the most common "gotchas" with React Query and testing: The library defaults to three retries with exponential backoff, which means that your tests are likely to timeout if you want to test an erroneous query. The easiest way to to this is, again, in the QueryClientProvider. Let's extend the above example:
+
+```tsx:title=no-retires {2-8}
+const createWrapper = () => {
+    const queryClient = new QueryClient({
+        defaultOptions: {
+            queries: {
+                // ✅ turns retries off
+                retry: false,
+            },
+        },
+    })
+
+    return ({ children }) => (
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    )
+}
+
+test("my first test", async () => {
+    const { result } = renderHook(() => useCustomHook(), {
+        wrapper: createWrapper()
+    })
+}
+```
+
+This will set the defaults for all queries in the component tree to "no retries". It is important to know that this will only work if your actual _useQuery_ has no explicit retries set. If you have a query that wants 5 retries, this will still take precedence, because defaults are only taken as a fallback.
+
+The best advice I can give you for this problem is: Don't set these options on _useQuery_ directly. Try to use and override the defaults as much as possible, and if you really need to change something for specific queries, use [queryClient.setQueryDefaults](https://react-query.tanstack.com/reference/QueryClient#queryclientsetquerydefaults). For example:
+
+```tsx:title=setQueryDefaults
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            retry: 2,
+        },
+    },
+})
+
+// ✅ only todos will retry 5 times
+queryClient.setQueryDefaults('todos', { retry: 5 })
+
+function App() {
+    return (
+        <QueryClientProvider client={queryClient}>
+            <Example />
+        </QueryClientProvider>
+    )
+}
+```
+
+Here, all queries will retry two times, only _todos_ will retry five times, and I still have the option to turn it off for all queries in my tests.
+
+#### ReactQueryConfigProvider
+
+Of course, this only works for known query keys. Sometimes, you really want to set some configs on a subset of your component tree. In v2, React Query had a [ReactQueryConfigProvider](https://react-query-v2.tanstack.com/docs/api#reactqueryconfigprovider) for that exact use-case. You can achieve the same thing in v3 with a couple of lines of codes:
+
+```jsx:title=ReactQueryConfigProvider
+const ReactQueryConfigProvider = ({ children, defaultOptions }) => {
+    const client = useQueryClient()
+    const [newClient] = React.useState(
+        () =>
+            new QueryClient({
+                queryCache: client.getQueryCache(),
+                muationCache: client.getMutationCache(),
+                defaultOptions,
+            })
+    )
+
+    return <QueryClientProvider client={newClient}>{children}</QueryClientProvider>
+}
+```
+
+You can see this in action in this [codesandbox example](https://codesandbox.io/s/react-query-config-provider-v3-lt00f).
+
+<Divider />
 
 Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
 if you have any questions, or just leave a comment below ⬇️
