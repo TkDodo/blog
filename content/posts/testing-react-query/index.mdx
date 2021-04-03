@@ -50,9 +50,36 @@ It can be your single source of truth when it comes mocking your apis:
 
 <Divider />
 
-With our network layer being out of the way, we can start talking about React Query specific things to keep an eye on:
+With our network layer being taken care of, we can start talking about React Query specific things to keep an eye on:
 
 ### QueryClientProvider
+
+Whenever you use React Query, you need a QueryClientProvider and give it a queryClient - a vessel which holds the _QueryCache_. The cache will in turn hold the data of your queries. Some tutorials suggest creating one QueryClient and resetting it after each test, but I think that shared state during tests is not a good idea at all. What if tests run in parallel? You might get unexpected results and flaky tests with this approach.
+
+I do prefer to give each test it's own QueryClientProvider, and create a _new QueryCache_ for each test. That way, tests are completely isolated from each other.
+
+#### For custom hooks
+
+If you are testing custom hooks, I'm quite certain you're using [react-hooks-testing-library](https://react-hooks-testing-library.com/). It's the easiest thing there is to test hooks. With that library, we can wrap our hook in a [wrapper](https://react-hooks-testing-library.com/reference/api#wrapper), which is a React component to wrap the test component in when rendering. I think this is the perfect place to create the QueryClient, because it will be executed once per test:
+
+```tsx:title=wrapper
+const createWrapper = () => {
+    const queryClient = new QueryClient()
+    return ({ children }) => (
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    )
+}
+
+test("my first test", async () => {
+  const { result } = renderHook(() => useCustomHook(), {
+    wrapper: createWrapper()
+  })
+}
+```
+
+#### For components
+
+If you want to test a Component that uses a _useQuery_ hook, you also need to wrap that Component in QueryClientProvider. A shallow wrapper around _render_ from [react-testing-library](https://testing-library.com/docs/react-testing-library/intro/) seems like a good choice. Have a look at how React Query does it [internally for their tests](https://github.com/tannerlinsley/react-query/blob/ead2e5dd5237f3d004b66316b5f36af718286d2d/src/react/tests/utils.tsx#L6-L17)
 
 Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
 if you have any questions, or just leave a comment below ⬇️
