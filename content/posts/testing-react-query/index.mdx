@@ -158,6 +158,55 @@ const ReactQueryConfigProvider = ({ children, defaultOptions }) => {
 
 You can see this in action in this [codesandbox example](https://codesandbox.io/s/react-query-config-provider-v3-lt00f).
 
+### Always await the query
+
+Since React Query is async by nature, when running the hook, you won't immediately get a result. It usually will be in loading state, and without data to check. The [async utilities](https://react-hooks-testing-library.com/reference/api#async-utilities) from react-hooks-testing-library offer a lot of ways to solve this problem. For the simplest case, we can just wait until the query has transitioned to success state:
+
+```tsx:title=waitFor {20-22}
+const createWrapper = () => {
+    const queryClient = new QueryClient({
+        defaultOptions: {
+            queries: {
+                retry: false,
+            },
+        },
+    })
+    return ({ children }) => (
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    )
+}
+
+test("my first test", async () => {
+    const { result, waitFor } = renderHook(() => useCustomHook(), {
+        wrapper: createWrapper()
+    })
+
+    // ✅ wait until the query has transitioned to success state
+    await waitFor(() => result.current.isSuccess)
+
+    expect(result.current.data).toBeDefined()
+}
+```
+
+### Silence the error console
+
+Per default, React Query prints errors to the console. I think this is quite disturbing during testing, because you'll see 🔴 in the console even though all tests are 🟢. React Query allows overwriting that default behaviour by [setting a logger](https://react-query.tanstack.com/reference/setLogger), so that's what I'm usually doing:
+
+```ts:title=silence-errors
+import { setLogger } from 'react-query'
+
+setLogger({
+    log: console.log,
+    warn: console.warn,
+    // ✅ no more errors on the console
+    error: () => {},
+})
+```
+
+### Putting it all together
+
+I've setup a quick repository where all of this comes nicely together: mock-service-worker, react-testing-library and the mentioned wrapper. It contains four tests - basic failure and success tests for custom hooks and components. Have a look here: https://github.com/TkDodo/testing-react-query
+
 <Divider />
 
 Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
