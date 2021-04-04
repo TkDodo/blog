@@ -13,7 +13,7 @@ export default {
             },
             dark: {
                 ...baseTheme.colors.modes.dark,
-                primary: '#D44248',
+                primary: '#f0666b',
             },
         },
     },
