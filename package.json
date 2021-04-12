@@ -13,8 +13,7 @@
     "build:cypress": "cross-env CYPRESS_SUPPORT=y yarn build",
     "start": "gatsby develop",
     "serve": "gatsby serve --prefix-paths",
-    "clean": "gatsby clean",
-    "postbuild": "mv public build && mkdir public && mv build public/blog"
+    "clean": "gatsby clean"
   },
   "dependencies": {
     "@lekoarts/gatsby-theme-minimal-blog": "^2.4.0",
