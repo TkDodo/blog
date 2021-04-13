@@ -117,8 +117,7 @@ module.exports = {
                         url: `https://dev.to/tkdodo`,
                     },
                 ],
-                feed: true,
-                feedTitle: "TkDodo's blog",
+                feed: false,
             },
         },
         `gatsby-plugin-sitemap`,
@@ -147,6 +146,52 @@ module.exports = {
             resolve: `gatsby-plugin-canonical-urls`,
             options: {
                 siteUrl: `https://tkdodo.eu/blog`,
+            },
+        },
+        {
+            resolve: `gatsby-plugin-feed`,
+            options: {
+                query: `
+                {
+                    site {
+                        siteMetadata {
+                            title: siteTitle
+                            description: siteDescription
+                            siteUrl
+                            site_url: siteUrl
+                        }
+                    }
+                }
+                `,
+                feeds: [
+                    {
+                        serialize: ({ query: { site, allPost } }) => {
+                            return allPost.nodes.map((post) => {
+                                return {
+                                    title: post.title,
+                                    date: post.date,
+                                    description: post.description,
+                                    url: site.siteMetadata.siteUrl + post.slug,
+                                    guid: site.siteMetadata.siteUrl + post.slug,
+                                }
+                            })
+                        },
+                        query: `
+                        {
+                            allPost(sort: { fields: date, order: DESC }) {
+                                nodes {
+                                    title
+                                    date(formatString: "MMMM D, YYYY")
+                                    description
+                                    slug
+                                }
+                            }
+                        }
+                        `,
+                        output: `rss.xml`,
+                        title: `TkDodo's blog`,
+                    },
+                ],
             },
         },
         shouldAnalyseBundle && {
