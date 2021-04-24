@@ -10,7 +10,6 @@ tags:
 
 import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
-import { Divider } from '@theme-ui/components'
 
 <img src="./how.jpeg" />
 
@@ -24,10 +23,44 @@ Since I started to become involved in a popular open source library that shall r
 
 And that can be quite frustrating.
 
+It all depends on the quality of the question. I can usually spot pretty quickly how much time someone has put into asking it. Unfortunately, many questions fall into the category of an [XY Problem](https://en.wikipedia.org/wiki/XY_problem).
 
-#### An example
+### XY Problems
 
-<Divider />
+We can find a good definition of xy problems at [xyproblem.info](https://xyproblem.info/):
+
+-   User wants to do X.
+-   User doesn't know how to do X, but thinks they can fumble their way to a solution if they can just manage to do Y.
+-   User doesn't know how to do Y either.
+-   User asks for help with Y.
+-   Others try to help user with Y, but are confused because Y seems like a strange problem to want to solve.
+-   After much interaction and wasted time, it finally becomes clear that the user really wants help with X, and that Y wasn't even a suitable solution for X.
+
+I think this happens a lot in software engineering, because developers like to first solve problems on their own and often have done an attempt that _almost works_. They feel that if they can just get this little thing working, it will all be fine. So they ask about this little detail, without presenting the broader picture. They might be on the completely wrong track though, so even if their question is answered, it might not work.
+
+#### Examples
+
+Your internet is not working (a classic), so you tinker a bit with some of the settings. You then proceed to call support with one specific question:
+
+> How can I configure DHCP on my router?
+
+This is your _Y_ question, because you _think_ that's the solution to your real problem (Internet is not working, your _X_). But you haven't asked for that, and there's no guarantee that this will fix your internet. It might be as easy as turning it off and on again instead 🤷‍♂️.
+
+---
+
+Another real-life (react-query related) example that happened to me more than once is this question:
+
+> How can I pass parameters to refetch?
+
+I could just answer with: _You can't_, because that's technically true, but it won't be a satisfying answer. There are of course solutions to the underlying problem, but without knowing what that is, it's hard to answer.
+
+
+
+So if you ever see me respond like this, you know you've just asked an XY question 😉
+
+<img src="./use-case.png" />
+
+---
 
 That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
 if you have any questions, or just leave a comment below ⬇️
