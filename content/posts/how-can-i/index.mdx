@@ -1,0 +1,107 @@
+---
+title: How can I ... ?
+description: Asking the right questions is a form of art that needs to be mastered.
+date: 2021-04-24
+banner: ./how.jpeg
+tags:
+    - principles
+    - asking questions
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+
+<img src="./how.jpeg" />
+
+<Attribution name="Emily Morter" url="https://unsplash.com/@emilymorter" />
+
+I love answering questions. Most of the time at least 😅. It's quite fun, rewarding and educational. People are very grateful when you help them figure out a problem - you get instant feedback and it's mostly a positive experience.
+
+It's also one of the best ways I know to dig deeper into a problem space. You'll have to ask yourself how you would solve a specific situation, even if you haven't experienced it yet. Maybe you have to dig into some code, get familiar with things you've avoided so far because you haven't needed it. Over time, you've _seen a lot_ and inevitably become an expert.
+
+Since I started to become involved in a certain popular [open source library](https://react-query.tanstack.com/), the time I'm spending answering questions has skyrocketed. Now, while I still learn something new almost every day, many questions are technically not very challenging. The hardest part is understanding what the question is about in the first place.
+
+And that can be quite frustrating.
+
+It all depends on the quality of the question. I can usually spot pretty quickly how much time someone has put into asking it. Unfortunately, many questions fall into the category of an [XY problem](https://en.wikipedia.org/wiki/XY_problem).
+
+### XY problems
+
+We can find a good definition of xy problems at [xyproblem.info](https://xyproblem.info/):
+
+-   User wants to do X.
+-   User doesn't know how to do X, but thinks they can fumble their way to a solution if they can just manage to do Y.
+-   User doesn't know how to do Y either.
+-   User asks for help with Y.
+-   Others try to help user with Y, but are confused because Y seems like a strange problem to want to solve.
+-   After much interaction and wasted time, it finally becomes clear that the user really wants help with X, and that Y wasn't even a suitable solution for X.
+
+I think this happens a lot in software engineering, because developers like to first solve problems on their own and often have done an attempt that _almost works_. They feel that if they can just get this little thing working, it will all be fine. So they ask about this little detail, without presenting the broader picture. They might be on the completely wrong track though, so even if their question is answered, it might not work.
+
+#### Examples
+
+Your internet is not working (a classic), so you take a look at your router settings. You then proceed to call support with one specific question:
+
+> How can I configure DHCP on my router?
+
+This is your _Y_ question, because you _think_ that's the solution to your real problem (Internet is not working, your _X_). But you haven't asked for that, and there's no guarantee that DHCP configuration will fix your internet. It might be as easy as turning it off and on again instead 🤷‍♂️.
+
+---
+
+Another real-life (react-query related) example question that I've more than once is:
+
+> How can I pass parameters to the refetch function?
+
+I could just answer with: _You can't_, because that's technically true, but it won't be a satisfying answer. There are of course solutions to the underlying problem, but without knowing what that is, it's hard to answer.
+
+### Asking good questions
+
+Being able to ask a good question is a very important skill in software development. The field is vast, so you can't possibly know everything. Ask the wrong question, and you'll likely be frustrated because you'll either get no answer at all, or an unsatisfying one. So here my personal guidelines to follow when asking for help from fellow engineers:
+
+#### 1. State the problem
+
+You can see that many XY-questions start with _"How can I..."_. This is almost like a red flag to me nowadays, which provokes the counter-question: "What's your use-case?" from my side.
+
+To ask a good question - don't start with asking a question (ironic, I know). Start with stating the problem:
+
+> I have an app where I would like to ...
+
+is a very good opener. It provides the much-needed context and background that so often goes missing. Others will get a better idea of what you are trying to achieve and might show you a totally different point of view that you haven't even considered. Of course, it's okay to include the paths you've already explored in your problem description.
+
+### 2. Do your homework
+
+Make sure you've done everything you can to find an answer _before_ you ask the question. That includes, but is not limited to:
+
+-   Googling
+-   Stackoverflowing (Is that a word? If not, it should be!)
+-   Looking for duplicates in closed issues
+-   Reading the official docs
+
+Very often, you're not the first person to encounter a problem. If it has been asked before - you can find it.
+
+### 3. Provide a minimal reproducible example
+
+Problems are oftentimes hard to understand when all you have is a theoretical description that something is not working. Posted code snippets might exclude some very important parts. Don't get me started on screenshots, they are even worse 😩
+
+The best thing you can do is include a minimal reproducible example that shows your problem. [codesandbox](http://codesandbox.io/) is my preferred tool for that. The magical word here is _minimal_. Please don't put your whole app with 20 files in there. Remove everything that is not needed for the error to reproduce.
+
+One very nice side effect is that very often, when I ask for a codesandbox reproduction, people figure it out for themselves. When you take a problem and reduce it to the bare minimum, you might find that it works in this sandbox, and that there is in fact an issue in the surrounding environment.
+
+What you can then do is either:
+
+-   add more code to the sandbox (in the direction of your app) until it breaks
+-   remove more code from your app (in the direction of the sandbox) until it works
+
+Both approaches should get you to the "thing" in question that is causing your issue.
+
+### 4. Be polite
+
+...and don't demand anything. If you want someone to invest their time to help you, you are not going to get very far by being impolite. You can trust me on that.
+
+---
+
+I'm happy to take your questions now. On [twitter](https://twitter.com/tkdodo), [github](https://github.com/tkdodo), [stackoverflow](https://stackoverflow.com/users/8405310/tkdodo) or right here in the comments below. And if you ever see me respond like this, you know you've just asked an XY question 😉
+
+<img src="./use-case.png" />
+
+<Comments withSeparator={false} />
