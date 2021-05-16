@@ -101,10 +101,6 @@ function useGroupCount() {
 
 There is an [open issue](https://github.com/microsoft/TypeScript/issues/26242) in TypeScript about Partial Type Argument Inference, but as long as we don't have it, we have to work with what we got.
 
-Tanner Linsley recently went on the record saying that default values for Generics were probably a bad idea, and I kinda agree:
-
-https://twitter.com/tannerlinsley/status/1390780257897115649
-
 So what's the alternative?
 
 #### Infer all the things
@@ -124,16 +120,13 @@ function useGroups() {
 If you (like me) like to keep your api layer separated from your queries, you'll need to add type definitions anyways to avoid _implicit any_, so React Query can infer the rest:
 
 ```ts:title=inferred-types
-function fetchGroups(): Promise<Group[]> => {
+function fetchGroups(): Promise<Group[]> {
     return axios.get('groups').then((response) => response.data)
 }
 
 // ✅ data will be Group[] | undefined here
 function useGroups() {
-    return useQuery(
-        'groups',
-        fetchGroups
-    )
+    return useQuery('groups', fetchGroups)
 }
 
 // ✅ data will be number | undefined here
@@ -179,8 +172,29 @@ if (groups.error instanceof Error) {
 
 Since we need to make some kind of check anyways to see if we have an error, the instanceof check doesn't look like a bad idea at all, and it will also make sure that our error actually has a property message at runtime.
 
+### Type Narrowing
+
+I rarely use destructuring when working with React Query. First of all, names like _data_ and _error_ are quite universal (purposefully so), so you'll likely rename them anyway. Keeping the whole object will keep the context of what data it is or where the error is coming from. It will further help TypeScript to narrow types when using the status field or one of the status booleans, which it cannot do if you use destructuring:
+
+```ts:title=type-narrowing
+const { data, isSuccess } = useGroups()
+if (isSuccess) {
+    // 🚨 data will still be `Group[] | undefined` here
+}
+
+const groupsQuery = useGroups()
+if (groupsQuery.isSuccess) {
+    // ✅ groupsQuery.data will now be `Group[]`
+}
+```
+
+This has nothing to do with React Query, it is just how TypeScript works. [@danvdk](https://twitter.com/danvdk) has a good explanation for this behaviour
+
+https://twitter.com/danvdk/status/1363614288103964672
+
 ---
 
-Feel free to reach out to me on [twitter](https://twitter.com/tkdodo) if you have any questions, or just leave a comment below ⬇️
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below ⬇️
 
 <Comments withSeparator={false} />
