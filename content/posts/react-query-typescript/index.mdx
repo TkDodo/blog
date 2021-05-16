@@ -192,6 +192,38 @@ This has nothing to do with React Query, it is just how TypeScript works. [@danv
 
 https://twitter.com/danvdk/status/1363614288103964672
 
+### Type safety with the enabled option
+
+I've expressed my ♥️ for the [enabled option](./practical-react-query#the-enabled-option-is-very-powerful) right from the start, but it can be a bit tricky on type level if you want to use it for [dependent queries](https://react-query.tanstack.com/guides/dependent-queries) and disable your query for as long as some parameters are not yet defined:
+
+```ts:title=the-enabled-option
+function fetchGroup(id: number): Promise<Group> {
+    return axios.get(`group/${id}`).then((response) => response.data)
+}
+
+function useGroup(id: number | undefined) {
+    return useQuery(['group', id], () => fetchGroup(id), { enabled: Boolean(id) })
+    // 🚨 Argument of type 'number | undefined' is not assignable to parameter of type 'number'.
+    //  Type 'undefined' is not assignable to type 'number'.ts(2345)
+}
+```
+
+Technically, TypeScript is right, _id_ is possibly _undefined_: the _enabled_ option does not perform any type narrowing. Also, there are ways to bypass the _enabled_ option, for example by calling the _refetch_ method returned from _useQuery_. In that case, the _id_ might really be _undefined_.
+
+I've found the best way to go here, if you don't like the [non-null assertion operator](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator), is to accept that _id_ can be _undefined_ and reject the Promise in the _queryFn_. It's a bit of duplication, but it's also explicit:
+
+```ts:title=explicit-id-check
+function fetchGroup(id: number | undefined): Promise<Group> {
+    return typeof id === 'undefined' ?
+        ? Promise.reject(new Error('Invalid id'))
+        : axios.get(`group/${id}`).then((response) => response.data)
+}
+
+function useGroup(id: number | undefined) {
+    return useQuery(['group', id], () => fetchGroup(id), { enabled: Boolean(id) })
+}
+```
+
 ---
 
 That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
