@@ -214,7 +214,7 @@ I've found the best way to go here, if you don't like the [non-null assertion op
 
 ```ts:title=explicit-id-check
 function fetchGroup(id: number | undefined): Promise<Group> {
-    return typeof id === 'undefined' ?
+    return typeof id === 'undefined'
         ? Promise.reject(new Error('Invalid id'))
         : axios.get(`group/${id}`).then((response) => response.data)
 }
@@ -222,6 +222,68 @@ function fetchGroup(id: number | undefined): Promise<Group> {
 function useGroup(id: number | undefined) {
     return useQuery(['group', id], () => fetchGroup(id), { enabled: Boolean(id) })
 }
+```
+
+### Optimistic Updates
+
+Getting optimistic updates right in TypeScript is not an easy feat, so we've decided to add it as an explicit [example](https://react-query.tanstack.com/examples/optimistic-updates-typescript) to the docs.
+
+The important part is: You have to explicitly type the _variables_ argument passed to _onMutate_ in order to get the best type inference. I don't fully comprehend why that is, but it again seems to have something to do with inference of Generics. Have a look [at this comment](https://github.com/tannerlinsley/react-query/pull/1366#discussion_r538459890) for more information.
+
+### useInfiniteQuery
+
+For the most parts, typing _useInfiniteQuery_ is no different from typing _useQuery_. One noticeable gotcha is that the _pageParam_ value, which is passed to the _queryFn_, is typed as _any_. Could be improved for sure, but as long as it's _any_, it's probably best to explicitly annotate it:
+
+```ts:title=useInfiniteQuery
+type GroupResponse = { next?: number, groups: Group[] }
+const queryInfo = useInfiniteQuery(
+    'groups',
+    // ⚠️ explicitly type pageParam to override `any`
+    ({ pageParam = 0 }: { pageParam: GroupResponse['next']) => fetchGroups(groups, pageParam),
+    {
+        getNextPageParam: (lastGroup) => lastGroup.next,
+    }
+)
+```
+
+If _fetchGroups_ returns a _GroupResponse_, _lastGroup_ will have its type nicely inferred, and we can use the same type to annotate _pageParam_.
+
+### Typing the default query function
+
+I am personally not using a [defaultQueryFn](https://react-query.tanstack.com/guides/default-query-function), but I know many people are. It's a neat way to leverage the passed _queryKey_ to directly build your url. If you inline the function when creating the _queryClient_, the type of the passed _QueryFunctionContext_ will also be inferred for you. TypeScript is just so much better when you inline stuff :)
+
+```ts:title=defaultQueryFn
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            queryFn: ({ queryKey: [url] }) => {
+                const { data } = await axios.get(`https://jsonplaceholder.typicode.com${url}`)
+                return data
+            },
+        },
+    },
+})
+```
+
+This just works, however, _url_ is inferred to type _unknown_, because the whole queryKey is an _unknown[]_. At the time of the creation of the queryClient, there is absolutely no guarantee how the queryKeys will be constructed when calling _useQuery_, so there is only so much React Query can do. That is just the nature of this highly dynamic feature. It's not a bad thing though because it means you now have to work defensively and narrow the type with runtime checks to work with it, for example:
+
+```ts:title=narrow-with-typeof {5-11}
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            queryFn: ({ queryKey: [url] }) => {
+                // ✅ narrow the type of url to string so that we can work with it
+                if (typeof url === 'string') {
+                    const { data } = await axios.get(
+                        `https://jsonplaceholder.typicode.com${url.toLowerCase()}`
+                    )
+                    return data
+                }
+                throw new Error('Invalid QueryKey')
+            },
+        },
+    },
+})
 ```
 
 ---
