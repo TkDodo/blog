@@ -81,7 +81,7 @@ multiply(10, 3) // ✅ 30
 TypeScript works best if you let it infer (or figure out) what type something should be on its own. Not only does it make code easier to _write_ (because you don't have to type all the types 😅), but it will also make it easier to _read_. In many instances, it can make code look exactly like JavaScript. Some simple examples of type inference would be:
 
 ```ts:title=type-inference
-const num = Math.random() + 5 // ✅ number
+const num = Math.random() + 5 // ✅ `number`
 
 // 🚀 both greeting and the result of greet will be string
 function greet(greeting = 'ciao') {
@@ -102,7 +102,7 @@ let result = identity<number>(23)
 // ⚠️ or to annotate the result
 let result: number = identity(23)
 
-// 😎 infers correctly to string
+// 😎 infers correctly to `string`
 let result = identity('react-query')
 ```
 
@@ -137,15 +137,12 @@ So what's the alternative?
 
 #### Infer all the things
 
-Let's start by _not_ passing in any Generics at all and let TypeScript figure out what to do. For this to work, we need the _queryFn_ to have a good return type. Of course, if you inline that function, you will have _any_ - because that's what _axios_ or _fetch_ give you:
+Let's start by _not_ passing in any Generics at all and let TypeScript figure out what to do. For this to work, we need the _queryFn_ to have a good return type. Of course, if you inline that function without an explicit return type, you will have _any_ - because that's what _axios_ or _fetch_ give you:
 
 ```ts:title=inlined-queryFn
 function useGroups() {
-    // 🚨 data will be any here
-    return useQuery(
-        'groups',
-        axios.get('groups').then((response) => respone.data)
-    )
+    // 🚨 data will be `any` here
+    return useQuery('groups', () => axios.get('groups').then((response) => respone.data))
 }
 ```
 
@@ -156,12 +153,12 @@ function fetchGroups(): Promise<Group[]> {
     return axios.get('groups').then((response) => response.data)
 }
 
-// ✅ data will be Group[] | undefined here
+// ✅ data will be `Group[] | undefined` here
 function useGroups() {
     return useQuery('groups', fetchGroups)
 }
 
-// ✅ data will be number | undefined here
+// ✅ data will be `number | undefined` here
 function useGroupCount() {
     return useQuery('groups', fetchGroups, {
         select: (groups) => groups.length,
@@ -196,13 +193,13 @@ if (groups.error) {
     return <div>An error occurred: {groups.error.message}</div>
 }
 
-// ✅ the instanceOf check narrows to type Error
+// ✅ the instanceOf check narrows to type `Error`
 if (groups.error instanceof Error) {
     return <div>An error occurred: {groups.error.message}</div>
 }
 ```
 
-Since we need to make some kind of check anyways to see if we have an error, the instanceof check doesn't look like a bad idea at all, and it will also make sure that our error actually has a property message at runtime.
+Since we need to make some kind of check anyways to see if we have an error, the instanceof check doesn't look like a bad idea at all, and it will also make sure that our error actually has a property message at runtime. This is also in line with what TypeScript has planned for the 4.4 release, where they'll introduce a new compiler flag _useUnknownInCatchVariables_, where catch variables will be _unknown_ instead of _any_ (see [here](https://github.com/microsoft/TypeScript/issues/41016)).
 
 ### Type Narrowing
 
@@ -244,8 +241,9 @@ Technically, TypeScript is right, _id_ is possibly _undefined_: the _enabled_ op
 
 I've found the best way to go here, if you don't like the [non-null assertion operator](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator), is to accept that _id_ can be _undefined_ and reject the Promise in the _queryFn_. It's a bit of duplication, but it's also explicit and safe:
 
-```ts:title=explicit-id-check
+```ts:title=explicit-id-check {3-5}
 function fetchGroup(id: number | undefined): Promise<Group> {
+    // ✅ check id at runtime because it can be `undefined`
     return typeof id === 'undefined'
         ? Promise.reject(new Error('Invalid id'))
         : axios.get(`group/${id}`).then((response) => response.data)
