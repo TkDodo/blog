@@ -99,6 +99,10 @@ module.exports = {
                         slug: `/tags`,
                     },
                     {
+                        title: `Supporters`,
+                        slug: `/supporters`,
+                    },
+                    {
                         title: `Rss`,
                         slug: `/rss.xml`,
                     },
