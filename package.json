@@ -11,7 +11,7 @@
     "develop": "gatsby develop",
     "develop:cypress": "cross-env CYPRESS_SUPPORT=y yarn develop",
     "build:cypress": "cross-env CYPRESS_SUPPORT=y yarn build",
-    "start": "gatsby develop",
+    "start": "rm -rf .cache && gatsby develop",
     "serve": "gatsby serve --prefix-paths",
     "clean": "gatsby clean",
     "postbuild": "mv public build && mkdir public && mv build public/blog"
