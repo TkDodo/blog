@@ -99,8 +99,8 @@ module.exports = {
                         slug: `/tags`,
                     },
                     {
-                        title: `Supporters`,
-                        slug: `/supporters`,
+                        title: `Sponsors`,
+                        slug: `/sponsors`,
                     },
                     {
                         title: `Rss`,
