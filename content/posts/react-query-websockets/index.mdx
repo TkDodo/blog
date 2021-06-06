@@ -1,0 +1,51 @@
+---
+title: Using WebSockets with React Query
+description:
+date: 2021-06-06
+banner: ./react-query-websockets.jpeg
+tags:
+    - react
+    - react-query
+    - JavaScript
+    - TypeScript
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+
+<img src="./react-query-websockets.jpeg" />
+
+<Attribution name="Maxim Hopman" url="https://unsplash.com/@nampoh" />
+
+-   [#1: Practical React Query](practical-react-query)
+-   [#2: React Query Data Transformations](react-query-data-transformations)
+-   [#3: React Query Render Optimizations](react-query-render-optimizations)
+-   [#4: Status Checks in React Query](status-checks-in-react-query)
+-   [#5: Testing React Query](testing-react-query)
+-   [#6: React Query and TypeScript](react-query-and-type-script)
+-   <b>#7: Using WebSockets with React Query</b>
+
+---
+
+How to handle live data using WebSockets together with React Query has been one of the most asked questions lately, so I thought I'd give it a try, play around with it a bit and report my findings. That's what this post is about :)
+
+### What are WebSockets
+
+Simply put, WebSockets allow push messages, or "live data", to be sent from the server to the client (browser). Usually with HTTP, the client makes a request to the server, specifying that they would like some data please, the server responds with that data or an error and then the connection closes.
+
+Since the client is the one opening the connections and initiating the requests, that leaves no room for the server to push data to the client when the server knows that an update is available.
+
+That's where [WebSockets](https://en.wikipedia.org/wiki/WebSocket) kick in.
+
+Like with any other HTTP request, the browser initiates the connection, but indicates that they would like to upgrade the connection to a WebSocket. If the server accepts this, they will then switch the protocol. This connection will not terminate, but will stay open until either side decides to close it. Now, we have a fully functioning by-directional connection open, where both sides can transmit data.
+
+This has the main advantage that the server can now push selective updates to the client. This can come in very handy if you have multiple users viewing the same data, and one user makes an update. Usually, the other clients will not see that update until they actively refetch. WebSockets allow to instantly push those updates in real-time.
+
+### React Query integration
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below ⬇️
+
+<Comments withSeparator={false} />
