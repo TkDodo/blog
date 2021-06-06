@@ -52,8 +52,8 @@ React Query doesn't have anything built-in specifically for WebSockets. That doe
 The general idea is to setup your queries as usual, as if you wouldn't be working with WebSockets. Most of the time, you will have your usual HTTP endpoints to query and mutate entities.
 
 ```jsx:title=a-standard-query
-const usePosts = () => useQuery(['posts'], fetchPosts)
-const usePost = (id) => useQuery(['posts', id], () => fetchPost(id))
+const usePosts = () => useQuery(['posts', 'list'], fetchPosts)
+const usePost = (id) => useQuery(['posts', 'detail', id], () => fetchPost(id))
 ```
 
 Additionally, you can setup an app-wide _useEffect_ that connects you to your WebSocket endpoint. How that works totally depends on which technology you are using. I've seen people subscribe to live data from [Hasura](https://github.com/tannerlinsley/react-query/issues/171#issuecomment-649810136). There's a great article about connecting to [Firebase](https://aggelosarvanitakis.medium.com/a-real-time-hook-with-firebase-react-query-f7eb537d5145). In my example, I will simply use the browser native [WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket):
@@ -75,7 +75,7 @@ const useReactQuerySubscription = () => {
 
 #### Consuming data
 
-After we've setup the connection, we will likely have some sort of callback that will be called when data comes in over the websocket. Again, what that data is depends entirely on how you'd like to set it up. Inspired by [this message](https://github.com/tannerlinsley/react-query/issues/171#issuecomment-649716718) from [Tanner Linsley](https://github.com/tannerlinsley), I like to send _events_ from the backend instead of complete data objects:
+After we've setup the connection, we will likely have some sort of callback that will be called when data comes in over the WebSocket. Again, what that data is depends entirely on how you'd like to set it up. Inspired by [this message](https://github.com/tannerlinsley/react-query/issues/171#issuecomment-649716718) from [Tanner Linsley](https://github.com/tannerlinsley), I like to send _events_ from the backend instead of complete data objects:
 
 ```jsx:title=event-based-subscriptions {8-12}
 const useReactQuerySubscription = () => {
@@ -87,7 +87,7 @@ const useReactQuerySubscription = () => {
         }
         websocket.onmessage = (event) => {
             const data = JSON.parse(event.data)
-            const queryKey = [data.entity, data.id].filter(Boolean)
+            const queryKey = [...data.entity, data.id].filter(Boolean)
             queryClient.invalidateQueries(queryKey)
         }
 
@@ -100,10 +100,69 @@ const useReactQuerySubscription = () => {
 
 That's really all you need to make list and detail views update when you receive an event.
 
--   `{ "entity": "posts" }` will invalidate the posts list
--   `{ "entity": "posts", id: 5 }` will invalidate a single post
+-   `{ "entity": ["posts", "list"] }` will invalidate the posts list
+-   `{ "entity": ["posts", "detail"], id: 5 }` will invalidate a single post
+-   `{ "entity": ["posts"] }` will invalidate everything post related
 
-This approach avoids the problem of over pushing, because if we receive an event for an entity that we are not interested in at the moment, nothing will happen. For example, if we are currently on the _Profile_ page, and we receive an update for _Posts_, _invalidateQueries_ will make sure that the next time we get to our _Posts_ page, it will be refetched. But it will not refetch it right now, because we have no active observers.
+[Query Invalidation](https://react-query.tanstack.com/guides/query-invalidation) plays really nice together with WebSockets. This approach avoids the problem of over pushing, because if we receive an event for an entity that we are not interested in at the moment, nothing will happen. For example, if we are currently on the _Profile_ page, and we receive an update for _Posts_, _invalidateQueries_ will make sure that the next time we get to our _Posts_ page, it will be refetched. However, it will not refetch it right away, because we have no active observers. If we never go to that page again, the pushed update would be completely unnecessary.
+
+#### Partial data updates
+
+Of course, if you have big data sets that receive small, but frequent updates, you might still want to push partial data down the WebSocket.
+
+Title of the post has changed? Just push the title. Number of likes have changed - push it down.
+
+For these partial updates, you can use [queryClient.setQueryData](https://react-query.tanstack.com/reference/QueryClient#queryclientsetquerydata) to directly update the query cache instead of just invalidating it.
+
+This will be a bit more cumbersome if you have multiple query keys for the same data, e.g. if you have multiple filter criteria as part of the query key, or if you want to update list _and_ detail view with the same message. [queryClient.setQueriesData](https://react-query.tanstack.com/reference/QueryClient#queryclientsetqueriesdata) is a relatively new addition to the library that will allow you to tackle this use-case as well:
+
+```jsx:title=partial-updates {10-14}
+const useReactQuerySubscription = () => {
+    const queryClient = useQueryClient()
+    React.useEffect(() => {
+        const websocket = new WebSocket('wss://echo.websocket.org/')
+        websocket.onopen = () => {
+            console.log('connected')
+        }
+        websocket.onmessage = (event) => {
+            const data = JSON.parse(event.data)
+            queryClient.setQueriesData(data.entity, (oldData) => {
+                const update = (entity) =>
+                    entity.id === data.id ? { ...entity, ...data.payload } : entity
+                return Array.isArray(oldData) ? oldData.map(update) : update(oldData)
+            })
+        }
+
+        return () => {
+            websocket.close()
+        }
+    }, [queryClient])
+}
+```
+
+It's a bit too dynamic for my taste, doesn't handle addition or deletion, and TypeScript won't like it very much, so I'd personally rather stick to query invalidation.
+
+Nevertheless, here is a [codesandbox example](https://codesandbox.io/s/react-query-websockets-ep1op) where I'm handling both type of events: invalidation and partial updates. (_Note: The custom hook is a bit more convoluted because in the example, I use the same WebSocket to simulate the server round trip. Don't worry about it if you have a real server_).
+
+### Increasing StaleTime
+
+Rect Query comes with a [default staleTime](https://react-query.tanstack.com/guides/important-defaults) of _zero_. This means that every query will be immediately considered as stale, which means it will refetch when a new subscriber mounts or when the user refocuses the window. It is aimed to keep your data as up-to-date as necessary.
+
+This goal overlaps a lot with WebSockets, which update your data in real-time. Why would I need to refetch at all if I just manually _invalidated_ because the server just told me to do so via a dedicated message?
+
+So if you update all your data via websockets anyways, consider setting a high _staleTime_. In my example, I just used `Infinity`. This means the data will be fetched initially via _useQuery_, and then always come from the cache. Refetching only happens via the explicit query invalidation.
+
+You can best achieve this by setting global query defaults when creating the _QueryClient_
+
+```jsx:title=infinite-stale-time
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: Infinity,
+        },
+    },
+})
+```
 
 ---
 
