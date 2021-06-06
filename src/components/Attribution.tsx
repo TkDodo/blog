@@ -18,7 +18,7 @@ const Attribution = ({ name, url, prefix = 'Photo by' }: Props) => (
             }}
         >
             {prefix}{' '}
-            <Link href={url} target="blank" rel="noreferrer noopener">
+            <Link href={url} target="_blank" rel="noreferrer noopener">
                 {name}
             </Link>
         </Box>
