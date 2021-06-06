@@ -43,6 +43,68 @@ This has the main advantage that the server can now push selective updates to th
 
 ### React Query integration
 
+Since React Query is primarily a client side async state management library, I will _not_ talk about how to set up WebSockets on the server. I've honestly never done it, and it also depends on which technology you are using in the backend.
+
+React Query doesn't have anything built-in specifically for WebSockets. That doesn't mean that WebSockets are not supported or that they don't work well with the library. It's just that React Query is _very_ agnostic when it comes to how you fetch your data: All it needs is a resolved or rejected _Promise_ to work - the rest is up to you.
+
+### Step by Step
+
+The general idea is to setup your queries as usual, as if you wouldn't be working with WebSockets. Most of the time, you will have your usual HTTP endpoints to query and mutate entities.
+
+```jsx:title=a-standard-query
+const usePosts = () => useQuery(['posts'], fetchPosts)
+const usePost = (id) => useQuery(['posts', id], () => fetchPost(id))
+```
+
+Additionally, you can setup an app-wide _useEffect_ that connects you to your WebSocket endpoint. How that works totally depends on which technology you are using. I've seen people subscribe to live data from [Hasura](https://github.com/tannerlinsley/react-query/issues/171#issuecomment-649810136). There's a great article about connecting to [Firebase](https://aggelosarvanitakis.medium.com/a-real-time-hook-with-firebase-react-query-f7eb537d5145). In my example, I will simply use the browser native [WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket):
+
+```jsx:title=useReactQuerySubscription
+const useReactQuerySubscription = () => {
+    React.useEffect(() => {
+        const websocket = new WebSocket('wss://echo.websocket.org/')
+        websocket.onopen = () => {
+            console.log('connected')
+        }
+
+        return () => {
+            websocket.close()
+        }
+    }, [])
+}
+```
+
+#### Consuming data
+
+After we've setup the connection, we will likely have some sort of callback that will be called when data comes in over the websocket. Again, what that data is depends entirely on how you'd like to set it up. Inspired by [this message](https://github.com/tannerlinsley/react-query/issues/171#issuecomment-649716718) from [Tanner Linsley](https://github.com/tannerlinsley), I like to send _events_ from the backend instead of complete data objects:
+
+```jsx:title=event-based-subscriptions {8-12}
+const useReactQuerySubscription = () => {
+    const queryClient = useQueryClient()
+    React.useEffect(() => {
+        const websocket = new WebSocket('wss://echo.websocket.org/')
+        websocket.onopen = () => {
+            console.log('connected')
+        }
+        websocket.onmessage = (event) => {
+            const data = JSON.parse(event.data)
+            const queryKey = [data.entity, data.id].filter(Boolean)
+            queryClient.invalidateQueries(queryKey)
+        }
+
+        return () => {
+            websocket.close()
+        }
+    }, [queryClient])
+}
+```
+
+That's really all you need to make list and detail views update when you receive an event.
+
+-   `{ "entity": "posts" }` will invalidate the posts list
+-   `{ "entity": "posts", id: 5 }` will invalidate a single post
+
+This approach avoids the problem of over pushing, because if we receive an event for an entity that we are not interested in at the moment, nothing will happen. For example, if we are currently on the _Profile_ page, and we receive an update for _Posts_, _invalidateQueries_ will make sure that the next time we get to our _Posts_ page, it will be refetched. But it will not refetch it right now, because we have no active observers.
+
 ---
 
 That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
