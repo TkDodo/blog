@@ -38,7 +38,9 @@ If you are working with REST though, you are constrained by what the backend ret
 
 > It depends.
 
-<p style="padding-left: 3rem; margin-top: -1rem">— Every developer, always</p>
+<p style="padding-left: 3rem; margin-top: -1rem">
+  — Every developer, always
+</p>
 
 Here are 3+1 approaches on where you _can_ transform data with their respective pros and cons:
 
@@ -102,14 +104,16 @@ export const useTodosQuery = () => {
   return {
     ...queryInfo,
     // 🚨 don't do this - the useMemo does nothig at all here!
-    data: React.useMemo(() => queryInfo.data?.map((todo) => todo.name.toUpperCase()), [
-      queryInfo,
-    ]),
+    data: React.useMemo(
+      () => queryInfo.data?.map((todo) => todo.name.toUpperCase()),
+      [queryInfo]
+    ),
 
     // ✅ correctly memoizes by queryInfo.data
-    data: React.useMemo(() => queryInfo.data?.map((todo) => todo.name.toUpperCase()), [
-      queryInfo.data,
-    ]),
+    data: React.useMemo(
+      () => queryInfo.data?.map((todo) => todo.name.toUpperCase()),
+      [queryInfo.data]
+    ),
   }
 }
 ```
@@ -135,7 +139,8 @@ export const useTodosQuery = () =>
 selectors will only be called if _data_ exists, so you don't have to care about _undefined_ here. Selectors like the one above will also run on every render, because the functional identity changes (it's an inline function). If your transformation is expensive, you can memoize it either with useCallback, or by extracting it to a stable function reference:
 
 ```ts:title=select-memoizations
-const transformTodoNames = (data: Todos) => data.map((todo) => todo.name.toUpperCase())
+const transformTodoNames = (data: Todos) =>
+  data.map((todo) => todo.name.toUpperCase())
 
 export const useTodosQuery = () =>
   useQuery(['todos'], fetchTodos, {
@@ -156,10 +161,12 @@ export const useTodosQuery = () =>
 Further, the select option can also be used to subscribe to only parts of the data. This is what makes this approach truly unique. Consider the following example:
 
 ```js:title=select-partial-subscriptions
-export const useTodosQuery = (select) => useQuery(['todos'], fetchTodos, { select })
+export const useTodosQuery = (select) =>
+  useQuery(['todos'], fetchTodos, { select })
 
 export const useTodosCount = () => useTodosQuery((data) => data.length)
-export const useTodo = (id) => useTodosQuery((data) => data.find((todo) => todo.id === id))
+export const useTodo = (id) =>
+  useTodosQuery((data) => data.find((todo) => todo.id === id))
 ```
 
 Here, we've created a [useSelector](https://react-redux.js.org/api/hooks#useselector) like API by passing a custom selector to our _useTodosQuery_. The custom hooks still works like before, as _select_ will be _undefined_ if you don't pass it, so the whole state will be returned.

@@ -53,7 +53,9 @@ The general idea is to setup your queries as usual, as if you wouldn't be workin
 
 ```jsx:title=a-standard-query
 const usePosts = () => useQuery(['posts', 'list'], fetchPosts)
-const usePost = (id) => useQuery(['posts', 'detail', id], () => fetchPost(id))
+
+const usePost = (id) =>
+  useQuery(['posts', 'detail', id], () => fetchPost(id))
 ```
 
 Additionally, you can setup an app-wide _useEffect_ that connects you to your WebSocket endpoint. How that works totally depends on which technology you are using. I've seen people subscribe to live data from [Hasura](https://github.com/tannerlinsley/react-query/issues/171#issuecomment-649810136). There's a great article about connecting to [Firebase](https://aggelosarvanitakis.medium.com/a-real-time-hook-with-firebase-react-query-f7eb537d5145). In my example, I will simply use the browser's native [WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket):

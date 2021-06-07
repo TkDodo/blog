@@ -292,7 +292,9 @@ If typescript narrows the type with each case in the switch statement, if all ca
 We can assert that with a little helper:
 
 ```tsx:title=never {1,9,10}
-const UnknownShape = ({ shape }: { shape: never }) => <div>Unknown Shape</div>
+const UnknownShape = ({ shape }: { shape: never }) => (
+  <div>Unknown Shape</div>
+)
 
 const Shape = (props: Shape): JSX.Element => {
   switch (props.kind) {

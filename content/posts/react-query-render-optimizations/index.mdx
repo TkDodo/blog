@@ -16,7 +16,10 @@ import { Divider } from '@theme-ui/components'
 
 <img src="./optimizations.jpeg" />
 
-<Attribution name="Lukasz Szmigiel" url="https://unsplash.com/@szmigieldesign" />
+<Attribution
+  name="Lukasz Szmigiel"
+  url="https://unsplash.com/@szmigieldesign"
+/>
 
 - [#1: Practical React Query](practical-react-query)
 - [#2: React Query Data Transformations](react-query-data-transformations)
@@ -42,7 +45,8 @@ I've already written quite a bit about render optimizations when describing the 
 I haven't been entirely honest in the [last example](react-query-data-transformations#3-using-the-select-option) when I said that this component will only re-render if the length of todos change:
 
 ```tsx:title=count-component
-export const useTodosQuery = (select) => useQuery(['todos'], fetchTodos, { select })
+export const useTodosQuery = (select) =>
+  useQuery(['todos'], fetchTodos, { select })
 export const useTodosCount = () => useTodosQuery((data) => data.length)
 
 function TodosCount() {
@@ -68,7 +72,8 @@ For this use-case, React Query has the _notifyOnChangeProps_ option. It can be s
 ```ts:title=optimized-with-notifyOnChangeProps
 export const useTodosQuery = (select, notifyOnChangeProps) =>
   useQuery(['todos'], fetchTodos, { select, notifyOnChangeProps })
-export const useTodosCount = () => useTodosQuery((data) => data.length, ['data'])
+export const useTodosCount = () =>
+  useTodosQuery((data) => data.length, ['data'])
 ```
 
 You can see this in action in the [optimistic-updates-typescript](https://github.com/tannerlinsley/react-query/blob/9023b0d1f01567161a8c13da5d8d551a324d6c23/examples/optimistic-updates-typescript/pages/index.tsx#L35-L48) example in the docs.
@@ -78,7 +83,8 @@ You can see this in action in the [optimistic-updates-typescript](https://github
 While the above code works well, it can get out of sync quite easily. What if we want to react to the _error_, too? Or we start to use the _isLoading_ flag? We have to keep the _notifyOnChangeProps_ list in sync with whichever fields we are actually using in our components. If we forget to do that, and we only observe the _data_ property, but get an _error_ that we also display, our component will not re-render and is thus outdated. This is especially troublesome if we hard-code this in our custom hook, because the hook does not know what the component will actually use:
 
 ```tsx:title=outdated-component
-export const useTodosCount = () => useTodosQuery((data) => data.length, ['data'])
+export const useTodosCount = () =>
+  useTodosQuery((data) => data.length, ['data'])
 
 function TodosCount() {
   // 🚨 we are using error, but we are not getting notified if error changes!

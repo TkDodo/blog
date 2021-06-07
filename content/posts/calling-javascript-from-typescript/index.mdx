@@ -15,7 +15,10 @@ import SpacingBox from 'components/SpacingBox'
 
 <img src="./call.jpg" />
 
-<Attribution name="Antoine Barr&egrave;s" url="https://unsplash.com/@antoinebarres" />
+<Attribution
+  name="Antoine Barr&egrave;s"
+  url="https://unsplash.com/@antoinebarres"
+/>
 
 There is nothing better than starting a new project, on a green field.
 You can choose all the latest tech you want, and you can begin with great types right from the start.
@@ -34,7 +37,8 @@ But what about the other way around? Turns out - that's not so easy.
 Suppose you have a util function that you would like to import. It could be something as simple as:
 
 ```js:title=utils.js
-export const sum = ({ first, second, third }) => first + second + (third ?? 0)
+export const sum = ({ first, second, third }) =>
+  first + second + (third ?? 0)
 ```
 
 A stupid example, I know, but it'll do.
@@ -100,7 +104,8 @@ The described problem is actually due to typescript performing better inference 
 We could change the implementation to:
 
 ```js:title=no-destruct-utils
-export const sum = (params) => params.first + params.second + (params.third ?? 0)
+export const sum = (params) =>
+  params.first + params.second + (params.third ?? 0)
 ```
 
 Now, TypeScript will just infer params as _any_, and we are again good to go.
@@ -121,7 +126,8 @@ This works well for variables where the default is clear, like booleans, where y
 If you don't know what a good default value would be, you could even cheat a bit and do this:
 
 ```js:title=cheating-default-params
-export const sum = ({ first, second, third = undefined }) => first + second + (third ?? 0)
+export const sum = ({ first, second, third = undefined }) =>
+  first + second + (third ?? 0)
 ```
 
 🤯
@@ -139,7 +145,8 @@ type Params = {
   second: number
   third?: number
 }
-export const sum = ({ first, second, third }: Params): number => first + second + (third ?? 0)
+export const sum = ({ first, second, third }: Params): number =>
+  first + second + (third ?? 0)
 ```
 
 The long-term thing you probably want to do anyways - convert it to TypeScript.
@@ -162,7 +169,8 @@ Adding JsDoc annotations to your JavaScript functions will:
  * @param {{ first: number, second: number, third?: number }} params
  * @returns {number}
  */
-export const sum = ({ first, second, third }) => first + second + (third ?? 0)
+export const sum = ({ first, second, third }) =>
+  first + second + (third ?? 0)
 ```
 
 Of course, you can also just type them to any or omit the return type. You can be as specific as you want.

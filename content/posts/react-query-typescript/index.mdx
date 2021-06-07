@@ -14,7 +14,10 @@ import Attribution from 'components/Attribution'
 
 <img src="./react-query-typescript.jpeg" />
 
-<Attribution name="hue12 photography" url="https://unsplash.com/@hue12_photography" />
+<Attribution
+  name="hue12 photography"
+  url="https://unsplash.com/@hue12_photography"
+/>
 
 - [#1: Practical React Query](practical-react-query)
 - [#2: React Query Data Transformations](react-query-data-transformations)
@@ -143,7 +146,9 @@ Let's start by _not_ passing in any Generics at all and let TypeScript figure ou
 ```ts:title=inlined-queryFn
 function useGroups() {
   // 🚨 data will be `any` here
-  return useQuery('groups', () => axios.get('groups').then((response) => respone.data))
+  return useQuery('groups', () =>
+    axios.get('groups').then((response) => respone.data)
+  )
 }
 ```
 
@@ -232,7 +237,9 @@ function fetchGroup(id: number): Promise<Group> {
 }
 
 function useGroup(id: number | undefined) {
-  return useQuery(['group', id], () => fetchGroup(id), { enabled: Boolean(id) })
+  return useQuery(['group', id], () => fetchGroup(id), {
+    enabled: Boolean(id),
+  })
   // 🚨 Argument of type 'number | undefined' is not assignable to parameter of type 'number'.
   //  Type 'undefined' is not assignable to type 'number'.ts(2345)
 }
@@ -251,7 +258,9 @@ function fetchGroup(id: number | undefined): Promise<Group> {
 }
 
 function useGroup(id: number | undefined) {
-  return useQuery(['group', id], () => fetchGroup(id), { enabled: Boolean(id) })
+  return useQuery(['group', id], () => fetchGroup(id), {
+    enabled: Boolean(id),
+  })
 }
 ```
 

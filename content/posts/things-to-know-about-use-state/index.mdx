@@ -160,10 +160,14 @@ When we pass an initial value to _useState_, the initial variable is always crea
 
 ```js:title=lazy-initializer
 // 🚨 will unnecessarily be computed on every render
-const [value, setValue] = React.useState(calculateExpensiveInitialValue(props))
+const [value, setValue] = React.useState(
+  calculateExpensiveInitialValue(props)
+)
 
 // ✅ looks like a small difference, but the function is only called once
-const [value, setValue] = React.useState(() => calculateExpensiveInitialValue(props))
+const [value, setValue] = React.useState(() =>
+  calculateExpensiveInitialValue(props)
+)
 ```
 
 ### 3: The update bailout
@@ -214,4 +218,6 @@ _useState_ is (kinda) implemented with _useReducer_ under the hood. You can see 
 
 The first 3 of those 5 things are actually mentioned directly in the Hooks API Reference of the official React docs I linked to at the very beginning 😉. If you didn't know about these things before - now you do!
 
-<Comments>How many of these points did you know? Leave a comment below ⬇️</Comments>
+<Comments>
+  How many of these points did you know? Leave a comment below ⬇️
+</Comments>

@@ -12,7 +12,10 @@ import Comments from 'components/Comments'
 
 <img src="./books.png" />
 
-<Attribution name="Sincerely Media" url="https://unsplash.com/@sincerelymedia" />
+<Attribution
+  name="Sincerely Media"
+  url="https://unsplash.com/@sincerelymedia"
+/>
 
 TypeScript 4.1 beta was [announced recently](https://devblogs.microsoft.com/typescript/announcing-typescript-4-1-beta/),
 and it introduces many new and exciting features.
@@ -81,7 +84,9 @@ const widgetIndex: Record<string, Widget> = {
   widget2: { id: 'widget2', title: 'Bar' },
 }
 
-const title: string = widgetIndex['helloWorld']?.title ?? { thisIs: 'completely Untyped' }
+const title: string = widgetIndex['helloWorld']?.title ?? {
+  thisIs: 'completely Untyped',
+}
 ```
 
 [TypeScript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBA6glgEwOYWFAvFA3gKCvqRALigGdgAnOAOyTwODmABsITyracBfHHAYwD21clADuiFMACS1BBAAeJAEoQhFBAB4ONJABpYk1AD4M2evgnJUARhJZCCEgHIrUm84OMWbKM4BigoLOUNx6FuJGwABM9o4ubqjRnlDerC4AQgCGFCFhPHxCImhpvjq0ZokycooA2s4AFhDMzIIwghTMCM4AugD8AHSlUH192KkNcKTSpC5CALZgrMDNIFAAqtSgkN2hQA)
@@ -92,7 +97,10 @@ Like many others, I believe this to be a big flaw of the language itself.
 But luckily, you can always implement your own types and use them instead of _Record_:
 
 ```ts:title=safe-record
-type SafeRecord<Key extends string | number | symbol, Value> = Record<Key, Value | undefined>
+type SafeRecord<Key extends string | number | symbol, Value> = Record<
+  Key,
+  Value | undefined
+>
 ```
 
 With that type, all values will also include _undefined_, so whenever you retrieve a value from a _SafeRecord_, you have
@@ -133,8 +141,9 @@ which let us tackle that specific problem:
 
 ```ts:title=non-empty-array
 type NonEmptyArray<T> = [T, ...Array<T>]
-const isNonEmpty = <T extends unknown>(array: Array<T>): array is NonEmptyArray<T> =>
-  array.length > 0
+const isNonEmpty = <T extends unknown>(
+  array: Array<T>
+): array is NonEmptyArray<T> => array.length > 0
 ```
 
 This basically gives us a variadic tuple type where the first element is always defined, and a
@@ -145,8 +154,9 @@ just type your function with a _NonEmptyArray_:
 
 ```ts:title=forced-empty-check {7-15}
 type NonEmptyArray<T> = [T, ...Array<T>]
-const isNonEmpty = <T extends unknown>(array: Array<T>): array is NonEmptyArray<T> =>
-  array.length > 0
+const isNonEmpty = <T extends unknown>(
+  array: Array<T>
+): array is NonEmptyArray<T> => array.length > 0
 
 const strings: Array<string> = ['one', 'two', 'three']
 
@@ -177,4 +187,6 @@ to the latest TypeScript playground beta with that flag enabled so you can play 
 
 It will still take about two months until that version is released, but I am _really_ looking forward to it 🎉.
 
-<Comments>Let me know how you like the new TypeScript beta in the comments below ⬇️</Comments>
+<Comments>
+  Let me know how you like the new TypeScript beta in the comments below ⬇️
+</Comments>

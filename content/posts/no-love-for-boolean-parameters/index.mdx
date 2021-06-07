@@ -14,7 +14,10 @@ import Attribution from 'components/Attribution'
 
 <img src="./boolean.jpg" />
 
-<Attribution name="Alexander Sinn" url="https://unsplash.com/@swimstaralex" />
+<Attribution
+  name="Alexander Sinn"
+  url="https://unsplash.com/@swimstaralex"
+/>
 
 Ah, booleans. 0 or 1, true or false. Always either one of them, never something in between. So simple and predictable. At the end of the day, all code we write winds up in lots of zeros and ones.
 
@@ -101,7 +104,11 @@ This is rather rudimentary number formatting function, but apart from that, it d
 Requirements change over time (as they tend to do), and now we have to support currencies for some of our metrics as well. Starting from the above formatting function, we are tempted to add _another_ flag, `isCurrency`
 
 ```ts:title=🚨-currency-formatting {1,5-7}
-function formatMetric(value: number, isPercent: boolean, isCurrency: boolean): string {
+function formatMetric(
+  value: number,
+  isPercent: boolean,
+  isCurrency: boolean
+): string {
   if (isPercent) {
     return `${value * 100}%`
   }
@@ -151,7 +158,10 @@ Further advantages of a single variant property include:
 
 ```ts:title=exhaustive-variants
 type MetricVariant = 'standard' | 'percent' | 'currency'
-function formatMetric(value: number, variant: MetricVariant = 'standard'): string {
+function formatMetric(
+  value: number,
+  variant: MetricVariant = 'standard'
+): string {
   switch (variant) {
     case 'percent':
       return `${value * 100}%`
@@ -190,5 +200,6 @@ There is lots of good literature available on that topic, showing why we shouldn
 I can recommend them all, and for starters, resist the urge of adding the next boolean parameter to your codebase.
 
 <Comments>
-  No matter if you like booleans, or not, or both at the same time, leave a comment below ⬇️
+  No matter if you like booleans, or not, or both at the same time, leave a
+  comment below ⬇️
 </Comments>
