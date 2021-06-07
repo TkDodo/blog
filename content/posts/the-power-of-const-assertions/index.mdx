@@ -4,7 +4,7 @@ description: const assertions are a criminally underused TypeScript feature - le
 date: 2020-10-08
 banner: ./power.jpg
 tags:
-    - TypeScript
+  - TypeScript
 ---
 
 import Attribution from 'components/Attribution'
@@ -53,7 +53,7 @@ This can be troublesome, even in cases where you think you are right. Consider t
 type Variant = 'primary' | 'secondary'
 
 type Props = {
-    variant: Variant
+  variant: Variant
 }
 
 const Component = (props: Props) => void 0
@@ -80,7 +80,7 @@ TypeScript is doing this because nothing stops you from re-assigning another str
 type Variant = 'primary' | 'secondary'
 
 type Props = {
-    variant: Variant
+  variant: Variant
 }
 
 const Component = (props: Props) => void 0
@@ -100,7 +100,7 @@ A type assertion would solve this:
 type Variant = 'primary' | 'secondary'
 
 type Props = {
-    variant: Variant
+  variant: Variant
 }
 
 const Component = (props: Props) => void 0
@@ -126,7 +126,7 @@ would be to use an explicit type annotation rather than a type assertion:
 type Variant = 'primary' | 'secondary'
 
 type Props = {
-    variant: Variant
+  variant: Variant
 }
 
 const Component = (props: Props) => void 0
@@ -148,7 +148,7 @@ I still think that fixing the issue with const assertions is the preferred way o
 type Variant = 'primary' | 'secondary'
 
 type Props = {
-    variant: Variant
+  variant: Variant
 }
 
 const Component = (props: Props) => void 0
@@ -164,9 +164,9 @@ This comes in handy if you don't have the type available for annotation, for exa
 The syntax is also more terse, and using const assertions has other benefits as well.
 Because you are signalling TypeScript that your object is _really_ constant, the compiler can make better assumptions about your intentions:
 
--   strings and numbers can be inferred as their literal counterparts
--   arrays become tuples with a fixed length
--   everything is readonly, so you cannot accidentally mutate it afterwards (looking at you, _Array.sort_)
+- strings and numbers can be inferred as their literal counterparts
+- arrays become tuples with a fixed length
+- everything is readonly, so you cannot accidentally mutate it afterwards (looking at you, _Array.sort_)
 
 This will give you a ton of flexibility when working with that constant on type level.
 
@@ -179,14 +179,14 @@ type Variant = 'primary' | 'secondary'
 type Option = { id: Variant; label: string }
 
 const options: Array<Option> = [
-    {
-        id: 'primary',
-        label: 'The primary option',
-    },
-    {
-        id: 'secondary',
-        label: 'The seondary option',
-    },
+  {
+    id: 'primary',
+    label: 'The primary option',
+  },
+  {
+    id: 'secondary',
+    label: 'The seondary option',
+  },
 ]
 ```
 
@@ -199,14 +199,14 @@ With const assertions, you can just grab the type from the options Array:
 
 ```ts:title=extract-it
 const options = [
-    {
-        id: 'primary',
-        label: 'The primary option',
-    },
-    {
-        id: 'secondary',
-        label: 'The seondary option',
-    },
+  {
+    id: 'primary',
+    label: 'The primary option',
+  },
+  {
+    id: 'secondary',
+    label: 'The seondary option',
+  },
 ] as const
 
 type Variant = typeof options[number]['id']
@@ -224,24 +224,24 @@ Luckily, we can also tell the compiler to only make this work with readonly Arra
 
 ```ts:title=ensure-readonly {12-22}
 const options = [
-    {
-        id: 'primary',
-        label: 'The primary option',
-    },
-    {
-        id: 'secondary',
-        label: 'The seondary option',
-    },
+  {
+    id: 'primary',
+    label: 'The primary option',
+  },
+  {
+    id: 'secondary',
+    label: 'The seondary option',
+  },
 ] as const
 
 type EnsureReadonlyArray<T> = T extends Array<any>
-    ? never
-    : T extends ReadonlyArray<any>
-    ? T
-    : never
+  ? never
+  : T extends ReadonlyArray<any>
+  ? T
+  : never
 export type ExtractValue<
-    T extends ReadonlyArray<any>,
-    K extends keyof T[number]
+  T extends ReadonlyArray<any>,
+  K extends keyof T[number]
 > = EnsureReadonlyArray<T>[number][K]
 
 type Variant = ExtractValue<typeof options, 'id'>

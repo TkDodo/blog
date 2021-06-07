@@ -4,10 +4,10 @@ description: An advanced guide to minimize component re-renderings when using Re
 date: 2021-03-20
 banner: ./optimizations.jpeg
 tags:
-    - react
-    - react-query
-    - JavaScript
-    - TypeScript
+  - react
+  - react-query
+  - JavaScript
+  - TypeScript
 ---
 
 import Comments from 'components/Comments'
@@ -18,20 +18,20 @@ import { Divider } from '@theme-ui/components'
 
 <Attribution name="Lukasz Szmigiel" url="https://unsplash.com/@szmigieldesign" />
 
--   [#1: Practical React Query](practical-react-query)
--   [#2: React Query Data Transformations](react-query-data-transformations)
--   <b>#3: React Query Render Optimizations</b>
--   [#4: Status Checks in React Query](status-checks-in-react-query)
--   [#5: Testing React Query](testing-react-query)
--   [#6: React Query and TypeScript](react-query-and-type-script)
--   [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
+- [#1: Practical React Query](practical-react-query)
+- [#2: React Query Data Transformations](react-query-data-transformations)
+- <b>#3: React Query Render Optimizations</b>
+- [#4: Status Checks in React Query](status-checks-in-react-query)
+- [#5: Testing React Query](testing-react-query)
+- [#6: React Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
 
 <Divider />
 
 **Disclaimer**: Render optimizations are an advanced concept for any app. React Query already comes with very good optimizations and defaults out of the box, and most of the time, no further optimizations are needed. "Unneeded re-renders" is a topic that many people tend to put a lot of focus on, which is why I've decided to cover it. But I wanted to point out once again, that usually, for most apps, render optimizations probably don't matter as much as you'd think. Re-renders are a good thing. They make sure your app is up-to-date. I'd take an "unnecessary re-render" over a "missing render-that-should-have-been-there" all day every day. For more on this topic, please read:
 
--   [Fix the slow render before you fix the re-render](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render) by Kent C. Dodds
--   [this article by @ryanflorence about premature optimizations](https://cdb.reacttraining.com/react-inline-functions-and-performance-bdff784f5578)
+- [Fix the slow render before you fix the re-render](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render) by Kent C. Dodds
+- [this article by @ryanflorence about premature optimizations](https://cdb.reacttraining.com/react-inline-functions-and-performance-bdff784f5578)
 
 <Divider />
 
@@ -46,9 +46,9 @@ export const useTodosQuery = (select) => useQuery(['todos'], fetchTodos, { selec
 export const useTodosCount = () => useTodosQuery((data) => data.length)
 
 function TodosCount() {
-    const todosCount = useTodosCount()
+  const todosCount = useTodosCount()
 
-    return <div>{todosCount.data}</div>
+  return <div>{todosCount.data}</div>
 }
 ```
 
@@ -67,7 +67,7 @@ For this use-case, React Query has the _notifyOnChangeProps_ option. It can be s
 
 ```ts:title=optimized-with-notifyOnChangeProps
 export const useTodosQuery = (select, notifyOnChangeProps) =>
-    useQuery(['todos'], fetchTodos, { select, notifyOnChangeProps })
+  useQuery(['todos'], fetchTodos, { select, notifyOnChangeProps })
 export const useTodosCount = () => useTodosQuery((data) => data.length, ['data'])
 ```
 
@@ -81,15 +81,15 @@ While the above code works well, it can get out of sync quite easily. What if we
 export const useTodosCount = () => useTodosQuery((data) => data.length, ['data'])
 
 function TodosCount() {
-    // 🚨 we are using error, but we are not getting notified if error changes!
-    const { error, data } = useTodosCount()
+  // 🚨 we are using error, but we are not getting notified if error changes!
+  const { error, data } = useTodosCount()
 
-    return (
-        <div>
-            {error ? error : null}
-            {data ? data : null}
-        </div>
-    )
+  return (
+    <div>
+      {error ? error : null}
+      {data ? data : null}
+    </div>
+  )
 }
 ```
 
@@ -101,24 +101,24 @@ I'm quite proud of this feature, given that it was my first major contribution t
 
 ```tsx:title=tracked-queries
 const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            notifyOnChangeProps: 'tracked',
-        },
+  defaultOptions: {
+    queries: {
+      notifyOnChangeProps: 'tracked',
     },
+  },
 })
 function App() {
-    return (
-        <QueryClientProvider client={queryClient}>
-            <Example />
-        </QueryClientProvider>
-    )
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Example />
+    </QueryClientProvider>
+  )
 }
 ```
 
 With this, you never have to think about re-renders again. Of course, tracking the usages has a bit of an overhead as well, so make sure you use this wisely. There are also some limitations to tracked queries, which is why this is an opt-in feature:
 
--   If you use [object rest destructuring](https://github.com/tc39/proposal-object-rest-spread/blob/6ee4ce3cdda246746fc46fb149bb8b43c28e704d/Rest.md), you are effectively observing all fields. Normal destructuring is fine, just don't do this:
+- If you use [object rest destructuring](https://github.com/tc39/proposal-object-rest-spread/blob/6ee4ce3cdda246746fc46fb149bb8b43c28e704d/Rest.md), you are effectively observing all fields. Normal destructuring is fine, just don't do this:
 
 ```ts:title=problematic-rest-destructuring
 // 🚨 will track all fields
@@ -128,7 +128,7 @@ const { isLoading, ...queryInfo } = useQuery(...)
 const { isLoading, data } = useQuery(...)
 ```
 
--   Tracked queries only work "during render". If you only access fields during effects, they will not be tracked. This is quite the edge case though because of dependency arrays:
+- Tracked queries only work "during render". If you only access fields during effects, they will not be tracked. This is quite the edge case though because of dependency arrays:
 
 ```ts:title=tracking-effects
 const queryInfo = useQuery(...)
@@ -144,7 +144,7 @@ React.useEffect(() => {
 }, [queryInfo.data])
 ```
 
--   Tracked queries don't reset on each render, so if you track a field once, you'll track it for the lifetime of the observer:
+- Tracked queries don't reset on each render, so if you track a field once, you'll track it for the lifetime of the observer:
 
 ```ts:title=no-reset
 const queryInfo = useQuery(...)
@@ -161,8 +161,8 @@ A different, but no less important render optimization that React Query has turn
 
 ```json
 [
-    { "id": 1, "name": "Learn React", "status": "active" },
-    { "id": 2, "name": "Learn React Query", "status": "todo" }
+  { "id": 1, "name": "Learn React", "status": "active" },
+  { "id": 2, "name": "Learn React Query", "status": "todo" }
 ]
 ```
 
@@ -170,9 +170,9 @@ No suppose we transition our first todo into the _done_ state, and we make a bac
 
 ```diff
 [
--    { "id": 1, "name": "Learn React", "status": "active" },
-+    { "id": 1, "name": "Learn React", "status": "done" },
-    { "id": 2, "name": "Learn React Query", "status": "todo" }
+-  { "id": 1, "name": "Learn React", "status": "active" },
++  { "id": 1, "name": "Learn React", "status": "done" },
+  { "id": 2, "name": "Learn React Query", "status": "todo" }
 ]
 ```
 

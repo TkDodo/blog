@@ -4,10 +4,10 @@ description: Learn the possibilities to perform the quite common and important t
 date: 2021-03-10
 banner: ./transformations.jpeg
 tags:
-    - react
-    - react-query
-    - JavaScript
-    - TypeScript
+  - react
+  - react-query
+  - JavaScript
+  - TypeScript
 ---
 
 import Comments from 'components/Comments'
@@ -18,13 +18,13 @@ import { Divider } from '@theme-ui/components'
 
 <Attribution name="Joshua Sukoff" url="https://unsplash.com/@joshuas" />
 
--   [#1: Practical React Query](practical-react-query)
--   <b>#2: React Query Data Transformations</b>
--   [#3: React Query Render Optimizations](react-query-render-optimizations)
--   [#4: Status Checks in React Query](status-checks-in-react-query)
--   [#5: Testing React Query](testing-react-query)
--   [#6: React Query and TypeScript](react-query-and-type-script)
--   [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
+- [#1: Practical React Query](practical-react-query)
+- <b>#2: React Query Data Transformations</b>
+- [#3: React Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in React Query](status-checks-in-react-query)
+- [#5: Testing React Query](testing-react-query)
+- [#6: React Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
 
 <Divider />
 
@@ -55,10 +55,10 @@ The _queryFn_ is the function that you pass to _useQuery_. It expects you to ret
 
 ```ts:title=queryFn-transformation
 const fetchTodos = async (): Promise<Todos> => {
-    const response = await axios.get('todos')
-    const data: Todos = response.data
+  const response = await axios.get('todos')
+  const data: Todos = response.data
 
-    return data.map((todo) => todo.name.toUpperCase())
+  return data.map((todo) => todo.name.toUpperCase())
 }
 
 export const useTodosQuery = () => useQuery(['todos'], fetchTodos)
@@ -79,17 +79,17 @@ As advised in [Part 1](practical-react-query), if you create custom hooks, you c
 
 ```ts:title=render-transformation
 const fetchTodos = async (): Promise<Todos> => {
-    const response = await axios.get('todos')
-    return response.data
+  const response = await axios.get('todos')
+  return response.data
 }
 
 export const useTodosQuery = () => {
-    const queryInfo = useQuery(['todos'], fetchTodos)
+  const queryInfo = useQuery(['todos'], fetchTodos)
 
-    return {
-        ...queryInfo,
-        data: queryInfo.data?.map((todo) => todo.name.toUpperCase()),
-    }
+  return {
+    ...queryInfo,
+    data: queryInfo.data?.map((todo) => todo.name.toUpperCase()),
+  }
 }
 ```
 
@@ -97,20 +97,20 @@ As it stands, this will not only run every time your fetch function runs, but ac
 
 ```ts:title=useMemo-dependencies
 export const useTodosQuery = () => {
-    const queryInfo = useQuery(['todos'], fetchTodos)
+  const queryInfo = useQuery(['todos'], fetchTodos)
 
-    return {
-        ...queryInfo,
-        // 🚨 don't do this - the useMemo does nothig at all here!
-        data: React.useMemo(() => queryInfo.data?.map((todo) => todo.name.toUpperCase()), [
-            queryInfo,
-        ]),
+  return {
+    ...queryInfo,
+    // 🚨 don't do this - the useMemo does nothig at all here!
+    data: React.useMemo(() => queryInfo.data?.map((todo) => todo.name.toUpperCase()), [
+      queryInfo,
+    ]),
 
-        // ✅ correctly memoizes by queryInfo.data
-        data: React.useMemo(() => queryInfo.data?.map((todo) => todo.name.toUpperCase()), [
-            queryInfo.data,
-        ]),
-    }
+    // ✅ correctly memoizes by queryInfo.data
+    data: React.useMemo(() => queryInfo.data?.map((todo) => todo.name.toUpperCase()), [
+      queryInfo.data,
+    ]),
+  }
 }
 ```
 
@@ -127,9 +127,9 @@ v3 introduced built-in selectors, which can also be used to transform data:
 
 ```ts:title=select-transformation
 export const useTodosQuery = () =>
-    useQuery(['todos'], fetchTodos, {
-        select: (data) => data.map((todo) => todo.name.toUpperCase()),
-    })
+  useQuery(['todos'], fetchTodos, {
+    select: (data) => data.map((todo) => todo.name.toUpperCase()),
+  })
 ```
 
 selectors will only be called if _data_ exists, so you don't have to care about _undefined_ here. Selectors like the one above will also run on every render, because the functional identity changes (it's an inline function). If your transformation is expensive, you can memoize it either with useCallback, or by extracting it to a stable function reference:
@@ -138,19 +138,19 @@ selectors will only be called if _data_ exists, so you don't have to care about 
 const transformTodoNames = (data: Todos) => data.map((todo) => todo.name.toUpperCase())
 
 export const useTodosQuery = () =>
-    useQuery(['todos'], fetchTodos, {
-        // ✅ uses a stable function reference
-        select: transformTodoNames,
-    })
+  useQuery(['todos'], fetchTodos, {
+    // ✅ uses a stable function reference
+    select: transformTodoNames,
+  })
 
 export const useTodosQuery = () =>
-    useQuery(['todos'], fetchTodos, {
-        // ✅ memoizes with useCallback
-        select: React.useCallback(
-            (data: Todos) => data.map((todo) => todo.name.toUpperCase()),
-            []
-        ),
-    })
+  useQuery(['todos'], fetchTodos, {
+    // ✅ memoizes with useCallback
+    select: React.useCallback(
+      (data: Todos) => data.map((todo) => todo.name.toUpperCase()),
+      []
+    ),
+  })
 ```
 
 Further, the select option can also be used to subscribe to only parts of the data. This is what makes this approach truly unique. Consider the following example:

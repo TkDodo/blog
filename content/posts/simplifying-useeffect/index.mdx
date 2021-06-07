@@ -4,10 +4,10 @@ description: useEffect hooks can be hard to reason about, but I have 5 principle
 date: 2021-01-23
 banner: ./effect.jpg
 tags:
-    - React
-    - useEffect
-    - JavaScript
-    - TypeScript
+  - React
+  - useEffect
+  - JavaScript
+  - TypeScript
 ---
 
 import Comments from 'components/Comments'
@@ -25,8 +25,8 @@ useEffect is about as complex as it can get in ReactJs, and it is very unlikely 
 
 I've already written about a couple of ways to reduce the amount of effects in the [useState pitfalls series](./tags/use-state-pitfalls):
 
--   In [part 1](./dont-over-use-state), we've established that some effects can be replaced with _useMemo_ or even just normal function executions.
--   In [part 2](./putting-props-to-use-state), I've outlined why trying to sync different react states with _useEffect_ is likely an anti-pattern and what you can do instead.
+- In [part 1](./dont-over-use-state), we've established that some effects can be replaced with _useMemo_ or even just normal function executions.
+- In [part 2](./putting-props-to-use-state), I've outlined why trying to sync different react states with _useEffect_ is likely an anti-pattern and what you can do instead.
 
 #### Data fetching
 
@@ -40,8 +40,8 @@ A function or a class should do one thing, and one thing only. Your `processPaym
 
 ```js:title=one-effect-two-responsibilities
 React.useEffect(() => {
-    document.title = 'hello world'
-    trackPageVisit()
+  document.title = 'hello world'
+  trackPageVisit()
 }, [])
 ```
 
@@ -53,8 +53,8 @@ Suppose we now want to add a feature that syncs some local state with the docume
 const [title, setTitle] = React.useState('hello world')
 
 React.useEffect(() => {
-    document.title = title
-    trackPageVisit()
+  document.title = title
+  trackPageVisit()
 }, [title])
 ```
 
@@ -64,11 +64,11 @@ Can you spot the bug? Every time the title changes, we are also tracking a page 
 const [title, setTitle] = React.useState('hello world')
 
 React.useEffect(() => {
-    document.title = title
+  document.title = title
 }, [title])
 
 React.useEffect(() => {
-    trackPageVisit()
+  trackPageVisit()
 }, [])
 ```
 
@@ -84,15 +84,15 @@ Giving variables and functions [a good name](./on-naming-things) is like writing
 
 ```ts:title=named-hooks
 const useTitleSync = (title: string) => {
-    React.useEffect(() => {
-        document.title = title
-    }, [title])
+  React.useEffect(() => {
+    document.title = title
+  }, [title])
 }
 
 const useTrackVisit = () => {
-    React.useEffect(() => {
-        trackPageVisit()
-    }, [])
+  React.useEffect(() => {
+    trackPageVisit()
+  }, [])
 }
 ```
 
@@ -104,13 +104,13 @@ This is probably the biggest advantage of custom hooks for me: We can tie things
 
 ```ts:title=useTitle {1-2,8}
 const useTitle = (initialTitle: string) => {
-    const [title, setTitle] = React.useState(initialTitle)
+  const [title, setTitle] = React.useState(initialTitle)
 
-    React.useEffect(() => {
-        document.title = title
-    }, [title])
+  React.useEffect(() => {
+    document.title = title
+  }, [title])
 
-    return [title, setTitle] as const
+  return [title, setTitle] as const
 }
 ```
 
@@ -118,13 +118,13 @@ We can even take this one step further: If we only intend to show the title in t
 
 ```ts:title=encapsulated-value {8}
 const useTitle = (initialTitle: string) => {
-    const [title, setTitle] = React.useState(initialTitle)
+  const [title, setTitle] = React.useState(initialTitle)
 
-    React.useEffect(() => {
-        document.title = title
-    }, [title])
+  React.useEffect(() => {
+    document.title = title
+  }, [title])
 
-    return setTitle
+  return setTitle
 }
 ```
 
@@ -136,13 +136,13 @@ Testing the _useTitle_ hook without having to test the component that uses it ha
 import { act, renderHook } from '@testing-library/react-hooks'
 
 describe('useTitle', () => {
-    test('sets the document title', () => {
-        const { result } = renderHook(() => useTitle('hello'))
-        expect(document.title).toEqual('hello')
+  test('sets the document title', () => {
+    const { result } = renderHook(() => useTitle('hello'))
+    expect(document.title).toEqual('hello')
 
-        act(() => result.current('world'))
-        expect(document.title).toEqual('world')
-    })
+    act(() => result.current('world'))
+    expect(document.title).toEqual('world')
+  })
 })
 ```
 
@@ -154,7 +154,7 @@ All the above reasons make me want to write custom hooks even if I only use them
 const [title, setTitle] = React.useState('hello world')
 
 React.useEffect(fuction syncTitle() {
-    document.title = title
+  document.title = title
 }, [title])
 ```
 
@@ -166,18 +166,18 @@ One additional thing that I think is worth mentioning is: not every effect needs
 
 ```js:use-initialize-payload
 const useInitializePayload = () => {
-    const payload = usePayload()
-    React.useEffect(() => {
-        if (payload === null) {
-            performSomeSideEffectThatInitializesPayload(value1, value2, ...valueN)
-        }
-    })
+  const payload = usePayload()
+  React.useEffect(() => {
+    if (payload === null) {
+      performSomeSideEffectThatInitializesPayload(value1, value2, ...valueN)
+    }
+  })
 }
 ```
 
 The dependency array for this effect would probably be quite large, or we could try to cheat with just `[payload]` as dependency. I find both ways to be inferior to just always running the effect and aborting if necessary.
 
 <Comments>
-    I hope these tips will reduce complexity for you when working with <i>useEffect</i>. Let me
-    know in the comments below how you prefer to organize your effects ⬇️
+  I hope these tips will reduce complexity for you when working with <i>useEffect</i>. Let me
+  know in the comments below how you prefer to organize your effects ⬇️
 </Comments>

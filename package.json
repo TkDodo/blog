@@ -39,7 +39,7 @@
   },
   "prettier": {
     "printWidth": 95,
-    "tabWidth": 4,
+    "tabWidth": 2,
     "singleQuote": true,
     "semi": false
   }

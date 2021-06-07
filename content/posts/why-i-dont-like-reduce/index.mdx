@@ -4,10 +4,10 @@ description: If you know me, you know I'm no fan of Array.reduce. I'll explain w
 date: 2020-09-09
 banner: ./swiss-knife.png
 tags:
-    - JavaScript
-    - TypeScript
-    - Array
-    - reduce
+  - JavaScript
+  - TypeScript
+  - Array
+  - reduce
 ---
 
 import Comments from 'components/Comments'
@@ -30,9 +30,9 @@ For me, there are many reasons why I rarely like to see reduce when reviewing co
 First and foremost, it is hard to grasp.
 I believe one of the reasons for this is that reduce can do _way too much_.
 
--   Need to sum up values?
--   Need to transform Arrays into Objects?
--   Need to build a string?
+- Need to sum up values?
+- Need to transform Arrays into Objects?
+- Need to build a string?
 
 Array.reduce can do it all.
 
@@ -57,10 +57,10 @@ Reduce is so mighty, you can implement all the other Array functions you are usi
 
 ```js:title=map-with-reduce
 const mapWithReduce = (array, callback) =>
-    array.reduce((accumulator, currentValue, index) => {
-        accumulator[index] = callback(currentValue, index, array)
-        return accumulator
-    }, [])
+  array.reduce((accumulator, currentValue, index) => {
+    accumulator[index] = callback(currentValue, index, array)
+    return accumulator
+  }, [])
 
 mapWithReduce([1, 2, 3], (value) => value * 2) // 2, 4, 6
 ```
@@ -69,20 +69,20 @@ I have even seen people re-implement _join_ with reduce:
 
 ```js:title=join-with-reduce
 const joinWithReduce = (array, delimiter) =>
-    array.reduce(
-        (accumulator, currentValue, index) =>
-            accumulator + currentValue + (index === array.length - 1 ? '' : delimiter),
-        ''
-    )
+  array.reduce(
+    (accumulator, currentValue, index) =>
+      accumulator + currentValue + (index === array.length - 1 ? '' : delimiter),
+    ''
+  )
 
 joinWithReduce(['foo', 'bar', 'baz'], ';') //foo;bar;baz
 ```
 
 The question is: why would you? For almost all cases, there are methods that:
 
--   are not as powerful, with a limited scope
--   have a clear API
--   have a good name, so you know what it is doing
+- are not as powerful, with a limited scope
+- have a clear API
+- have a good name, so you know what it is doing
 
 _Array.join_ is a very good example of such a limited method.
 Everyone understands what is going on when we read:
@@ -109,14 +109,14 @@ The implementation is something like this:
 
 ```ts:title=to-object
 export const toObject = <T, K extends string | number | symbol, V>(
-    array: ReadonlyArray<T>,
-    iteratee: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
+  array: ReadonlyArray<T>,
+  iteratee: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
 ): Record<K, V> =>
-    array.reduce((result, element, index) => {
-        const [key, value] = iteratee(element, index, array)
-        result[key] = value
-        return result
-    }, {} as Record<K, V>)
+  array.reduce((result, element, index) => {
+    const [key, value] = iteratee(element, index, array)
+    result[key] = value
+    return result
+  }, {} as Record<K, V>)
 
 toObject(['foo', 'bar', 'baz'], (element) => ['key-' + element, 'value-' + element])
 ```
@@ -149,16 +149,16 @@ Talking about performance and linear iterations, I've learned the hard way _not_
 
 ```ts:title=immutability-🎉 {7-10}
 export const toObject = <T, K extends string | number | symbol, V>(
-    array: ReadonlyArray<T>,
-    iteratee: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
+  array: ReadonlyArray<T>,
+  iteratee: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
 ): Record<K, V> =>
-    array.reduce((result, element, index) => {
-        const [key, value] = iteratee(element, index, array)
-        return {
-            ...result,
-            [key]: value,
-        }
-    }, {} as Record<K, V>)
+  array.reduce((result, element, index) => {
+    const [key, value] = iteratee(element, index, array)
+    return {
+      ...result,
+      [key]: value,
+    }
+  }, {} as Record<K, V>)
 ```
 
 Why should I be _dirty_ and mutate the result, when I can be super fancy instead and create a new object every time 🤔🤦‍.

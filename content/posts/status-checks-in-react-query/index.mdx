@@ -4,10 +4,10 @@ description: How the wrong status check order can negatively impact user experie
 date: 2021-03-27
 banner: ./status-checks.jpeg
 tags:
-    - react
-    - react-query
-    - JavaScript
-    - TypeScript
+  - react
+  - react-query
+  - JavaScript
+  - TypeScript
 ---
 
 import Comments from 'components/Comments'
@@ -18,22 +18,22 @@ import { Divider } from '@theme-ui/components'
 
 <Attribution name="Kyndall Ramirez" url="https://unsplash.com/@kyndallramirez" />
 
--   [#1: Practical React Query](practical-react-query)
--   [#2: React Query Data Transformations](react-query-data-transformations)
--   [#3: React Query Render Optimizations](react-query-render-optimizations)
--   <b>#4: Status Checks in React Query</b>
--   [#5: Testing React Query](testing-react-query)
--   [#6: React Query and TypeScript](react-query-and-type-script)
--   [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
+- [#1: Practical React Query](practical-react-query)
+- [#2: React Query Data Transformations](react-query-data-transformations)
+- [#3: React Query Render Optimizations](react-query-render-optimizations)
+- <b>#4: Status Checks in React Query</b>
+- [#5: Testing React Query](testing-react-query)
+- [#6: React Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
 
 <Divider />
 
 One advantage of React Query is the easy access to status fields of the query. You instantly know if your query is loading or if it's erroneous. For this, the library exposes a bunch of boolean flags, which are mostly derived from the internal state machine. Looking at [the types](https://github.com/tannerlinsley/react-query/blob/f2137dc4e4553256c4ebc1891b548fe35efe9231/src/core/types.ts#L250), your query can be in one of the following states:
 
--   `success`: Your query was successful and you have _data_ for it
--   `error`: Your query did not work, and an _error_ is set
--   `loading`: Your query has no data and is currently _loading_ for the first time
--   `idle`: Your query has never run because it's not _enabled_
+- `success`: Your query was successful and you have _data_ for it
+- `error`: Your query did not work, and an _error_ is set
+- `loading`: Your query has no data and is currently _loading_ for the first time
+- `idle`: Your query has never run because it's not _enabled_
 
 Note that the `isFetching` flag is _not_ part of the internal state machine - it is an additional flag that will be true whenever a request is in-flight. You can be fetching and success, you can be fetching and error - but you cannot be loading and success at the same time. The state machine makes sure of that.
 
@@ -45,10 +45,10 @@ The _idle_ state is mostly left out, because it's an edge case for disabled quer
 const todos = useTodos()
 
 if (todos.isLoading) {
-    return 'Loading...'
+  return 'Loading...'
 }
 if (todos.error) {
-    return 'An error has occurred: ' + todos.error.message
+  return 'An error has occurred: ' + todos.error.message
 }
 
 return <div>{todos.data.map(renderTodo)}</div>
@@ -64,16 +64,16 @@ It refetches quite aggressively per default, and does so without the user active
 
 In many situations, if a background refetch fails, it could be silently ignored. But the code above does not do that. Let's look at two examples:
 
--   The user opens a page, and the initial query loads successfully. They are working on the page for some time, then switch browser tabs to check emails. They come back some minutes later, and React Query will do a background refetch. Now that fetch fails.
--   Our user is on page with a list view, and they click on one item to drill down to the detail view. This works fine, so they go back to the list view. Once they go to the detail view again, they will see data from the cache. This is great - except if the background refetch fails.
+- The user opens a page, and the initial query loads successfully. They are working on the page for some time, then switch browser tabs to check emails. They come back some minutes later, and React Query will do a background refetch. Now that fetch fails.
+- Our user is on page with a list view, and they click on one item to drill down to the detail view. This works fine, so they go back to the list view. Once they go to the detail view again, they will see data from the cache. This is great - except if the background refetch fails.
 
 In both situations, our query will be in the following state:
 
 ```json
 {
-    "status": "error",
-    "error": { "message": "Something went wrong" },
-    "data": [{ ... }]
+  "status": "error",
+  "error": { "message": "Something went wrong" },
+  "data": [{ ... }]
 }
 ```
 
@@ -91,10 +91,10 @@ This is why I usually check for data-availability first:
 const todos = useTodos()
 
 if (todos.data) {
-    return <div>{todos.data.map(renderTodo)}</div>
+  return <div>{todos.data.map(renderTodo)}</div>
 }
 if (todos.error) {
-    return 'An error has occurred: ' + todos.error.message
+  return 'An error has occurred: ' + todos.error.message
 }
 
 return 'Loading...'

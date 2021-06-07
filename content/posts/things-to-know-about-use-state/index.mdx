@@ -4,10 +4,10 @@ description: 5 things everyone needs to know about useState
 date: 2021-02-13
 banner: ../dont-over-usestate/use-state-pitfalls.png
 tags:
-    - React
-    - useState pitfalls
-    - JavaScript
-    - TypeScript
+  - React
+  - useState pitfalls
+  - JavaScript
+  - TypeScript
 ---
 
 import Comments from 'components/Comments'
@@ -17,10 +17,10 @@ import { Divider } from '@theme-ui/components'
 
 <Divider />
 
--   [#1: Don't over useState](dont-over-use-state)
--   [#2: Putting props to useState](putting-props-to-use-state)
--   <b>#3: Things to know about useState</b>
--   [#4: useState for one-time initializations](use-state-for-one-time-initializations)
+- [#1: Don't over useState](dont-over-use-state)
+- [#2: Putting props to useState](putting-props-to-use-state)
+- <b>#3: Things to know about useState</b>
+- [#4: useState for one-time initializations](use-state-for-one-time-initializations)
 
 [React.useState](https://reactjs.org/docs/hooks-reference.html#usestate) is pretty straightforward to use. A value, a setter function, an initial state. What hidden gems could possibly be there to know about? Well, here are 5 things you can profit from on a daily basis that you might not have known:
 
@@ -46,18 +46,18 @@ Live example:
 
 ```js react-live
 function App() {
-    const [count, setCount] = React.useState(0)
+  const [count, setCount] = React.useState(0)
 
-    return (
-        <button
-            onClick={() => {
-                setCount(count + 1)
-                setCount(count + 1)
-            }}
-        >
-            🚨 This will not work as expected, count is: {count}
-        </button>
-    )
+  return (
+    <button
+      onClick={() => {
+        setCount(count + 1)
+        setCount(count + 1)
+      }}
+    >
+      🚨 This will not work as expected, count is: {count}
+    </button>
+  )
 }
 
 render(<App />)
@@ -81,18 +81,18 @@ The functional updater form ensures this:
 
 ```js react-live
 function App() {
-    const [count, setCount] = React.useState(0)
+  const [count, setCount] = React.useState(0)
 
-    return (
-        <button
-            onClick={() => {
-                setCount((previousCount) => previousCount + 1)
-                setCount((previousCount) => previousCount + 1)
-            }}
-        >
-            ✅ Increment by 2, count is: {count}
-        </button>
-    )
+  return (
+    <button
+      onClick={() => {
+        setCount((previousCount) => previousCount + 1)
+        setCount((previousCount) => previousCount + 1)
+      }}
+    >
+      ✅ Increment by 2, count is: {count}
+    </button>
+  )
 }
 
 render(<App />)
@@ -114,19 +114,19 @@ The functional updater form can also help you to avoid dependencies for _useEffe
 
 ```js:title=avoiding-dependencies
 function Counter({ incrementBy = 1 }) {
-    const [count, setCount] = React.useState(0)
+  const [count, setCount] = React.useState(0)
 
-    // 🚨 will create a new function whenever count changes because we closure over it
-    const increment = React.useCallback(() => setCount(count + incrementBy), [
-        incrementBy,
-        count,
-    ])
+  // 🚨 will create a new function whenever count changes because we closure over it
+  const increment = React.useCallback(() => setCount(count + incrementBy), [
+    incrementBy,
+    count,
+  ])
 
-    // ✅ avoids this problem by not using count at all
-    const increment = React.useCallback(
-        () => setCount((previousCount) => previousCount + incrementBy),
-        [incrementBy]
-    )
+  // ✅ avoids this problem by not using count at all
+  const increment = React.useCallback(
+    () => setCount((previousCount) => previousCount + incrementBy),
+    [incrementBy]
+  )
 }
 ```
 
@@ -142,9 +142,9 @@ const [value, setValue] = React.useState(true)
 
 If the only thing you want to do is toggle the state value, maybe even multiple times in one component, _useReducer_ might be the better choice, as it:
 
--   shifts the toggling logic from the setter invocation to the hook call
--   allows you to name your toggle function, as it's not just a setter
--   reduces repetitive boilerplate if you use the toggle function more than once
+- shifts the toggling logic from the setter invocation to the hook call
+- allows you to name your toggle function, as it's not just a setter
+- reduces repetitive boilerplate if you use the toggle function more than once
 
 ```js:title=✅-toggle-with-use-reducer
 const [value, toggleValue] = React.useReducer(previousValue => !previousValue, true)
@@ -172,14 +172,14 @@ When you call the updater function, React will not always re-render your compone
 
 ```js react-live
 function App() {
-    const [name, setName] = React.useState('Elias')
+  const [name, setName] = React.useState('Elias')
 
-    // 🤯 clicking this button will not re-render the component
-    return (
-        <button onClick={() => setName('Elias')}>
-            Name is: {name}, Date is: {new Date().getTime()}
-        </button>
-    )
+  // 🤯 clicking this button will not re-render the component
+  return (
+    <button onClick={() => setName('Elias')}>
+      Name is: {name}, Date is: {new Date().getTime()}
+    </button>
+  )
 }
 
 render(<App />)

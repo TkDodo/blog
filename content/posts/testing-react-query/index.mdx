@@ -4,10 +4,10 @@ description: Let's take a look at how to efficiently test custom useQuery hooks 
 date: 2021-04-04
 banner: ./testing.jpeg
 tags:
-    - react
-    - react-query
-    - JavaScript
-    - TypeScript
+  - react
+  - react-query
+  - JavaScript
+  - TypeScript
 ---
 
 import Comments from 'components/Comments'
@@ -18,13 +18,13 @@ import { Divider } from '@theme-ui/components'
 
 <Attribution name="Girl with red hat" url="https://unsplash.com/@girlwithredhat" />
 
--   [#1: Practical React Query](practical-react-query)
--   [#2: React Query Data Transformations](react-query-data-transformations)
--   [#3: React Query Render Optimizations](react-query-render-optimizations)
--   [#4: Status Checks in React Query](status-checks-in-react-query)
--   <b>#5: Testing React Query</b>
--   [#6: React Query and TypeScript](react-query-and-type-script)
--   [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
+- [#1: Practical React Query](practical-react-query)
+- [#2: React Query Data Transformations](react-query-data-transformations)
+- [#3: React Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in React Query](status-checks-in-react-query)
+- <b>#5: Testing React Query</b>
+- [#6: React Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
 
 <Divider />
 
@@ -46,11 +46,11 @@ Use [mock service worker](https://mswjs.io/) by [@ApiMocking](https://twitter.co
 
 It can be your single source of truth when it comes to mocking your apis:
 
--   works in node for testing
--   supports REST and GraphQL
--   has a [storybook addon](https://storybook.js.org/addons/msw-storybook-addon) so you can write stories for your components that _useQuery_
--   works in the browser for development purposes, and you'll still see the requests going out in the browser devtools
--   works with cypress, similar to fixtures
+- works in node for testing
+- supports REST and GraphQL
+- has a [storybook addon](https://storybook.js.org/addons/msw-storybook-addon) so you can write stories for your components that _useQuery_
+- works in the browser for development purposes, and you'll still see the requests going out in the browser devtools
+- works with cypress, similar to fixtures
 
 <Divider />
 
@@ -68,17 +68,17 @@ If you are testing custom hooks, I'm quite certain you're using [react-hooks-tes
 
 ```tsx:title=wrapper
 const createWrapper = () => {
-    // ✅ creates a new QueryClient for each test
-    const queryClient = new QueryClient()
-    return ({ children }) => (
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    )
+  // ✅ creates a new QueryClient for each test
+  const queryClient = new QueryClient()
+  return ({ children }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  )
 }
 
 test("my first test", async () => {
-    const { result } = renderHook(() => useCustomHook(), {
-        wrapper: createWrapper()
-    })
+  const { result } = renderHook(() => useCustomHook(), {
+    wrapper: createWrapper()
+  })
 }
 ```
 
@@ -92,24 +92,24 @@ It's one of the most common "gotchas" with React Query and testing: The library 
 
 ```tsx:title=no-retries {2-9}
 const createWrapper = () => {
-    const queryClient = new QueryClient({
-        defaultOptions: {
-            queries: {
-                // ✅ turns retries off
-                retry: false,
-            },
-        },
-    })
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        // ✅ turns retries off
+        retry: false,
+      },
+    },
+  })
 
-    return ({ children }) => (
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    )
+  return ({ children }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  )
 }
 
 test("my first test", async () => {
-    const { result } = renderHook(() => useCustomHook(), {
-        wrapper: createWrapper()
-    })
+  const { result } = renderHook(() => useCustomHook(), {
+    wrapper: createWrapper()
+  })
 }
 ```
 
@@ -125,16 +125,16 @@ So for example, instead of setting retry on _useQuery_:
 const queryClient = new QueryClient()
 
 function App() {
-    return (
-        <QueryClientProvider client={queryClient}>
-            <Example />
-        </QueryClientProvider>
-    )
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Example />
+    </QueryClientProvider>
+  )
 }
 
 function Example() {
-    // 🚨 you cannot override this setting for tests!
-    const queryInfo = useQuery('todos', fetchTodos, { retry: 5 })
+  // 🚨 you cannot override this setting for tests!
+  const queryInfo = useQuery('todos', fetchTodos, { retry: 5 })
 }
 ```
 
@@ -142,22 +142,22 @@ Set it like this:
 
 ```tsx:title=setQueryDefaults {9-10}
 const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            retry: 2,
-        },
+  defaultOptions: {
+    queries: {
+      retry: 2,
     },
+  },
 })
 
 // ✅ only todos will retry 5 times
 queryClient.setQueryDefaults('todos', { retry: 5 })
 
 function App() {
-    return (
-        <QueryClientProvider client={queryClient}>
-            <Example />
-        </QueryClientProvider>
-    )
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Example />
+    </QueryClientProvider>
+  )
 }
 ```
 
@@ -169,17 +169,17 @@ Of course, this only works for known query keys. Sometimes, you really want to s
 
 ```jsx:title=ReactQueryConfigProvider
 const ReactQueryConfigProvider = ({ children, defaultOptions }) => {
-    const client = useQueryClient()
-    const [newClient] = React.useState(
-        () =>
-            new QueryClient({
-                queryCache: client.getQueryCache(),
-                muationCache: client.getMutationCache(),
-                defaultOptions,
-            })
-    )
+  const client = useQueryClient()
+  const [newClient] = React.useState(
+    () =>
+      new QueryClient({
+        queryCache: client.getQueryCache(),
+        muationCache: client.getMutationCache(),
+        defaultOptions,
+      })
+  )
 
-    return <QueryClientProvider client={newClient}>{children}</QueryClientProvider>
+  return <QueryClientProvider client={newClient}>{children}</QueryClientProvider>
 }
 ```
 
@@ -191,27 +191,27 @@ Since React Query is async by nature, when running the hook, you won't immediate
 
 ```tsx:title=waitFor {19-22}
 const createWrapper = () => {
-    const queryClient = new QueryClient({
-        defaultOptions: {
-            queries: {
-                retry: false,
-            },
-        },
-    })
-    return ({ children }) => (
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    )
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  })
+  return ({ children }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  )
 }
 
 test("my first test", async () => {
-    const { result, waitFor } = renderHook(() => useCustomHook(), {
-        wrapper: createWrapper()
-    })
+  const { result, waitFor } = renderHook(() => useCustomHook(), {
+    wrapper: createWrapper()
+  })
 
-    // ✅ wait until the query has transitioned to success state
-    await waitFor(() => result.current.isSuccess)
+  // ✅ wait until the query has transitioned to success state
+  await waitFor(() => result.current.isSuccess)
 
-    expect(result.current.data).toBeDefined()
+  expect(result.current.data).toBeDefined()
 }
 ```
 
@@ -223,10 +223,10 @@ Per default, React Query prints errors to the console. I think this is quite dis
 import { setLogger } from 'react-query'
 
 setLogger({
-    log: console.log,
-    warn: console.warn,
-    // ✅ no more errors on the console
-    error: () => {},
+  log: console.log,
+  warn: console.warn,
+  // ✅ no more errors on the console
+  error: () => {},
 })
 ```
 

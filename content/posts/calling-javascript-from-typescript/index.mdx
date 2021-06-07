@@ -4,9 +4,9 @@ description: Gradually migrating from JS to TS is not without difficulties - her
 date: 2020-09-04
 banner: ./call.jpg
 tags:
-    - TypeScript
-    - JavaScript
-    - JsDoc
+  - TypeScript
+  - JavaScript
+  - JsDoc
 ---
 
 import Attribution from 'components/Attribution'
@@ -135,9 +135,9 @@ This is a non-invasive change, so if you have complex types where you can't easi
 
 ```ts:title=ts-all-the-things
 type Params = {
-    first: number
-    second: number
-    third?: number
+  first: number
+  second: number
+  third?: number
 }
 export const sum = ({ first, second, third }: Params): number => first + second + (third ?? 0)
 ```
@@ -153,9 +153,9 @@ just being _any_ and converting the whole file to TypeScript right away.
 I never really understood why you would need this, but now I do.
 Adding JsDoc annotations to your JavaScript functions will:
 
--   Help TypeScript with type inference, thus making your call sides more safe.
--   Give you IntelliSense in your IDE.
--   Make it easier to finally migrate to TypeScript when the time is right.
+- Help TypeScript with type inference, thus making your call sides more safe.
+- Give you IntelliSense in your IDE.
+- Make it easier to finally migrate to TypeScript when the time is right.
 
 ```js:title=with-js-docs
 /**
@@ -178,10 +178,10 @@ You can read more about the differences [here](https://github.com/Microsoft/Type
 I used [JsDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) for the first time today when I had this exact problem.
 I chose it over the other options because:
 
--   adding .d.ts files is tedious to maintain and will make my IDE stop navigating to the actual source 😒
--   I wanted to keep the destructuring 😕
--   Default parameters were hard to come up with as my case was much more complex 🧐
--   The file in question had 120+ lines of code 🤨
--   I wanted to make it easier for us to migrate when we fully convert that file 🚀
+- adding .d.ts files is tedious to maintain and will make my IDE stop navigating to the actual source 😒
+- I wanted to keep the destructuring 😕
+- Default parameters were hard to come up with as my case was much more complex 🧐
+- The file in question had 120+ lines of code 🤨
+- I wanted to make it easier for us to migrate when we fully convert that file 🚀
 
 <Comments>What would you do? Let me know in the comments below ⬇️</Comments>

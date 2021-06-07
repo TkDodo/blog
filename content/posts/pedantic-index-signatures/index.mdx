@@ -4,7 +4,7 @@ description: Accessing objects and arrays has never been safe in TypeScript, but
 date: 2020-09-20
 banner: ./books.png
 tags:
-    - TypeScript
+  - TypeScript
 ---
 
 import Attribution from 'components/Attribution'
@@ -31,15 +31,15 @@ This is very useful if you build objects where you really don't know the keys, f
 
 ```ts:title=index-signature
 type Widget = {
-    id: string
-    title: string
+  id: string
+  title: string
 }
 
 type WidgetIndex = Record<string, Widget>
 
 // alternate syntax:
 type WidgetIndex = {
-    [id: string]: Widget
+  [id: string]: Widget
 }
 ```
 
@@ -48,13 +48,13 @@ But alas, it does not:
 
 ```ts:title=unsafe-access {6-11}
 type Widget = {
-    id: string
-    title: string
+  id: string
+  title: string
 }
 
 const widgetIndex: Record<string, Widget> = {
-    widget1: { id: 'widget1', title: 'Foo' },
-    widget2: { id: 'widget2', title: 'Bar' },
+  widget1: { id: 'widget1', title: 'Foo' },
+  widget2: { id: 'widget2', title: 'Bar' },
 }
 
 widgetIndex['helloWorld'].title.toUpperCase()
@@ -72,13 +72,13 @@ access will _always_ return a value:
 
 ```ts:title=unsafe-fallback {11}
 type Widget = {
-    id: string
-    title: string
+  id: string
+  title: string
 }
 
 const widgetIndex: Record<string, Widget> = {
-    widget1: { id: 'widget1', title: 'Foo' },
-    widget2: { id: 'widget2', title: 'Bar' },
+  widget1: { id: 'widget1', title: 'Foo' },
+  widget2: { id: 'widget2', title: 'Bar' },
 }
 
 const title: string = widgetIndex['helloWorld']?.title ?? { thisIs: 'completely Untyped' }
@@ -134,7 +134,7 @@ which let us tackle that specific problem:
 ```ts:title=non-empty-array
 type NonEmptyArray<T> = [T, ...Array<T>]
 const isNonEmpty = <T extends unknown>(array: Array<T>): array is NonEmptyArray<T> =>
-    array.length > 0
+  array.length > 0
 ```
 
 This basically gives us a variadic tuple type where the first element is always defined, and a
@@ -146,7 +146,7 @@ just type your function with a _NonEmptyArray_:
 ```ts:title=forced-empty-check {7-15}
 type NonEmptyArray<T> = [T, ...Array<T>]
 const isNonEmpty = <T extends unknown>(array: Array<T>): array is NonEmptyArray<T> =>
-    array.length > 0
+  array.length > 0
 
 const strings: Array<string> = ['one', 'two', 'three']
 
@@ -157,7 +157,7 @@ firstToUpper(strings)
 
 // this is fine
 if (isNonEmpty(strings)) {
-    firstToUpper(strings)
+  firstToUpper(strings)
 }
 ```
 

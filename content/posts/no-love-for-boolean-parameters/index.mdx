@@ -4,9 +4,9 @@ description: Innocent looking boolean parameters, or flags, are often the reason
 date: 2021-02-28
 banner: ./boolean.jpg
 tags:
-    - JavaScript
-    - TypeScript
-    - React
+  - JavaScript
+  - TypeScript
+  - React
 ---
 
 import Comments from 'components/Comments'
@@ -23,7 +23,7 @@ There is nothing wrong with booleans per se. We use them for conditions every da
 ```js:title=boolean-condition
 // ✅ boolean condition
 if (user.age() < legalAge) {
-    return 'Sorry, you are too young to use this service'
+  return 'Sorry, you are too young to use this service'
 }
 ```
 
@@ -36,13 +36,13 @@ A function should do one thing, and one thing only. Passing a "flag" to it often
 ```ts:title=single-responsibility
 // 🚨 booleans as a function parameter
 function createReport(user: User, sendEmail: boolean) {
-    // create the report here
-    const reportData = ...
+  // create the report here
+  const reportData = ...
 
-    if (sendEmail) {
-        sendReport(user.email, reportData)
-    }
-    return reportData
+  if (sendEmail) {
+    sendReport(user.email, reportData)
+  }
+  return reportData
 }
 ```
 
@@ -77,7 +77,7 @@ Before you look it up [here](<http://docs.groovy-lang.org/latest/html/groovy-jdk
 
 In case it isn't obvious to everyone:
 
--   `mutate` - false will always cause a new list to be created, true will mutate lists in place
+- `mutate` - false will always cause a new list to be created, true will mutate lists in place
 
 Totally logical and intuitive api, not confusing at all 🤷‍♂️
 
@@ -87,10 +87,10 @@ Booleans make it easy to create impossible states. Suppose you have a _metric_ o
 
 ```ts:title=format-metric
 function formatMetric(value: number, isPercent: boolean): string {
-    if (isPercent) {
-        return `${value * 100}%`
-    }
-    return String(metric)
+  if (isPercent) {
+    return `${value * 100}%`
+  }
+  return String(metric)
 }
 ```
 
@@ -102,13 +102,13 @@ Requirements change over time (as they tend to do), and now we have to support c
 
 ```ts:title=🚨-currency-formatting {1,5-7}
 function formatMetric(value: number, isPercent: boolean, isCurrency: boolean): string {
-    if (isPercent) {
-        return `${value * 100}%`
-    }
-    if (isCurrency) {
-        return // imagine some currency formatting is returned here
-    }
-    return String(metric)
+  if (isPercent) {
+    return `${value * 100}%`
+  }
+  if (isCurrency) {
+    return // imagine some currency formatting is returned here
+  }
+  return String(metric)
 }
 ```
 
@@ -130,10 +130,10 @@ To avoid impossible states, resist the urge of adding the _first_ boolean parame
 
 ```ts:title=✅-metric-variant {1,2}
 function formatMetric(value: number, variant?: 'percent'): string {
-    if (variant === 'percent') {
-        return `${value * 100}%`
-    }
-    return String(metric)
+  if (variant === 'percent') {
+    return `${value * 100}%`
+  }
+  return String(metric)
 }
 ```
 
@@ -143,23 +143,23 @@ Now we can extend the variant to `'percent' | 'currency'`, and only have three s
 
 Further advantages of a single variant property include:
 
--   Better type safety<br />
-    We've already covered readability, but it's also very easy to mix flags up, and because they have the same type (boolean), the compiler won't tell you about it. You can work around this by using a single options object, which is quite popular in JavaScript.
+- Better type safety<br />
+  We've already covered readability, but it's also very easy to mix flags up, and because they have the same type (boolean), the compiler won't tell you about it. You can work around this by using a single options object, which is quite popular in JavaScript.
 
--   Exhaustive matching <br />
-    I've written about [exhaustive matching in TypeScript](./exhaustive-matching-in-type-script) before, and it also comes in very handy in this example. The compiler will then tell us where we need to adapt our code when we add a new variant. CDD, compiler-driven-development:
+- Exhaustive matching <br />
+  I've written about [exhaustive matching in TypeScript](./exhaustive-matching-in-type-script) before, and it also comes in very handy in this example. The compiler will then tell us where we need to adapt our code when we add a new variant. CDD, compiler-driven-development:
 
 ```ts:title=exhaustive-variants
 type MetricVariant = 'standard' | 'percent' | 'currency'
 function formatMetric(value: number, variant: MetricVariant = 'standard'): string {
-    switch (variant) {
-        case 'percent':
-            return `${value * 100}%`
-        case 'currency':
-            return // imagine some currency formatting is returned here
-        case 'standard':
-            return String(metric)
-    }
+  switch (variant) {
+    case 'percent':
+      return `${value * 100}%`
+    case 'currency':
+      return // imagine some currency formatting is returned here
+    case 'standard':
+      return String(metric)
+  }
 }
 ```
 
@@ -177,18 +177,18 @@ We also do the same when creating React components, or have you seen a Button wi
 
 Oftentimes, flags are added because we see similarities to existing code, and we don't want to repeat ourselves, keeping everything [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself).
 
--   Here is a function that looks almost like what I want, I just need to add this one flag, because it's slightly different.
--   This component looks like I could use it for my case as well, I just need a _withPadding_ property added so that it fits.
+- Here is a function that looks almost like what I want, I just need to add this one flag, because it's slightly different.
+- This component looks like I could use it for my case as well, I just need a _withPadding_ property added so that it fits.
 
 There is lots of good literature available on that topic, showing why we shouldn't do this and what we could do instead:
 
--   [The wet codebase](https://www.deconstructconf.com/2019/dan-abramov-the-wet-codebase)
--   [Inversion of control](https://kentcdodds.com/blog/inversion-of-control)
--   [AHA programming](https://kentcdodds.com/blog/aha-programming)
--   [The wrong abstraction](https://sandimetz.com/blog/2016/1/20/the-wrong-abstraction)
+- [The wet codebase](https://www.deconstructconf.com/2019/dan-abramov-the-wet-codebase)
+- [Inversion of control](https://kentcdodds.com/blog/inversion-of-control)
+- [AHA programming](https://kentcdodds.com/blog/aha-programming)
+- [The wrong abstraction](https://sandimetz.com/blog/2016/1/20/the-wrong-abstraction)
 
 I can recommend them all, and for starters, resist the urge of adding the next boolean parameter to your codebase.
 
 <Comments>
-    No matter if you like booleans, or not, or both at the same time, leave a comment below ⬇️
+  No matter if you like booleans, or not, or both at the same time, leave a comment below ⬇️
 </Comments>
