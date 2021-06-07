@@ -4,8 +4,8 @@ description: Let me share with you the experiences I have made lately with React
 date: 2020-11-16
 banner: ./react-query.png
 tags:
-    - react
-    - react-query
+  - react
+  - react-query
 ---
 
 import Comments from 'components/Comments'
@@ -15,13 +15,13 @@ import { Divider } from '@theme-ui/components'
 
 <Divider />
 
--   <b>#1: Practical React Query</b>
--   [#2: React Query Data Transformations](react-query-data-transformations)
--   [#3: React Query Render Optimizations](react-query-render-optimizations)
--   [#4: Status Checks in React Query](status-checks-in-react-query)
--   [#5: Testing React Query](testing-react-query)
--   [#6: React Query and TypeScript](react-query-and-type-script)
--   [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
+- <b>#1: Practical React Query</b>
+- [#2: React Query Data Transformations](react-query-data-transformations)
+- [#3: React Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in React Query](status-checks-in-react-query)
+- [#5: Testing React Query](testing-react-query)
+- [#6: React Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
 
 <Divider />
 
@@ -114,13 +114,13 @@ especially because focusing between the Browser DevTools and your app will also 
 
 Secondly, there seems to be a bit of confusion between _cacheTime_ and _staleTime_, so let me try to clear that up:
 
--   StaleTime: The duration until a query transitions from fresh to stale.
-    As long as the query is fresh, data will always be read from the cache only - no network request will happen!
-    If the query is stale (which per default is: instantly), you will still get data from the cache,
-    but a background refetch can happen [under certain conditions](https://react-query.tanstack.com/docs/guides/caching).
--   CacheTime: The duration until inactive queries will be removed from the cache. This defaults to 5 minutes.
-    Queries transition to the inactive state as soon as there are no observers registered,
-    so when all components which use that query have unmounted.
+- StaleTime: The duration until a query transitions from fresh to stale.
+  As long as the query is fresh, data will always be read from the cache only - no network request will happen!
+  If the query is stale (which per default is: instantly), you will still get data from the cache,
+  but a background refetch can happen [under certain conditions](https://react-query.tanstack.com/docs/guides/caching).
+- CacheTime: The duration until inactive queries will be removed from the cache. This defaults to 5 minutes.
+  Queries transition to the inactive state as soon as there are no observers registered,
+  so when all components which use that query have unmounted.
 
 Most of the time, if you want to change one of these settings, it's the _staleTime_ that needs adjusting.
 I have rarely ever needed to tamper with the _cacheTime_.
@@ -149,18 +149,18 @@ Instead of orchestrating complex effects to manually trigger a refetch, we can u
 ```ts:title=feature/todos/queries.ts
 type State = 'all' | 'open' | 'done'
 type Todo = {
-    id: number
-    state: State
+  id: number
+  state: State
 }
 type Todos = ReadonlyArray<Todo>
 
 const fetchTodos = async (state: State): Promise<Todos> => {
-    const response = await axios.get(`todos/${state}`)
-    return response.data
+  const response = await axios.get(`todos/${state}`)
+  return response.data
 }
 
 export const useTodosQuery = (state: State) =>
-    useQuery(['todos', state], () => fetchTodos(state))
+  useQuery(['todos', state], () => fetchTodos(state))
 ```
 
 Here, imagine that our ui displays a list of todos along with a filter option.
@@ -184,25 +184,26 @@ The above example is perfect for that, because we can do some client side pre-fi
 ```ts:title=pre-filtering {15-20}
 type State = 'all' | 'open' | 'done'
 type Todo = {
-    id: number
-    state: State
+  id: number
+  state: State
 }
 type Todos = ReadonlyArray<Todo>
 
 const fetchTodos = async (state: State): Promise<Todos> => {
-    const response = await axios.get(`todos/${state}`)
-    return response.data
+  const response = await axios.get(`todos/${state}`)
+  return response.data
 }
 
 export const useTodosQuery = (state: State) =>
-    useQuery(['todos', state], () => fetchTodos(state), {
-        initialData: () => {
-            const allTodos = queryCache.getQuery<Todos>(['todos', 'all'])
-            const filteredData = allTodos?.filter((todo) => todo.state === state) ?? []
+  useQuery(['todos', state], () => fetchTodos(state), {
+    initialData: () => {
+      const allTodos = queryCache.getQuery<Todos>(['todos', 'all'])
+      const filteredData =
+        allTodos?.filter((todo) => todo.state === state) ?? []
 
-            return filteredData.length > 0 ? filteredData : undefined
-        },
-    })
+      return filteredData.length > 0 ? filteredData : undefined
+    },
+  })
 ```
 
 Now, every time the user switches between states, if we don't have data yet,
@@ -228,14 +229,14 @@ So if you do that on purpose, make sure to _not_ fire off unnecessary background
 
 ```jsx:title=initial-form-data
 const App = () => {
-    const { data } = useQuery('key', queryFn, { staleTime: Infinity })
+  const { data } = useQuery('key', queryFn, { staleTime: Infinity })
 
-    return data ? <MyForm initialData={data} /> : null
+  return data ? <MyForm initialData={data} /> : null
 }
 
 const MyForm = ({ initialData} ) => {
-    const [data, setData] = React.useState(initialData)
-    ...
+  const [data, setData] = React.useState(initialData)
+  ...
 }
 ```
 
@@ -244,11 +245,11 @@ but it has many advantages.
 I have prepared a little codesandbox example:
 
 <iframe
-    src="https://codesandbox.io/embed/inspiring-mayer-rp3jx?fontsize=14&hidenavigation=1&theme=dark&view=preview"
-    style="width:100%; height:600px; border:0; border-radius: 4px; overflow:hidden;"
-    title="separate-server-and-client-state"
-    allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-    sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+  src="https://codesandbox.io/embed/inspiring-mayer-rp3jx?fontsize=14&hidenavigation=1&theme=dark&view=preview"
+  style="width:100%; height:600px; border:0; border-radius: 4px; overflow:hidden;"
+  title="separate-server-and-client-state"
+  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
 ></iframe>
 
 The important part of this demo is that we never put the value that we get from React Query into local state.
@@ -260,15 +261,15 @@ The _useQuery_ hook has many options that you can pass in to customize its behav
 and the _enabled_ option is a very powerful one that _enables_ you to do many cool things (pun intended).
 Here is a short list of things that we were able to accomplish thanks to this option:
 
--   [Dependent Queries](https://react-query.tanstack.com/docs/guides/queries#dependent-queries)<br />
-    Fetch data in one query and have a second query only run once we have successfully obtained data from the first query.
--   Turn queries on and off<br />
-    We have one query that polls data regularly thanks to _refetchInterval_, but we can temporarily pause it if a Modal is open to avoid
-    updates in the back of the screen.
--   Wait for user input<br />
-    Have some filter criteria in the query key, but disable it for as long as the user has not applied their filters.
--   Disable a query after some user input<br/>
-    e.g. if we then have a draft value that should take precedence over the server data. See the above example.
+- [Dependent Queries](https://react-query.tanstack.com/docs/guides/queries#dependent-queries)<br />
+  Fetch data in one query and have a second query only run once we have successfully obtained data from the first query.
+- Turn queries on and off<br />
+  We have one query that polls data regularly thanks to _refetchInterval_, but we can temporarily pause it if a Modal is open to avoid
+  updates in the back of the screen.
+- Wait for user input<br />
+  Have some filter criteria in the query key, but disable it for as long as the user has not applied their filters.
+- Disable a query after some user input<br/>
+  e.g. if we then have a draft value that should take precedence over the server data. See the above example.
 
 #### Don't use the queryCache as a local state manager
 
@@ -283,14 +284,14 @@ Remember that every background refetch might override that data, so
 
 Even if it's only for wrapping one _useQuery_ call, creating a custom hook usually pays off because:
 
--   You can keep the actual data fetching out of the ui, but co-located with your _useQuery_ call.
--   You can keep all usages of one query key (and potentially type definitions) in one file.
--   If you need to tweak some settings or add some data transformation, you can do that in one place.
+- You can keep the actual data fetching out of the ui, but co-located with your _useQuery_ call.
+- You can keep all usages of one query key (and potentially type definitions) in one file.
+- If you need to tweak some settings or add some data transformation, you can do that in one place.
 
 You have already seen an example of that in the [todos queries above](#treat-the-query-key-like-a-dependency-array).
 
 <Comments>
-    I hope that these practical tips will help you getting started with React Query, so go
-    check it out :) If you have any further questions, please let me know in the comments below
-    ⬇️
+  I hope that these practical tips will help you getting started with React
+  Query, so go check it out :) If you have any further questions, please let
+  me know in the comments below ⬇️
 </Comments>

@@ -4,10 +4,10 @@ description: A step-by-step guide on how to make real-time notifications work wi
 date: 2021-06-06
 banner: ./react-query-websockets.jpeg
 tags:
-    - react
-    - react-query
-    - JavaScript
-    - TypeScript
+  - react
+  - react-query
+  - JavaScript
+  - TypeScript
 ---
 
 import Comments from 'components/Comments'
@@ -17,13 +17,13 @@ import Attribution from 'components/Attribution'
 
 <Attribution name="Maxim Hopman" url="https://unsplash.com/@nampoh" />
 
--   [#1: Practical React Query](practical-react-query)
--   [#2: React Query Data Transformations](react-query-data-transformations)
--   [#3: React Query Render Optimizations](react-query-render-optimizations)
--   [#4: Status Checks in React Query](status-checks-in-react-query)
--   [#5: Testing React Query](testing-react-query)
--   [#6: React Query and TypeScript](react-query-and-type-script)
--   <b>#7: Using WebSockets with React Query</b>
+- [#1: Practical React Query](practical-react-query)
+- [#2: React Query Data Transformations](react-query-data-transformations)
+- [#3: React Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in React Query](status-checks-in-react-query)
+- [#5: Testing React Query](testing-react-query)
+- [#6: React Query and TypeScript](react-query-and-type-script)
+- <b>#7: Using WebSockets with React Query</b>
 
 ---
 
@@ -53,23 +53,25 @@ The general idea is to setup your queries as usual, as if you wouldn't be workin
 
 ```jsx:title=a-standard-query
 const usePosts = () => useQuery(['posts', 'list'], fetchPosts)
-const usePost = (id) => useQuery(['posts', 'detail', id], () => fetchPost(id))
+
+const usePost = (id) =>
+  useQuery(['posts', 'detail', id], () => fetchPost(id))
 ```
 
 Additionally, you can setup an app-wide _useEffect_ that connects you to your WebSocket endpoint. How that works totally depends on which technology you are using. I've seen people subscribe to live data from [Hasura](https://github.com/tannerlinsley/react-query/issues/171#issuecomment-649810136). There's a great article about connecting to [Firebase](https://aggelosarvanitakis.medium.com/a-real-time-hook-with-firebase-react-query-f7eb537d5145). In my example, I will simply use the browser's native [WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket):
 
 ```jsx:title=useReactQuerySubscription
 const useReactQuerySubscription = () => {
-    React.useEffect(() => {
-        const websocket = new WebSocket('wss://echo.websocket.org/')
-        websocket.onopen = () => {
-            console.log('connected')
-        }
+  React.useEffect(() => {
+    const websocket = new WebSocket('wss://echo.websocket.org/')
+    websocket.onopen = () => {
+      console.log('connected')
+    }
 
-        return () => {
-            websocket.close()
-        }
-    }, [])
+    return () => {
+      websocket.close()
+    }
+  }, [])
 }
 ```
 
@@ -79,30 +81,30 @@ After we've setup the connection, we will likely have some sort of callback that
 
 ```jsx:title=event-based-subscriptions {8-12}
 const useReactQuerySubscription = () => {
-    const queryClient = useQueryClient()
-    React.useEffect(() => {
-        const websocket = new WebSocket('wss://echo.websocket.org/')
-        websocket.onopen = () => {
-            console.log('connected')
-        }
-        websocket.onmessage = (event) => {
-            const data = JSON.parse(event.data)
-            const queryKey = [...data.entity, data.id].filter(Boolean)
-            queryClient.invalidateQueries(queryKey)
-        }
+  const queryClient = useQueryClient()
+  React.useEffect(() => {
+    const websocket = new WebSocket('wss://echo.websocket.org/')
+    websocket.onopen = () => {
+      console.log('connected')
+    }
+    websocket.onmessage = (event) => {
+      const data = JSON.parse(event.data)
+      const queryKey = [...data.entity, data.id].filter(Boolean)
+      queryClient.invalidateQueries(queryKey)
+    }
 
-        return () => {
-            websocket.close()
-        }
-    }, [queryClient])
+    return () => {
+      websocket.close()
+    }
+  }, [queryClient])
 }
 ```
 
 That's really all you need to make list and detail views update when you receive an event.
 
--   `{ "entity": ["posts", "list"] }` will invalidate the posts list
--   `{ "entity": ["posts", "detail"], id: 5 }` will invalidate a single post
--   `{ "entity": ["posts"] }` will invalidate everything post related
+- `{ "entity": ["posts", "list"] }` will invalidate the posts list
+- `{ "entity": ["posts", "detail"], id: 5 }` will invalidate a single post
+- `{ "entity": ["posts"] }` will invalidate everything post related
 
 [Query Invalidation](https://react-query.tanstack.com/guides/query-invalidation) plays really nice together with WebSockets. This approach avoids the problem of over pushing, because if we receive an event for an entity that we are not interested in at the moment, nothing will happen. For example, if we are currently on the _Profile_ page, and we receive an update for _Posts_, _invalidateQueries_ will make sure that the next time we get to our _Posts_ page, it will be refetched. However, it will not refetch it right away, because we have no active observers. If we never go to that page again, the pushed update would be completely unnecessary.
 
@@ -118,25 +120,25 @@ This will be a bit more cumbersome if you have multiple query keys for the same 
 
 ```jsx:title=partial-updates {10-14}
 const useReactQuerySubscription = () => {
-    const queryClient = useQueryClient()
-    React.useEffect(() => {
-        const websocket = new WebSocket('wss://echo.websocket.org/')
-        websocket.onopen = () => {
-            console.log('connected')
-        }
-        websocket.onmessage = (event) => {
-            const data = JSON.parse(event.data)
-            queryClient.setQueriesData(data.entity, (oldData) => {
-                const update = (entity) =>
-                    entity.id === data.id ? { ...entity, ...data.payload } : entity
-                return Array.isArray(oldData) ? oldData.map(update) : update(oldData)
-            })
-        }
+  const queryClient = useQueryClient()
+  React.useEffect(() => {
+    const websocket = new WebSocket('wss://echo.websocket.org/')
+    websocket.onopen = () => {
+      console.log('connected')
+    }
+    websocket.onmessage = (event) => {
+      const data = JSON.parse(event.data)
+      queryClient.setQueriesData(data.entity, (oldData) => {
+        const update = (entity) =>
+          entity.id === data.id ? { ...entity, ...data.payload } : entity
+        return Array.isArray(oldData) ? oldData.map(update) : update(oldData)
+      })
+    }
 
-        return () => {
-            websocket.close()
-        }
-    }, [queryClient])
+    return () => {
+      websocket.close()
+    }
+  }, [queryClient])
 }
 ```
 
@@ -156,11 +158,11 @@ You can best achieve this by setting global query defaults when creating the _Qu
 
 ```jsx:title=infinite-stale-time
 const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            staleTime: Infinity,
-        },
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
     },
+  },
 })
 ```
 

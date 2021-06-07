@@ -4,9 +4,9 @@ description: Why you shouldn't rely on useMemo for guaranteed referential stabil
 date: 2021-03-12
 banner: ../dont-over-usestate/use-state-pitfalls.png
 tags:
-    - React
-    - useState pitfalls
-    - useMemo
+  - React
+  - useState pitfalls
+  - useMemo
 ---
 
 import Comments from 'components/Comments'
@@ -16,10 +16,10 @@ import { Divider } from '@theme-ui/components'
 
 <Divider />
 
--   [#1: Don't over useState](dont-over-use-state)
--   [#2: Putting props to useState](putting-props-to-use-state)
--   [#3: Things to know about useState](things-to-know-about-use-state)
--   <b>useState for one-time initializations</b>
+- [#1: Don't over useState](dont-over-use-state)
+- [#2: Putting props to useState](putting-props-to-use-state)
+- [#3: Things to know about useState](things-to-know-about-use-state)
+- <b>useState for one-time initializations</b>
 
 <Divider />
 
@@ -34,9 +34,9 @@ Suppose you have a resource that you only want to initialize once per life-time 
 const resource = new Resource()
 
 const Component = () => (
-    <ResourceProvider resource={resource}>
-        <App />
-    </ResourceProvider>
+  <ResourceProvider resource={resource}>
+    <App />
+  </ResourceProvider>
 )
 ```
 
@@ -46,13 +46,13 @@ In our case however, we were mounting the Component (a [micro-frontend](https://
 
 ```tsx:title=create-in-component
 const Component = () => {
-    // 🚨 be aware: new instance is created every render
-    const resource = new Resource()
-    return (
-        <ResourceProvider resource={new Resource()}>
-            <App />
-        </ResourceProvider>
-    )
+  // 🚨 be aware: new instance is created every render
+  const resource = new Resource()
+  return (
+    <ResourceProvider resource={new Resource()}>
+      <App />
+    </ResourceProvider>
+  )
 }
 ```
 
@@ -62,13 +62,13 @@ The first solution that came to our mind was to _useMemo_. After all, _useMemo_ 
 
 ```tsx:title=use-memo
 const Component = () => {
-    // 🚨 still not truly stable
-    const resource = React.useMemo(() => new Resource(), [])
-    return (
-        <ResourceProvider resource={resource}>
-            <App />
-        </ResourceProvider>
-    )
+  // 🚨 still not truly stable
+  const resource = React.useMemo(() => new Resource(), [])
+  return (
+    <ResourceProvider resource={resource}>
+      <App />
+    </ResourceProvider>
+  )
 }
 ```
 
@@ -84,13 +84,13 @@ Turns out, it's _state_. State is guaranteed to only update if you call the sett
 
 ```tsx:title=use-state
 const Component = () => {
-    // ✅ truly stable
-    const [resource] = React.useState(() => new Resource())
-    return (
-        <ResourceProvider resource={resource}>
-            <App />
-        </ResourceProvider>
-    )
+  // ✅ truly stable
+  const [resource] = React.useState(() => new Resource())
+  return (
+    <ResourceProvider resource={resource}>
+      <App />
+    </ResourceProvider>
+  )
 }
 ```
 
@@ -102,16 +102,16 @@ I think you can achieve the same with [useRef](https://reactjs.org/docs/hooks-re
 
 ```jsx:title=use-ref
 const Component = () => {
-    // ✅ also works, but meh
-    const resource = React.useRef(null)
-    if (!resource.current) {
-        resource.current = new Resource()
-    }
-    return (
-        <ResourceProvider resource={resource.current}>
-            <App />
-        </ResourceProvider>
-    )
+  // ✅ also works, but meh
+  const resource = React.useRef(null)
+  if (!resource.current) {
+    resource.current = new Resource()
+  }
+  return (
+    <ResourceProvider resource={resource.current}>
+      <App />
+    </ResourceProvider>
+  )
 }
 ```
 

@@ -4,10 +4,10 @@ description: How we migrated over 100k lines of code from Flow to TypeScript. A 
 date: 2021-01-04
 banner: ./race.jpg
 tags:
-    - JavaScript
-    - TypeScript
-    - Flow
-    - ReactJs
+  - JavaScript
+  - TypeScript
+  - Flow
+  - ReactJs
 ---
 
 import Attribution from 'components/Attribution'
@@ -22,9 +22,9 @@ It's the end of 2020, and it's hard to imagine frontend development without stat
 
 But for a professional setting, code readability and maintainability are a must. In that sense, static types fall in the same category as tests:
 
--   They help document the code
--   They make everyone trust the code more and give safety during refactoring
--   They catch bugs before they hit production
+- They help document the code
+- They make everyone trust the code more and give safety during refactoring
+- They catch bugs before they hit production
 
 Most people don't write tests for personal projects either (if you do: good for you, I don't 😜), but they very much write them at work. So no matter if you love types or not, I think we can agree that they do provide value in the long run the bigger the project gets and the more people work on it. Also, more and more projects adopt types, so there is really no working around them anymore.
 
@@ -56,13 +56,13 @@ It also turned out that it's not always possible to "just add types later": Some
 
 Nevertheless, things were working well, and we were not unhappy with our choice for quite some time. Here and there, flow was not catching bugs that we expected from a static type checker. We also accumulated lots of `//@flowignore` or `//@flowfixme` annotations where things just didn't seem to work. Typing higher order components (which were everywhere) was a real pain, and after about two years, our happiness started shift:
 
--   We had about 50% of our codebase written with flow types, but only about 15% of our third party libraries were actively shipping flow-type-definitions: The rest was just any stubs! This seems to have been a direct result of the community shifting to TypeScript.
--   The flow version we were using did support optional chaining (one of the best additions to EcmaScript), but it didn't yet _type narrow_ when you used optional chaining, making it kinda useless:
+- We had about 50% of our codebase written with flow types, but only about 15% of our third party libraries were actively shipping flow-type-definitions: The rest was just any stubs! This seems to have been a direct result of the community shifting to TypeScript.
+- The flow version we were using did support optional chaining (one of the best additions to EcmaScript), but it didn't yet _type narrow_ when you used optional chaining, making it kinda useless:
 
 ```js
 if (foo?.bar) {
-    // nope, not with flow 🚫
-    doSomething(foo.bar)
+  // nope, not with flow 🚫
+  doSomething(foo.bar)
 }
 ```
 
@@ -98,8 +98,8 @@ The reason for this is quite simple: If the compiler doesn't scream at you, you 
 
 ```tsx:title=implicit-any
 const loginUser = (event) => {
-    event.preventDefault()
-    axios.post('/login', ...)
+  event.preventDefault()
+  axios.post('/login', ...)
 }
 
 return <form onSubmit={loginUser}>...</form>
@@ -113,8 +113,8 @@ We found ts-migrate, which allowed us to convert most the of implicit anys to ex
 
 ```tsx:title=explicit-any {1}
 const loginUser = (event: any) => {
-    event.preventDefault()
-    axios.post('/login', ...)
+  event.preventDefault()
+  axios.post('/login', ...)
 }
 
 return <form onSubmit={loginUser}>...</form>
@@ -135,5 +135,6 @@ I don't regret the move to TypeScript at all. TypeScript has emerged as the clea
 | Files changed          |   2,568 |
 
 <Comments withSeparator={false}>
-    Flow, TypeScript or plain ES6? Let me know in the comments below what you prefer ⬇️
+  Flow, TypeScript or plain ES6? Let me know in the comments below what you
+  prefer ⬇️
 </Comments>

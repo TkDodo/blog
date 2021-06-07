@@ -4,8 +4,8 @@ description: The first part of the useState pitfalls series is all about avoidin
 date: 2020-08-29
 banner: ./use-state-pitfalls.png
 tags:
-    - React
-    - useState pitfalls
+  - React
+  - useState pitfalls
 ---
 
 import { Divider } from '@theme-ui/components'
@@ -14,10 +14,10 @@ import { Divider } from '@theme-ui/components'
 
 <Divider />
 
--   <b>#1: Don't over useState</b>
--   [#2: Putting props to useState](putting-props-to-use-state)
--   [#3: Things to know about useState](things-to-know-about-use-state)
--   [#4: useState for one-time initializations](use-state-for-one-time-initializations)
+- <b>#1: Don't over useState</b>
+- [#2: Putting props to useState](putting-props-to-use-state)
+- [#3: Things to know about useState](things-to-know-about-use-state)
+- [#4: useState for one-time initializations](use-state-for-one-time-initializations)
 
 <Divider />
 
@@ -64,25 +64,25 @@ import { fetchData } from './api'
 import { computeCategories } from './utils'
 
 const App = () => {
-    const [data, setData] = React.useState(null)
-    const [categories, setCategories] = React.useState([])
+  const [data, setData] = React.useState(null)
+  const [categories, setCategories] = React.useState([])
 
-    React.useEffect(() => {
-        async function fetch() {
-            const response = await fetchData()
-            setData(response.data)
-        }
+  React.useEffect(() => {
+    async function fetch() {
+      const response = await fetchData()
+      setData(response.data)
+    }
 
-        fetch()
-    }, [])
+    fetch()
+  }, [])
 
-    React.useEffect(() => {
-        if (data) {
-            setCategories(computeCategories(data))
-        }
-    }, [data])
+  React.useEffect(() => {
+    if (data) {
+      setCategories(computeCategories(data))
+    }
+  }, [data])
 
-    return <>...</>
+  return <>...</>
 }
 ```
 
@@ -102,40 +102,42 @@ import { fetchData } from './api'
 import { computeCategories, getMoreCategories } from './utils'
 
 const App = () => {
-    const [data, setData] = React.useState(null)
-    const [categories, setCategories] = React.useState([])
+  const [data, setData] = React.useState(null)
+  const [categories, setCategories] = React.useState([])
 
-    React.useEffect(() => {
-        async function fetch() {
-            const response = await fetchData()
-            setData(response.data)
-        }
+  React.useEffect(() => {
+    async function fetch() {
+      const response = await fetchData()
+      setData(response.data)
+    }
 
-        fetch()
-    }, [])
+    fetch()
+  }, [])
 
-    React.useEffect(() => {
-        if (data) {
-            setCategories(computeCategories(data))
-        }
-    }, [data])
+  React.useEffect(() => {
+    if (data) {
+      setCategories(computeCategories(data))
+    }
+  }, [data])
 
-    return (
-        <>
-            ...
-            <Button onClick={() => setCategories(getMoreCategories())}>Get more</Button>
-        </>
-    )
+  return (
+    <>
+      ...
+      <Button onClick={() => setCategories(getMoreCategories())}>
+        Get more
+      </Button>
+    </>
+  )
 }
 ```
 
 Now what? We have no predictable way of telling what "categories" are.
 
--   The page loads, categories are _X_
--   User clicks the button, categories are _Y_
--   If the data fetching re-executes, say, because we are using [react-query](https://react-query.tanstack.com/),
-    which has features like automatic re-fetching when you focus your tab or when you re-connect to your network
-    (it's awesome, you should give it a try), the categories will be _X_ again.
+- The page loads, categories are _X_
+- User clicks the button, categories are _Y_
+- If the data fetching re-executes, say, because we are using [react-query](https://react-query.tanstack.com/),
+  which has features like automatic re-fetching when you focus your tab or when you re-connect to your network
+  (it's awesome, you should give it a try), the categories will be _X_ again.
 
 Inadvertently, we have now introduced a hard to track bug that will only occur every now and then.
 
@@ -167,26 +169,26 @@ import { fetchData } from './api'
 import { computeCategories } from './utils'
 
 const App = () => {
-    const [data, setData] = React.useState(null)
--    const [categories, setCategories] = React.useState([])
-+    const categories = data ? computeCategories(data) : []
+  const [data, setData] = React.useState(null)
+-  const [categories, setCategories] = React.useState([])
++  const categories = data ? computeCategories(data) : []
 
-    React.useEffect(() => {
-        async function fetch() {
-            const response = await fetchData()
-            setData(response.data)
-        }
+  React.useEffect(() => {
+    async function fetch() {
+      const response = await fetchData()
+        setData(response.data)
+      }
 
-        fetch()
+      fetch()
     }, [])
 
--    React.useEffect(() => {
--        if (data) {
--            setCategories(computeCategories(data))
--        }
--    }, [data])
+-  React.useEffect(() => {
+-    if (data) {
+-      setCategories(computeCategories(data))
+-    }
+-  }, [data])
 
-    return <>...</>
+  return <>...</>
 }
 ```
 

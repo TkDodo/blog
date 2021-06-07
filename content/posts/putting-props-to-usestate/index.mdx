@@ -4,9 +4,9 @@ description: Part deux of the useState pitfalls series is here, showing patterns
 date: 2020-10-25
 banner: ../dont-over-usestate/use-state-pitfalls.png
 tags:
-    - React
-    - useState pitfalls
-    - props-to-state
+  - React
+  - useState pitfalls
+  - props-to-state
 ---
 
 import Comments from 'components/Comments'
@@ -16,10 +16,10 @@ import { Divider } from '@theme-ui/components'
 
 <Divider />
 
--   [#1: Don't over useState](dont-over-use-state)
--   <b>#2: Putting props to useState</b>
--   [#3: Things to know about useState](things-to-know-about-use-state)
--   [#4: useState for one-time initializations](use-state-for-one-time-initializations)
+- [#1: Don't over useState](dont-over-use-state)
+- <b>#2: Putting props to useState</b>
+- [#3: Things to know about useState](things-to-know-about-use-state)
+- [#4: useState for one-time initializations](use-state-for-one-time-initializations)
 
 <Divider />
 
@@ -39,48 +39,54 @@ It's an interactive example, so feel free to click around (the code is also edit
 
 ```js react-live
 const persons = [
-    {
-        id: 1,
-        name: 'Dominik',
-        email: 'dominik@dorfmeister.cc',
-    },
-    {
-        id: 2,
-        name: 'John',
-        email: 'john@doe.com',
-    },
+  {
+    id: 1,
+    name: 'Dominik',
+    email: 'dominik@dorfmeister.cc',
+  },
+  {
+    id: 2,
+    name: 'John',
+    email: 'john@doe.com',
+  },
 ]
 
 function App() {
-    const [selected, setSelected] = React.useState(persons[0])
+  const [selected, setSelected] = React.useState(persons[0])
 
-    return (
-        <div>
-            {persons.map((person) => (
-                <button type="button" key={person.id} onClick={() => setSelected(person)}>
-                    {person.id === selected.id ? person.name.toUpperCase() : person.name}
-                </button>
-            ))}
-            <DetailView initialEmail={selected.email} />
-        </div>
-    )
+  return (
+    <div>
+      {persons.map((person) => (
+        <button
+          type="button"
+          key={person.id}
+          onClick={() => setSelected(person)}
+        >
+          {person.id === selected.id
+            ? person.name.toUpperCase()
+            : person.name}
+        </button>
+      ))}
+      <DetailView initialEmail={selected.email} />
+    </div>
+  )
 }
 
 function DetailView({ initialEmail }) {
-    const [email, setEmail] = React.useState(initialEmail)
+  const [email, setEmail] = React.useState(initialEmail)
 
-    return (
-        <div>
-            <input
-                type="text"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-            />
-            <button type="button" onClick={() => alert(email)}>
-                Apply
-            </button>
-        </div>
-    )
+  return (
+    <div>
+      <input
+        type="text"
+        value={email}
+        onChange={(event) => setEmail(event.target.value)}
+      />
+      <button type="button" onClick={() => alert(email)}>
+        Apply
+      </button>
+    </div>
+  )
 }
 
 render(<App />)
@@ -116,84 +122,88 @@ Here is how that might look:
 
 ```js react-live
 const persons = [
-    {
-        id: 1,
-        name: 'Dominik',
-        email: 'dominik@dorfmeister.cc',
-    },
-    {
-        id: 2,
-        name: 'John',
-        email: 'john@doe.com',
-    },
+  {
+    id: 1,
+    name: 'Dominik',
+    email: 'dominik@dorfmeister.cc',
+  },
+  {
+    id: 2,
+    name: 'John',
+    email: 'john@doe.com',
+  },
 ]
 
 function App() {
-    const [selected, setSelected] = React.useState()
+  const [selected, setSelected] = React.useState()
 
-    const close = () => setSelected(undefined)
+  const close = () => setSelected(undefined)
 
-    return (
-        <div>
-            {persons.map((person) => (
-                <button type="button" key={person.id} onClick={() => setSelected(person)}>
-                    {person.name}
-                </button>
-            ))}
-            {selected && (
-                <div
-                    style={{
-                        position: 'fixed',
-                        top: '0',
-                        left: '0',
-                        paddingTop: '100px',
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: 'rgba(0,0,0,0.4)',
-                    }}
-                >
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            width: '80%',
-                            height: '50vh',
-                            margin: 'auto',
-                            backgroundColor: 'white',
-                        }}
-                    >
-                        <DetailView initialEmail={selected.email} close={close} />
-                        <span style={{ cursor: 'pointer' }} onClick={close}>
-                            &times;
-                        </span>
-                    </div>
-                </div>
-            )}
+  return (
+    <div>
+      {persons.map((person) => (
+        <button
+          type="button"
+          key={person.id}
+          onClick={() => setSelected(person)}
+        >
+          {person.name}
+        </button>
+      ))}
+      {selected && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            paddingTop: '100px',
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0,0,0,0.4)',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              width: '80%',
+              height: '50vh',
+              margin: 'auto',
+              backgroundColor: 'white',
+            }}
+          >
+            <DetailView initialEmail={selected.email} close={close} />
+            <span style={{ cursor: 'pointer' }} onClick={close}>
+              &times;
+            </span>
+          </div>
         </div>
-    )
+      )}
+    </div>
+  )
 }
 
 function DetailView({ initialEmail, close }) {
-    const [email, setEmail] = React.useState(initialEmail)
+  const [email, setEmail] = React.useState(initialEmail)
 
-    return (
-        <div>
-            <input
-                type="text"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-            />
-            <button
-                type="button"
-                onClick={() => {
-                    alert(email)
-                    close()
-                }}
-            >
-                Apply
-            </button>
-        </div>
-    )
+  return (
+    <div>
+      <input
+        type="text"
+        value={email}
+        onChange={(event) => setEmail(event.target.value)}
+      />
+      <button
+        type="button"
+        onClick={() => {
+          alert(email)
+          close()
+        }}
+      >
+        Apply
+      </button>
+    </div>
+  )
 }
 
 render(<App />)
@@ -217,54 +227,56 @@ Since the DetailView then doesn't need any local state at all, we won't have the
 
 ```js react-live
 const persons = [
-    {
-        id: 1,
-        name: 'Dominik',
-        email: 'dominik@dorfmeister.cc',
-    },
-    {
-        id: 2,
-        name: 'John',
-        email: 'john@doe.com',
-    },
+  {
+    id: 1,
+    name: 'Dominik',
+    email: 'dominik@dorfmeister.cc',
+  },
+  {
+    id: 2,
+    name: 'John',
+    email: 'john@doe.com',
+  },
 ]
 
 function App() {
-    const [selected, setSelected] = React.useState(persons[0])
-    const [email, setEmail] = React.useState(selected.email)
+  const [selected, setSelected] = React.useState(persons[0])
+  const [email, setEmail] = React.useState(selected.email)
 
-    return (
-        <div>
-            {persons.map((person) => (
-                <button
-                    type="button"
-                    key={person.id}
-                    onClick={() => {
-                        setSelected(person)
-                        setEmail(person.email)
-                    }}
-                >
-                    {person.id === selected.id ? person.name.toUpperCase() : person.name}
-                </button>
-            ))}
-            <DetailView email={email} setEmail={setEmail} />
-        </div>
-    )
+  return (
+    <div>
+      {persons.map((person) => (
+        <button
+          type="button"
+          key={person.id}
+          onClick={() => {
+            setSelected(person)
+            setEmail(person.email)
+          }}
+        >
+          {person.id === selected.id
+            ? person.name.toUpperCase()
+            : person.name}
+        </button>
+      ))}
+      <DetailView email={email} setEmail={setEmail} />
+    </div>
+  )
 }
 
 function DetailView({ email, setEmail }) {
-    return (
-        <div>
-            <input
-                type="text"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-            />
-            <button type="button" onClick={() => alert(email)}>
-                Apply
-            </button>
-        </div>
-    )
+  return (
+    <div>
+      <input
+        type="text"
+        value={email}
+        onChange={(event) => setEmail(event.target.value)}
+      />
+      <button type="button" onClick={() => alert(email)}>
+        Apply
+      </button>
+    </div>
+  )
 }
 
 render(<App />)
@@ -287,48 +299,54 @@ Keep the same ux and the scope of the draft state small, but still re-mount your
 
 ```js react-live
 const persons = [
-    {
-        id: 1,
-        name: 'Dominik',
-        email: 'dominik@dorfmeister.cc',
-    },
-    {
-        id: 2,
-        name: 'John',
-        email: 'john@doe.com',
-    },
+  {
+    id: 1,
+    name: 'Dominik',
+    email: 'dominik@dorfmeister.cc',
+  },
+  {
+    id: 2,
+    name: 'John',
+    email: 'john@doe.com',
+  },
 ]
 
 function App() {
-    const [selected, setSelected] = React.useState(persons[0])
+  const [selected, setSelected] = React.useState(persons[0])
 
-    return (
-        <div>
-            {persons.map((person) => (
-                <button type="button" key={person.id} onClick={() => setSelected(person)}>
-                    {person.id === selected.id ? person.name.toUpperCase() : person.name}
-                </button>
-            ))}
-            <DetailView key={selected.id} initialEmail={selected.email} />
-        </div>
-    )
+  return (
+    <div>
+      {persons.map((person) => (
+        <button
+          type="button"
+          key={person.id}
+          onClick={() => setSelected(person)}
+        >
+          {person.id === selected.id
+            ? person.name.toUpperCase()
+            : person.name}
+        </button>
+      ))}
+      <DetailView key={selected.id} initialEmail={selected.email} />
+    </div>
+  )
 }
 
 function DetailView({ initialEmail }) {
-    const [email, setEmail] = React.useState(initialEmail)
+  const [email, setEmail] = React.useState(initialEmail)
 
-    return (
-        <div>
-            <input
-                type="text"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-            />
-            <button type="button" onClick={() => alert(email)}>
-                Apply
-            </button>
-        </div>
-    )
+  return (
+    <div>
+      <input
+        type="text"
+        value={email}
+        onChange={(event) => setEmail(event.target.value)}
+      />
+      <button type="button" onClick={() => alert(email)}>
+        Apply
+      </button>
+    </div>
+  )
 }
 
 render(<App />)

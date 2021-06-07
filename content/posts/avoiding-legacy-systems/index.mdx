@@ -4,8 +4,8 @@ description: Every software will eventually become a nightmare to maintain, unle
 date: 2020-11-01
 banner: ./legacy.jpg
 tags:
-    - principles
-    - documentation
+  - principles
+  - documentation
 ---
 
 import Comments from 'components/Comments'
@@ -140,9 +140,9 @@ The one thing that is very hard to find out is the _WHY_. _WHY_ are we even doin
 And this is way more subtle than documenting what a function / a module / an if branch does.
 It's the little things that will often give us a headache:
 
--   _WHY_ the early return in that function?
--   _WHY_ do we need an extra negative margin here??
--   _WHY_ z-index: 999 ???
+- _WHY_ the early return in that function?
+- _WHY_ do we need an extra negative margin here??
+- _WHY_ z-index: 999 ???
 
 What was the intent of the developer who wrote that code when they wrote that code?
 Usually, you can't tell. I rarely know _WHY_ I did something the way I did it a couple of weeks later,
@@ -188,13 +188,13 @@ They were a thing six months ago, but they are long gone.
 So the comment isn't even accurate anymore.
 And I have seen this happen time and time again, especially with functions that have a description at the top:
 
--   You write the function and add some comment: _This function does XYZ_.
--   Someone changes the implementation of the function. Now the function does _AYZ_.
--   No one touches the comment. The function is long, so I don't even blame the person who updated it -
-    they probably didn't even notice the comment.
-    Same for the reviewers:
-    We are not gonna check the function signature every single time if there is a comment that now doesn't match the implementation anymore.
-    It probably didn't even show up in the PR!
+- You write the function and add some comment: _This function does XYZ_.
+- Someone changes the implementation of the function. Now the function does _AYZ_.
+- No one touches the comment. The function is long, so I don't even blame the person who updated it -
+  they probably didn't even notice the comment.
+  Same for the reviewers:
+  We are not gonna check the function signature every single time if there is a comment that now doesn't match the implementation anymore.
+  It probably didn't even show up in the PR!
 
 To me, it's just the nature of code comments that they are frequently outdated.
 And the only thing worse than no documentation is _wrong_ documentation.
@@ -215,9 +215,9 @@ writes commit messages:
 <img src="./commit.jpeg" />
 
 <Attribution
-    prefix="Source:"
-    name="Twitter"
-    url="https://twitter.com/acdlite/status/1251169389564407809"
+  prefix="Source:"
+  name="Twitter"
+  url="https://twitter.com/acdlite/status/1251169389564407809"
 />
 
 What I like most about this is that you can fit as much text in there as you want.
@@ -229,10 +229,10 @@ To me, that makes writing commit messages a super-power.
 
 Here is my rule of thumb for a good commit messages structure:
 
--   Start with a commit message header, consisting of one line, where you document _WHAT_ is being done in this commit.
-    Try to find a good, concise summary of what this commit does.
--   Continue with a newline, followed by the commit message body, where you can be as verbose as you like.
-    Try to focus on the _WHY_ here.
+- Start with a commit message header, consisting of one line, where you document _WHAT_ is being done in this commit.
+  Try to find a good, concise summary of what this commit does.
+- Continue with a newline, followed by the commit message body, where you can be as verbose as you like.
+  Try to focus on the _WHY_ here.
 
 This will allow you to use `git log --pretty=oneline` to get a good overview of what happened when.
 GitHub also displays the first line completely and collapses the rest automatically.
@@ -266,9 +266,9 @@ Great, who doesn't love a nice little ios bug.
 Googling shows a potential fix, remove some _aspectRatio setting_ and it will all be fine, they say.
 Of course, I have no idea why we even have this specific setting.
 
--   Is there a comment? No, there is not.
--   Is there a test? You're kidding, right... 🤣
--   I find the issue and look at the description: It's about adding the feature, nothing about this specific setting, obviously.
+- Is there a comment? No, there is not.
+- Is there a test? You're kidding, right... 🤣
+- I find the issue and look at the description: It's about adding the feature, nothing about this specific setting, obviously.
 
 Right, so let's take a look at the commit message that introduced that setting, it will tell us everything.
 After all, I'm the author!
@@ -287,5 +287,6 @@ but literally any documentation is better than nothing.
 Your future self will definitely thank you 🙏.
 
 <Comments>
-    How do you prefer to document your code? Let me know in the comments below ⬇️
+  How do you prefer to document your code? Let me know in the comments below
+  ⬇️
 </Comments>

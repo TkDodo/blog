@@ -4,9 +4,9 @@ description: Gradually migrating from JS to TS is not without difficulties - her
 date: 2020-09-04
 banner: ./call.jpg
 tags:
-    - TypeScript
-    - JavaScript
-    - JsDoc
+  - TypeScript
+  - JavaScript
+  - JsDoc
 ---
 
 import Attribution from 'components/Attribution'
@@ -15,7 +15,10 @@ import SpacingBox from 'components/SpacingBox'
 
 <img src="./call.jpg" />
 
-<Attribution name="Antoine Barr&egrave;s" url="https://unsplash.com/@antoinebarres" />
+<Attribution
+  name="Antoine Barr&egrave;s"
+  url="https://unsplash.com/@antoinebarres"
+/>
 
 There is nothing better than starting a new project, on a green field.
 You can choose all the latest tech you want, and you can begin with great types right from the start.
@@ -34,7 +37,8 @@ But what about the other way around? Turns out - that's not so easy.
 Suppose you have a util function that you would like to import. It could be something as simple as:
 
 ```js:title=utils.js
-export const sum = ({ first, second, third }) => first + second + (third ?? 0)
+export const sum = ({ first, second, third }) =>
+  first + second + (third ?? 0)
 ```
 
 A stupid example, I know, but it'll do.
@@ -100,7 +104,8 @@ The described problem is actually due to typescript performing better inference 
 We could change the implementation to:
 
 ```js:title=no-destruct-utils
-export const sum = (params) => params.first + params.second + (params.third ?? 0)
+export const sum = (params) =>
+  params.first + params.second + (params.third ?? 0)
 ```
 
 Now, TypeScript will just infer params as _any_, and we are again good to go.
@@ -121,7 +126,8 @@ This works well for variables where the default is clear, like booleans, where y
 If you don't know what a good default value would be, you could even cheat a bit and do this:
 
 ```js:title=cheating-default-params
-export const sum = ({ first, second, third = undefined }) => first + second + (third ?? 0)
+export const sum = ({ first, second, third = undefined }) =>
+  first + second + (third ?? 0)
 ```
 
 🤯
@@ -135,11 +141,12 @@ This is a non-invasive change, so if you have complex types where you can't easi
 
 ```ts:title=ts-all-the-things
 type Params = {
-    first: number
-    second: number
-    third?: number
+  first: number
+  second: number
+  third?: number
 }
-export const sum = ({ first, second, third }: Params): number => first + second + (third ?? 0)
+export const sum = ({ first, second, third }: Params): number =>
+  first + second + (third ?? 0)
 ```
 
 The long-term thing you probably want to do anyways - convert it to TypeScript.
@@ -153,16 +160,17 @@ just being _any_ and converting the whole file to TypeScript right away.
 I never really understood why you would need this, but now I do.
 Adding JsDoc annotations to your JavaScript functions will:
 
--   Help TypeScript with type inference, thus making your call sides more safe.
--   Give you IntelliSense in your IDE.
--   Make it easier to finally migrate to TypeScript when the time is right.
+- Help TypeScript with type inference, thus making your call sides more safe.
+- Give you IntelliSense in your IDE.
+- Make it easier to finally migrate to TypeScript when the time is right.
 
 ```js:title=with-js-docs
 /**
  * @param {{ first: number, second: number, third?: number }} params
  * @returns {number}
  */
-export const sum = ({ first, second, third }) => first + second + (third ?? 0)
+export const sum = ({ first, second, third }) =>
+  first + second + (third ?? 0)
 ```
 
 Of course, you can also just type them to any or omit the return type. You can be as specific as you want.
@@ -178,10 +186,10 @@ You can read more about the differences [here](https://github.com/Microsoft/Type
 I used [JsDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) for the first time today when I had this exact problem.
 I chose it over the other options because:
 
--   adding .d.ts files is tedious to maintain and will make my IDE stop navigating to the actual source 😒
--   I wanted to keep the destructuring 😕
--   Default parameters were hard to come up with as my case was much more complex 🧐
--   The file in question had 120+ lines of code 🤨
--   I wanted to make it easier for us to migrate when we fully convert that file 🚀
+- adding .d.ts files is tedious to maintain and will make my IDE stop navigating to the actual source 😒
+- I wanted to keep the destructuring 😕
+- Default parameters were hard to come up with as my case was much more complex 🧐
+- The file in question had 120+ lines of code 🤨
+- I wanted to make it easier for us to migrate when we fully convert that file 🚀
 
 <Comments>What would you do? Let me know in the comments below ⬇️</Comments>

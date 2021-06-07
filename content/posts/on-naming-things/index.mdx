@@ -4,10 +4,10 @@ description: Naming is hard. Naming is subjective. Yet there are some things we 
 date: 2020-12-08
 banner: ./naming.jpg
 tags:
-    - principles
-    - React
-    - JavaScript
-    - TypeScript
+  - principles
+  - React
+  - JavaScript
+  - TypeScript
 ---
 
 import Comments from 'components/Comments'
@@ -120,9 +120,9 @@ posts.map((post) => post.id)
 
 I would recommend inlining functions if:
 
--   they are not used often
--   they are rather small
--   you cannot come up with a meaningful name
+- they are not used often
+- they are rather small
+- you cannot come up with a meaningful name
 
 This comes up a lot with event handlers in React.
 And no, inline functions are _not_ bad for performance.
@@ -222,13 +222,13 @@ The same applies when you create an event handler, and you call it _handleClick_
 
 ```jsx:title=handleClick
 const handleClick = () => {
-    login(
-        { userName, password },
-        {
-            onSuccess: (url) => routes.push(url),
-            onError: () => showToast('Could not login'),
-        }
-    )
+  login(
+    { userName, password },
+    {
+      onSuccess: (url) => routes.push(url),
+      onError: () => showToast('Could not login'),
+    }
+  )
 }
 
 ...
@@ -250,9 +250,11 @@ but it's a lot more accurate, descriptive and future proof.
 
 The two important takeaways are:
 
--   Would the name change if the implementation changes (a)?
--   Would the name change if the usage changes (b)?
+- Would the name change if the implementation changes (a)?
+- Would the name change if the usage changes (b)?
 
 If so, it's probably not a very good name.
 
-<Comments>What are your favorite rules on naming things? Leave a comment below ⬇️</Comments>
+<Comments>
+  What are your favorite rules on naming things? Leave a comment below ⬇️
+</Comments>

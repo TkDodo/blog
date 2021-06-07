@@ -3,9 +3,9 @@ title: Exhaustive matching in TypeScript
 date: 2020-08-09
 banner: ./exhaustive-matching.jpg
 tags:
-    - Scala
-    - TypeScript
-    - React
+  - Scala
+  - TypeScript
+  - React
 ---
 
 import Comments from 'components/Comments'
@@ -128,23 +128,23 @@ This is best done with tagged unions, which just means a union where each member
 
 ```ts:title=tagged-union
 type Circle = {
-    kind: 'circle'
-    radius: number
+  kind: 'circle'
+  radius: number
 }
 
 type Rectangle = {
-    kind: 'rectangle'
-    width: number
-    height: number
+  kind: 'rectangle'
+  width: number
+  height: number
 }
 
 type Shape = Circle | Rectangle
 
 const renderShape = (shape: Shape): string => {
-    switch (shape.kind) {
-        case 'circle':
-            return 'I am a circle'
-    }
+  switch (shape.kind) {
+    case 'circle':
+      return 'I am a circle'
+  }
 }
 ```
 
@@ -174,10 +174,10 @@ Even though all members of the union type contain a shape, TypeScript won't acce
 
 ```ts:title=❌-no-destructuring-😢 {1, 4}
 const renderShape = ({ kind, ...shape }: Shape): string => {
-    switch (kind) {
-        case 'circle':
-            return `I am a circle with ${shape.radius}`
-    }
+  switch (kind) {
+    case 'circle':
+      return `I am a circle with ${shape.radius}`
+  }
 }
 ```
 
@@ -189,12 +189,12 @@ So with all this in mind, our code would look like this:
 
 ```ts:title=exhaustive-matching-in-ts
 const renderShape = (shape: Shape): string => {
-    switch (shape.kind) {
-        case 'circle':
-            return 'I am a circle'
-        case 'rectangle':
-            return 'I am a rectangle'
-    }
+  switch (shape.kind) {
+    case 'circle':
+      return 'I am a circle'
+    case 'rectangle':
+      return 'I am a rectangle'
+  }
 }
 ```
 
@@ -215,32 +215,32 @@ We will use `React` to render our little app:
 
 ```tsx:title=react-shapes
 export const App = () => {
-    const [shapes, setShapes] = React.useState()
+  const [shapes, setShapes] = React.useState()
 
-    React.useEffect(() => {
-        getShapes().then(setShapes)
-    }, [])
+  React.useEffect(() => {
+    getShapes().then(setShapes)
+  }, [])
 
-    if (!shapes) {
-        return <Loading />
-    }
+  if (!shapes) {
+    return <Loading />
+  }
 
-    return (
-        <Grid>
-            {shapes.map((shape) => (
-                <Shape {...shape} />
-            ))}
-        </Grid>
-    )
+  return (
+    <Grid>
+      {shapes.map((shape) => (
+        <Shape {...shape} />
+      ))}
+    </Grid>
+  )
 }
 
 const Shape = (props: Shape): JSX.Element => {
-    switch (props.kind) {
-        case 'circle':
-            return <Circle radius={props.radius} />
-        case 'rectangle':
-            return <Rectangle width={props.width} height={props.height} />
-    }
+  switch (props.kind) {
+    case 'circle':
+      return <Circle radius={props.radius} />
+    case 'rectangle':
+      return <Rectangle width={props.width} height={props.height} />
+  }
 }
 ```
 
@@ -249,11 +249,11 @@ Great, this is future-proof, typescript will tell us what to do as soon as we ad
 Here, you can see the whole App in action:
 
 <iframe
-    src="https://codesandbox.io/embed/nostalgic-diffie-gush0?fontsize=14&hidenavigation=1&theme=dark&view=preview"
-    style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-    title="nostalgic-diffie-gush0"
-    allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-    sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+  src="https://codesandbox.io/embed/nostalgic-diffie-gush0?fontsize=14&hidenavigation=1&theme=dark&view=preview"
+  style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+  title="nostalgic-diffie-gush0"
+  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
 ></iframe>
 
 ### Undefined strikes back
@@ -274,11 +274,11 @@ This happens because now, we fall through our switch statement, and because we h
 See it live:
 
 <iframe
-    src="https://codesandbox.io/embed/sharp-mirzakhani-lenv3?fontsize=14&hidenavigation=1&theme=dark&view=preview"
-    style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-    title="sharp-mirzakhani-lenv3"
-    allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-    sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+  src="https://codesandbox.io/embed/sharp-mirzakhani-lenv3?fontsize=14&hidenavigation=1&theme=dark&view=preview"
+  style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
+  title="sharp-mirzakhani-lenv3"
+  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
 ></iframe>
 
 ### Never to the rescue
@@ -292,25 +292,27 @@ If typescript narrows the type with each case in the switch statement, if all ca
 We can assert that with a little helper:
 
 ```tsx:title=never {1,9,10}
-const UnknownShape = ({ shape }: { shape: never }) => <div>Unknown Shape</div>
+const UnknownShape = ({ shape }: { shape: never }) => (
+  <div>Unknown Shape</div>
+)
 
 const Shape = (props: Shape): JSX.Element => {
-    switch (props.kind) {
-        case 'circle':
-            return <Circle radius={props.radius} />
-        case 'rectangle':
-            return <Rectangle width={props.width} height={props.height} />
-        default:
-            return <UnknownShape shape={props} />
-    }
+  switch (props.kind) {
+    case 'circle':
+      return <Circle radius={props.radius} />
+    case 'rectangle':
+      return <Rectangle width={props.width} height={props.height} />
+    default:
+      return <UnknownShape shape={props} />
+  }
 }
 ```
 
 This approach has two advantages:
 
--   It will _not_ fail at runtime - it will still display all other shapes and display a little not-found helper for the newly added shape
--   If we add Square to our Shape type, because we finally catch-up with the backend team and want to implement it as well, we will _still_ get a compile error from TypeScript. You can see that [here](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAKjgQwM5wEoFNkGN4BmUEIcA5FDvmQFA0wCeYWcAQmlgMoAWyzcAXjgBvGnDjAAJgC44AOwCuIAEZYoAbhoBfTY34BhYFFwAbFkPaouvfgDIRYuAGtgcmXABEuI6awfN4lDIksAKqLKKKmqaOvRMLNj4yHIA5maCbBw8fCz2ouIubrIelEmpZv6OAO5SMNwRSqoajtxYwCncMA1RzbF6LJwAjgrIlBmW1jlweY4Fru4eqMOjfgA0s3BmqXWyAOzacfzZ-EKGxukAPphYZWksV0MjlJo0uBByqPBnvhkAFMJwIIhMJwLSyADyIGAMAAPN8zKtPIVJB44FcPFIPAA+ACUgixcF+jhhIQAbliAJJkUjIODec4sGp1QHBULoYRAtlaGEAejJWJoOJebw+8ESMGSdz+AJqkjqiNa7U6oIhUNh4slCKR81R6MxuPxhOJ-I2VJpgJuEvKjOh3DgsuZwgd3C0KDccEVHXgwk9nS0xL5wHJguF70+cAAqnInHIIFU5MdzISAagbCwwSI4KmchEsKS1KC8QICSSg1iozG43I4IneSbXmH4Im-mBiGBwjW0zjZAApTgADQAdABRMwgLByeDFhzicSoJm4O2-VsQduD5F4-Kz7e4Djkem+MjSDbb7eUGAKKDVuE+dKcsICYQrtf31CunkC0+z3dWcilK13EeJ5fhaF5XnAMIata9q1Nwj7Pqgg7Oq6vowPBbaIah76fiBkhYAQyAKCYXTAV+56XteFaxvGzbZsw6Grm+cAfhs-paEAA).
-    This is because now, the type is not narrowed to never (since Square is still left), so the type of props for UnknownShape does not match.
+- It will _not_ fail at runtime - it will still display all other shapes and display a little not-found helper for the newly added shape
+- If we add Square to our Shape type, because we finally catch-up with the backend team and want to implement it as well, we will _still_ get a compile error from TypeScript. You can see that [here](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAKjgQwM5wEoFNkGN4BmUEIcA5FDvmQFA0wCeYWcAQmlgMoAWyzcAXjgBvGnDjAAJgC44AOwCuIAEZYoAbhoBfTY34BhYFFwAbFkPaouvfgDIRYuAGtgcmXABEuI6awfN4lDIksAKqLKKKmqaOvRMLNj4yHIA5maCbBw8fCz2ouIubrIelEmpZv6OAO5SMNwRSqoajtxYwCncMA1RzbF6LJwAjgrIlBmW1jlweY4Fru4eqMOjfgA0s3BmqXWyAOzacfzZ-EKGxukAPphYZWksV0MjlJo0uBByqPBnvhkAFMJwIIhMJwLSyADyIGAMAAPN8zKtPIVJB44FcPFIPAA+ACUgixcF+jhhIQAbliAJJkUjIODec4sGp1QHBULoYRAtlaGEAejJWJoOJebw+8ESMGSdz+AJqkjqiNa7U6oIhUNh4slCKR81R6MxuPxhOJ-I2VJpgJuEvKjOh3DgsuZwgd3C0KDccEVHXgwk9nS0xL5wHJguF70+cAAqnInHIIFU5MdzISAagbCwwSI4KmchEsKS1KC8QICSSg1iozG43I4IneSbXmH4Im-mBiGBwjW0zjZAApTgADQAdABRMwgLByeDFhzicSoJm4O2-VsQduD5F4-Kz7e4Djkem+MjSDbb7eUGAKKDVuE+dKcsICYQrtf31CunkC0+z3dWcilK13EeJ5fhaF5XnAMIata9q1Nwj7Pqgg7Oq6vowPBbaIah76fiBkhYAQyAKCYXTAV+56XteFaxvGzbZsw6Grm+cAfhs-paEAA).
+  This is because now, the type is not narrowed to never (since Square is still left), so the type of props for UnknownShape does not match.
 
 ### Conclusion
 
