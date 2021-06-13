@@ -85,8 +85,137 @@ I have a more in depth example in [#1: Practical React Query - Treat the query k
 
 ### Manual Interaction
 
+Manual Interactions with the Query Cache are where the structure of your Query Keys are most important. Many of those interaction methods, like [invalidateQueries](https://react-query.tanstack.com/reference/QueryClient#queryclientinvalidatequeries) or [setQueriesData](https://react-query.tanstack.com/reference/QueryClient#queryclientsetqueriesdata) support [Query Filters](https://react-query.tanstack.com/guides/filters#query-filters), which allow you to fuzzily match your Query Keys.
+
 ### Effective Query Keys
 
+Please note that these points reflect my personal opinion (as everything on this blog, actually), so don't take it as something that you absolutely must do when working with Query Keys. I have found these strategies to work best when your App becomes more complex, and it also scales quite well. You definitely don't need to do this for a Todo App 😁.
+
+#### Colocate
+
+If you haven't yet read [Maintainability through colocation](https://react-query.tanstack.com/guides/query-keys#query-keys-are-hashed-deterministically) by [Kent C. Dodds](https://twitter.com/kentcdodds), please do. I don't believe that storing all your Query Keys globally in `/src/utils/queryKeys.ts` will make things better. I keep my Query Keys next to their respective queries, co-located in a feature directory, so something like:
+
+```
+
+- src
+  - features
+    - Profile
+      - index.tsx
+      - queries.ts
+    - Todos
+      - index.tsx
+      - queries.ts
+
+```
+
+The _queries_ file will contain everything React Query related. I usually only export custom hooks, so the actual Query Functions as well as Query Keys will stay local.
+
+#### Always use Array Keys
+
+Yes, Query Keys can be a string, too, but to keep things unified, I like to always use Arrays. React Query will internally convert them to an Array anyhow, so:
+
+```ts:title=always-use-array-keys
+// 🚨 will be transformed to ['todos'] anyhow
+useQuery('todos')
+// ✅
+useQuery(['todos'])
+```
+
+#### Structure
+
+Structure your Query Keys from _most generic_ to _most specific_, with as many levels of granularity as you see fit in between. Here's how I would structure a todos list that allows for filterable lists as well as detail views:
+
+```
+['todos', 'list', { filters: 'all' }]
+['todos', 'list', { filters: 'done' }]
+['todos', 'detail', 1]
+['todos', 'detail', 2]
+```
+
+With that structure, I can invalidate everything todo related with `['todos']`, all the lists or all the details as well as target one specific list if I know the exact key. [Updates from Mutation Responses
+](https://react-query.tanstack.com/guides/updates-from-mutation-responses) become a lot more flexible with this, because you can target all lists if necessary:
+
+```js:title=updates-from-mutation-responses
+function useUpdateTitle() {
+  return useMutation(updateTitle, {
+    onSuccess: (newTodo) => {
+      // ✅ update the todo detail
+      queryClient.setQueryData(['todos', 'detail', newTodo.id], newTodo)
+
+      // ✅ update all the lists that contain this todo
+      queryClient.setQueriesData(['todos', 'list'], (previous) =>
+        previous.map((todo) => (todo.id === newTodo.id ? newtodo : todo))
+      )
+    },
+  })
+}
+```
+
+This might not work if the structure of lists and details differ a lot, so alternatively, you can also of course just invalidate all the list instead:
+
+```js:title=invalidate-all-lists {6-7}
+function useUpdateTitle() {
+  return useMutation(updateTitle, {
+    onSuccess: (newTodo) => {
+      queryClient.setQueryData(['todos', 'detail', newTodo.id], newTodo)
+
+      // ✅ just invalidate all lists
+      queryClient.invalidateQueries(['todos', 'list'])
+    },
+  })
+}
+```
+
+If you know which list you are currently, e.g. by reading the filters from the url, and can therefore construct the exact Query Key, you can also combine this two methods and call _setQueryData_ on your list and invalidate all others:
+
+```js:title=combine {11-20}
+function useUpdateTitle() {
+  // imagine a custom hook that returns the current filters,
+  // stored in the url
+  const { filters } = useFilterParams()
+
+  return useMutation(updateTitle, {
+    onSuccess: (newTodo) => {
+      const listKey = ['todos', 'list', { filters }]
+      queryClient.setQueryData(['todos', 'detail', newTodo.id], newTodo)
+
+      // ✅ update the list we are currently on instantly
+      queryClient.setQueryData(listKey, (previous) =>
+        previous.map((todo) => (todo.id === newTodo.id ? newtodo : todo))
+      )
+
+      // 🥳 invalidate all lists but don't refetch the active one
+      queryClient.invalidateQueries({
+        queryKey: ['todos', 'list'],
+        refetchActive: false,
+      })
+    },
+  })
+}
+```
+
+#### Use Query Key factories
+
+In the examples above, you can see that I've been manually declaring the Query Keys a lot. This is not only error prone, but also makes it harder to change in the future, for example, if you find out that you'd like to add _another_ level of granularity to your keys.
+
+That's why I recommend one Query Key factory per feature. It's just a simple object with entries and functions that will produce query keys, which can you can then use in your custom hooks. For the above example structure, it would look something like this:
+
+```ts:title=query-key-factory
+const todoKeys = {
+  all: ['todos'] as const,
+  lists: [...queryKeys.all, 'list'] as const,
+  list: (filters: string) => [...queryKeys.lists, { filters }] as const,
+  details: [...queryKeys.all, 'detail'] as const,
+  detail: (id: number) => [...queryKeys.details, id] as const,
+}
+```
+
+This gives me a lot of flexibility, as each level builds on top of each other, but is still accessible independently:
+
+```ts:title=examples
+// invalidate everything:
+queryClient.invalidateQueries(todoKeys.all)
+```
 
 ---
 
