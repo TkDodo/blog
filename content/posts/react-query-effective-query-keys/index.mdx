@@ -1,0 +1,46 @@
+---
+title: Effective Query Keys
+description:
+date: 2021-06-13
+banner: ./keys.jpeg
+tags:
+  - react
+  - react-query
+  - JavaScript
+  - TypeScript
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+
+<img src="./keys.jpeg" />
+
+<Attribution name="Chunli Ju" url="https://unsplash.com/@chunlea" />
+
+- [#1: Practical React Query](practical-react-query)
+- [#2: React Query Data Transformations](react-query-data-transformations)
+- [#3: React Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in React Query](status-checks-in-react-query)
+- [#5: Testing React Query](testing-react-query)
+- [#6: React Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
+- <b>#8: Effective Query Keys</b>
+
+---
+
+[Query Keys](https://react-query.tanstack.com/guides/query-keys) are a very important core concept in React Query. They are necessary so that the library can internally cache your data correctly and refetch automatically when a dependency to your query changes. Lastly, it will allow you to interact with the Query Cache manually when needed, for example when updating data after a mutation or when you need to manually invalidate some queries.
+
+Let's quickly have a look what these three points mean before I'll show you how I personally organize Query Keys to be able to do these things most effectively.
+
+### Caching Data
+
+### Automatic Refetching
+
+### Manual Interaction
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below ⬇️
+
+<Comments withSeparator={false} />
