@@ -1,6 +1,6 @@
 ---
-title: Effective Query Keys
-description:
+title: Effective React Query Keys
+description: Learn how to structure React Query Keys effectively as your App grows
 date: 2021-06-13
 banner: ./keys.jpeg
 tags:
@@ -24,7 +24,7 @@ import Attribution from 'components/Attribution'
 - [#5: Testing React Query](testing-react-query)
 - [#6: React Query and TypeScript](react-query-and-type-script)
 - [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
-- <b>#8: Effective Query Keys</b>
+- <b>#8: Effective React Query Keys</b>
 
 ---
 
@@ -87,7 +87,7 @@ The re-render triggered by the _setFilters_ update will pass a different Query K
 
 Manual Interactions with the Query Cache are where the structure of your Query Keys are most important. Many of those interaction methods, like [invalidateQueries](https://react-query.tanstack.com/reference/QueryClient#queryclientinvalidatequeries) or [setQueriesData](https://react-query.tanstack.com/reference/QueryClient#queryclientsetqueriesdata) support [Query Filters](https://react-query.tanstack.com/guides/filters#query-filters), which allow you to fuzzily match your Query Keys.
 
-### Effective Query Keys
+### Effective React Query Keys
 
 Please note that these points reflect my personal opinion (as everything on this blog, actually), so don't take it as something that you absolutely must do when working with Query Keys. I have found these strategies to work best when your App becomes more complex, and it also scales quite well. You definitely don't need to do this for a Todo App 😁.
 
