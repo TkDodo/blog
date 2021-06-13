@@ -93,7 +93,7 @@ Please note that these points reflect my personal opinion (as everything on this
 
 #### Colocate
 
-If you haven't yet read [Maintainability through colocation](https://react-query.tanstack.com/guides/query-keys#query-keys-are-hashed-deterministically) by [Kent C. Dodds](https://twitter.com/kentcdodds), please do. I don't believe that storing all your Query Keys globally in `/src/utils/queryKeys.ts` will make things better. I keep my Query Keys next to their respective queries, co-located in a feature directory, so something like:
+If you haven't yet read [Maintainability through colocation](https://kentcdodds.com/blog/colocation) by [Kent C. Dodds](https://twitter.com/kentcdodds), please do. I don't believe that storing all your Query Keys globally in `/src/utils/queryKeys.ts` will make things better. I keep my Query Keys next to their respective queries, co-located in a feature directory, so something like:
 
 ```
 
