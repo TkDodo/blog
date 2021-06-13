@@ -202,10 +202,10 @@ That's why I recommend one Query Key factory per feature. It's just a simple obj
 ```ts:title=query-key-factory
 const todoKeys = {
   all: ['todos'] as const,
-  lists: [...queryKeys.all, 'list'] as const,
-  list: (filters: string) => [...queryKeys.lists, { filters }] as const,
-  details: [...queryKeys.all, 'detail'] as const,
-  detail: (id: number) => [...queryKeys.details, id] as const,
+  lists: [...todoKeys.all, 'list'] as const,
+  list: (filters: string) => [...todoKeys.lists, { filters }] as const,
+  details: [...todoKeys.all, 'detail'] as const,
+  detail: (id: number) => [...todoKeys.details, id] as const,
 }
 ```
 
