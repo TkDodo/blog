@@ -34,9 +34,26 @@ Let's quickly have a look what these three points mean before I'll show you how 
 
 ### Caching Data
 
+Internally, the Query Cache is just a JavaScript object, where the keys are serialized Query Keys and the values are your Query Data plus meta information. The keys are hashed it in a [deterministic way](https://react-query.tanstack.com/guides/query-keys#query-keys-are-hashed-deterministically), so you can use Objects as well (On the top level, keys have to be strings or Arrays though).
+
+The most important part is that keys need to be _unique_ for your queries. If React Query finds an entry for a key in the cache, it will use it. Please also be aware that you cannot use the same key for _useQuery_ _and_ _useInfiniteQuery_. There is, after all, only _one_ Query Cache, and you would share the data between these two. That is not good because infinite queries have a fundamentally different structure than "normal" queries.
+
+```ts:title=dont-mix-keys
+useQuery(['todos'], fetchTodos)
+
+// 🚨 this won't work
+useInfiniteQuery(['todos'], fetchInfiniteTodos)
+
+// ✅ choose something else instead
+useInfiniteQuery(['infiniteTodos'], fetchInfiniteTodos)
+```
+
 ### Automatic Refetching
 
 ### Manual Interaction
+
+### Effective Query Keys
+
 
 ---
 
