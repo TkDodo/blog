@@ -50,6 +50,39 @@ useInfiniteQuery(['infiniteTodos'], fetchInfiniteTodos)
 
 ### Automatic Refetching
 
+> Queries are declarative.
+
+This is a _very_ important concept that cannot be emphasized enough, and it's also something that might take some time to _click_. Most people think about queries, and especially refetching, in an _imperative_ way.
+
+I have a query, it fetches some data. Now I click this button and I want to refetch, _but_ with parameters. Lots of folks attempt to go at it like this:
+
+```jsx:title=imperative-refetch
+function Component() {
+  const { data, refetch } = useQuery(['todos'], fetchTodos)
+
+  // ❓ how do I pass parameters to refetch ❓
+  return <Filters onApply={() => refetch(???)} />
+}
+```
+
+The answer is: **You don't.**
+
+That's not what _refetch_ is for - it's for refetching _with the same data_.
+
+If you have some _state_ that changes your data, all you need to do is put it in the Query Key, because React Query will trigger a refetch automatically whenever the key changes. So when you want to apply your filters, change your _client state_:
+
+```jsx:title=query-key-drives-the-query {2-3, 5}
+function Component() {
+  const [filters, setFilters] = React.useState()
+  const { data } = useQuery(['todos', filters], fetchTodos)
+
+  // ✅ just set local state and let it "drive" the query
+  return <Filters onApply={setFilters} />
+}
+```
+
+I have a more in depth example in [#1: Practical React Query - Treat the query key like a dependency array](practical-react-query#treat-the-query-key-like-a-dependency-array).
+
 ### Manual Interaction
 
 ### Effective Query Keys
