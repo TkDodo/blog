@@ -202,10 +202,10 @@ That's why I recommend one Query Key factory per feature. It's just a simple obj
 ```ts:title=query-key-factory
 const todoKeys = {
   all: ['todos'] as const,
-  lists: [...todoKeys.all, 'list'] as const,
-  list: (filters: string) => [...todoKeys.lists, { filters }] as const,
-  details: [...todoKeys.all, 'detail'] as const,
-  detail: (id: number) => [...todoKeys.details, id] as const,
+  lists: () => [...todoKeys.all, 'list'] as const,
+  list: (filters: string) => [...todoKeys.lists(), { filters }] as const,
+  details: () => [...todoKeys.all, 'detail'] as const,
+  detail: (id: number) => [...todoKeys.details(), id] as const,
 }
 ```
 
@@ -216,7 +216,7 @@ This gives me a lot of flexibility, as each level builds on top of each other, b
 queryClient.removeQueries(todoKeys.all)
 
 // 🚀 invalidate all lists
-queryClient.invalidateQueries(todoKeys.lists)
+queryClient.invalidateQueries(todoKeys.lists())
 
 // 🙌 prefetch a single todo
 queryClient.prefetchQueries(todoKeys.detail(id), () => fetchTodo(id))
