@@ -29,7 +29,9 @@ const Sponsors = () => (
             alt="Tanner Linsley"
           />
         </Link>
-        <Text>🥳 Sponsor ($20 a month)</Text>
+        <div>
+          <Text>🥳 Sponsor ($20 a month)</Text>
+        </div>
       </Card>
       <Card>
         <Link
@@ -45,7 +47,9 @@ const Sponsors = () => (
             alt="WorkflowGen"
           />
         </Link>
-        <Text>🎗 Supporter ($10 a month)</Text>
+        <div>
+          <Text>🎗 Supporter ($10 a month)</Text>
+        </div>
       </Card>
     </Grid>
   </Box>
