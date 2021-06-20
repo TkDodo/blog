@@ -117,10 +117,6 @@ module.exports = {
 
             url: `https://github.com/tkdodo`,
           },
-          {
-            name: `dev.to`,
-            url: `https://dev.to/tkdodo`,
-          },
         ],
         feed: false,
       },
