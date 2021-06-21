@@ -1,161 +1,158 @@
 require(`dotenv`).config({
-    path: `.env`,
+  path: `.env`,
 })
 
 const shouldAnalyseBundle = process.env.ANALYSE_BUNDLE
 
 module.exports = {
-    pathPrefix: `/blog`,
-    siteMetadata: {
-        author: 'TkDodo',
-        siteTitle: "TkDodo's blog",
-        siteTitleAlt: `TkDodo's blog`,
-        siteHeadline: `TkDodo's blog`,
-        siteUrl: `https://tkdodo.eu/blog`,
-        siteDescription: `A technical blog about frontend-development, TypesScript and React`,
-        siteLanguage: `en`,
+  pathPrefix: `/blog`,
+  siteMetadata: {
+    author: 'TkDodo',
+    siteTitle: "TkDodo's blog",
+    siteTitleAlt: `TkDodo's blog`,
+    siteHeadline: `TkDodo's blog`,
+    siteUrl: `https://tkdodo.eu/blog`,
+    siteDescription: `A technical blog about frontend-development, TypesScript and React`,
+    siteLanguage: `en`,
+  },
+  plugins: [
+    {
+      resolve: `gatsby-transformer-remark`,
+      options: {
+        plugins: [
+          {
+            resolve: `gatsby-remark-autolink-headers`,
+          },
+          {
+            resolve: '@weknow/gatsby-remark-twitter',
+            options: {
+              theme: 'dark',
+            },
+          },
+          {
+            resolve: 'gatsby-remark-external-links',
+            options: {
+              target: '_blank',
+              rel: 'noreferrer noopener',
+            },
+          },
+        ],
+      },
     },
-    plugins: [
-        {
-            resolve: `gatsby-transformer-remark`,
+    {
+      resolve: `gatsby-plugin-mdx`,
+      options: {
+        extensions: [`.mdx`, `.md`],
+        gatsbyRemarkPlugins: [
+          {
+            resolve: `gatsby-remark-autolink-headers`,
+          },
+          {
+            resolve: '@weknow/gatsby-remark-twitter',
             options: {
-                plugins: [
-                    {
-                        resolve: `gatsby-remark-autolink-headers`,
-                    },
-                    {
-                        resolve: '@weknow/gatsby-remark-twitter',
-                        options: {
-                            theme: 'dark',
-                        },
-                    },
-                    {
-                        resolve: 'gatsby-remark-external-links',
-                        options: {
-                            target: '_blank',
-                            rel: 'noreferrer noopener',
-                        },
-                    },
-                ],
+              theme: 'dark',
             },
-        },
-        {
-            resolve: `gatsby-plugin-mdx`,
+          },
+          {
+            resolve: 'gatsby-remark-external-links',
             options: {
-                extensions: [`.mdx`, `.md`],
-                gatsbyRemarkPlugins: [
-                    {
-                        resolve: `gatsby-remark-autolink-headers`,
-                    },
-                    {
-                        resolve: '@weknow/gatsby-remark-twitter',
-                        options: {
-                            theme: 'dark',
-                        },
-                    },
-                    {
-                        resolve: 'gatsby-remark-external-links',
-                        options: {
-                            target: '_blank',
-                            rel: 'noreferrer noopener',
-                        },
-                    },
-                    {
-                        resolve: `gatsby-remark-images`,
-                        options: {
-                            maxWidth: 960,
-                            quality: 90,
-                            backgroundColor: 'transparent',
-                            linkImagesToOriginal: false,
-                        },
-                    },
-                ],
-                plugins: [
-                    {
-                        resolve: `gatsby-remark-images`,
-                        options: {
-                            maxWidth: 960,
-                            quality: 90,
-                            backgroundColor: 'transparent',
-                            linkImagesToOriginal: false,
-                        },
-                    },
-                ],
+              target: '_blank',
+              rel: 'noreferrer noopener',
             },
-        },
-        {
-            resolve: `@lekoarts/gatsby-theme-minimal-blog`,
-            // See the theme's README for all available options
+          },
+          {
+            resolve: `gatsby-remark-images`,
             options: {
-                mdx: false,
-                blogPath: '/all',
-                navigation: [
-                    {
-                        title: `Blog`,
-                        slug: `/all`,
-                    },
-                    {
-                        title: `Tags`,
-                        slug: `/tags`,
-                    },
-                    {
-                        title: `Sponsors`,
-                        slug: `/sponsors`,
-                    },
-                    {
-                        title: `Rss`,
-                        slug: `/rss.xml`,
-                    },
-                ],
-                externalLinks: [
-                    {
-                        name: `Twitter`,
-                        url: `https://twitter.com/tkdodo`,
-                    },
-                    {
-                        name: `Github`,
-                        url: `https://github.com/tkdodo`,
-                    },
-                    {
-                        name: `dev.to`,
-                        url: `https://dev.to/tkdodo`,
-                    },
-                ],
-                feed: false,
+              maxWidth: 960,
+              quality: 90,
+              backgroundColor: 'transparent',
+              linkImagesToOriginal: false,
             },
-        },
-        `gatsby-plugin-sitemap`,
-        {
-            resolve: `gatsby-plugin-manifest`,
+          },
+        ],
+        plugins: [
+          {
+            resolve: `gatsby-remark-images`,
             options: {
-                name: `TkDodo's blog`,
-                short_name: `tkdodo-blog`,
-                description: `A technical blog about frontend-development, Typescript and React`,
-                start_url: `/`,
-                background_color: `#fff`,
-                theme_color: `#a10f15`,
-                display: `standalone`,
-                icons: [
-                    {
-                        src: `/stack.png`,
-                        sizes: `256x256`,
-                        type: `image/png`,
-                    },
-                ],
+              maxWidth: 960,
+              quality: 90,
+              backgroundColor: 'transparent',
+              linkImagesToOriginal: false,
             },
-        },
-        `gatsby-plugin-offline`,
-        `gatsby-plugin-vercel`,
-        {
-            resolve: `gatsby-plugin-canonical-urls`,
-            options: {
-                siteUrl: `https://tkdodo.eu/blog`,
-            },
-        },
-        {
-            resolve: `gatsby-plugin-feed`,
-            options: {
-                query: `
+          },
+        ],
+      },
+    },
+    {
+      resolve: `@lekoarts/gatsby-theme-minimal-blog`,
+      // See the theme's README for all available options
+      options: {
+        mdx: false,
+        blogPath: '/all',
+        navigation: [
+          {
+            title: `Blog`,
+            slug: `/all`,
+          },
+          {
+            title: `Tags`,
+            slug: `/tags`,
+          },
+          {
+            title: `Sponsors`,
+            slug: `/sponsors`,
+          },
+          {
+            title: `Rss`,
+            slug: `/rss.xml`,
+          },
+        ],
+        externalLinks: [
+          {
+            name: `Twitter`,
+            url: `https://twitter.com/tkdodo`,
+          },
+          {
+            name: `Github`,
+
+            url: `https://github.com/tkdodo`,
+          },
+        ],
+        feed: false,
+      },
+    },
+    `gatsby-plugin-sitemap`,
+    {
+      resolve: `gatsby-plugin-manifest`,
+      options: {
+        name: `TkDodo's blog`,
+        short_name: `tkdodo-blog`,
+        description: `A technical blog about frontend-development, Typescript and React`,
+        start_url: `/`,
+        background_color: `#fff`,
+        theme_color: `#a10f15`,
+        display: `standalone`,
+        icons: [
+          {
+            src: `/stack.png`,
+            sizes: `256x256`,
+            type: `image/png`,
+          },
+        ],
+      },
+    },
+    `gatsby-plugin-offline`,
+    `gatsby-plugin-vercel`,
+    {
+      resolve: `gatsby-plugin-canonical-urls`,
+      options: {
+        siteUrl: `https://tkdodo.eu/blog`,
+      },
+    },
+    {
+      resolve: `gatsby-plugin-feed`,
+      options: {
+        query: `
                 {
                     site {
                         siteMetadata {
@@ -167,20 +164,20 @@ module.exports = {
                     }
                 }
                 `,
-                feeds: [
-                    {
-                        serialize: ({ query: { site, allPost } }) => {
-                            return allPost.nodes.map((post) => {
-                                return {
-                                    title: post.title,
-                                    date: post.date,
-                                    description: post.description,
-                                    url: site.siteMetadata.siteUrl + post.slug,
-                                    guid: site.siteMetadata.siteUrl + post.slug,
-                                }
-                            })
-                        },
-                        query: `
+        feeds: [
+          {
+            serialize: ({ query: { site, allPost } }) => {
+              return allPost.nodes.map((post) => {
+                return {
+                  title: post.title,
+                  date: post.date,
+                  description: post.description,
+                  url: site.siteMetadata.siteUrl + post.slug,
+                  guid: site.siteMetadata.siteUrl + post.slug,
+                }
+              })
+            },
+            query: `
                         {
                             allPost(sort: { fields: date, order: DESC }) {
                                 nodes {
@@ -192,19 +189,19 @@ module.exports = {
                             }
                         }
                         `,
-                        output: `rss.xml`,
-                        title: `TkDodo's blog`,
-                    },
-                ],
-            },
-        },
-        shouldAnalyseBundle && {
-            resolve: `gatsby-plugin-webpack-bundle-analyser-v2`,
-            options: {
-                analyzerMode: `static`,
-                reportFilename: `_bundle.html`,
-                openAnalyzer: false,
-            },
-        },
-    ].filter(Boolean),
+            output: `rss.xml`,
+            title: `TkDodo's blog`,
+          },
+        ],
+      },
+    },
+    shouldAnalyseBundle && {
+      resolve: `gatsby-plugin-webpack-bundle-analyser-v2`,
+      options: {
+        analyzerMode: `static`,
+        reportFilename: `_bundle.html`,
+        openAnalyzer: false,
+      },
+    },
+  ].filter(Boolean),
 }

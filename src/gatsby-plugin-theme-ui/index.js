@@ -1,6 +1,6 @@
 import baseTheme from '@lekoarts/gatsby-theme-minimal-blog/src/gatsby-plugin-theme-ui'
 
-export default {
+const theme = {
   ...baseTheme,
   useColorSchemeMediaQuery: true,
   colors: {
@@ -19,3 +19,5 @@ export default {
     },
   },
 }
+
+export default theme
