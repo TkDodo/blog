@@ -3,7 +3,7 @@ import * as React from 'react'
 const About = () => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
     <img
-      src="profile-pic.jpg"
+      src="https://avatars.githubusercontent.com/u/1021430"
       alt="TkDodo"
       style={{
         marginRight: '0.875rem',
