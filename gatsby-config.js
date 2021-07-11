@@ -12,7 +12,7 @@ module.exports = {
     siteTitleAlt: `TkDodo's blog`,
     siteHeadline: `TkDodo's blog`,
     siteUrl: `https://tkdodo.eu/blog`,
-    siteDescription: `A technical blog about frontend-development, TypesScript and React`,
+    siteDescription: `A technical blog about frontend-development, TypeScript and React`,
     siteLanguage: `en`,
   },
   plugins: [
