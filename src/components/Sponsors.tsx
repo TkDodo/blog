@@ -53,7 +53,7 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://twitter.com/MasteringRQuery"
+          href="https://twitter.com/OhansEmmanuel"
           target="_blank"
           rel="noopener noreferrer"
         >
