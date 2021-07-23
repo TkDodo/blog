@@ -1,0 +1,201 @@
+---
+title: About async functions
+description: A deep dive into async functions and how they are different from promise chaining
+date: 2021-07-23
+banner: ./async.jpeg
+tags:
+  - JavaScript
+  - TypeScript
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+
+<img src="./async.jpeg" />
+
+<Attribution name="WanderLabs" url="https://unsplash.com/@wanderlabs" />
+
+[Async functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function) are great, especially if you have to call multiple functions in a row that return promises. With async / await, code becomes easier to reason about for humans, because the data flow mimics synchronous code, which is what we are used to reading.
+
+So what are async functions exactly?
+
+### Syntactic sugar
+
+When I first learned about async functions, the following sentence stuck with me:
+
+> Async/ await is "just" syntactic sugar for promise chaining
+
+<p style="padding-left: 3rem; margin-top: -1rem">— Someone, somewhen</p>
+
+This is mostly true, and if that's your mental model about async functions, it will get you quite far. To re-iterate, let's take an example and refactor it from promise chaining to an async function:
+
+```ts:title=promise-chaining
+function fetchTodos() {
+  return fetch('/todos')
+    .then(response => response.json())
+    .then(json => json.data)
+}
+```
+
+So far, so good. Nothing too difficult here, just our normal data fetching and extracting (error handling left out intentionally here). Still, even with this example, the callbacks are not so easy to read, so how would this look with an async function?
+
+```ts:title=async-function
+async function fetchTodos() {
+  const response = await fetch('/todos')
+  const json = await response.json()
+  return json.data
+}
+```
+
+Ah, I believe that reads a lot better, because you can actually see where we are assigning variables to and what will be the final return value of that function.
+
+So, if that is a good mental model for async functions, what's the problem with the above definition? Well, it's just not everything. There are a couple of subtle difference between promise chaining and async functions that I learned the hard way. Let's go through them:
+
+### They always return a promise
+
+This is actually _the_ defining trait of an async function. No matter what you do, it will always return a promise, even if you don't explicitly return one:
+
+```ts:title=promisify
+async function fetchRandom() {
+  // ✅ this will return `Promise<number>`
+  return Math.random()
+}
+```
+
+This is necessary because you can use the _await_ keyword in async functions, and once you do that, you enter promise-land, in which there is no escaping from. If code is async, you can't turn it back to sync code. I was personally quite confused by this, because in scala, [Await.result](https://docs.scala-lang.org/overviews/core/futures.html#blocking-outside-the-future) actually takes a promise, blocks the execution for a certain amount of time and then lets you continue synchronously with the resolved value.
+
+In JavaScript however, an async function will stay asynchronous, so the return value _must_ be a promise, and the language construct makes sure of this out of the box. This brings us to the next point:
+
+### It transforms thrown Errors into rejected promises
+
+You might have seen this in example code involving [the fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), as fetch will not automatically give you a failed promise on erroneous status codes like other libraries, e.g. [axios](https://axios-http.com/), do. To get to a failed promise, you just throw an Error (or anything, really), which will then be transformed into a failed promise. This is happening because, again, an async function always needs to return a promise:
+
+```ts:title=throw
+async function fetchTodos() {
+  const response = await fetch('/todos')
+  if (!response.ok) {
+    // ✅ this will become a failed promise
+    throw new Error('Network response was not ok')
+  }
+  return response.json()
+}
+```
+
+Now the same works if you are in a promise chain, but not if you are _outside_ of it. Suppose you want to do some parameter validation and decide to throw an Error if the input is invalid in a non-async function:
+
+```ts:title=parameter-validation
+function fetchTodo(id: number | undefined) {
+  if (!id) {
+    // 🚨 this will NOT give you a failed promise
+    throw new Error("expected id")
+  }
+  return fetch('/todos')
+    .then(response => response.json())
+    .then(json => json.data)
+}
+```
+
+If you make the same function _async_, it would give you a failed promise. These little nuances can be quite confusing, so I prefer to explicitly work with _Promise.reject_ no matter which context I'm in:
+
+```ts:title=parameter-explicit-promise-rejection
+function fetchTodo(id: number | undefined) {
+  if (!id) {
+    // ✅ this will work as expected, not matter where
+    return Promise.reject(new Error("expected id"))
+  }
+  return fetch('/todos')
+    .then(response => response.json())
+    .then(json => json.data)
+}
+```
+
+### They always return a _new_ promise
+
+I first stumbled upon this when working with [query cancellation in react-query](https://react-query.tanstack.com/guides/query-cancellation). Here, react-query wants us to attach a `.cancel` method on our resulting promise. Surprisingly, this doesn't quite work in async functions:
+
+```js:title=query-cancellation
+async function fetchTodos() {
+  const controller = new AbortController()
+  const signal = controller.signal
+
+  const promise = fetch('/todos', {
+    signal,
+  })
+
+  promise.cancel = () => controller.abort()
+  // 🚨 This will be a new promise without the cancel method!
+  return promise
+}
+```
+
+Because we are in an async function, a _new_ promise will be returned at the end of it, even if we already return a promise ourselves! [Here](https://www.carlrippon.com/cancelling-requests-with-react-query/) is a great article if you want to see how query cancellation can work even with async functions.
+
+### Handling errors
+
+The default way of handling errors in async functions is with try / catch, which I don't like very much, mainly because the scope of try / catches seems to get very large. If additional, synchronous code happens _after_ the async operation that might fail, we are likely still treating it as if the fetch failed:
+
+```ts:title=error-handling
+const fetchTodos = async (): Promise<Todos | undefined> => {
+  try {
+    const response = await axios.get('/todos')
+    // 🚨 if tranform fails, we will catch it and show a toast :(
+    return transform(response.data)
+  } catch (error) {
+    showToast("Fetch failed: " + error.message)
+    return undefined
+  }
+}
+```
+
+Sometimes, we even silently catch and discard the error, which will make debugging very hard.
+
+So if you also think that async / await is cool, but try / catch is not, you can try combining async functions with "traditional" catch methods:
+
+```ts:title=await-and-catch
+const fetchTodos = async (): Promise<Todos | undefined> => {
+  const response = await axios.get('/todos').catch(error => {
+    // 🚀 showing the toast is scoped to catching the response error
+    showToast("Fetch failed: " + error.message)
+    return undefined
+  })
+  return transform(response?.data)
+}
+```
+
+### In summary
+
+I hope this gives you a bit of a deeper understanding of what async / await is doing under the hood. I have seen lots of code where the _async_ keyword is just stuck on a function for no good reason, so lastly, here are some examples of patterns that I think should be avoided:
+
+```ts:title=weird-combos
+// 🚨 the async keyword doesn't do anything -
+// except creating a new unneccessary promise
+const fetchTodos = async () => axios.get('/todos')
+
+const fetchTodos = async () => {
+  const response = await axios.get('/todos')
+  // ⚠️ awaiting a non-promise is possible, but doesn't do anything
+  return await response.data
+}
+
+// 🙈 I don't even 🤷‍♂️
+const fetchTodos = async () =>
+  await axios.get('/todos').then(response => response.data)
+
+const fetchTodos = async () => {
+  try {
+    // 🚨 await is redundant here, too
+    return await axios.get('/todos')
+  } catch (error) {
+    // 🚨 the catch-and-throw is totally unnecessary
+    throw error
+  }
+}
+```
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below ⬇️
+
+<Comments withSeparator={false} />
+```
