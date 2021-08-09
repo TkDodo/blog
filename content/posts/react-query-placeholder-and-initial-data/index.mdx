@@ -1,7 +1,7 @@
 ---
 title: Placeholder and Initial Data in React Query
-description:
-date: 2021-08-08
+description: Learn about the different possibilities to avoid loading spinners in React Query.
+date: 2021-08-09
 banner: ./placeholder-and-initial-data.jpeg
 tags:
   - react
@@ -67,9 +67,7 @@ Some options we provide to _useQuery_ will affect that cache entry, prominent ex
 
 An observer in React Query is, broadly speaking, a subscription created for one cache entry. The observer watches the cache entry for changes and will be informed every time something changes.
 
-The basic way to create an observer is to call _useQuery_. Every time we do that, we create an observer, and our component will re-render when data changes.
-
-This of course means we can have multiple observers watching the same cache entry.
+The basic way to create an observer is to call _useQuery_. Every time we do that, we create an observer, and our component will re-render when data changes. This of course means we can have multiple observers watching the same cache entry.
 
 By the way, you can see how many observers a query has by the number on the left of the Query Key in the React Query Devtools (3 in this example):
 
@@ -79,13 +77,13 @@ Some options that work on observer level would be _select_ or _keepPreviousData_
 
 ### Differences
 
-_InitialData_ works on cache level, while _placeholderData_ works on observer level. This has a couple of implications.
+_InitialData_ works on cache level, while _placeholderData_ works on observer level. This has a couple of implications:
 
 #### Persistence
 
 First of all, _initialData_ is persisted to the cache. It's one way of telling React Query: I have "good" data for my use-case already, data that is as good as if it were fetched from the backend. Because it works on cache level, there can only be one _initialData_, and that data will be put into the cache as soon as the cache entry is created (meaning when the first observer mounts). If you try to mount a second observer with different _initialData_, it won't do anything.
 
-_PlaceholderData_ on the other hand is _never_ persisted to the cache. I like to see it as "fake-it-till-you-make-it" data. It's "not real". React Query gives it to you so that you can show it while the real data is being fetched. Because it works on observer level, you can theoretically even have different placeholderData for different components.
+_PlaceholderData_ on the other hand is _never_ persisted to the cache. I like to see it as "fake-it-till-you-make-it" data. It's "not real". React Query gives it to you so that you can show it while the real data is being fetched. Because it works on observer level, you can theoretically even have different _placeholderData_ for different components.
 
 #### Background refetches
 
@@ -128,17 +126,18 @@ Suppose you provide _initialData_ or _placeholderData_, and a background refetch
 <p>
   <details>
     <summary>InitialData</summary>
-    Since _initialData_ is persisted in the cache, the refetch error is treated
-    like any other background error. Our query will be in _error_ state, but your
-    _data_ will still be there.
+    Since <i>initialData</i> is persisted in the cache, the refetch error is treated
+    like any other background error. Our query will be in <i>error</i> state,
+    but your <i>data</i> will still be there.
   </details>
 </p>
 <p>
   <details>
     <summary>PlaceholderData</summary>
-    Since _placeholderData_ is "fake-it-till-you-make-it" data, and we didn't
-    make it, we won't see that data anymore. Our query will be in _error_ state,
-    and our _data_ will be _undefined_.
+    Since <i>placeholderData</i> is "fake-it-till-you-make-it" data, and we didn't
+    make it, we won't see that data anymore. Our query will be in <i>
+      error
+    </i> state, and our <i>data</i> will be <i>undefined</i>.
   </details>
 </p>
 
