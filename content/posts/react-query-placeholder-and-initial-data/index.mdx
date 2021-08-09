@@ -50,10 +50,101 @@ function Component() {
 
   // ✅ same goes for initialData
   const { data, status } = useQuery(['number'], fetchNumber, {
-    placeholderData: () => 42,
+    initialData: () => 42,
   })
 }
 ```
+
+Lastly, neither has an effect if you already have data in your cache. So what difference does it make if I use one or the other? To understand that, we have to briefly take a look at how (and on which "level") the options in React Query work:
+
+#### On cache level
+
+For each Query Key, there is only one cache entry. This is kinda obvious because part of what makes React Query great is the possibility to share the same data "globally" in our application.
+
+Some options we provide to _useQuery_ will affect that cache entry, prominent examples are _staleTime_ and _cacheTime_. Since there is only _one_ cache entry, those options specify when that entry is considered stale, or when it can be garbage collected.
+
+#### On observer level
+
+An observer in React Query is, broadly speaking, a subscription created for one cache entry. The observer watches the cache entry for changes and will be informed every time something changes.
+
+The basic way to create an observer is to call _useQuery_. Every time we do that, we create an observer, and our component will re-render when data changes.
+
+This of course means we can have multiple observers watching the same cache entry.
+
+By the way, you can see how many observers a query has by the number on the left of the Query Key in the React Query Devtools (3 in this example):
+
+<img src="./observers.png" />
+
+Some options that work on observer level would be _select_ or _keepPreviousData_. In fact, what's makes _select_ so great for [data transformations](./react-query-data-transformations#3-using-the-select-option) is the ability to watch the same cache entry, but subscribe to different slices of its data in different components.
+
+### Differences
+
+_InitialData_ works on cache level, while _placeholderData_ works on observer level. This has a couple of implications.
+
+#### Persistence
+
+First of all, _initialData_ is persisted to the cache. It's one way of telling React Query: I have "good" data for my use-case already, data that is as good as if it were fetched from the backend. Because it works on cache level, there can only be one _initialData_, and that data will be put into the cache as soon as the cache entry is created (meaning when the first observer mounts). If you try to mount a second observer with different _initialData_, it won't do anything.
+
+_PlaceholderData_ on the other hand is _never_ persisted to the cache. I like to see it as "fake-it-till-you-make-it" data. It's "not real". React Query gives it to you so that you can show it while the real data is being fetched. Because it works on observer level, you can theoretically even have different placeholderData for different components.
+
+#### Background refetches
+
+With _placeholderData_, you will always get a background refetch when you mount an observer for the first time. Because the data is "not real", React Query will get the real data for you. While this is happening, you will also get an _isPlaceholderData_ flag returned from _useQuery_. You can use this flag to visually hint to your users that the data they are seeing is in fact just placeholderData. It will transition back to _false_ as soon as the real data comes in.
+
+_InitialData_ on the other hand, because data is seen as good and valid data that we actually put into our cache, respects _staleTime_. If you have a _staleTime_ of zero (which is the default), you will still see a background refetch.
+
+But if you've set a _staleTime_ (e.g. 30 seconds) on your query, React Query will see the _initialData_ and be like:
+
+> Oh, I'm getting fresh and new data here synchronously, thank you very much, now I don't need to go to the backend because this data is good for 30 seconds.
+
+<p style="padding-left: 3rem; margin-top: -1rem">
+  — React Query when it sees <i>initialData</i> and <i>staleTime</i>
+</p>
+
+If that's not what you want, you can provide _initialDataUpdatedAt_ to your query. This will tell React Query when this initialData has been created, and background refetches will be triggered, taking this into account as well. This is extremely helpful when using initialData from an existing cache entry by using the available _dataUpdatedAt_ timestamp:
+
+```jsx:title=initialDataUpdatedAt
+const useTodo = (id) => {
+  const queryClient = useQueryClient()
+
+  return useQuery(['todo', id], () => fetchTodo(id), {
+    staleTime: 30 * 1000,
+    initialData: () =>
+      queryClient
+        .getQueryData(['todo', 'list'])
+        ?.find((todo) => todo.id === id),
+    initialDataUpdatedAt: () =>
+      // ✅ will refetch in the background if our list query data is older
+      // than the provided staleTime (30 seconds)
+      queryClient.getQueryState(['todo', 'list'])?.dataUpdatedAt,
+  })
+}
+```
+
+#### Error transitions
+
+Suppose you provide _initialData_ or _placeholderData_, and a background refetch is triggered, which then fails. What do you think will happen in each situation? I've hidden the answers so that you can try to come up with them for yourselves if you want before expanding them.
+
+<p>
+  <details>
+    <summary>InitialData</summary>
+    Since _initialData_ is persisted in the cache, the refetch error is treated
+    like any other background error. Our query will be in _error_ state, but your
+    _data_ will still be there.
+  </details>
+</p>
+<p>
+  <details>
+    <summary>PlaceholderData</summary>
+    Since _placeholderData_ is "fake-it-till-you-make-it" data, and we didn't
+    make it, we won't see that data anymore. Our query will be in _error_ state,
+    and our _data_ will be _undefined_.
+  </details>
+</p>
+
+### When to use what
+
+As always, that is totally up to you. I personally like to use _initialData_ when pre-filling a query from another query, and I use _placeholderData_ for everything else.
 
 ---
 
