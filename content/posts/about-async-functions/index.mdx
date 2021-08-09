@@ -100,7 +100,7 @@ If you make the same function _async_, it would give you a failed promise. These
 ```ts:title=parameter-explicit-promise-rejection
 function fetchTodo(id: number | undefined) {
   if (!id) {
-    // ✅ this will work as expected, not matter where
+    // ✅ this will work as expected, no matter where
     return Promise.reject(new Error("expected id"))
   }
   return fetch('/todos')
