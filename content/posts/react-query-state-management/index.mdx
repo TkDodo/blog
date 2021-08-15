@@ -30,6 +30,18 @@ import Attribution from 'components/Attribution'
 
 ---
 
+React Query is loved by many for drastically simplifying data fetching in React applications. So it might come as a bit of a surprise if I tell you that React Query is in fact _NOT_ a data fetching library.
+
+It doesn't fetch any data for you, and only a very small set of features are directly tied to the network (like [the OnlineManager](https://react-query.tanstack.com/reference/onlineManager), _refetchOnReconnect_ or [retrying offline mutation](https://react-query.tanstack.com/guides/mutations#retry)). This also becomes apparent when you write your first _queryFn_, and you have to use _something_ to actually get the data, like [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), [axios](https://axios-http.com/) or [ky](https://github.com/sindresorhus/ky).
+
+So if React Query is no data fetching library, what is it?
+
+### An Async State Manager
+
+
+
+#### Letting React Query do its work
+
 ---
 
 That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
