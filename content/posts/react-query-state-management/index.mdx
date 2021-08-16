@@ -32,15 +32,80 @@ import Attribution from 'components/Attribution'
 
 React Query is loved by many for drastically simplifying data fetching in React applications. So it might come as a bit of a surprise if I tell you that React Query is in fact _NOT_ a data fetching library.
 
-It doesn't fetch any data for you, and only a very small set of features are directly tied to the network (like [the OnlineManager](https://react-query.tanstack.com/reference/onlineManager), _refetchOnReconnect_ or [retrying offline mutation](https://react-query.tanstack.com/guides/mutations#retry)). This also becomes apparent when you write your first _queryFn_, and you have to use _something_ to actually get the data, like [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), [axios](https://axios-http.com/) or [ky](https://github.com/sindresorhus/ky).
+It doesn't fetch any data for you, and only a very small set of features are directly tied to the network (like [the OnlineManager](https://react-query.tanstack.com/reference/onlineManager), _refetchOnReconnect_ or [retrying offline mutation](https://react-query.tanstack.com/guides/mutations#retry)). This also becomes apparent when you write your first _queryFn_, and you have to use _something_ to actually get the data, like [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), [axios](https://axios-http.com/), [ky](https://github.com/sindresorhus/ky) or even [graphql-request](https://github.com/prisma-labs/graphql-request.
 
 So if React Query is no data fetching library, what is it?
 
 ### An Async State Manager
 
+React Query is an async state manager. It can manage any form of asynchronous state - it is happy as long as it gets a Promise. Yes, most of the time, we produce Promises via data fetching, so that's where it shines. But it does more than just handle loading and error states for you. It is a proper, real, "global state manager". The _QueryKey_ uniquely identifies your query, so as long you call the query with the same key in two different places, they will get the same data. This can be best abstracted with a custom hook so that we don't have to access the actual data fetching function twice:
 
+```tsx
+export const useTodos = () => useQuery('todos', fetchTodos)
 
-#### Letting React Query do its work
+function ComponentOne() {
+  const { data } = useTodos()
+}
+
+function ComponentTwo() {
+  // ✅ will get exactly the same data as Component1
+  const { data } = useTodos()
+}
+```
+
+### A data synchronization tool
+
+Because React Query manages async state (or, in terms of data fetching: server state), it assumes that the frontend application doesn't "own" the data. And that's totally right. If we display data on the screen that we fetch from an API, we only display a "snapshot" of that data - the version of how it looked when we retrieved it. So the question we have to ask ourselves is:
+
+Is that data still accurate after we fetch it?
+
+The answer depends totally on our problem domain. If we fetch a Twitter Post with all it's likes and comments, it's likely outdated (stale) pretty fast. If we fetch exchange rates that update on a daily basis, well, our data is going to be quite accurate for some time even without refetching.
+
+React Query provides the means to synchronize our view with the actual data owner - the backend. And by doing so, it errs on the side of updating often rather than not updating often enough.
+
+### Before React Query
+
+Two approaches to data fetching were pretty common before libraries like React Query came to the rescue:
+
+- fetch once, distribute globally, rarely update
+  This is pretty much what I myself have been doing with redux a lot. Somewhere, I dispatch an action that initiates the data fetching, usually on mount of the application. After we get the data, we put it in a global state manager so that we can access it everywhere in our application. After all, many components need access to our Todo list.
+  Do we refetch that data? No, we have "downloaded" it, so we have it already, why should we? Maybe if we fire a POST request to the backend, it will be kind enough to give us the "latest" state back. If you want something more accurate, you can always reload your browser window.
+
+- fetch on every mount, keep it local
+  Sometimes, we might also think that putting data in global state is "too much". We only need it in this Modal Dialog, so why not fetch it _just in time_ when the Dialog opens. You know the drill: _useEffect_, empty dependency array (throw an eslint-disable at it if it screams), _setLoading(true)_ and so on ... Of course, we now show a loading spinner every time the Dialog opens until we have the data. What else can we do, the local state is gone.
+
+---
+
+Both of these approaches are pretty sub-optimal. The first one doesn't update our local cache often enough, while the second one potentially re-fetches too often, and also has a sub-optimal ux because data is not there when we fetch a second time.
+
+So how does React Query approach these problems?
+
+### Stale While Revalidate
+
+You might have heard this before, it's the caching mechanism that React Query uses. It's nothing new - you can read about the [HTTP Cache-Control Extensions for Stale Content here](https://datatracker.ietf.org/doc/html/rfc5861). In summary, it means React Query will cache data for you and give it to you when you need it, even if that data might not be up-to-date (stale) anymore. The principle is that stale data is better than no data, because no data usually means a loading spinner, and this will be perceived as "slow" by users. At the same time, it will try to perform a background refetch to revalidate that data.
+
+### Smart refetches
+
+Cache invalidation is pretty hard, so when do you decide it's time to ask the backend again for new data? Surely we can't just do this every time a component that calls `useQuery` re-renders. That would be insane, even by modern standards.
+
+So React Query is being smart and chooses strategic points for triggering a refetch. Points that seem to be a good indicator for saying: Yep, now would be a good time to go get some data. These are:
+
+- refetchOnMount
+  Whenever a new component that calls `useQuery` mounts, React Query will do revalidation.
+- refetchOnWindowFocus
+  Whenever you focus the browser tab, there will be a refetch. This is my favourite point in time to do a refetch, but it's often misunderstood. During development, we switch browser tabs very often, so we might perceive this as "too much". In production however, it most likely indicates that a user who left our app open in a tab now comes back from checking mails or reading twitter. Showing them the latest updates makes perfect sense in this situation.
+- refetchOnReconnect
+  If you lose your network connection and re-gain it, it's also a good indicator to revalidate.
+
+Finally, if you, as the developer of your app, know a good point in time, you can invoke a manual invalidation via _queryClient.invalidateQueries_. This comes in very handy after you perform a mutation.
+
+### Letting React Query do its work
+
+I love [the defaults](https://react-query.tanstack.com/guides/important-defaults), but as I said before, they are geared towards keeping things up-to-date, _not_ to minimize the amount of network requests. This is mainly because _staleTime_ defaults to _zero_, which means that evey time you e.g. mount a new component instance, you will get a background refetch. If you do this a lot, you might se _a lot_ of fetches in the network tab.
+
+I've seen many reactions to this default behaviour, and most try to bypass React Query in some way:
+
+1. let's put it in context so that we can easily access it _anywhere_
 
 ---
 
