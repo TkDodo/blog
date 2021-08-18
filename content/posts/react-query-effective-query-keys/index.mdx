@@ -168,7 +168,7 @@ function useUpdateTitle() {
 }
 ```
 
-If you know which list you are currently, e.g. by reading the filters from the url, and can therefore construct the exact Query Key, you can also combine this two methods and call _setQueryData_ on your list and invalidate all others:
+If you know which list you are currently on, e.g. by reading the filters from the url, and can therefore construct the exact Query Key, you can also combine this two methods and call _setQueryData_ on your list and invalidate all others:
 
 ```js:title=combine {10-19}
 function useUpdateTitle() {
