@@ -24,7 +24,7 @@ const Sponsors = () => (
         >
           <h2>Tanner Linsley</h2>
           <img
-            src="https://avatars.githubusercontent.com/u/5580297?v=4"
+            src="https://avatars.githubusercontent.com/u/5580297?s=300"
             height="300"
             alt="Tanner Linsley"
           />
@@ -59,7 +59,7 @@ const Sponsors = () => (
         >
           <h2>Ohans Emmanuel</h2>
           <img
-            src="https://avatars.githubusercontent.com/u/10930234"
+            src="https://avatars.githubusercontent.com/u/10930234?s=300"
             height="300"
             alt="WorkflowGen"
           />
