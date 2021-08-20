@@ -204,7 +204,7 @@ There is also no "correct" value for staleTime. In many situations, the defaults
 
 Since v3, React Query supports a great way of setting default values per Query Key via [QueryClient.setQueryDefaults](https://react-query.tanstack.com/reference/QueryClient#queryclientsetquerydefaults). So if you follow the patterns I've outlined in [#8: Effective React Query Keys](effective-react-query-keys), you can set defaults for any granularity you want, because passing Query Keys to _setQueyDefaults_ follows the standard partial matching that e.g. [Query Filters](https://react-query.tanstack.com/guides/filters#query-filters) also have:
 
-```tsx
+```tsx:title=setQueryDefaults
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
