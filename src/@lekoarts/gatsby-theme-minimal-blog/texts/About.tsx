@@ -3,12 +3,10 @@ import * as React from 'react'
 const About = () => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
     <img
-      src="https://avatars.githubusercontent.com/u/1021430"
+      src="https://avatars.githubusercontent.com/u/1021430?s=64"
       alt="TkDodo"
       style={{
         marginRight: '0.875rem',
-        width: '4rem',
-        height: '4rem',
         borderRadius: '50%',
       }}
     />

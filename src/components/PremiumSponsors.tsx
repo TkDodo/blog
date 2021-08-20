@@ -9,12 +9,10 @@ const PremiumSponsors = () => (
   >
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <img
-        src="https://avatars.githubusercontent.com/u/5580297?v=4"
+        src="https://avatars.githubusercontent.com/u/5580297?s=64"
         alt="Tanner Linsley"
         style={{
           marginRight: '0.875rem',
-          width: '4rem',
-          height: '4rem',
           borderRadius: '50%',
         }}
       />
