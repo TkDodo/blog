@@ -3,6 +3,13 @@ import baseTheme from '@lekoarts/gatsby-theme-minimal-blog/src/gatsby-plugin-the
 const theme = {
   ...baseTheme,
   useColorSchemeMediaQuery: true,
+  alerts: {
+    ...baseTheme.alerts,
+    highlight: {
+      color: 'background',
+      bg: 'primary',
+    },
+  },
   colors: {
     ...baseTheme.colors,
     primary: '#a10f15',
