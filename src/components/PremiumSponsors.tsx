@@ -13,6 +13,8 @@ const PremiumSponsors = () => (
         alt="Tanner Linsley"
         style={{
           marginRight: '0.875rem',
+          width: '4rem',
+          height: '4rem',
           borderRadius: '50%',
         }}
       />
