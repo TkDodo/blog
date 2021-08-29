@@ -142,7 +142,12 @@ module.exports = {
       },
     },
     `gatsby-plugin-offline`,
-    `gatsby-plugin-vercel`,
+    {
+      resolve: `gatsby-plugin-plausible`,
+      options: {
+        domain: `tkdodo.eu`,
+      },
+    },
     {
       resolve: `gatsby-plugin-canonical-urls`,
       options: {
