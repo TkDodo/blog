@@ -9,9 +9,9 @@ const noFlashDark = `(function () {
       window.matchMedia('(prefers-color-scheme: dark)').matches
     ) {
       document.documentElement.classList.add('theme-ui-dark')
-      setTimeout(() => {
+      window.addEventListener('load', () => {
         document.documentElement.classList.remove('theme-ui-dark')
-      }, 1000);
+      });
     }
   } catch (err) {}
 })();`
