@@ -119,7 +119,7 @@ Finally, if you, as the developer of your app, know a good point in time, you ca
 
 #### Letting React Query do its magic
 
-I love [these defaults](https://react-query.tanstack.com/guides/important-defaults), but as I said before, they are geared towards keeping things up-to-date, _not_ to minimize the amount of network requests. This is mainly because _staleTime_ defaults to _zero_, which means that evey time you e.g. mount a new component instance, you will get a background refetch. If you do this a lot, especially with mounts in short succession that are not in the same render cycle, you might see _a lot_ of fetches in the network tab. That's because React Query can't deduplicate in such situations:
+I love [these defaults](https://react-query.tanstack.com/guides/important-defaults), but as I said before, they are geared towards keeping things up-to-date, _not_ to minimize the amount of network requests. This is mainly because _staleTime_ defaults to _zero_, which means that every time you e.g. mount a new component instance, you will get a background refetch. If you do this a lot, especially with mounts in short succession that are not in the same render cycle, you might see _a lot_ of fetches in the network tab. That's because React Query can't deduplicate in such situations:
 
 ```tsx:title=mounts-in-short-succession
 function ComponentOne() {
@@ -202,7 +202,7 @@ There is also no "correct" value for staleTime. In many situations, the defaults
 
 ##### Bonus: using setQueryDefaults
 
-Since v3, React Query supports a great way of setting default values per Query Key via [QueryClient.setQueryDefaults](https://react-query.tanstack.com/reference/QueryClient#queryclientsetquerydefaults). So if you follow the patterns I've outlined in [#8: Effective React Query Keys](effective-react-query-keys), you can set defaults for any granularity you want, because passing Query Keys to _setQueyDefaults_ follows the standard partial matching that e.g. [Query Filters](https://react-query.tanstack.com/guides/filters#query-filters) also have:
+Since v3, React Query supports a great way of setting default values per Query Key via [QueryClient.setQueryDefaults](https://react-query.tanstack.com/reference/QueryClient#queryclientsetquerydefaults). So if you follow the patterns I've outlined in [#8: Effective React Query Keys](effective-react-query-keys), you can set defaults for any granularity you want, because passing Query Keys to _setQueryDefaults_ follows the standard partial matching that e.g. [Query Filters](https://react-query.tanstack.com/guides/filters#query-filters) also have:
 
 ```tsx:title=setQueryDefaults
 const queryClient = new QueryClient({
