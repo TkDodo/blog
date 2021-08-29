@@ -11,7 +11,7 @@ const noFlashDark = `(function () {
       document.documentElement.classList.add('theme-ui-dark')
       setTimeout(() => {
         document.documentElement.classList.remove('theme-ui-dark')
-      }, 2000);
+      }, 1000);
     }
   } catch (err) {}
 })();`
