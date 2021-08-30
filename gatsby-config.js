@@ -121,6 +121,7 @@ module.exports = {
         feed: false,
       },
     },
+    `gatsby-plugin-remove-trailing-slashes`,
     `gatsby-plugin-sitemap`,
     {
       resolve: `gatsby-plugin-manifest`,
