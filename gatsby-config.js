@@ -144,9 +144,11 @@ module.exports = {
     },
     `gatsby-plugin-offline`,
     {
-      resolve: `gatsby-plugin-plausible`,
+      resolve: `@devular/gatsby-plugin-plausible`,
       options: {
         domain: `tkdodo.eu`,
+        proxyScript: `/js/script.js`,
+        proxyApi: `/api/event`,
       },
     },
     {
