@@ -147,6 +147,7 @@ module.exports = {
       resolve: `gatsby-plugin-plausible`,
       options: {
         domain: `tkdodo.eu`,
+        customDomain: `tkdodo.eu`,
       },
     },
     {

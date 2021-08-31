@@ -2,3 +2,13 @@
   from = "/"
   to = "/blog"
   status = 301
+
+[[redirects]]
+  from = "/js/script.js"
+  to = "https://plausible.io/js/plausible.js"
+  status = 200
+
+[[redirects]]
+  from = "/api/event"
+  to = "https://plausible.io/api/event"
+  status = 202
