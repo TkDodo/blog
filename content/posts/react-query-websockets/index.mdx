@@ -40,7 +40,7 @@ Since the client is the one opening the connections and initiating the requests,
 
 That's where [WebSockets](https://en.wikipedia.org/wiki/WebSocket) kick in.
 
-Like with any other HTTP request, the browser initiates the connection, but indicates that they would like to upgrade the connection to a WebSocket. If the server accepts this, they will then switch the protocol. This connection will not terminate, but will stay open until either side decides to close it. Now, we have a fully functioning by-directional connection open, where both sides can transmit data.
+Like with any other HTTP request, the browser initiates the connection, but indicates that they would like to upgrade the connection to a WebSocket. If the server accepts this, they will then switch the protocol. This connection will not terminate, but will stay open until either side decides to close it. Now, we have a fully functioning bi-directional connection open, where both sides can transmit data.
 
 This has the main advantage that the server can now push selective updates to the client. This can come in very handy if you have multiple users viewing the same data, and one user makes an update. Usually, the other clients will not see that update until they actively refetch. WebSockets allow to instantly push those updates in real-time.
 
