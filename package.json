@@ -17,6 +17,7 @@
     "postbuild": "mv public build && mkdir public && mv build public/blog"
   },
   "dependencies": {
+    "@devular/gatsby-plugin-plausible": "^0.1.8",
     "@lekoarts/gatsby-theme-minimal-blog": "^3.0.1",
     "@weknow/gatsby-remark-twitter": "^0.2.3",
     "gatsby": "^3.7.2",
@@ -26,7 +27,6 @@
     "gatsby-plugin-offline": "^4.7.1",
     "gatsby-plugin-remove-trailing-slashes": "^3.12.0",
     "gatsby-plugin-sitemap": "^4.3.1",
-    "gatsby-plugin-plausible": "^0.0.7",
     "gatsby-plugin-webpack-bundle-analyser-v2": "^1.1.22",
     "gatsby-remark-autolink-headers": "^4.4.1",
     "gatsby-remark-external-links": "^0.0.4",

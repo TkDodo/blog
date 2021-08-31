@@ -4,7 +4,7 @@
   status = 301
 
 [[redirects]]
-  from = "/js/index.js"
+  from = "/js/script.js"
   to = "https://plausible.io/js/plausible.js"
   status = 200
 
