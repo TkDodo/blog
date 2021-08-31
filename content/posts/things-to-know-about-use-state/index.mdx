@@ -137,7 +137,7 @@ Toggling a Boolean state value is likely something that you've done once or twic
 ```js:title=🚨-toggle-with-use-state
 const [value, setValue] = React.useState(true)
 
-<button onClick={() => setValue(perviousValue => !previousValue)}>Toggle</button>
+<button onClick={() => setValue(previousValue => !previousValue)}>Toggle</button>
 ```
 
 If the only thing you want to do is toggle the state value, maybe even multiple times in one component, _useReducer_ might be the better choice, as it:
