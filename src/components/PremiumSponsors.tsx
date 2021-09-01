@@ -28,7 +28,7 @@ const PremiumSponsors = () => (
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <img
-        src="/images/reactbricks.svg"
+        src="./images/reactbricks.svg"
         alt="React Bricks"
         style={{
           marginRight: '0.875rem',

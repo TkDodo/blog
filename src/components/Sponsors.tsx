@@ -41,7 +41,7 @@ const Sponsors = () => (
         >
           <h2>React Bricks</h2>
           <img
-            src="/images/reactbricks.svg"
+            src="./images/reactbricks.svg"
             height="300"
             alt="React Bricks"
           />
@@ -59,7 +59,7 @@ const Sponsors = () => (
           <h2>WorkflowGen</h2>
 
           <img
-            src="/images/workflowgen.png"
+            src="./images/workflowgen.png"
             height="300"
             alt="WorkflowGen"
           />
