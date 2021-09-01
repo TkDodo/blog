@@ -35,6 +35,23 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
+          href="https://reactbricks.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>React Bricks</h2>
+          <img
+            src="./images/reactbricks.svg"
+            height="300"
+            alt="React Bricks"
+          />
+        </Link>
+        <div>
+          <Text>🥉 Bronze ($50 a month)</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
           href="https://www.workflowgen.com/"
           target="_blank"
           rel="noopener noreferrer"
@@ -42,7 +59,7 @@ const Sponsors = () => (
           <h2>WorkflowGen</h2>
 
           <img
-            src="https://www.workflowgen.com/img/workflowgen-workflow-thumbnail.png"
+            src="./images/workflowgen.png"
             height="300"
             alt="WorkflowGen"
           />
