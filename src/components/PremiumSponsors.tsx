@@ -26,6 +26,24 @@ const PremiumSponsors = () => (
         Tanner Linsley
       </Link>
     </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img
+        src="/images/reactbricks.svg"
+        alt="React Bricks"
+        style={{
+          marginRight: '0.875rem',
+          width: '4rem',
+          height: '4rem',
+        }}
+      />
+      <Link
+        href="https://reactbricks.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        React Bricks
+      </Link>
+    </div>
   </Grid>
 )
 
