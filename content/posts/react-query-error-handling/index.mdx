@@ -1,0 +1,54 @@
+---
+title: React Query Error Handling
+description:
+date: 2021-09-09
+banner: ./error-handling.jpg
+tags:
+  - react
+  - react-query
+  - JavaScript
+  - TypeScript
+---
+
+import Comments from 'components/Comments'
+import Highlight from 'components/Highlight'
+import Attribution from 'components/Attribution'
+
+<img src="./error-handling.jpeg" />
+
+<Attribution name="Sigmund" url="https://unsplash.com/@sigmund" />
+
+- [#1: Practical React Query](practical-react-query)
+- [#2: React Query Data Transformations](react-query-data-transformations)
+- [#3: React Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in React Query](status-checks-in-react-query)
+- [#5: Testing React Query](testing-react-query)
+- [#6: React Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
+- [#8: Effective React Query Keys](effective-react-query-keys)
+- [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
+- [#10: React Query as a State Manager](react-query-as-a-state-manager)
+- <b>#11: React Query Error Handling</b>
+
+---
+
+Handling errors is an integral part of working with asynchronous data, especially data fetching. We have to face it: Not all requests will be successful, and not all Promises will be fulfilled.
+
+Oftentimes, it is something that we don't focus on right from the beginning though. We like to handle "sunshine cases" first where error handling becomes an afterthought.
+
+As described in [#4: Status Checks in React Query](status-checks-in-react-query),not thinking about how we are going to handle our errors might negatively affect user experience.
+
+To avoid that, let's dive into what options React Query offers us when it comes to error handling.
+
+### Prerequisites
+
+React Query needs a rejected Promise in order to handle errors correctly. Luckily, this is exactly what you'll get when you work with libraries like [axios](https://axios-http.com/).
+
+If you are working with [the fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) or other libraries that _do not_ give you a rejected Promise on erroneous status codes like 4xx or 5xx, you'll have to do the transformation yourself in the _queryFn_. This is covered in [the official docs](https://react-query.tanstack.com/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default).
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below ⬇️
+
+<Comments withSeparator={false} />
