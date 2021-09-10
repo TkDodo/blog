@@ -28,6 +28,7 @@ import Attribution from 'components/Attribution'
 - [#8: Effective React Query Keys](effective-react-query-keys)
 - [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
 - <b>#10: React Query as a State Manager</b>
+- [#11: React Query Error Handling](react-query-error-handling)
 
 ---
 
@@ -184,13 +185,13 @@ function ComponentOne() {
 
 In this example, our second component (which also depends on the todo data) will only mount after the user clicks a button. Now imagine our user clicks on that button after some minutes. Wouldn't a background refetch be nice in that situation, so that we can see the up-to-date values of our todo list?
 
-This wouldn't be possible if chose any of the aforementioned approaches that basically bypass what React Query wants to do.
+This wouldn't be possible if you chose any of the aforementioned approaches that basically bypass what React Query wants to do.
 
 So how can we have our cake and eat it, too?
 
 #### Customize staleTime
 
-Maybe you've already guessed the direction in which I want to go: The solution would be to set staleTime to a value you are comfortable with for your specific use-case. The key thing to know is:
+Maybe you've already guessed the direction in which I want to go: The solution would be to set _staleTime_ to a value you are comfortable with for your specific use-case. The key thing to know is:
 
 <Highlight>
   As long as data is fresh, it will always come from the cache only. You will
@@ -220,7 +221,7 @@ queryClient.setQueryDefaults(todoKeys.all, { staleTime: 1000 * 60 })
 
 ### A note on separation of concerns
 
-It is a seemingly legit concern that adding hooks like _useQuery_ to components of all layers in your app mixes responsibilities of what a component should do. Back in the "old days", the "smart-vs-dumb", "container-vs-presentational" component pattern was ubiquitous. It promised clear separation, decoupling, reusability and ease of testability because presentational components would just "get props". It also led to lots of prop drilling, boilerplate, patterns that were hard to statically type (👋 higher-order-components) and arbitrary component splits.
+It is a seemingly legit concern that adding hooks like _useQuery_ to components of all layers in your app mixes responsibilities of what a component should do. Back in the _old days_, the "smart-vs-dumb", "container-vs-presentational" component pattern was ubiquitous. It promised clear separation, decoupling, reusability and ease of testability because presentational components would just "get props". It also led to lots of prop drilling, boilerplate, patterns that were hard to statically type (👋 higher-order-components) and arbitrary component splits.
 
 That changed a lot when hooks came around. You can now _useContext_, _useQuery_ or _useSelector_ (if you're using redux) everywhere, and thus inject dependencies into your component. You can argue that doing so makes your component more coupled. You can also say that it's now more independent because you can move it around freely in your app, and it will just work on its own.
 
