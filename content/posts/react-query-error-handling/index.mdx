@@ -36,9 +36,7 @@ Handling errors is an integral part of working with asynchronous data, especiall
 
 Oftentimes, it is something that we don't focus on right from the beginning though. We like to handle "sunshine cases" first where error handling becomes an afterthought.
 
-As described in [#4: Status Checks in React Query](status-checks-in-react-query), not thinking about how we are going to handle our errors might negatively affect user experience.
-
-To avoid that, let's dive into what options React Query offers us when it comes to error handling.
+However, not thinking about how we are going to handle our errors might negatively affect user experience. To avoid that, let's dive into what options React Query offers us when it comes to error handling.
 
 ### Prerequisites
 
@@ -78,9 +76,51 @@ Here, we're handling error situations by checking for the _isError_ boolean flag
 
 This is certainly okay for some scenarios, but has a couple of drawbacks, too:
 
-- It doesn't handle background errors very well: Would we really want to unmount our complete Todo List just because a background refetch failed? Maybe the api is temporarily down, or we reached a rate limit, in which case it might work again in a few minutes. You can have a look at [#4: Status Checks in React Query](status-checks-in-react-query) to find out how to improve that situation
+1. It doesn't handle background errors very well: Would we really want to unmount our complete Todo List just because a background refetch failed? Maybe the api is temporarily down, or we reached a rate limit, in which case it might work again in a few minutes. You can have a look at [#4: Status Checks in React Query](status-checks-in-react-query) to find out how to improve that situation.
 
-- It can become quite boilerplate-y if you have to do this in every component that wants to use a query.
+2. It can become quite boilerplate-y if you have to do this in every component that wants to use a query.
+
+To solve the second issue, we can use error boundaries
+
+### Error Boundaries
+
+[Error Boundaries](https://reactjs.org/docs/error-boundaries.html#introducing-error-boundaries) are a general concept in React to catch runtime errors that happen during rendering, which allows us to react (pun intended) properly to them and display a fallback UI instead.
+
+This is nice because we can wrap our components in Error Boundaries at any granularity we want so that the rest of the UI will be unaffected by that error.
+
+One thing that Error Boundaries cannot do is catch asynchronous errors, because they do not occur during rendering. So to make Error Boundaries work in React Query, the library simply catches the error for you and re-throws it in the next render cycle so that the Error Boundary can pick it up.
+
+I think this is a pretty genius yet simple approach to error handling, and all you need to do to make that work is pass the _useErrorBoundary_ flag to your query (or provide it via a default config):
+
+```tsx
+function TodoList() {
+  // ✅ will propagate all fetching errors to the nearest Error Boundary
+  const todos = useQuery(['todos'], fetchTodos, { useErrorBoundary: true })
+
+  if (todos.data) {
+    return (
+      <div>
+        {todos.data.map((todo) => (
+          <Todo key={todo.id} {...todo} />
+        ))}
+      </div>
+    )
+  }
+
+  return 'Loading...'
+}
+```
+
+Starting with [v3.23.0](https://github.com/tannerlinsley/react-query/releases/tag/v3.23.0), you an even customize which errors should go towards an Error Boundary, and which ones you'd rather handle locally by providing a function to _useErrorBoundary_:
+
+```js
+useQuery(['todos'], fetchTodos, {
+  // 🚀 only server errors will go to the Error Boundary
+  useErrorBoundary: (error) => error.response?.status >= 500,
+})
+```
+
+This also works for mutations, and is quite helpful for e.g. form submissions to handle errors in the 4xx range locally (e.g. if some backend validation failed), but propagate all 5xx server errors to the Error Boundary.
 
 ### Showing Error Notifications
 
@@ -115,7 +155,8 @@ Conceptually, you can think that the onError callback functions similar to a _us
 const useTodos = () => {
   const todos = useQuery(['todos'], fetchTodos)
 
-  // 🚨 effects are executed for every time we call useTodos
+  // 🚨 effects are executed for every component
+  // that uses this custom hook individually
   React.useEffect(() => {
     if (todos.error) {
       toast.error(`Something went wrong: ${todos.error.message}`)
@@ -129,6 +170,43 @@ const useTodos = () => {
 So we don't really want to notify all Observers that our fetch failed - we want to notify our user _once_ that the underlying fetch failed. For that, React Query has global callbacks on a different level:
 
 #### the global callbacks
+
+The global callbacks need to be provided when you create the _QueryCache_, which happens implicitly when you create a _new QueryClient_, but you can also customize that:
+
+```jsx
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (error) =>
+      toast.error(`Something went wrong: ${error.message}`),
+  }),
+})
+```
+
+This will now only show an error toast once for each query, which exactly what we want.
+
+### Putting it all together
+
+The three main ways to handle errors in React Query are:
+
+- the error property returned from useQuery
+- the onError callback (on the QueryCache)
+- using Error Boundaries
+
+You can mix and match them however you want, and what I personally like to do is show error toasts for background refetches (to keep the stale ui intact) and handle everything else locally or with Error Boundaries.
+
+```jsx
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (error, query) => {
+      // 🎉 only show error toasts if we already have data in the cache
+      // which indicates a failed background update
+      if (query.state.data !== undefined) {
+        toast.error(`Something went wrong: ${error.message}`)
+      }
+    },
+  }),
+})
+```
 
 ---
 
