@@ -1,6 +1,6 @@
 ---
 title: React Query Error Handling
-description:
+description: After covering the sunshine cases of data fetching, it's time to look at situations where things don't go as planned and "Something weng wrong..."
 date: 2021-09-09
 banner: ./error-handling.jpg
 tags:
@@ -194,7 +194,7 @@ The three main ways to handle errors in React Query are:
 - the _onError_ callback (on the query itself or the global QueryCache / MutationCache)
 - using Error Boundaries
 
-You can mix and match them however you want, and what I personally like to do is show error toasts for background refetches (to keep the stale ui intact) and handle everything else locally or with Error Boundaries:
+You can mix and match them however you want, and what I personally like to do is show error toasts for background refetches (to keep the stale UI intact) and handle everything else locally or with Error Boundaries:
 
 ```js:title=background-error-toasts
 const queryClient = new QueryClient({
