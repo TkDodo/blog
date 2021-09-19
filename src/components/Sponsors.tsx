@@ -85,6 +85,23 @@ const Sponsors = () => (
           <Text>🎗 Supporter ($10 a month)</Text>
         </div>
       </Card>
+      <Card>
+        <Link
+          href="https://jolvera.dev/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Juan Olvera</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/1130549?s=300"
+            height="300"
+            alt="Juan Olvera"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter ($10 a month)</Text>
+        </div>
+      </Card>
     </Grid>
   </Box>
 )
