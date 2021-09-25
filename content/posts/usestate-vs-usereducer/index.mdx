@@ -11,9 +11,12 @@ tags:
 ---
 
 import Comments from 'components/Comments'
-import { Divider } from '@theme-ui/components'
+import Highlight from 'components/Highlight'
+import Attribution from 'components/Attribution'
 
 <img src="./usestate-vs-usereducer.jpeg" />
+
+<Attribution name="Piret Ilver" url="https://unsplash.com/@saltsup" />
 
 <Divider />
 
@@ -31,15 +34,146 @@ The question about which state management solution to use might be just as old a
 
 <p style="padding-left: 3rem; margin-top: -1rem">— TkDodo</p>
 
-It depends on the type of state.
-
-It depends on update frequency.
-
-It depends on scoping.
+It depends on the type of state. It depends on update frequency. It depends on scoping.
 
 If you know me, you know I have strong preferences on what to do with [server state](react-query-as-a-state-manager). So lets keep that out of the picture and look at everything that's left:
 
 ### Local State
+
+Before hooks, there was only one way of managing local state: in class-based components with _this.setState_. The state had to be an object, and the update function accepted a partial version of it.
+
+Hooks changed that in a fundamental way. Not only could you now also manage state in functional components, you got two different ways of doing so with _useState_ and _useReducer_.
+
+I think the way most people approached the switch from class based state management to hooks was to split up the object and go towards a single _useState_ for each field:
+
+Before:
+
+```jsx
+class Names extends React.Component {
+  state = {
+    firstName: '',
+    lastName: '',
+  }
+
+  render() {
+    return (
+      <div>
+        <input
+          value={this.state.firstName}
+          onChange={(event) =>
+            this.setState({ firstName: event.target.value })
+          }
+        />
+        <input
+          value={this.state.lastName}
+          onChange={(event) =>
+            this.setState({ lastName: event.target.value })
+          }
+        />
+      </div>
+    )
+  }
+}
+```
+
+After:
+
+```jsx
+const Names = () => {
+  const [firstName, setFirstName] = React.useState('')
+  const [lastName, setLastName] = React.useState('')
+
+  return (
+    <div>
+      <input
+        value={firstName}
+        onChange={(event) => setFirstName(event.target.value)}
+      />
+      <input
+        value={lastName}
+        onChange={(event) => setLastName(event.target.value)}
+      />
+    </div>
+  )
+}
+```
+
+This is pretty much the textbook example, and the split makes a lot of sense here. The two fields are pretty self-sufficient as they update on their own.
+
+But this isn't always the case. Sometimes, you might have state that actually updates together. If that's the case, why split it up into multiple useStates? One example that comes to mind is storing mouse coordinates (x/y). Using two _useStates_ seems super weird for something that always updates together, so I would use a single state object here:
+
+```jsx
+const App = () => {
+  const [{ x, y }, setCoordinates] = React.useState({ x: 0, y: 0 })
+
+  return (
+    <button
+      onClick={(event) => {
+        setCoordinates({ x: event.screenX, y: event.screenY })
+      }}
+    >
+      Click, {x} {y}
+    </button>
+  )
+}
+```
+
+I think a single useState object also works fine for a simple generic form, where the structure might be different, but you only want to update one field at the time. You can't really have multiple _useStates_ for that, so a rudimentary custom hook implementation could look something like this:
+
+```tsx
+const useForm = <State extends Record<string, unknown>>(
+  initialState: State
+) => {
+  const [values, setValues] = React.useState(initialState)
+  const handleChange = <Key extends keyof State>(
+    name: Key,
+    value: State[Key]
+  ) => setValues((form) => ({ ...form, [name]: value }))
+
+  return [values, handleChange] as const
+}
+```
+
+So, for useState, I go by the following rule:
+
+<Highlight>State that updates together should live together</Highlight>
+
+### useReducer
+
+I believe _useReducer_ is still criminally underused. The main thinking around _useReducer_ seems to be that you only need it for "complex state". As I've written previously, it's pretty good for [toggling state](things-to-know-about-use-state#bonus2-toggling-state-with-usereducer):
+
+```js:title=toggle-with-use-reducer
+const [value, toggleValue] = React.useReducer(previous => !previous, true)
+
+<button onClick={toggleValue}>Toggle</button>
+```
+
+It's also an often used way to implement _forceUpdate_ (which almost every global state manager needs to inform subscribers about state changes if that state is kept outside of React):
+
+```js:title=force-update-with-use-reducer
+const forceUpdate = React.useReducer((state) => state + 1, 0)[1]
+```
+
+None of these implementations are particularly complex, and I think it really shows the flexibility of _useReducer_. That being said, it also shines when you update multiple parts of your state from different "actions", e.g. when implementing a multi-step wizard. You might want to initialize the second step depending on data chosen in the first step, or you might want to discard data of the third step when going back to the second.
+
+All these dependencies between parts of your state would need you to call _setState_ multiple times in a row when you have independent _useStates_ (one for each step), and it would also get quite messy if you'd had a single state object.
+
+#### useReducer tips
+
+When I'm using _useReducer_, I try to adhere to the [redux style guide](https://redux.js.org/style-guide/style-guide). It's a great writeup that I can totally recommend, and most of the points also translate very well to _useReducer_, for example:
+
+- [Model Actions as Events, not Setters](https://redux.js.org/style-guide/style-guide#model-actions-as-events-not-setters)
+- [Treat Reducers as State Machines](https://redux.js.org/style-guide/style-guide#treat-reducers-as-state-machines)
+- [Do Not Mutate State](https://redux.js.org/style-guide/style-guide#do-not-mutate-state)
+- [Reducers Must Not Have Side Effects](https://redux.js.org/style-guide/style-guide#reducers-must-not-have-side-effects)
+
+### Rule of thumb
+
+In summary, my rule of thumb of when to use what is basically:
+
+- if state updates independently - separate _useStates_
+- for state that updates together, or only one at a time - a single _useState_ object
+- for state where user interactions update different parts of the state - _useReducer_
 
 ---
 
@@ -47,3 +181,4 @@ That's it for today. Feel free to reach out to me on [twitter](https://twitter.c
 if you have any questions, or just leave a comment below ⬇️
 
 <Comments withSeparator={false} />
+```
