@@ -1,0 +1,49 @@
+---
+title: useState vs useReducer
+description:
+date: 2021-09-25
+banner: ../usestate-vs-usereducer.jpeg
+tags:
+  - React
+  - useState pitfalls
+  - useState
+  - useReducer
+---
+
+import Comments from 'components/Comments'
+import { Divider } from '@theme-ui/components'
+
+<img src="./usestate-vs-usereducer.jpeg" />
+
+<Divider />
+
+- [#1: Don't over useState](dont-over-use-state)
+- [#2: Putting props to useState](putting-props-to-use-state)
+- [#3: Things to know about useState](things-to-know-about-use-state)
+- [#4: useState for one-time initializations](use-state-for-one-time-initializations)
+- <b>#5: useState vs. useReducer</b>
+
+<Divider />
+
+The question about which state management solution to use might be just as old as React itself (or maybe even older), and answers to it are manifold. To me, there is only one good answer, and it's the same answer I will give to every seemingly complex question:
+
+> It depends.
+
+<p style="padding-left: 3rem; margin-top: -1rem">— TkDodo</p>
+
+It depends on the type of state.
+
+It depends on update frequency.
+
+It depends on scoping.
+
+If you know me, you know I have strong preferences on what to do with [server state](react-query-as-a-state-manager). So lets keep that out of the picture and look at everything that's left:
+
+### Local State
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below ⬇️
+
+<Comments withSeparator={false} />
