@@ -38,9 +38,9 @@ It depends on the type of state. It depends on update frequency. It depends on s
 
 If you know me, you know I have strong preferences on what to do with [server state](react-query-as-a-state-manager). So lets keep that out of the picture and look at everything that's left:
 
-### Local State
+### Client State
 
-Before hooks, there was only one way of managing local state: in class-based components with _this.setState_. The state had to be an object, and the update function accepted a partial version of it.
+Before hooks, there was only one way of managing client state locally: in class-based components with _this.setState_. The state had to be an object, and the update function accepted a partial version of it.
 
 Hooks changed that in a fundamental way. Not only could you now also manage state in functional components, you got two different ways of doing so with _useState_ and _useReducer_.
 
@@ -136,9 +136,9 @@ const useForm = <State extends Record<string, unknown>>(
 }
 ```
 
-So, for useState, to decide if I want to split state up or not, I go by the following rule:
+So, for _useState_, to decide if I want to split state up or not, I go by the following rule:
 
-<Highlight>State that updates together should live together</Highlight>
+<Highlight>State that updates together should live together.</Highlight>
 
 ### Batching
 
@@ -270,7 +270,7 @@ const reducer = (amount) => (state, action) => {
 
 const useCounterState = () => {
   const { data } = useQuery(['amount'], fetchAmount)
-  return React.useReducer(reducer(data ?? 1))
+  return React.useReducer(reducer(data ?? 1), 0)
 }
 
 function App() {
