@@ -21,6 +21,7 @@ import { Divider } from '@theme-ui/components'
 - [#2: Putting props to useState](putting-props-to-use-state)
 - <b>#3: Things to know about useState</b>
 - [#4: useState for one-time initializations](use-state-for-one-time-initializations)
+- [#5: useState vs. useReducer](use-state-vs-use-reducer)
 
 [React.useState](https://reactjs.org/docs/hooks-reference.html#usestate) is pretty straightforward to use. A value, a setter function, an initial state. What hidden gems could possibly be there to know about? Well, here are 5 things you can profit from on a daily basis that you might not have known:
 
@@ -147,7 +148,7 @@ If the only thing you want to do is toggle the state value, maybe even multiple 
 - reduces repetitive boilerplate if you use the toggle function more than once
 
 ```js:title=✅-toggle-with-use-reducer
-const [value, toggleValue] = React.useReducer(previousValue => !previousValue, true)
+const [value, toggleValue] = React.useReducer(previous => !previous, true)
 
 <button onClick={toggleValue}>Toggle</button>
 ```
