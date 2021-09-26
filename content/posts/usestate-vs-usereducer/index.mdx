@@ -1,7 +1,7 @@
 ---
 title: useState vs useReducer
-description:
-date: 2021-09-25
+description: To useState or useReducer, that is the question...
+date: 2021-09-26
 banner: ../usestate-vs-usereducer.jpeg
 tags:
   - React
@@ -48,7 +48,7 @@ I think the way most people approached the switch from class based state managem
 
 Before:
 
-```jsx
+```jsx:title=class-based-set-state
 class Names extends React.Component {
   state = {
     firstName: '',
@@ -78,7 +78,7 @@ class Names extends React.Component {
 
 After:
 
-```jsx
+```jsx:title=separate-use-states
 const Names = () => {
   const [firstName, setFirstName] = React.useState('')
   const [lastName, setLastName] = React.useState('')
@@ -104,7 +104,7 @@ But this isn't always the case. Sometimes, you might have state that actually up
 
 One example that comes to mind is storing mouse coordinates (x/y). Using two _useStates_ seems super weird for something that always updates together, so I would use a single state object here:
 
-```jsx
+```jsx:title=single-state-object
 const App = () => {
   const [{ x, y }, setCoordinates] = React.useState({ x: 0, y: 0 })
 
@@ -124,7 +124,7 @@ const App = () => {
 
 I think a single useState object also works fine for a simple generic form, where the structure might be different each time you're using it, and you only want to update one field at the time. You can't really have multiple _useStates_ for that, so a rudimentary custom hook implementation could look something like this:
 
-```tsx
+```tsx:title=use-form
 const useForm = <State extends Record<string, unknown>>(
   initialState: State
 ) => {
@@ -172,7 +172,7 @@ When I'm using _useReducer_, I try to adhere to the [redux style guide](https://
 - [Reducers Must Not Have Side Effects](https://redux.js.org/style-guide/style-guide#reducers-must-not-have-side-effects)
 - [Model Actions as Events, not Setters](https://redux.js.org/style-guide/style-guide#model-actions-as-events-not-setters)
 
-#### event driven reducers
+##### event driven reducers
 
 Working immutably and not having side effects in reducers are things that most people will adhere to automatically, because it's in line with what react itself needs you do.
 
@@ -180,7 +180,7 @@ Modelling actions as events is something that I really want to emphasize on, bec
 
 To illustrate the concept, let's have a quick look at the standard _counter_ example:
 
-```jsx
+```jsx:title=event-driven-reducer
 const reducer = (state, action) => {
   // ✅ ui only dispatches events, logic is in the reducer
   switch (action) {
@@ -208,7 +208,7 @@ The logic is not very sophisticated (adding 1 or subtracting 1), but it's still 
 
 All of that would happen _inside_ the reducer. Compare that to an example where the reducer is "dumb" and just accepts the new number:
 
-```jsx
+```jsx:title=🚨-dumb-reducer
 const reducer = (state, action) => {
   switch (action.payload) {
     // 🚨 dumb reducer that doesn't do anything, logic is in the ui
@@ -236,11 +236,11 @@ function App() {
 
 This works the same, but is not as extensible as the previous example. So generally speaking, try to avoid actions that have _set_ in their name.
 
-#### passing props to reducers
+##### passing props to reducers
 
 Another great trait of reducers is that you can inline them, or closure over props. This comes in very handy if you need access to props or server state (e.g. coming from a [useQuery](https://react-query.tanstack.com/) hook) _inside_ your reducer. Instead of "copying" these things into the reducer by using the state initializer, you can pass it to a function:
 
-```js
+```js:title=reducer-with-props
 const reducer = (data) => (state, action) => {
   // ✅ you'll always have access to the latest
   // server state in here
@@ -258,7 +258,7 @@ So you'd wind up creating effects that try to sync the state into the reducer, w
 
 Extending our event driven counter example where we fetch an _amount_ parameter from an endpoint would work pretty well with this approach. And of course, I'd use a custom hook for that:
 
-```jsx
+```jsx:title=use-counter-state
 const reducer = (amount) => (state, action) => {
   switch (action) {
     case 'increment':
