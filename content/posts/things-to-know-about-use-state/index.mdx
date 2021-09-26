@@ -148,7 +148,7 @@ If the only thing you want to do is toggle the state value, maybe even multiple 
 - reduces repetitive boilerplate if you use the toggle function more than once
 
 ```js:title=✅-toggle-with-use-reducer
-const [value, toggleValue] = React.useReducer(previousValue => !previousValue, true)
+const [value, toggleValue] = React.useReducer(previous => !previous, true)
 
 <button onClick={toggleValue}>Toggle</button>
 ```

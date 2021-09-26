@@ -146,7 +146,7 @@ Consider using a single state object over calling multiple _useState_ setters in
 
 ### useReducer
 
-I believe _useReducer_ is still criminally underused. The main thinking around _useReducer_ seems to be that you only need it for "complex state". As I've written previously, it's pretty good for [toggling state](things-to-know-about-use-state#bonus2-toggling-state-with-usereducer):
+I believe [useReducer](https://reactjs.org/docs/hooks-reference.html#usereducer) is still heavily underused. The main thinking around _useReducer_ seems to be that you only need it for "complex state". As I've written previously, it's pretty good for [toggling state](things-to-know-about-use-state#bonus2-toggling-state-with-usereducer):
 
 ```js:title=toggle-with-use-reducer
 const [value, toggleValue] = React.useReducer(previous => !previous, true)
@@ -168,10 +168,125 @@ All these dependencies between parts of your state would need you to call _setSt
 
 When I'm using _useReducer_, I try to adhere to the [redux style guide](https://redux.js.org/style-guide/style-guide). It's a great writeup that I can totally recommend, and most of the points also translate very well to _useReducer_, for example:
 
-- [Model Actions as Events, not Setters](https://redux.js.org/style-guide/style-guide#model-actions-as-events-not-setters)
-- [Treat Reducers as State Machines](https://redux.js.org/style-guide/style-guide#treat-reducers-as-state-machines)
 - [Do Not Mutate State](https://redux.js.org/style-guide/style-guide#do-not-mutate-state)
 - [Reducers Must Not Have Side Effects](https://redux.js.org/style-guide/style-guide#reducers-must-not-have-side-effects)
+- [Model Actions as Events, not Setters](https://redux.js.org/style-guide/style-guide#model-actions-as-events-not-setters)
+
+#### event driven reducers
+
+Working immutably and not having side effects in reducers are things that most people will adhere to automatically, because it's in line with what react itself needs you do.
+
+Modelling actions as events is something that I really want to emphasize on, because it's one of the biggest advantages of reducers. By doing so, you can keep all your application logic _inside_ the reducer instead of spread around various parts of the ui. This will not only make it easier to reason about state transitions, it will also make your logic super easy to test (really, pure functions are the easiest to test).
+
+To illustrate the concept, let's have a quick look at the standard _counter_ example:
+
+```jsx
+const reducer = (state, action) => {
+  // ✅ ui only dispatches events, logic is in the reducer
+  switch (action) {
+    case 'increment':
+      return state + 1
+    case 'decrement':
+      return state - 1
+  }
+}
+
+function App() {
+  const [count, dispatch] = React.useReducer(reducer, 0)
+
+  return (
+    <div>
+      Count: {count}
+      <button onClick={() => dispatch('increment')}>Increment</button>
+      <button onClick={() => dispatch('decrement')}>Decrement</button>
+    </div>
+  )
+}
+```
+
+The logic is not very sophisticated (adding 1 or subtracting 1), but it's still _logic_. We can extend that to allow an upper / lower bound, or customize the amount of numbers to increase / decrease with each click.
+
+All of that would happen _inside_ the reducer. Compare that to an example where the reducer is "dumb" and just accepts the new number:
+
+```jsx
+const reducer = (state, action) => {
+  switch (action.payload) {
+    // 🚨 dumb reducer that doesn't do anything, logic is in the ui
+    case 'set':
+      return action.value
+  }
+}
+
+function App() {
+  const [count, dispatch] = React.useReducer(reducer, 0)
+
+  return (
+    <div>
+      Count: {count}
+      <button onClick={() => dispatch({ type: 'set', value: count + 1 })}>
+        Increment
+      </button>
+      <button onClick={() => dispatch({ type: 'set', value: count - 1 })}>
+        Decrement
+      </button>
+    </div>
+  )
+}
+```
+
+This works the same, but is not as extensible as the previous example. So generally speaking, try to avoid actions that have _set_ in their name.
+
+#### passing props to reducers
+
+Another great trait of reducers is that you can inline them, or closure over props. This comes in very handy if you need access to props or server state (e.g. coming from a [useQuery](https://react-query.tanstack.com/) hook) _inside_ your reducer. Instead of "copying" these things into the reducer by using the state initializer, you can pass it to a function:
+
+```js
+const reducer = (data) => (state, action) => {
+  // ✅ you'll always have access to the latest
+  // server state in here
+}
+
+function App() {
+  const { data } = useQuery(key, queryFn)
+  const [state, dispatch] = React.useReducer(reducer(data))
+}
+```
+
+This goes very well with the concept of [separating server and client state](practical-react-query#keep-server-and-client-state-separate), and it actually wouldn't work at all if you'd pass _data_ as _initialValue_, because when the reducer first runs, _data_ will be _undefined_ (as we still need to fetch it first).
+
+So you'd wind up creating effects that try to sync the state into the reducer, which can get you in all sorts of troubles with background updates.
+
+Extending our event driven counter example where we fetch an _amount_ parameter from an endpoint would work pretty well with this approach. And of course, I'd use a custom hook for that:
+
+```jsx
+const reducer = (amount) => (state, action) => {
+  switch (action) {
+    case 'increment':
+      return state + amount
+    case 'decrement':
+      return state - amount
+  }
+}
+
+const useCounterState = () => {
+  const { data } = useQuery(['amount'], fetchAmount)
+  return React.useReducer(reducer(data ?? 1))
+}
+
+function App() {
+  const [count, dispatch] = useCounterState()
+
+  return (
+    <div>
+      Count: {count}
+      <button onClick={() => dispatch('increment')}>Increment</button>
+      <button onClick={() => dispatch('decrement')}>Decrement</button>
+    </div>
+  )
+}
+```
+
+Note how we didn't need to change anything in the ui at all because of the clear separation provided by the custom hook 🎉
 
 ### Rule of thumb
 
@@ -187,4 +302,3 @@ That's it for today. Feel free to reach out to me on [twitter](https://twitter.c
 if you have any questions, or just leave a comment below ⬇️
 
 <Comments withSeparator={false} />
-```
