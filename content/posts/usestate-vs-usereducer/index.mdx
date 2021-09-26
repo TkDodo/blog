@@ -100,7 +100,9 @@ const Names = () => {
 
 This is pretty much the textbook example, and the split makes a lot of sense here. The two fields are pretty self-sufficient as they update on their own.
 
-But this isn't always the case. Sometimes, you might have state that actually updates together. If that's the case, why split it up into multiple useStates? One example that comes to mind is storing mouse coordinates (x/y). Using two _useStates_ seems super weird for something that always updates together, so I would use a single state object here:
+But this isn't always the case. Sometimes, you might have state that actually updates together. In those situations, I don't think it makes sense to split it up into multiple useStates.
+
+One example that comes to mind is storing mouse coordinates (x/y). Using two _useStates_ seems super weird for something that always updates together, so I would use a single state object here:
 
 ```jsx
 const App = () => {
@@ -118,25 +120,29 @@ const App = () => {
 }
 ```
 
-I think a single useState object also works fine for a simple generic form, where the structure might be different, but you only want to update one field at the time. You can't really have multiple _useStates_ for that, so a rudimentary custom hook implementation could look something like this:
+### Form state
+
+I think a single useState object also works fine for a simple generic form, where the structure might be different each time you're using it, and you only want to update one field at the time. You can't really have multiple _useStates_ for that, so a rudimentary custom hook implementation could look something like this:
 
 ```tsx
 const useForm = <State extends Record<string, unknown>>(
   initialState: State
 ) => {
   const [values, setValues] = React.useState(initialState)
-  const handleChange = <Key extends keyof State>(
-    name: Key,
-    value: State[Key]
-  ) => setValues((form) => ({ ...form, [name]: value }))
+  const update = <Key extends keyof State>(name: Key, value: State[Key]) =>
+    setValues((form) => ({ ...form, [name]: value }))
 
-  return [values, handleChange] as const
+  return [values, update] as const
 }
 ```
 
-So, for useState, I go by the following rule:
+So, for useState, to decide if I want to split state up or not, I go by the following rule:
 
 <Highlight>State that updates together should live together</Highlight>
+
+### Batching
+
+Consider using a single state object over calling multiple _useState_ setters in a row. React is very good at batching those state updates together in synchronous event handlers, but still struggles with batching in async functions. This will get better with [Automatic Batching in React 18](https://github.com/reactwg/react-18/discussions/21), but structuring your code in a way so that you can reason about what state belongs together will help with readability and maintainability in the long run, regardless of performance concerns.
 
 ### useReducer
 
@@ -169,10 +175,10 @@ When I'm using _useReducer_, I try to adhere to the [redux style guide](https://
 
 ### Rule of thumb
 
-In summary, my rule of thumb of when to use what is basically:
+In summary, my rule of thumb of when to use what would be:
 
 - if state updates independently - separate _useStates_
-- for state that updates together, or only one at a time - a single _useState_ object
+- for state that updates together, or only one field at a time updates - a single _useState_ object
 - for state where user interactions update different parts of the state - _useReducer_
 
 ---
