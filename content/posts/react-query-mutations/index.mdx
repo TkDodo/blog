@@ -190,6 +190,28 @@ Promises returned from the mutation callbacks are awaited by React Query, and as
 
 ### Optimistic updates
 
+Optimistic updates are one of the key selling points for using React Query mutations. The _useQuery_ cache give us data instantly when switching between queries, especially when combined with [prefetching](https://react-query.tanstack.com/guides/prefetching). Our whole UI feels very snappy because of it, so why not get the same advantage for mutations as well?
+
+A lot of the time, we are quite certain that an update will go through. Why should the user wait for a couple of seconds until we get the okay from the backend to show the result in the UI? The idea of optimistic updates is to fake the success of a mutation even before we have sent it to the server. Once we get a successful response back, all we have to do is invalidate our view again to see the real data. In case the request fails, we're going to roll back our UI to the state from before the mutation.
+
+This works great for small mutations where instant user feedback is actually required. There is nothing worse than having a toggle button that performs a request, and it doesn't react at all until the request has completed. Users will double or even triple click that button, and it will just feel "laggy" all over the place.
+
+#### Example
+
+I've decided to _not_ show an additional example. The [official docs](https://react-query.tanstack.com/guides/optimistic-updates) cover that topic very well, and they also have a codesandbox example [in JavaScript](https://react-query.tanstack.com/examples/optimistic-updates) and [in TypeScript](https://react-query.tanstack.com/examples/optimistic-updates-typescript).
+
+I further think that optimistic updates are a bit over-used. Not every mutation needs to be done optimistically. You should really be sure that it rarely fails, because the UX for a rollback is not great. Imagine a Form in a Dialog that closes when you submit it, or a redirect from a detail view to a list view after an update. If those are done prematurely, they are hard to undo.
+
+Also, be sure that the instant feedback is really required (like in the toggle button example above). The code needed to make optimistic updates work is non-trivial, especially compared to "standard" mutations. You need to mimic what the backend is doing when you're faking the result, which can be as easy as flipping a Boolean or adding an item to an Array, but it might also get more complex really fast:
+
+- If the todo you're adding needs an id, where do you get it from?
+- If the list you're currently viewing is sorted, will you insert the new entry at the right position?
+- What if another user has added something else in the meantime - will our optimistically added entry switch positions after a refetch?
+
+All these edge cases might make the UX actually worse in some situations, where it might be enough to disable the button and show a loading animation while the mutation is in-flight. As always, choose the right tool for the right job.
+
+### Common Gotchas
+
 ---
 
 That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
