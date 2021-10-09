@@ -11,6 +11,7 @@ const Highlight = ({ children }: Props) => {
   return (
     <Box
       sx={{
+        textAlign: 'center',
         fontSize: [1, 1, 2],
         padding: 2,
         borderRadius: 2,
