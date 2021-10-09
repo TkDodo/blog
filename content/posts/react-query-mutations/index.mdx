@@ -265,7 +265,34 @@ mutation.mutate({ title: 'hello', body: 'world' })
 
 To read more on why that is currently necessary, have a look at [this discussion](https://github.com/tannerlinsley/react-query/discussions/1226)
 
-### Some callbacks might not fire
+#### Some callbacks might not fire
+
+You can have callbacks on _useMutation_ as well as on _mutate_ itself. It is important to know that the callback on _useMutation_ fire before the callbacks on _mutate_. Further, the callbacks on _mutate_ might not fire _at all_ if the component unmounts before the mutation has finished.
+
+That's why I think it's a good practice to separate concerns in your callbacks:
+
+- Do things that are absolutely necessary and logic related (like query invalidation) in the _useMutation_ callbacks.
+- Do UI related things like redirects or showing toast notifications in _mutate_ callbacks. If the user navigated away from the current screen before the mutation finished, those will purposefully not fire.
+
+This separation is especially neat if _useMutation_ comes from a custom hook, as this will keep query related logic in the custom hook while UI related actions are still in the UI. This also makes the custom hook more reusable, because how you interact with the UI might vary on a case by case basis - but the invalidation logic will likely always be the same:
+
+```js
+const useUpdateTodo = () =>
+  useMutation(updateTodo, {
+    // ✅ always invalidate the todo list
+    onSuccess: () => queryClient.invalidateQueries(['todos', 'list']),
+  })
+
+// in the component
+
+const updateTodo = useUpdateTodo()
+updateTodo.mutate(
+  { title: 'newTitle' },
+  // ✅ only redirect if we're still on the detail page
+  // when the mutation finishes
+  { onSuccess: () => history.push('/todos') }
+)
+```
 
 ---
 
