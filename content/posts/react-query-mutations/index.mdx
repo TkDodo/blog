@@ -212,6 +212,61 @@ All these edge cases might make the UX actually worse in some situations, where 
 
 ### Common Gotchas
 
+Finally, let's dive into some things that are good to know when dealing with mutations that might not be that obvious initially:
+
+#### Mutate or MutateAsync
+
+_useMutation_ gives you two functions - _mutate_ and _mutateAsync_. What's the difference, and when should you use which one?
+
+_mutate_ doesn't return anything, while _mutateAsync_ returns a Promise containing the result of the mutation. So you might be tempted to use _mutateAsync_ when you need access to the mutation response, but I would still argue that you should almost always use _mutate_.
+
+You can still get access to the _data_ or the _error_ via the callbacks, and you don't have to worry about error handling: Since _mutateAsync_ gives you control over the Promise, you also have to catch errors manually, or you might get an [unhandled promise rejection](https://stackoverflow.com/questions/40500490/what-is-an-unhandled-promise-rejection).
+
+```js
+const onSubmit = () => {
+  // ✅ accessing the response via onSuccess
+  myMutation.mutate(someData, {
+    onSuccess: (data) => history.push(data.url),
+  })
+}
+
+const onSubmit = async () => {
+  // 🚨 works, but is missing error handling
+  const data = await myMutation.mutateAsync(someData)
+  history.push(data.url)
+}
+
+const onSubmit = async () => {
+  // 😕 this is okay, but look at the verbosity
+  try {
+    const data = await myMutation.mutateAsync(someData)
+    history.push(data.url)
+  } catch (e) {
+    // do nothing
+  }
+}
+```
+
+The only situations where I've found _mutateAsync_ to be superior is when you really need the Promise for the sake of having a Promise. This can be necessary if you want to fire off multiple mutations concurrently and want to wait for them all to be finished, or if you have dependent mutations where you'd get into callback hell with the callbacks.
+
+#### Mutations only take one argument for variables
+
+Since the last argument to _.mutate_ is the options object, _useMutation_ can currently only take _one_ argument for variables. This is certainly a limitation, but it can be easily worked around by using an object:
+
+```jsx
+// 🚨 this is invalid syntax and will NOT work
+const mutation = useMutation((title, body) => updateTodo(title, body))
+mutation.mutate('hello', 'world')
+
+// ✅ use an object for multiple variables
+const mutation = useMutation(({ title, body }) => updateTodo(title, body))
+mutation.mutate({ title: 'hello', body: 'world' })
+```
+
+To read more on why that is currently necessary, have a look at [this discussion](https://github.com/tannerlinsley/react-query/discussions/1226)
+
+### Some callbacks might not fire
+
 ---
 
 That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
