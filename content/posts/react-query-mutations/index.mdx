@@ -279,7 +279,7 @@ That's why I think it's a good practice to separate concerns in your callbacks:
 
 This separation is especially neat if _useMutation_ comes from a custom hook, as this will keep query related logic in the custom hook while UI related actions are still in the UI. This also makes the custom hook more reusable, because how you interact with the UI might vary on a case by case basis - but the invalidation logic will likely always be the same:
 
-```js
+```js:title=separate-concerns
 const useUpdateTodo = () =>
   useMutation(updateTodo, {
     // ✅ always invalidate the todo list
