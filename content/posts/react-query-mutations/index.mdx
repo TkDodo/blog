@@ -40,9 +40,9 @@ For this use-case, React Query offers the _useMutation_ hook.
 
 ### What are mutations?
 
-Generally speaking, mutations are functions that have a side effect. As an example, have a look at the _.push_ method of Arrays: It has the side effect of _changing_ the array in place where you're pushing a value to:
+Generally speaking, mutations are functions that have a side effect. As an example, have a look at the _push_ method of Arrays: It has the side effect of _changing_ the array in place where you're pushing a value to:
 
-```js
+```js:title=mutable-array-push
 const myArray = [1]
 myArray.push(2)
 
@@ -51,7 +51,7 @@ console.log(myArray) // [1, 2]
 
 The _immutable_ counterpart would be _concat_, which can also add values to an array, but it will return a new Array instead of directly manipulating the Array you operate on:
 
-```js
+```js:title=immutable-array-concat
 const myArray = [1]
 const newArray = myArray.concat(2)
 
@@ -76,11 +76,11 @@ You'll also get the same nice callbacks that _useQuery_ has: _onSuccess_, _onErr
   <i>useQuery</i> is declarative, <i>useMutation</i> is imperative.
 </Highlight>
 
-By that I mean that queries mostly run automatically. You define the dependencies, but React Query takes care of running the query immediately, and then also performs smart background updates when deemed necessary. That works great for queries because we want to keep what we see on the screen _in sync_ with the actual data on the backend.
+By that, I mean that queries mostly run automatically. You define the dependencies, but React Query takes care of running the query immediately, and then also performs smart background updates when deemed necessary. That works great for queries because we want to keep what we see on the screen _in sync_ with the actual data on the backend.
 
 For mutations, that wouldn't work well. Imagine a new todo would be created every time you focus your browser window 🤨. So instead of running the mutation instantly, React Query gives you a function that you can invoke whenever you want to make the mutation:
 
-```jsx
+```jsx:title=imperative-mutate
 function AddComment({ id }) {
   // this doesn't really do anything yet
   const addComment = useMutation((newComment) =>
@@ -91,9 +91,8 @@ function AddComment({ id }) {
     <form
       onSubmit={(event) => {
         event.preventDefault()
-        const comment = new FormData(event.currentTarget).get('comment')
         // ✅ mutation is invoked when the form is submitted
-        addComment.mutate(id, comment)
+        addComment.mutate(new FormData(event.currentTarget).get('comment'))
       }}
     >
       <textarea name="comment" />
@@ -115,7 +114,7 @@ To have a mutation reflect the changes it made on our queries, React Query prima
 
 This is conceptually the simplest way to get your screen up-to-date. Remember, with server state, you're only ever displaying a snapshot of data from a given point in time. React Query tries to keep that up-to-date of course, but if you're deliberately changing server state with a mutation, this is a great point in time to tell React Query that some data you have cached is now "invalid". React Query will then go and refetch that data if it's currently in use, and your screen will update automatically for you once the fetch is completed. The only thing you have to tell the library is _which_ queries you want to invalidate:
 
-```jsx
+```jsx:title=invalidation-from-mutation
 const useAddComment = (id) => {
   const queryClient = useQueryClient()
 
@@ -131,13 +130,13 @@ const useAddComment = (id) => {
 }
 ```
 
-Query invalidation is pretty smart. Like all [Query Filters](https://react-query.tanstack.com/guides/filters#query-filters), it uses fuzzy matching on the query key. So if you have multiple keys for your comments list, they will all be invalidated. However, only the ones that are currently active will be refetched. The rest will be marked as stale, which will cause them to be refetched if you use them the next time.
+Query invalidation is pretty smart. Like all [Query Filters](https://react-query.tanstack.com/guides/filters#query-filters), it uses fuzzy matching on the query key. So if you have multiple keys for your comments list, they will all be invalidated. However, only the ones that are currently active will be refetched. The rest will be marked as stale, which will cause them to be refetched the next time they are used.
 
 As an example, let's assume we have the option to sort our comments, and at the time the new comment was added, we have two queries with comments in our cache:
 
 ```
 ['posts', 5, 'comments', { sortBy: ['date', 'asc'] }
-['posts', 5, 'comments', { sortBy: ['date', 'desc'] }
+['posts', 5, 'comments', { sortBy: ['author', 'desc'] }
 ```
 
 Since we're only displaying one of them on the screen, _invalidateQueries_ will refetch that one and mark the other one as stale.
@@ -146,7 +145,7 @@ Since we're only displaying one of them on the screen, _invalidateQueries_ will 
 
 Sometimes, you don't want to refetch data, especially if the mutation already returns everything you need to know. If you have a mutation that updates the title of your blog post, and the backend returns the complete blog post as a response, you can update the query cache directly via _setQueryData_:
 
-```jsx
+```jsx:title=update-from-mutation-response
 const useUpdateTitle = (id) => {
   const queryClient = useQueryClient()
 
@@ -163,30 +162,13 @@ const useUpdateTitle = (id) => {
 }
 ```
 
-I'm showing some more examples of direct updates and the combination of both approaches in [#8: Effective React Query Keys](effective-react-query-keys#structure)
+Putting data into the cache directly via _setQueryData_ will act as if this data was returned from the backend, which means that all components using that query will re-render accordingly.
+
+I'm showing some more examples of direct updates and the combination of both approaches in [#8: Effective React Query Keys](effective-react-query-keys#structure).
 
 ---
 
-I personally think that most of the time, invalidation should be preferred. Of course, it depends on the use-case, but for direct updates to work reliably, you need more code on the frontend, and to some extent duplicate logic from the backend. Sorted lists are for example pretty hard to update directly, as the sort order could've potentially changed because of my update.
-
-#### Bonus: awaited Promises
-
-Promises returned from the mutation callbacks are awaited by React Query, and as it so happens, _invalidateQueries_ returns a Promise. So if you want your mutation to stay in _loading_ state while your related queries update, you have to return the result of _invalidateQueries_:
-
-```js
-{
-  // 🎉 will wait for query invalidation to finish
-  onSuccess: () => {
-    return queryClient.invalidateQueries(['posts', id, 'comments'])
-  }
-}
-{
-  // 🚀 fire and forget - will not wait
-  onSuccess: () => {
-    queryClient.invalidateQueries(['posts', id, 'comments'])
-  }
-}
-```
+I personally think that most of the time, invalidation should be preferred. Of course, it depends on the use-case, but for direct updates to work reliably, you need more code on the frontend, and to some extent duplicate logic from the backend. Sorted lists are for example pretty hard to update directly, as the position of my entry could've potentially changed because of the update. Invalidating the whole list is the "safer" approach.
 
 ### Optimistic updates
 
@@ -214,6 +196,25 @@ All these edge cases might make the UX actually worse in some situations, where 
 
 Finally, let's dive into some things that are good to know when dealing with mutations that might not be that obvious initially:
 
+#### awaited Promises
+
+Promises returned from the mutation callbacks are awaited by React Query, and as it so happens, _invalidateQueries_ returns a Promise. If you want your mutation to stay in _loading_ state while your related queries update, you have to return the result of _invalidateQueries_ from the callback:
+
+```js:title=awaited-promises
+{
+  // 🎉 will wait for query invalidation to finish
+  onSuccess: () => {
+    return queryClient.invalidateQueries(['posts', id, 'comments'])
+  }
+}
+{
+  // 🚀 fire and forget - will not wait
+  onSuccess: () => {
+    queryClient.invalidateQueries(['posts', id, 'comments'])
+  }
+}
+```
+
 #### Mutate or MutateAsync
 
 _useMutation_ gives you two functions - _mutate_ and _mutateAsync_. What's the difference, and when should you use which one?
@@ -222,7 +223,7 @@ _mutate_ doesn't return anything, while _mutateAsync_ returns a Promise containi
 
 You can still get access to the _data_ or the _error_ via the callbacks, and you don't have to worry about error handling: Since _mutateAsync_ gives you control over the Promise, you also have to catch errors manually, or you might get an [unhandled promise rejection](https://stackoverflow.com/questions/40500490/what-is-an-unhandled-promise-rejection).
 
-```js
+```js:title=accessing-mutation-data
 const onSubmit = () => {
   // ✅ accessing the response via onSuccess
   myMutation.mutate(someData, {
@@ -241,19 +242,21 @@ const onSubmit = async () => {
   try {
     const data = await myMutation.mutateAsync(someData)
     history.push(data.url)
-  } catch (e) {
+  } catch (error) {
     // do nothing
   }
 }
 ```
 
+Handling errors is not necessary with _mutate_, because React Query catches (and discards) the error for you internally. It is literally implemented with: *mutateAsync().catch(noop)*😎
+
 The only situations where I've found _mutateAsync_ to be superior is when you really need the Promise for the sake of having a Promise. This can be necessary if you want to fire off multiple mutations concurrently and want to wait for them all to be finished, or if you have dependent mutations where you'd get into callback hell with the callbacks.
 
 #### Mutations only take one argument for variables
 
-Since the last argument to _.mutate_ is the options object, _useMutation_ can currently only take _one_ argument for variables. This is certainly a limitation, but it can be easily worked around by using an object:
+Since the last argument to _mutate_ is the options object, _useMutation_ can currently only take _one_ argument for variables. This is certainly a limitation, but it can be easily worked around by using an object:
 
-```jsx
+```jsx:title=multiple-variables
 // 🚨 this is invalid syntax and will NOT work
 const mutation = useMutation((title, body) => updateTodo(title, body))
 mutation.mutate('hello', 'world')
@@ -263,11 +266,11 @@ const mutation = useMutation(({ title, body }) => updateTodo(title, body))
 mutation.mutate({ title: 'hello', body: 'world' })
 ```
 
-To read more on why that is currently necessary, have a look at [this discussion](https://github.com/tannerlinsley/react-query/discussions/1226)
+To read more on why that is currently necessary, have a look at [this discussion](https://github.com/tannerlinsley/react-query/discussions/1226).
 
 #### Some callbacks might not fire
 
-You can have callbacks on _useMutation_ as well as on _mutate_ itself. It is important to know that the callback on _useMutation_ fire before the callbacks on _mutate_. Further, the callbacks on _mutate_ might not fire _at all_ if the component unmounts before the mutation has finished.
+You can have callbacks on _useMutation_ as well as on _mutate_ itself. It is important to know that the callbacks on _useMutation_ fire before the callbacks on _mutate_. Further, the callbacks on _mutate_ might not fire _at all_ if the component unmounts before the mutation has finished.
 
 That's why I think it's a good practice to separate concerns in your callbacks:
 
@@ -280,7 +283,9 @@ This separation is especially neat if _useMutation_ comes from a custom hook, as
 const useUpdateTodo = () =>
   useMutation(updateTodo, {
     // ✅ always invalidate the todo list
-    onSuccess: () => queryClient.invalidateQueries(['todos', 'list']),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['todos', 'list'])
+    },
   })
 
 // in the component
