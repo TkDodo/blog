@@ -78,7 +78,7 @@ If you have some _state_ that changes your data, all you need to do is put it in
 ```jsx:title=query-key-drives-the-query {2-3, 5}
 function Component() {
   const [filters, setFilters] = React.useState()
-  const { data } = useQuery(['todos', filters], fetchTodos)
+  const { data } = useQuery(['todos', filters], () => fetchTodos(filters))
 
   // ✅ set local state and let it "drive" the query
   return <Filters onApply={setFilters} />

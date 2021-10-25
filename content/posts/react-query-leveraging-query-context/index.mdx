@@ -41,7 +41,7 @@ We all strive to improve as engineers, and as time goes by, we hopefully succeed
 
 Quite some time has passed since I first started to use React Query. I think I learned a great deal on that journey, and I've also "seen" a lot. I want my blog to be as up-to-date as possible, so that you can come back here and re-read it, knowing that the concepts are still valid. This is now more relevant than ever since [Tanner Linsley](https://twitter.com/tannerlinsley) agreed to link to my blog from the official [React Query documentation](https://react-query.tanstack.com/community/tkdodos-blog).
 
-That's why I've decided to write this addendum to my [Effective React Query Keys](effective-react-query-keys) article. Pleas make sure to read it first to have an understanding of what we are talking about.
+That's why I've decided to write this addendum to my [Effective React Query Keys](effective-react-query-keys) article. Please make sure to read it first to have an understanding of what we are talking about.
 
 ### Hot take
 
@@ -49,6 +49,67 @@ That's why I've decided to write this addendum to my [Effective React Query Keys
   Don't use inline functions - leverage the Query Context given to you, and
   use a Query Key factory that produces object keys
 </Highlight>
+
+Inline functions are by far the easiest way to pass props to your _queryFn_, because they let you closure over other variables available in your custom hook. Let's look at the evergreen todo example:
+
+```ts:title=inline-query-fn
+type State = 'all' | 'open' | 'done'
+type Todo = {
+  id: number
+  state: TodoState
+}
+type Todos = ReadonlyArray<Todo>
+
+const fetchTodos = async (state: State): Promise<Todos> => {
+  const response = await axios.get(`todos/${state}`)
+  return response.data
+}
+
+export const useTodos = () => {
+  // imagine this grabs the current user selection
+  // from somewhere, e.g. the url
+  const { state } = useTodoParams()
+
+  // ✅ The queryFn is an inline function that
+  // closures over the passed state
+  return useQuery(['todos', state], () => fetchTodo(state))
+}
+```
+
+Maybe you recognize the example - It's a slight variation of [#1: Practical React Query - Treat the query key like a dependency array](practical-react-query#treat-the-query-key-like-a-dependency-array). This works great for simple examples, but it has a quite substantial problem when having lots of parameters. In bigger apps, it's not unheard of to have lots of filter and sorting options, and I've personally seen up to 10 params being passed.
+
+I like to approach these things from the bottom up - starting with the _queryFn_ and letting the compiler tell me what I need to change next:
+
+```ts:title=sorting-todos {1,4,6}
+type Sorting = 'dateCreated' | 'name'
+const fetchTodos = async (
+  state: State,
+  sorting: Sorting
+): Promise<Todos> => {
+  const response = await axios.get(`todos/${state}?sorting={sorting}`)
+  return response.data
+}
+```
+
+This will certainly yield an error in our custom hook, where we call _fetchTodos_, so let's fix that:
+
+```ts:title=useTodos-with-sorting {2, 4-5}
+export const useTodos = () => {
+  const { state, sorting } = useTodoParams()
+
+  // 🚨 can you spot the mistake ⬇️
+  return useQuery(['todos', state], () => fetchTodo(state, sorting))
+}
+```
+
+Maybe you've already spotted the issue: Our query key got out of sync with our actual dependencies, and no red squiggly lines are screaming at us about it 😔. In the above case, you'll likely spot the issue very fast (hopefully via an integration test), because changing the sorting does not automatically trigger a refetch. And, let's be honest, it's also pretty obvious in this simple example. I have however seen the query key diverge from the actual dependencies a couple of times in the last months, and with greater complexity, those can be some hard to track issues. There's also a reason why React comes with the [react-hooks/exhaustive-deps eslint rule](https://reactjs.org/docs/hooks-rules.html#eslint-plugin) to spot such issues.
+
+So will React Query now come with its own eslint-rule?
+
+Well, that would be one option. There is also the [babel-plugin-react-query-key-gen
+](https://github.com/dominictwlee/babel-plugin-react-query-key-gen) that solves this problem by generating query keys for you, including all your dependencies. React Query however comes with a different, built-in way of making dependencies more explicit: The `QueryFunctionContext`.
+
+### QueryFunctionContext
 
 ---
 
