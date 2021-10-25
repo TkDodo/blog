@@ -197,7 +197,7 @@ This comes in very handy when using selectors for partial subscriptions:
 const { data } = useTodo(2)
 ```
 
-As I've hinted before, for selectors, structural sharing will be done twice: Once on the result returned from the queryFn to determine if anything changed at all, and then once more on the _result_ of the selector function. In some instances, especially when having very large datasets, structural sharing _can_ be a bottleneck. It also only works on json-serializable data. If you don't need this optimization, you can turn it off by setting _structuralSharing: false_ on any query.
+As I've hinted before, for selectors, structural sharing will be done twice: Once on the result returned from the _queryFn_ to determine if anything changed at all, and then once more on the _result_ of the selector function. In some instances, especially when having very large datasets, structural sharing _can_ be a bottleneck. It also only works on json-serializable data. If you don't need this optimization, you can turn it off by setting _structuralSharing: false_ on any query.
 
 Have a look at the [replaceEqualDeep tests](https://github.com/tannerlinsley/react-query/blob/80cecef22c3e088d6cd9f8fbc5cd9e2c0aab962f/src/core/tests/utils.test.tsx#L97-L304) if you want to learn more about what happens under the hood.
 

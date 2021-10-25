@@ -99,7 +99,7 @@ but also got involved in the React Query community, answering questions on Disco
 I believe the React Query [Defaults](https://react-query.tanstack.com/docs/guides/important-defaults)
 are very well chosen, but they can catch you off guard from time to time, especially at the beginning.
 
-First of all: React Query does _not_ invoke the queryFn on every re-render, even with the default _staleTime_ of zero.
+First of all: React Query does _not_ invoke the _queryFn_ on every re-render, even with the default _staleTime_ of zero.
 Your app can re-render for various reasons at any time, so fetching every time would be insane!
 
 > Always code for re-renders, and a lot of them. I like to call it render resiliency.
@@ -148,7 +148,7 @@ which I assume you are familiar with.
 Why are these two similar?
 
 Because React Query will trigger a refetch whenever the query key changes.
-So when we pass a variable parameter to our queryFn, we almost always want to fetch data when that value changes.
+So when we pass a variable parameter to our _queryFn_, we almost always want to fetch data when that value changes.
 Instead of orchestrating complex effects to manually trigger a refetch, we can utilize the query key:
 
 ```ts:title=feature/todos/queries.ts
@@ -168,13 +168,13 @@ export const useTodosQuery = (state: State) =>
   useQuery(['todos', state], () => fetchTodos(state))
 ```
 
-Here, imagine that our ui displays a list of todos along with a filter option.
+Here, imagine that our UI displays a list of todos along with a filter option.
 We would have some local state to store that filtering,
 and as soon as the user changes their selection, we would update that local state,
 and React Query will automatically trigger the refetch for us, because the query key changes.
 We are thus keeping the user's filter selection _in sync_ with the query function,
 which is very similar to what a dependency array represents for useEffect.
-I don't think I have ever passed a variable to the queryFn that was _not_ part of the queryKey, too.
+I don't think I have ever passed a variable to the _queryFn_ that was _not_ part of the _queryKey_, too.
 
 ##### A new cache entry
 
