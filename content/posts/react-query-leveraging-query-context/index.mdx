@@ -50,8 +50,8 @@ That's why I've decided to write this addendum to my [Effective React Query Keys
 <SpacingBox />
 
 <Highlight>
-  Don't use inline functions - leverage the Query Function Context given to you, and
-  use a Query Key factory that produces object keys
+  Don't use inline functions - leverage the Query Function Context given to
+  you, and use a Query Key factory that produces object keys
 </Highlight>
 
 Inline functions are by far the easiest way to pass parameters to your _queryFn_, because they let you closure over other variables available in your custom hook. Let's look at the evergreen todo example:
@@ -265,7 +265,7 @@ This can come in quite handy if you have multiple overlapping scopes that have a
 
 ### Is this worth it?
 
-As always: it depends. I've been loving this approach lately (which is why I wanted to share it with you), but there is certainly a tradeoff here between complexity and type safety. Composing query keys inside the key factory is slightly more complex, and typing the context depending on the return type of the key factory is also not trivial. If your team is small, your api interface is slim and / or you're using plain JavaScript, you might not want to go that route. As per usual, choose whichever tools and approaches make the most sense for your specific situation 🙌
+As always: it depends. I've been loving this approach lately (which is why I wanted to share it with you), but there is certainly a tradeoff here between complexity and type safety. Composing query keys inside the key factory is slightly more complex (because _queryKeys_ still have to be an Array at the top level), and typing the context depending on the return type of the key factory is also not trivial. If your team is small, your api interface is slim and / or you're using plain JavaScript, you might not want to go that route. As per usual, choose whichever tools and approaches make the most sense for your specific situation 🙌
 
 ---
 
