@@ -86,7 +86,7 @@ const fetchTodos = async (
   state: State,
   sorting: Sorting
 ): Promise<Todos> => {
-  const response = await axios.get(`todos/${state}?sorting={sorting}`)
+  const response = await axios.get(`todos/${state}?sorting=${sorting}`)
   return response.data
 }
 ```
@@ -102,14 +102,143 @@ export const useTodos = () => {
 }
 ```
 
-Maybe you've already spotted the issue: Our query key got out of sync with our actual dependencies, and no red squiggly lines are screaming at us about it 😔. In the above case, you'll likely spot the issue very fast (hopefully via an integration test), because changing the sorting does not automatically trigger a refetch. And, let's be honest, it's also pretty obvious in this simple example. I have however seen the query key diverge from the actual dependencies a couple of times in the last months, and with greater complexity, those can be some hard to track issues. There's also a reason why React comes with the [react-hooks/exhaustive-deps eslint rule](https://reactjs.org/docs/hooks-rules.html#eslint-plugin) to spot such issues.
+Maybe you've already spotted the issue: Our _queryKey_ got out of sync with our actual dependencies, and no red squiggly lines are screaming at us about it 😔. In the above case, you'll likely spot the issue very fast (hopefully via an integration test), because changing the sorting does not automatically trigger a refetch. And, let's be honest, it's also pretty obvious in this simple example. I have however seen the _queryKey_ diverge from the actual dependencies a couple of times in the last months, and with greater complexity, those can be some hard to track issues. There's also a reason why React comes with the [react-hooks/exhaustive-deps eslint rule](https://reactjs.org/docs/hooks-rules.html#eslint-plugin) to avoid such issues.
 
-So will React Query now come with its own eslint-rule?
+So will React Query now come with its own eslint-rule 👀 ?
 
 Well, that would be one option. There is also the [babel-plugin-react-query-key-gen
 ](https://github.com/dominictwlee/babel-plugin-react-query-key-gen) that solves this problem by generating query keys for you, including all your dependencies. React Query however comes with a different, built-in way of making dependencies more explicit: The `QueryFunctionContext`.
 
 ### QueryFunctionContext
+
+The _queryFunctionContext_ is an object that is passed as argument to the _queryFn_. You've probably used it before when working with _infinite queries_:
+
+```js:title=useInfiniteQuery
+//                     ⬇️ this is the QueryFunctionContext
+const fetchProjects = ({ pageParam = 0 }) =>
+  fetch('/api/projects?cursor=' + pageParam)
+
+useInfiniteQuery('projects', fetchProjects, {
+  getNextPageParam: (lastPage) => lastPage.nextCursor,
+})
+```
+
+React Query uses that object to inject information about the _query_ to the _queryFn_. In case of _infinite queries_, you'll get the return value of _getNextPageParam_ injected as _pageParam_.
+
+However, the context also contains the _queryKey_ that is used for this query (and we're about to add more cool things to the context), which means you actually don't have to closure over things, as they will be provided for you by React Query:
+
+```js
+const fetchTodos = async ({ queryKey }) => {
+  // 🚀 we can get all params from the queryKey
+  const [, state, sorting] = queryKey
+  const response = await axios.get(`todos/${state}?sorting=${sorting}`)
+  return response.data
+}
+
+export const useTodos = () => {
+  const { state, sorting } = useTodoParams()
+
+  // ✅ no need to pass parameters manually
+  return useQuery(['todos', state, sorting], fetchTodo)
+}
+```
+
+With this approach, you basically have no way of using any additional parameters in your _queryFn_ without also adding it to the _queryKey_.
+
+### How to type the QueryFunctionContext
+
+One of the aspirations for this approach was to get full type safety and infer the type of the _QueryFunctionContext_ from the _queryKey_ passed to _useQuery_. This wasn't easy, but React Query supports that since [v3.13.3](https://github.com/tannerlinsley/react-query/releases/tag/v3.13.3). If you inline the _queryFn_, you'll see that the types are properly inferred (thank you, Generics):
+
+```ts:title=query-key-type-inference
+export const useTodos = () => {
+  const { state, sorting } = useTodoParams()
+
+  return useQuery(
+    ['todos', state, sorting] as const,
+    async ({ queryKey }) => {
+      const response = await axios.get(
+        // ✅ this is safe because the queryKey is a tuple
+        `todos/${queryKey[1]}?sorting=${queryKey[2]}`
+      )
+      return response.data
+    }
+  )
+}
+```
+
+This is nice and all, but still has a bunch of flaws:
+
+- You can still just use whatever you have in the closure to build your query
+- Using the _queryKey_ for building the url in the above way is still unsafe because you can stringify everything.
+
+This is where query key factories come in again. If we have a typesafe query key factory to build our keys, we can use the return type of that factory to type our _QueryFunctionContext_. Here's how that might look:
+
+```ts:title=typed-query-function-context
+const todoKeys = {
+  all: ['todos'] as const,
+  lists: () => [...todoKeys.all, 'list'] as const,
+  list: (state: State, sorting: Sorting) =>
+    [...todoKeys.lists(), state, sorting] as const,
+}
+
+const fetchTodos = async ({
+  queryKey,
+}: // 🤯 only accept keys that come from the factory
+QueryFunctionContext<ReturnType<typeof todoKeys['list']>>) => {
+  const [, , state, sorting] = queryKey
+  const response = await axios.get(`todos/${state}?sorting=${sorting}`)
+  return response.data
+}
+
+export const useTodos = () => {
+  const { state, sorting } = useTodoParams()
+
+  // ✅ build the key via the factory
+  return useQuery(todoKeys.list(state, sorting), fetchTodo)
+}
+```
+
+The type _QueryFunctionContext_ is exported by React Query. It takes one generic, which defines the type of the _queryKey_. In the above example, we set it to be equal to whatever the _list_ function of our key factory returns. Since we use [const assertions](the-power-of-const-assertions), all our keys will be strictly typed tuples - so if we try to use a key that doesn't conform to that structure, we will get a type error.
+
+### Object Query Keys
+
+While slowly transitioning to the above approach, I noticed that array keys are not really performing that well. This becomes apparent when looking at how we destruct the query key now:
+
+```ts:title=weird-destruct
+const [, , state, sorting] = queryKey
+```
+
+We basically leave out the first two parts (our hardcoded scopes _todo_ and _list_) and only use the dynamic parts. Of course, it didn't take long until we added another scope at the beginning, which again led to wrongly built urls:
+
+<img src="./destruct-query-key.png" />
+
+Turns out, _objects_ solve this problem really well, because you can use named destructuring. Further, they have _no drawback_ when used inside a query key, because fuzzy matching for query invalidation works the same for objects as for arrays. Have a look at the [partialDeepEqual](https://github.com/tannerlinsley/react-query/blob/9e414e8b4f3118b571cf83121881804c0b58a814/src/core/utils.ts#L321-L338) function if you're interested in how that works.
+
+Keeping that in mind, this is how I would construct my query keys with what I know today:
+
+```ts:title=object-keys
+const todoKeys = {
+  // ✅ all keys are arrays with exactly one object
+  all: [{ scope: 'todos' }] as const,
+  lists: () => ({ ...todoKeys.all[0], entity: 'list' } as const),
+  list: (state: State, sorting: Sorting) =>
+    ({ ...todoKeys.lists()[0], state, sorting } as const),
+}
+
+const fetchTodos = async ({
+  // ✅ extract named properties from the queryKey
+  queryKey: [{ state, sorting }],
+}: QueryFunctionContext<ReturnType<typeof todoKeys['list']>>) => {
+  const response = await axios.get(`todos/${state}?sorting=${sorting}`)
+  return response.data
+}
+
+export const useTodos = () => {
+  const { state, sorting } = useTodoParams()
+
+  return useQuery(todoKeys.list(state, sorting), fetchTodo)
+}
+```
 
 ---
 
