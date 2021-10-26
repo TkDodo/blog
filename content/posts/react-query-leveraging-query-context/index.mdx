@@ -228,9 +228,9 @@ Keeping that in mind, this is how I would construct my query keys with what I kn
 const todoKeys = {
   // ✅ all keys are arrays with exactly one object
   all: [{ scope: 'todos' }] as const,
-  lists: () => ([{ ...todoKeys.all[0], entity: 'list' }] as const),
+  lists: () => [{ ...todoKeys.all[0], entity: 'list' }] as const,
   list: (state: State, sorting: Sorting) =>
-    ([{ ...todoKeys.lists()[0], state, sorting }] as const),
+    [{ ...todoKeys.lists()[0], state, sorting }] as const,
 }
 
 const fetchTodos = async ({
