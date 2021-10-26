@@ -76,7 +76,7 @@ export const useTodos = () => {
 
   // ✅ The queryFn is an inline function that
   // closures over the passed state
-  return useQuery(['todos', state], () => fetchTodo(state))
+  return useQuery(['todos', state], () => fetchTodos(state))
 }
 ```
 
@@ -102,7 +102,7 @@ export const useTodos = () => {
   const { state, sorting } = useTodoParams()
 
   // 🚨 can you spot the mistake ⬇️
-  return useQuery(['todos', state], () => fetchTodo(state, sorting))
+  return useQuery(['todos', state], () => fetchTodos(state, sorting))
 }
 ```
 
@@ -143,7 +143,7 @@ export const useTodos = () => {
   const { state, sorting } = useTodoParams()
 
   // ✅ no need to pass parameters manually
-  return useQuery(['todos', state, sorting], fetchTodo)
+  return useQuery(['todos', state, sorting], fetchTodos)
 }
 ```
 
@@ -200,7 +200,7 @@ export const useTodos = () => {
   const { state, sorting } = useTodoParams()
 
   // ✅ build the key via the factory
-  return useQuery(todoKeys.list(state, sorting), fetchTodo)
+  return useQuery(todoKeys.list(state, sorting), fetchTodos)
 }
 ```
 
@@ -228,9 +228,9 @@ Keeping that in mind, this is how I would construct my query keys with what I kn
 const todoKeys = {
   // ✅ all keys are arrays with exactly one object
   all: [{ scope: 'todos' }] as const,
-  lists: () => ({ ...todoKeys.all[0], entity: 'list' } as const),
+  lists: () => ([{ ...todoKeys.all[0], entity: 'list' }] as const),
   list: (state: State, sorting: Sorting) =>
-    ({ ...todoKeys.lists()[0], state, sorting } as const),
+    ([{ ...todoKeys.lists()[0], state, sorting }] as const),
 }
 
 const fetchTodos = async ({
@@ -244,7 +244,7 @@ const fetchTodos = async ({
 export const useTodos = () => {
   const { state, sorting } = useTodoParams()
 
-  return useQuery(todoKeys.list(state, sorting), fetchTodo)
+  return useQuery(todoKeys.list(state, sorting), fetchTodos)
 }
 ```
 
