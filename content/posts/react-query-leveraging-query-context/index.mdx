@@ -248,6 +248,21 @@ export const useTodos = () => {
 }
 ```
 
+Object query keys even make your fuzzy matching capabilities more powerful, because they have no order. With the array approach, you can tackle everything todo related, all todo lists, or the todo list with a specific filter. With objects keys, you can do that too, but also tackle all lists (e.g. todo lists and profile lists) if you want to:
+
+```js:title=fuzzy-matching-with-object-keys
+// 🕺 remove everything related to the todos feature
+queryClient.removeQueries([{ scope: 'todos' }])
+
+// 🚀 reset all todo lists
+queryClient.resetQueries([{ scope: 'todos', entity: 'list' }])
+
+// 🙌 invalidate all lists across all scopes
+queryClient.invalidateQueries([{ entity: 'list' }])
+```
+
+This can come in quite handy if you have multiple overlapping scopes that have a hierarchy, but where you still want to match everything belonging to the sub-scope.
+
 ### Is this worth it?
 
 As always: it depends. I've been loving this approach lately (which is why I wanted to share it with you), but there is certainly a tradeoff here between complexity and type safety. Composing query keys inside the key factory is slightly more complex, and typing the context depending on the return type of the key factory is also not trivial. If your team is small, your api interface is slim and / or you're using plain JavaScript, you might not want to go that route. As per usual, choose whichever tools and approaches make the most sense for your specific situation 🙌
@@ -258,3 +273,4 @@ That's it for today. Feel free to reach out to me on [twitter](https://twitter.c
 if you have any questions, or just leave a comment below ⬇️
 
 <Comments withSeparator={false} />
+```
