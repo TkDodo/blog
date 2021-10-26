@@ -54,7 +54,7 @@ That's why I've decided to write this addendum to my [Effective React Query Keys
   use a Query Key factory that produces object keys
 </Highlight>
 
-Inline functions are by far the easiest way to pass props to your _queryFn_, because they let you closure over other variables available in your custom hook. Let's look at the evergreen todo example:
+Inline functions are by far the easiest way to pass parameters to your _queryFn_, because they let you closure over other variables available in your custom hook. Let's look at the evergreen todo example:
 
 ```ts:title=inline-query-fn
 type State = 'all' | 'open' | 'done'
