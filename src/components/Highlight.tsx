@@ -14,6 +14,8 @@ const Highlight = ({ children }: Props) => {
         textAlign: 'center',
         fontSize: [1, 1, 2],
         padding: 2,
+        paddingLeft: [2, 2, 5],
+        paddingRight: [2, 2, 5],
         borderRadius: 2,
         border: '2px solid',
         boxShadow: `0 0 8px rgba(${color}, ${color}, ${color}, 0.125)`,

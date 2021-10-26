@@ -1,5 +1,7 @@
 import * as React from 'react'
-import { Box, Divider, Link } from '@theme-ui/components'
+import { Divider, Link } from '@theme-ui/components'
+
+import SmallCentered from './SmallCentered'
 
 type Props = {
   name: string
@@ -9,19 +11,12 @@ type Props = {
 
 const Attribution = ({ name, url, prefix = 'Photo by' }: Props) => (
   <>
-    <Box
-      sx={{
-        fontSize: 'smaller',
-        textAlign: 'center',
-        marginTop: ['-1rem', '-1rem', '-3rem'],
-        marginBottom: '1rem',
-      }}
-    >
+    <SmallCentered>
       {prefix}{' '}
       <Link href={url} target="_blank" rel="noreferrer noopener">
         {name}
       </Link>
-    </Box>
+    </SmallCentered>
     <Divider />
   </>
 )

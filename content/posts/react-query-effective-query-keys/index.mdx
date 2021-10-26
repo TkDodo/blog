@@ -24,7 +24,7 @@ import Attribution from 'components/Attribution'
 - [#5: Testing React Query](testing-react-query)
 - [#6: React Query and TypeScript](react-query-and-type-script)
 - [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
-- <b>#8: Effective React Query Keys</b>
+- <b>#8: Effective React Query Keys</b>- [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
 - [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
 - [#10: React Query as a State Manager](react-query-as-a-state-manager)
 - [#11: React Query Error Handling](react-query-error-handling)
@@ -78,7 +78,7 @@ If you have some _state_ that changes your data, all you need to do is put it in
 ```jsx:title=query-key-drives-the-query {2-3, 5}
 function Component() {
   const [filters, setFilters] = React.useState()
-  const { data } = useQuery(['todos', filters], fetchTodos)
+  const { data } = useQuery(['todos', filters], () => fetchTodos(filters))
 
   // ✅ set local state and let it "drive" the query
   return <Filters onApply={setFilters} />
