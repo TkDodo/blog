@@ -5,13 +5,15 @@ const noFlashDark = `(function () {
     var hasLocalStorage = localStorage.getItem('theme-ui-color-mode');
 
     if (
-      !hasLocalStorage &&
       window.matchMedia('(prefers-color-scheme: dark)').matches
     ) {
-      document.documentElement.classList.add('theme-ui-dark')
-      window.addEventListener('load', () => {
-        document.documentElement.classList.remove('theme-ui-dark')
-      });
+      document.querySelector('html').setAttribute('data-theme', 'dark')
+      if (!hasLocalStorage) {
+        document.documentElement.classList.add('theme-ui-dark')
+        window.addEventListener('load', () => {
+          document.documentElement.classList.remove('theme-ui-dark')
+        });
+      }
     }
   } catch (err) {}
 })();`
