@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@devular/gatsby-plugin-plausible": "^0.1.8",
+    "@docsearch/react": "3.0.0-alpha.41",
     "@lekoarts/gatsby-theme-minimal-blog": "^3.0.1",
     "@weknow/gatsby-remark-twitter": "^0.2.3",
     "gatsby": "^3.7.2",
