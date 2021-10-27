@@ -1,0 +1,275 @@
+---
+title: Leveraging the Query Function Context
+description: Use what React Query provides for optimal type safety
+date: 2021-10-26
+banner: ./context.jpeg
+tags:
+  - react
+  - react-query
+  - JavaScript
+  - TypeScript
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+import Highlight from 'components/Highlight'
+import SmallCentered from 'components/SmallCentered'
+import SpacingBox from 'components/SpacingBox'
+
+<img src="./context.jpeg" />
+
+<Attribution
+  name="mohammad takhsh"
+  url="https://unsplash.com/@mohammadtkh"
+/>
+
+- [#1: Practical React Query](practical-react-query)
+- [#2: React Query Data Transformations](react-query-data-transformations)
+- [#3: React Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in React Query](status-checks-in-react-query)
+- [#5: Testing React Query](testing-react-query)
+- [#6: React Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
+- [#8: Effective React Query Keys](effective-react-query-keys)
+  - <b>#8a: Leveraging the Query Function Context</b>
+- [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
+- [#10: React Query as a State Manager](react-query-as-a-state-manager)
+- [#11: React Query Error Handling](react-query-error-handling)
+- [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
+
+---
+
+We all strive to improve as engineers, and as time goes by, we hopefully succeed in that endeavour. Maybe we learn new things that invalidate or challenge our previous thinking. Or we realise that patterns that we thought ideal would not scale to the level we now need them to.
+
+Quite some time has passed since I first started to use React Query. I think I learned a great deal on that journey, and I've also "seen" a lot. I want my blog to be as up-to-date as possible, so that you can come back here and re-read it, knowing that the concepts are still valid. This is now more relevant than ever since [Tanner Linsley](https://twitter.com/tannerlinsley) agreed to link to my blog from the official [React Query documentation](https://react-query.tanstack.com/community/tkdodos-blog).
+
+That's why I've decided to write this addendum to my [Effective React Query Keys](effective-react-query-keys) article. Please make sure to read it first to have an understanding of what we are talking about.
+
+### Hot take
+
+<SpacingBox />
+
+<Highlight>
+  Don't use inline functions - leverage the Query Function Context given to
+  you, and use a Query Key factory that produces object keys
+</Highlight>
+
+Inline functions are by far the easiest way to pass parameters to your _queryFn_, because they let you closure over other variables available in your custom hook. Let's look at the evergreen todo example:
+
+```ts:title=inline-query-fn
+type State = 'all' | 'open' | 'done'
+type Todo = {
+  id: number
+  state: TodoState
+}
+type Todos = ReadonlyArray<Todo>
+
+const fetchTodos = async (state: State): Promise<Todos> => {
+  const response = await axios.get(`todos/${state}`)
+  return response.data
+}
+
+export const useTodos = () => {
+  // imagine this grabs the current user selection
+  // from somewhere, e.g. the url
+  const { state } = useTodoParams()
+
+  // ✅ The queryFn is an inline function that
+  // closures over the passed state
+  return useQuery(['todos', state], () => fetchTodos(state))
+}
+```
+
+Maybe you recognize the example - It's a slight variation of [#1: Practical React Query - Treat the query key like a dependency array](practical-react-query#treat-the-query-key-like-a-dependency-array). This works great for simple examples, but it has a quite substantial problem when having lots of parameters. In bigger apps, it's not unheard of to have lots of filter and sorting options, and I've personally seen up to 10 params being passed.
+
+Suppose we want to add sorting to our query. I like to approach these things from the bottom up - starting with the _queryFn_ and letting the compiler tell me what I need to change next:
+
+```ts:title=sorting-todos {1,4,6}
+type Sorting = 'dateCreated' | 'name'
+const fetchTodos = async (
+  state: State,
+  sorting: Sorting
+): Promise<Todos> => {
+  const response = await axios.get(`todos/${state}?sorting=${sorting}`)
+  return response.data
+}
+```
+
+This will certainly yield an error in our custom hook, where we call _fetchTodos_, so let's fix that:
+
+```ts:title=useTodos-with-sorting {2,5}
+export const useTodos = () => {
+  const { state, sorting } = useTodoParams()
+
+  // 🚨 can you spot the mistake ⬇️
+  return useQuery(['todos', state], () => fetchTodos(state, sorting))
+}
+```
+
+Maybe you've already spotted the issue: Our _queryKey_ got out of sync with our actual dependencies, and no red squiggly lines are screaming at us about it 😔. In the above case, you'll likely spot the issue very fast (hopefully via an integration test), because changing the sorting does not automatically trigger a refetch. And, let's be honest, it's also pretty obvious in this simple example. I have however seen the _queryKey_ diverge from the actual dependencies a couple of times in the last months, and with greater complexity, those can result in some hard to track issues. There's also a reason why React comes with the [react-hooks/exhaustive-deps eslint rule](https://reactjs.org/docs/hooks-rules.html#eslint-plugin) to avoid that.
+
+So will React Query now come with its own eslint-rule 👀 ?
+
+Well, that would be one option. There is also the [babel-plugin-react-query-key-gen
+](https://github.com/dominictwlee/babel-plugin-react-query-key-gen) that solves this problem by generating query keys for you, including all your dependencies. React Query however comes with a different, built-in way of handling dependencies: The `QueryFunctionContext`.
+
+### QueryFunctionContext
+
+The _QueryFunctionContext_ is an object that is passed as argument to the _queryFn_. You've probably used it before when working with _infinite queries_:
+
+```js:title=useInfiniteQuery
+// this is the QueryFunctionContext ⬇️
+const fetchProjects = ({ pageParam = 0 }) =>
+  fetch('/api/projects?cursor=' + pageParam)
+
+useInfiniteQuery('projects', fetchProjects, {
+  getNextPageParam: (lastPage) => lastPage.nextCursor,
+})
+```
+
+React Query uses that object to inject information about the _query_ to the _queryFn_. In case of _infinite queries_, you'll get the return value of _getNextPageParam_ injected as _pageParam_.
+
+However, the context also contains the _queryKey_ that is used for this query (and we're about to add more cool things to the context), which means you actually don't have to closure over things, as they will be provided for you by React Query:
+
+```js:title=query-function-context {1,3,12}
+const fetchTodos = async ({ queryKey }) => {
+  // 🚀 we can get all params from the queryKey
+  const [, state, sorting] = queryKey
+  const response = await axios.get(`todos/${state}?sorting=${sorting}`)
+  return response.data
+}
+
+export const useTodos = () => {
+  const { state, sorting } = useTodoParams()
+
+  // ✅ no need to pass parameters manually
+  return useQuery(['todos', state, sorting], fetchTodos)
+}
+```
+
+With this approach, you basically have no way of using any additional parameters in your _queryFn_ without also adding them to the _queryKey_ 🎉.
+
+### How to type the QueryFunctionContext
+
+One of the ambitions for this approach was to get full type safety and infer the type of the _QueryFunctionContext_ from the _queryKey_ passed to _useQuery_. This wasn't easy, but React Query supports that since [v3.13.3](https://github.com/tannerlinsley/react-query/releases/tag/v3.13.3). If you inline the _queryFn_, you'll see that the types are properly inferred (thank you, Generics):
+
+```ts:title=query-key-type-inference {6,9}
+export const useTodos = () => {
+  const { state, sorting } = useTodoParams()
+
+  return useQuery(
+    ['todos', state, sorting] as const,
+    async ({ queryKey }) => {
+      const response = await axios.get(
+        // ✅ this is safe because the queryKey is a tuple
+        `todos/${queryKey[1]}?sorting=${queryKey[2]}`
+      )
+      return response.data
+    }
+  )
+}
+```
+
+This is nice and all, but still has a bunch of flaws:
+
+- You can still just use whatever you have in the closure to build your query
+- Using the _queryKey_ for building the url in the above way is still unsafe because you can stringify everything.
+
+#### Query Key Factories
+
+This is where query key factories come in again. If we have a typesafe query key factory to build our keys, we can use the return type of that factory to type our _QueryFunctionContext_. Here's how that might look:
+
+```ts:title=typed-query-function-context {11,12,21}
+const todoKeys = {
+  all: ['todos'] as const,
+  lists: () => [...todoKeys.all, 'list'] as const,
+  list: (state: State, sorting: Sorting) =>
+    [...todoKeys.lists(), state, sorting] as const,
+}
+
+const fetchTodos = async ({
+  queryKey,
+}: // 🤯 only accept keys that come from the factory
+QueryFunctionContext<ReturnType<typeof todoKeys['list']>>) => {
+  const [, , state, sorting] = queryKey
+  const response = await axios.get(`todos/${state}?sorting=${sorting}`)
+  return response.data
+}
+
+export const useTodos = () => {
+  const { state, sorting } = useTodoParams()
+
+  // ✅ build the key via the factory
+  return useQuery(todoKeys.list(state, sorting), fetchTodos)
+}
+```
+
+The type _QueryFunctionContext_ is exported by React Query. It takes one generic, which defines the type of the _queryKey_. In the above example, we set it to be equal to whatever the _list_ function of our key factory returns. Since we use [const assertions](the-power-of-const-assertions), all our keys will be strictly typed tuples - so if we try to use a key that doesn't conform to that structure, we will get a type error.
+
+### Object Query Keys
+
+While slowly transitioning to the above approach, I noticed that array keys are not really performing that well. This becomes apparent when looking at how we destruct the query key now:
+
+```ts:title=weird-destruct
+const [, , state, sorting] = queryKey
+```
+
+We basically leave out the first two parts (our hardcoded scopes _todo_ and _list_) and only use the dynamic parts. Of course, it didn't take long until we added another scope at the beginning, which again led to wrongly built urls:
+
+<img src="./destruct-query-key.png" />
+
+<SmallCentered>Source: A PR I recently made</SmallCentered>
+
+Turns out, _objects_ solve this problem really well, because you can use named destructuring. Further, they have _no drawback_ when used inside a query key, because fuzzy matching for query invalidation works the same for objects as for arrays. Have a look at the [partialDeepEqual](https://github.com/tannerlinsley/react-query/blob/9e414e8b4f3118b571cf83121881804c0b58a814/src/core/utils.ts#L321-L338) function if you're interested in how that works.
+
+Keeping that in mind, this is how I would construct my query keys with what I know today:
+
+```ts:title=object-keys {3-6,11}
+const todoKeys = {
+  // ✅ all keys are arrays with exactly one object
+  all: [{ scope: 'todos' }] as const,
+  lists: () => [{ ...todoKeys.all[0], entity: 'list' }] as const,
+  list: (state: State, sorting: Sorting) =>
+    [{ ...todoKeys.lists()[0], state, sorting }] as const,
+}
+
+const fetchTodos = async ({
+  // ✅ extract named properties from the queryKey
+  queryKey: [{ state, sorting }],
+}: QueryFunctionContext<ReturnType<typeof todoKeys['list']>>) => {
+  const response = await axios.get(`todos/${state}?sorting=${sorting}`)
+  return response.data
+}
+
+export const useTodos = () => {
+  const { state, sorting } = useTodoParams()
+
+  return useQuery(todoKeys.list(state, sorting), fetchTodos)
+}
+```
+
+Object query keys even make your fuzzy matching capabilities more powerful, because they have no order. With the array approach, you can tackle everything todo related, all todo lists, or the todo list with a specific filter. With objects keys, you can do that too, but also tackle all lists (e.g. todo lists and profile lists) if you want to:
+
+```js:title=fuzzy-matching-with-object-keys
+// 🕺 remove everything related to the todos feature
+queryClient.removeQueries([{ scope: 'todos' }])
+
+// 🚀 reset all todo lists
+queryClient.resetQueries([{ scope: 'todos', entity: 'list' }])
+
+// 🙌 invalidate all lists across all scopes
+queryClient.invalidateQueries([{ entity: 'list' }])
+```
+
+This can come in quite handy if you have multiple overlapping scopes that have a hierarchy, but where you still want to match everything belonging to the sub-scope.
+
+### Is this worth it?
+
+As always: it depends. I've been loving this approach lately (which is why I wanted to share it with you), but there is certainly a tradeoff here between complexity and type safety. Composing query keys inside the key factory is slightly more complex (because _queryKeys_ still have to be an Array at the top level), and typing the context depending on the return type of the key factory is also not trivial. If your team is small, your api interface is slim and / or you're using plain JavaScript, you might not want to go that route. As per usual, choose whichever tools and approaches make the most sense for your specific situation 🙌
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below ⬇️
+
+<Comments withSeparator={false} />
