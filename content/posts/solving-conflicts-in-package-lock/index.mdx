@@ -31,7 +31,7 @@ So here you are, updating your PR with the base branch, and git shows you this h
 The conflicts in package.json are usually easily solved (if there even are any), so I think it is tempting to just _delete_ package-lock.json and run `npm install`.
 After all, this will give you a brand new package-lock.json, which you can happily commit.
 
-### Why you should never delete package-lock.json
+## Why you should never delete package-lock.json
 
 When you install a dependency for the first time, it is usually automatically added to your dependencies or devDependencies with `^version`,
 which means "compatible with version, according to [semver](https://semver.org/)".
@@ -67,7 +67,7 @@ If you delete package-lock.json now from any one of your projects and run `npm i
 Will your app be fine? Maybe, maybe not. No one can tell.
 For me, this would usually mean: "regression test everything", which is certainly not what I have in mind when I am just solving a conflict.
 
-### What you can do instead
+## What you can do instead
 
 My usual approach was the following:
 

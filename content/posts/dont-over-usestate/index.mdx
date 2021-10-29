@@ -31,7 +31,7 @@ This has mostly nothing to do with the hook itself, but because state management
 This is the first part of a series I'm calling _useState pitfalls_,
 where I will try to outline common scenarios with the useState hook that might better be solved differently.
 
-### What is state?
+## What is state?
 
 I think it all boils down to understanding what state is.
 Or more precisely, what state _isn't_.
@@ -53,7 +53,7 @@ It might seem quite apparent that a value that can be computed from a state valu
 However, when I reviewed some code challenges for a client of mine lately, this is exactly the pattern I have seen a lot,
 even from senior candidates.
 
-### An example
+## An example
 
 The exercise is pretty simple and goes something like this:
 Fetch some data from a remote endpoint (a list of items with categories) and let the user filter by the category.
@@ -91,7 +91,7 @@ At first glance, this looks okay. You might be thinking:
 We have an effect that fetches the data for us, and another effect that keeps the categories _in sync_ with the data.
 This is exactly what the useEffect hook is for (keeping things in sync), so what is bad about this approach?
 
-### Getting out of sync
+## Getting out of sync
 
 This will actually work fine, and it's also not totally unreadable or hard to reason about.
 The problem is that we have a "publicly" available function `setCategories` that future developers might use.
@@ -142,7 +142,7 @@ Now what? We have no predictable way of telling what "categories" are.
 
 Inadvertently, we have now introduced a hard to track bug that will only occur every now and then.
 
-### No-useless-state
+## No-useless-state
 
 Maybe this is not so much about useState after all, but more about a misconception with useEffect:
 It should be used to sync your state _with something outside of React_.

@@ -38,7 +38,7 @@ It depends on the type of state. It depends on update frequency. It depends on s
 
 If you know me, you know I have strong preferences on what to do with [server state](react-query-as-a-state-manager). So lets keep that out of the picture and look at everything that's left:
 
-### Client State
+## Client State
 
 Before hooks, there was only one way of managing client state locally: in class-based components with _this.setState_. The state had to be an object, and the update function accepted a partial version of it.
 
@@ -120,7 +120,7 @@ const App = () => {
 }
 ```
 
-### Form state
+## Form state
 
 I think a single useState object also works fine for a simple generic form, where the structure might be different each time you're using it, and you only want to update one field at the time. You can't really have multiple _useStates_ for that, so a rudimentary custom hook implementation could look something like this:
 
@@ -140,11 +140,11 @@ So, for _useState_, to decide if I want to split state up or not, I go by the fo
 
 <Highlight>State that updates together should live together.</Highlight>
 
-### Batching
+## Batching
 
 Consider using a single state object over calling multiple _useState_ setters in a row. React is very good at batching those state updates together in synchronous event handlers, but still struggles with batching in async functions. This will get better with [Automatic Batching in React 18](https://github.com/reactwg/react-18/discussions/21), but structuring your code in a way so that you can reason about what state belongs together will help with readability and maintainability in the long run, regardless of performance concerns.
 
-### useReducer
+## useReducer
 
 I believe [useReducer](https://reactjs.org/docs/hooks-reference.html#usereducer) is still heavily underused. The main thinking around _useReducer_ seems to be that you only need it for "complex state". As I've written previously, it's pretty good for [toggling state](things-to-know-about-use-state#bonus2-toggling-state-with-usereducer):
 
@@ -164,7 +164,7 @@ None of these implementations are particularly complex, and I think it really sh
 
 All these dependencies between parts of your state would need you to call _setState_ multiple times in a row when you have independent _useStates_ (one for each step), and it would also get quite messy if you'd had a single state object.
 
-#### useReducer tips
+### useReducer tips
 
 When I'm using _useReducer_, I try to adhere to the [redux style guide](https://redux.js.org/style-guide/style-guide). It's a great writeup that I can totally recommend, and most of the points also translate very well to _useReducer_, for example:
 
@@ -172,7 +172,7 @@ When I'm using _useReducer_, I try to adhere to the [redux style guide](https://
 - [Reducers Must Not Have Side Effects](https://redux.js.org/style-guide/style-guide#reducers-must-not-have-side-effects)
 - [Model Actions as Events, not Setters](https://redux.js.org/style-guide/style-guide#model-actions-as-events-not-setters)
 
-##### event driven reducers
+#### event driven reducers
 
 Working immutably and not having side effects in reducers are things that most people will adhere to automatically, because it's in line with what react itself needs you do.
 
@@ -236,7 +236,7 @@ function App() {
 
 This works the same, but is not as extensible as the previous example. So generally speaking, try to avoid actions that have _set_ in their name.
 
-##### passing props to reducers
+#### passing props to reducers
 
 Another great trait of reducers is that you can inline them, or closure over props. This comes in very handy if you need access to props or server state (e.g. coming from a [useQuery](https://react-query.tanstack.com/) hook) _inside_ your reducer. Instead of "copying" these things into the reducer by using the state initializer, you can pass it to a function:
 
@@ -288,7 +288,7 @@ function App() {
 
 Note how we didn't need to change anything in the ui at all because of the clear separation provided by the custom hook 🎉
 
-### Rule of thumb
+## Rule of thumb
 
 In summary, my rule of thumb of when to use what would be:
 

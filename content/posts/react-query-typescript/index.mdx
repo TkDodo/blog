@@ -41,7 +41,7 @@ React Query was initially written in JavaScript (v1), and was then re-written to
 
 There are however a couple of "gotchas" when working with TypeScript due to how dynamic and unopinionated React Query is. Let's go through them one by one to make your experience with it even better.
 
-### Generics
+## Generics
 
 React Query heavily uses [Generics](https://www.typescriptlang.org/docs/handbook/2/generics.html). This is necessary because the library does not actually fetch data for you, and it cannot know what _type_ the data will have that your api returns.
 
@@ -55,7 +55,7 @@ function useGroups() {
 
 Over time, React Query has added more Generics to the _useQuery_ hook (there are now four of them), mainly because more functionality was added. The above code works, and it will make sure that the _data_ property of our custom hook is correctly typed to `Group[] | undefined` as well as that our _error_ will be of type `Error | undefined`. But it will not work like that for more advanced use-cases, especially when the other two Generics are needed.
 
-#### The four Generics
+### The four Generics
 
 This is the current definition of the _useQuery_ hook:
 
@@ -86,7 +86,7 @@ multiply(10) // ✅ 20
 multiply(10, 3) // ✅ 30
 ```
 
-#### Type Inference
+### Type Inference
 
 TypeScript works best if you let it infer (or figure out) what type something should be on its own. Not only does it make code easier to _write_ (because you don't have to type all the types 😅), but it will also make it easier to _read_. In many instances, it can make code look exactly like JavaScript. Some simple examples of type inference would be:
 
@@ -116,7 +116,7 @@ let result: number = identity(23)
 let result = identity('react-query')
 ```
 
-#### Partial Type Argument Inference
+### Partial Type Argument Inference
 
 ...doesn't exist in TypeScript yet (see this [open issue](https://github.com/microsoft/TypeScript/issues/26242)). This basically means that if you provide _one_ Generic, you have to provide _all_ of them. But because React Query has default values for Generics, we might not notice right away that they will be taken. The resulting error messages can be quite cryptic. Let's look at an example where this actually backfires:
 
@@ -145,7 +145,7 @@ As long as we don't have Partial Type Argument Inference, we have to work with w
 
 So what's the alternative?
 
-#### Infer all the things
+### Infer all the things
 
 Let's start by _not_ passing in any Generics at all and let TypeScript figure out what to do. For this to work, we need the _queryFn_ to have a good return type. Of course, if you inline that function without an explicit return type, you will have _any_ - because that's what _axios_ or _fetch_ give you:
 
@@ -185,7 +185,7 @@ Advantages of this approach are:
 - will continue to work if more Generics are added
 - code is less confusing / looks more like JavaScript
 
-#### What about error?
+### What about error?
 
 What about error, you might ask? Per default, without any Generics, error will be inferred to _unknown_. This might sound like a bug, why is it not _Error_? But it is actually on purpose, because in JavaScript, you can throw _anything_ - it doesn't have to be of type `Error`:
 
@@ -213,7 +213,7 @@ if (groups.error instanceof Error) {
 
 Since we need to make some kind of check anyways to see if we have an error, the instanceof check doesn't look like a bad idea at all, and it will also make sure that our error actually has a property message at runtime. This is also in line with what TypeScript has planned for the 4.4 release, where they'll introduce a new compiler flag _useUnknownInCatchVariables_, where catch variables will be _unknown_ instead of _any_ (see [here](https://github.com/microsoft/TypeScript/issues/41016)).
 
-### Type Narrowing
+## Type Narrowing
 
 I rarely use destructuring when working with React Query. First of all, names like _data_ and _error_ are quite universal (purposefully so), so you'll likely rename them anyway. Keeping the whole object will keep the context of what data it is or where the error is coming from. It will further help TypeScript to narrow types when using the status field or one of the status booleans, which it cannot do if you use destructuring:
 
@@ -233,7 +233,7 @@ This has nothing to do with React Query, it is just how TypeScript works. [@danv
 
 https://twitter.com/danvdk/status/1363614288103964672
 
-### Type safety with the enabled option
+## Type safety with the enabled option
 
 I've expressed my ♥️ for the [enabled option](./practical-react-query#the-enabled-option-is-very-powerful) right from the start, but it can be a bit tricky on type level if you want to use it for [dependent queries](https://react-query.tanstack.com/guides/dependent-queries) and disable your query for as long as some parameters are not yet defined:
 
@@ -270,13 +270,13 @@ function useGroup(id: number | undefined) {
 }
 ```
 
-### Optimistic Updates
+## Optimistic Updates
 
 Getting optimistic updates right in TypeScript is not an easy feat, so we've decided to add it as a comprehensive [example](https://react-query.tanstack.com/examples/optimistic-updates-typescript) to the docs.
 
 The important part is: You have to explicitly type the _variables_ argument passed to _onMutate_ in order to get the best type inference. I don't fully comprehend why that is, but it again seems to have something to do with inference of Generics. Have a look [at this comment](https://github.com/tannerlinsley/react-query/pull/1366#discussion_r538459890) for more information.
 
-### useInfiniteQuery
+## useInfiniteQuery
 
 For the most parts, typing _useInfiniteQuery_ is no different from typing _useQuery_. One noticeable gotcha is that the _pageParam_ value, which is passed to the _queryFn_, is typed as _any_. Could be improved in the library for sure, but as long as it's _any_, it's probably best to explicitly annotate it:
 
@@ -294,7 +294,7 @@ const queryInfo = useInfiniteQuery(
 
 If _fetchGroups_ returns a _GroupResponse_, _lastGroup_ will have its type nicely inferred, and we can use the same type to annotate _pageParam_.
 
-### Typing the default query function
+## Typing the default query function
 
 I am personally not using a [defaultQueryFn](https://react-query.tanstack.com/guides/default-query-function), but I know many people are. It's a neat way to leverage the passed _queryKey_ to directly build your request url. If you inline the function when creating the _queryClient_, the type of the passed _QueryFunctionContext_ will also be inferred for you. TypeScript is just so much better when you inline stuff :)
 

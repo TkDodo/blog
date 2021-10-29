@@ -39,7 +39,7 @@ We've covered a lot of ground already when it comes to the features and concepts
 
 For this use-case, React Query offers the _useMutation_ hook.
 
-### What are mutations?
+## What are mutations?
 
 Generally speaking, mutations are functions that have a side effect. As an example, have a look at the _push_ method of Arrays: It has the side effect of _changing_ the array in place where you're pushing a value to:
 
@@ -64,13 +64,13 @@ As the name indicates, _useMutation_ also has some sort of side effect. Since we
 
 In some aspects, _useMutation_ very similar to _useQuery_. In others, it is quite different.
 
-### Similarities to useQuery
+## Similarities to useQuery
 
 _useMutation_ will track the state of a mutation, just like _useQuery_ does for queries. It'll give you _loading_, _error_ and _status_ fields to make it easy for you to display what's going on to your users.
 
 You'll also get the same nice callbacks that _useQuery_ has: _onSuccess_, _onError_ and _ onSettled_. But that's about where the similarities end.
 
-### Differences to useQuery
+## Differences to useQuery
 
 <SpacingBox />
 <Highlight>
@@ -105,13 +105,13 @@ function AddComment({ id }) {
 
 Another difference is that mutations don't share state like _useQuery_ does. You can invoke the same _useQuery_ call multiple times in different components and will get the same, cached result returned to you - but this won't work for mutations.
 
-### Tying mutations to queries
+## Tying mutations to queries
 
 Mutations are, per design, not directly coupled to queries. A mutation that likes a blog post has no ties towards the query that fetches that blog post. For that to work, you would need some sort of underlying schema, which React Query doesn't have.
 
 To have a mutation reflect the changes it made on our queries, React Query primarily offers two ways:
 
-#### Invalidation
+### Invalidation
 
 This is conceptually the simplest way to get your screen up-to-date. Remember, with server state, you're only ever displaying a snapshot of data from a given point in time. React Query tries to keep that up-to-date of course, but if you're deliberately changing server state with a mutation, this is a great point in time to tell React Query that some data you have cached is now "invalid". React Query will then go and refetch that data if it's currently in use, and your screen will update automatically for you once the fetch is completed. The only thing you have to tell the library is _which_ queries you want to invalidate:
 
@@ -142,7 +142,7 @@ As an example, let's assume we have the option to sort our comments, and at the 
 
 Since we're only displaying one of them on the screen, _invalidateQueries_ will refetch that one and mark the other one as stale.
 
-#### Direct updates
+### Direct updates
 
 Sometimes, you don't want to refetch data, especially if the mutation already returns everything you need to know. If you have a mutation that updates the title of your blog post, and the backend returns the complete blog post as a response, you can update the query cache directly via _setQueryData_:
 
@@ -171,7 +171,7 @@ I'm showing some more examples of direct updates and the combination of both app
 
 I personally think that most of the time, invalidation should be preferred. Of course, it depends on the use-case, but for direct updates to work reliably, you need more code on the frontend, and to some extent duplicate logic from the backend. Sorted lists are for example pretty hard to update directly, as the position of my entry could've potentially changed because of the update. Invalidating the whole list is the "safer" approach.
 
-### Optimistic updates
+## Optimistic updates
 
 Optimistic updates are one of the key selling points for using React Query mutations. The _useQuery_ cache give us data instantly when switching between queries, especially when combined with [prefetching](https://react-query.tanstack.com/guides/prefetching). Our whole UI feels very snappy because of it, so why not get the same advantage for mutations as well?
 
@@ -179,7 +179,7 @@ A lot of the time, we are quite certain that an update will go through. Why shou
 
 This works great for small mutations where instant user feedback is actually required. There is nothing worse than having a toggle button that performs a request, and it doesn't react at all until the request has completed. Users will double or even triple click that button, and it will just feel "laggy" all over the place.
 
-#### Example
+### Example
 
 I've decided to _not_ show an additional example. The [official docs](https://react-query.tanstack.com/guides/optimistic-updates) cover that topic very well, and they also have a codesandbox example [in JavaScript](https://react-query.tanstack.com/examples/optimistic-updates) and [in TypeScript](https://react-query.tanstack.com/examples/optimistic-updates-typescript).
 
@@ -193,11 +193,11 @@ Also, be sure that the instant feedback is really required (like in the toggle b
 
 All these edge cases might make the UX actually worse in some situations, where it might be enough to disable the button and show a loading animation while the mutation is in-flight. As always, choose the right tool for the right job.
 
-### Common Gotchas
+## Common Gotchas
 
 Finally, let's dive into some things that are good to know when dealing with mutations that might not be that obvious initially:
 
-#### awaited Promises
+### awaited Promises
 
 Promises returned from the mutation callbacks are awaited by React Query, and as it so happens, _invalidateQueries_ returns a Promise. If you want your mutation to stay in _loading_ state while your related queries update, you have to return the result of _invalidateQueries_ from the callback:
 
@@ -216,7 +216,7 @@ Promises returned from the mutation callbacks are awaited by React Query, and as
 }
 ```
 
-#### Mutate or MutateAsync
+### Mutate or MutateAsync
 
 _useMutation_ gives you two functions - _mutate_ and _mutateAsync_. What's the difference, and when should you use which one?
 
@@ -253,7 +253,7 @@ Handling errors is not necessary with _mutate_, because React Query catches (and
 
 The only situations where I've found _mutateAsync_ to be superior is when you really need the Promise for the sake of having a Promise. This can be necessary if you want to fire off multiple mutations concurrently and want to wait for them all to be finished, or if you have dependent mutations where you'd get into callback hell with the callbacks.
 
-#### Mutations only take one argument for variables
+### Mutations only take one argument for variables
 
 Since the last argument to _mutate_ is the options object, _useMutation_ can currently only take _one_ argument for variables. This is certainly a limitation, but it can be easily worked around by using an object:
 
@@ -269,7 +269,7 @@ mutation.mutate({ title: 'hello', body: 'world' })
 
 To read more on why that is currently necessary, have a look at [this discussion](https://github.com/tannerlinsley/react-query/discussions/1226).
 
-#### Some callbacks might not fire
+### Some callbacks might not fire
 
 You can have callbacks on _useMutation_ as well as on _mutate_ itself. It is important to know that the callbacks on _useMutation_ fire before the callbacks on _mutate_. Further, the callbacks on _mutate_ might not fire _at all_ if the component unmounts before the mutation has finished.
 

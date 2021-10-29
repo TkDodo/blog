@@ -40,13 +40,13 @@ Oftentimes, it is something that we don't focus on right from the beginning thou
 
 However, not thinking about how we are going to handle our errors might negatively affect user experience. To avoid that, let's dive into what options React Query offers us when it comes to error handling.
 
-### Prerequisites
+## Prerequisites
 
 React Query needs a rejected Promise in order to handle errors correctly. Luckily, this is exactly what you'll get when you work with libraries like [axios](https://axios-http.com/).
 
 If you are working with [the fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) or other libraries that _do not_ give you a rejected Promise on erroneous status codes like 4xx or 5xx, you'll have to do the transformation yourself in the _queryFn_. This is covered in [the official docs](https://react-query.tanstack.com/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default).
 
-### The standard example
+## The standard example
 
 Let's see how most examples around displaying errors look like:
 
@@ -84,7 +84,7 @@ This is certainly okay for some scenarios, but has a couple of drawbacks, too:
 
 To solve the second issue, we can use a great feature provided directly by React itself:
 
-### Error Boundaries
+## Error Boundaries
 
 [Error Boundaries](https://reactjs.org/docs/error-boundaries.html#introducing-error-boundaries) are a general concept in React to catch runtime errors that happen during rendering, which allows us to react (pun intended) properly to them and display a fallback UI instead.
 
@@ -124,7 +124,7 @@ useQuery(['todos'], fetchTodos, {
 
 This also works for [mutations](https://react-query.tanstack.com/guides/mutations), and is quite helpful for when you're doing form submissions. Errors in the 4xx range can be handled locally (e.g. if some backend validation failed), while all 5xx server errors can be propagated to the Error Boundary.
 
-### Showing error notifications
+## Showing error notifications
 
 For some use-cases, it might be better to show error toast notifications that pop up somewhere (and disappear automatically) instead of rendering Alert banners on the screen. These are usually opened with an imperative api, like the one offered by [react-hot-toast](https://react-hot-toast.com/):
 
@@ -136,7 +136,7 @@ toast.error('Something went wrong')
 
 So how can we do this when getting an error from React Query?
 
-#### The onError callback
+### The onError callback
 
 <SpacingBox />
 
@@ -173,7 +173,7 @@ const useTodos = () => {
 
 Of course, if you don't add the callback to your custom hook, but to the invocation of the hook, this is totally fine. But what if we don't really want to notify all Observers that our fetch failed, but just notify the user _once_ that the underlying fetch failed? For that, React Query has callbacks on a different level:
 
-#### The global callbacks
+### The global callbacks
 
 The global callbacks need to be provided when you create the _QueryCache_, which happens implicitly when you create a _new QueryClient_, but you can also customize that:
 
@@ -188,7 +188,7 @@ const queryClient = new QueryClient({
 
 This will now only show an error toast once for each query, which exactly what we want 🥳. It is also likely the best place to put any sort of error tracking or monitoring that you want to perform, because it's guaranteed to run only once per request and _cannot_ be overwritten like e.g. the defaultOptions.
 
-### Putting it all together
+## Putting it all together
 
 The three main ways to handle errors in React Query are:
 

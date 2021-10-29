@@ -36,7 +36,7 @@ import { Divider } from '@theme-ui/components'
 
 Welcome to Part 2 of "Things I have to say about react-query". As I've become more and more involved with the library and the community around it, I've observed some more patterns people frequently ask about. Initially, I wanted to write them all down in one big article, but then decided to break them down into more manageable pieces. The first one is about a quite common and important task: Data Transformation.
 
-### Data Transformation
+## Data Transformation
 
 Let's face it - most of us are _not_ using GraphQL. If you do, then you can be very happy because you have the luxury of requesting your data in the format that you desire.
 
@@ -50,14 +50,14 @@ If you are working with REST though, you are constrained by what the backend ret
 
 Here are 3+1 approaches on where you _can_ transform data with their respective pros and cons:
 
-#### 0. On the backend
+### 0. On the backend
 
 This is my favourite approach, if you can afford it. If the backend returns data in exactly the structure we want, there is nothing we need to do. While this might sound unrealistic in many cases, e.g. when working with public REST APIs, it is also quite possible to achieve in enterprise applications. If you are in control of the backend and have an endpoint that returns data for your exact use-case, prefer to deliver the data the way you expect it.
 
 🟢 &nbsp; no work on the frontend<br/>
 🔴 &nbsp; not always possible
 
-#### 1. In the queryFn
+### 1. In the queryFn
 
 The _queryFn_ is the function that you pass to _useQuery_. It expects you to return a Promise, and the resulting data winds up in the query cache. But it doesn't mean that you have to absolutely return data in the structure that the backend delivers here. You can transform it before doing so:
 
@@ -81,7 +81,7 @@ Also, there is no optimization that react-query can do for you here. Every time 
 🔴 &nbsp; runs on every fetch<br/>
 🔴 &nbsp; not feasible if you have a shared api layer that you cannot freely modify
 
-#### 2. In the render function
+### 2. In the render function
 
 As advised in [Part 1](practical-react-query), if you create custom hooks, you can easily do transformations there:
 
@@ -131,7 +131,7 @@ Especially if you have additional logic in your custom hook to combine with your
 🔴 &nbsp; a bit more convoluted syntax<br/>
 🔴 &nbsp; data can be potentially undefined<br/>
 
-#### 3. using the select option
+### 3. using the select option
 
 v3 introduced built-in selectors, which can also be used to transform data:
 

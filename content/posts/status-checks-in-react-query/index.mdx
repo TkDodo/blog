@@ -46,7 +46,7 @@ One advantage of React Query is the easy access to status fields of the query. Y
 
 Note that the `isFetching` flag is _not_ part of the internal state machine - it is an additional flag that will be true whenever a request is in-flight. You can be fetching and success, you can be fetching and error - but you cannot be loading and success at the same time. The state machine makes sure of that.
 
-### The standard example
+## The standard example
 
 The _idle_ state is mostly left out, because it's an edge case for disabled queries. So most examples look something like this:
 
@@ -69,7 +69,7 @@ But React Query does.
 
 It refetches quite aggressively per default, and does so without the user actively requesting a refetch. The concepts of _refetchOnMount_, _refetchOnWindowFocus_ and _refetchOnReconnect_ are great for keeping your data accurate, but they might cause a confusing ux if such an automatic background refetch fails.
 
-### Background errors
+## Background errors
 
 In many situations, if a background refetch fails, it could be silently ignored. But the code above does not do that. Let's look at two examples:
 

@@ -45,7 +45,7 @@ Quite some time has passed since I first started to use React Query. I think I l
 
 That's why I've decided to write this addendum to my [Effective React Query Keys](effective-react-query-keys) article. Please make sure to read it first to have an understanding of what we are talking about.
 
-### Hot take
+## Hot take
 
 <SpacingBox />
 
@@ -113,7 +113,7 @@ So will React Query now come with its own eslint-rule 👀 ?
 Well, that would be one option. There is also the [babel-plugin-react-query-key-gen
 ](https://github.com/dominictwlee/babel-plugin-react-query-key-gen) that solves this problem by generating query keys for you, including all your dependencies. React Query however comes with a different, built-in way of handling dependencies: The `QueryFunctionContext`.
 
-### QueryFunctionContext
+## QueryFunctionContext
 
 The _QueryFunctionContext_ is an object that is passed as argument to the _queryFn_. You've probably used it before when working with _infinite queries_:
 
@@ -149,7 +149,7 @@ export const useTodos = () => {
 
 With this approach, you basically have no way of using any additional parameters in your _queryFn_ without also adding them to the _queryKey_ 🎉.
 
-### How to type the QueryFunctionContext
+## How to type the QueryFunctionContext
 
 One of the ambitions for this approach was to get full type safety and infer the type of the _QueryFunctionContext_ from the _queryKey_ passed to _useQuery_. This wasn't easy, but React Query supports that since [v3.13.3](https://github.com/tannerlinsley/react-query/releases/tag/v3.13.3). If you inline the _queryFn_, you'll see that the types are properly inferred (thank you, Generics):
 
@@ -175,7 +175,7 @@ This is nice and all, but still has a bunch of flaws:
 - You can still just use whatever you have in the closure to build your query
 - Using the _queryKey_ for building the url in the above way is still unsafe because you can stringify everything.
 
-#### Query Key Factories
+### Query Key Factories
 
 This is where query key factories come in again. If we have a typesafe query key factory to build our keys, we can use the return type of that factory to type our _QueryFunctionContext_. Here's how that might look:
 
@@ -206,7 +206,7 @@ export const useTodos = () => {
 
 The type _QueryFunctionContext_ is exported by React Query. It takes one generic, which defines the type of the _queryKey_. In the above example, we set it to be equal to whatever the _list_ function of our key factory returns. Since we use [const assertions](the-power-of-const-assertions), all our keys will be strictly typed tuples - so if we try to use a key that doesn't conform to that structure, we will get a type error.
 
-### Object Query Keys
+## Object Query Keys
 
 While slowly transitioning to the above approach, I noticed that array keys are not really performing that well. This becomes apparent when looking at how we destruct the query key now:
 
@@ -263,7 +263,7 @@ queryClient.invalidateQueries([{ entity: 'list' }])
 
 This can come in quite handy if you have multiple overlapping scopes that have a hierarchy, but where you still want to match everything belonging to the sub-scope.
 
-### Is this worth it?
+## Is this worth it?
 
 As always: it depends. I've been loving this approach lately (which is why I wanted to share it with you), but there is certainly a tradeoff here between complexity and type safety. Composing query keys inside the key factory is slightly more complex (because _queryKeys_ still have to be an Array at the top level), and typing the context depending on the return type of the key factory is also not trivial. If your team is small, your api interface is slim and / or you're using plain JavaScript, you might not want to go that route. As per usual, choose whichever tools and approaches make the most sense for your specific situation 🙌
 

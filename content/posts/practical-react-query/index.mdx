@@ -44,7 +44,7 @@ and that you would still obviously need some way of making that data accessible 
 
 I couldn't have been more wrong.
 
-### Client State vs. Server State
+## Client State vs. Server State
 
 What Apollo gives you is not just the ability to describe which data you want and to fetch that data,
 it also comes with a _cache_ for that server data.
@@ -65,7 +65,7 @@ If we can leverage the cache to display data that we do not own,
 there isn't really much left that is real client state that _also_ needs to be made available to the whole app.
 That made me understand why many think that Apollo can replace redux in lots of instances.
 
-### React Query
+## React Query
 
 I have never had the chance to use GraphQL.
 We have an existing REST API, don't really experience problems with over-fetching, it just works, etc.
@@ -95,7 +95,7 @@ I want to focus more on some practical tips that go beyond the docs, which might
 These are things I have picked up over the last couple of months when I was not only actively using the library at work,
 but also got involved in the React Query community, answering questions on Discord and in GitHub Discussions.
 
-#### The Defaults explained
+### The Defaults explained
 
 I believe the React Query [Defaults](https://react-query.tanstack.com/docs/guides/important-defaults)
 are very well chosen, but they can catch you off guard from time to time, especially at the beginning.
@@ -133,14 +133,14 @@ I have rarely ever needed to tamper with the _cacheTime_.
 There is a good [explanation by example](https://react-query.tanstack.com/docs/guides/caching#a-detailed-caching-example)
 in the docs as well.
 
-#### Use the React Query DevTools
+### Use the React Query DevTools
 
 This will help you immensely in understanding the state a query is in.
 The DevTools will also tell you what data is currently in the cache, so you'll have an easier time debugging.
 In addition to that, I have found that it helps to throttle your network connection in the browser DevTools
 if you want to better recognize background refetches, since dev-servers are usually pretty fast.
 
-#### Treat the query key like a dependency array
+### Treat the query key like a dependency array
 
 I am referring to the dependency array of the
 [useEffect](https://reactjs.org/docs/hooks-reference.html#conditionally-firing-an-effect) hook here,
@@ -177,7 +177,7 @@ We are thus keeping the user's filter selection _in sync_ with the query functio
 which is very similar to what a dependency array represents for useEffect.
 I don't think I have ever passed a variable to the _queryFn_ that was _not_ part of the _queryKey_, too.
 
-##### A new cache entry
+#### A new cache entry
 
 Because the query key is used as a key for the cache, you will get a new cache entry when you switch from
 'all' to 'done', and that will result in a hard loading state (probably showing a loading spinner)
@@ -220,7 +220,7 @@ Please note that prior to v3, you would also need to set the _initialStale_ prop
 
 I think this is a great ux improvement for just a few lines of code.
 
-#### Keep server and client state separate
+### Keep server and client state separate
 
 This goes hand in hand with [putting-props-to-use-state](./putting-props-to-use-state),
 an article I have written last month:
@@ -261,7 +261,7 @@ I have prepared a little codesandbox example:
 The important part of this demo is that we never put the value that we get from React Query into local state.
 This makes sure that we always see the latest data, because there is no local "copy" of it.
 
-#### The enabled option is very powerful
+### The enabled option is very powerful
 
 The _useQuery_ hook has many options that you can pass in to customize its behaviour,
 and the _enabled_ option is a very powerful one that _enables_ you to do many cool things (pun intended).
@@ -277,7 +277,7 @@ Here is a short list of things that we were able to accomplish thanks to this op
 - Disable a query after some user input<br/>
   e.g. if we then have a draft value that should take precedence over the server data. See the above example.
 
-#### Don't use the queryCache as a local state manager
+### Don't use the queryCache as a local state manager
 
 If you tamper with the queryCache (_queryCache.setData_), it should only be for optimistic updates
 or for writing data that you receive from the backend after a mutation.
@@ -286,7 +286,7 @@ Remember that every background refetch might override that data, so
 [something](https://zustand.surge.sh/)
 [else](https://redux.js.org/) for local state.
 
-#### Create custom hooks
+### Create custom hooks
 
 Even if it's only for wrapping one _useQuery_ call, creating a custom hook usually pays off because:
 

@@ -35,7 +35,7 @@ import Attribution from 'components/Attribution'
 
 How to handle live data using WebSockets together with React Query has been one of the most asked questions lately, so I thought I'd give it a try, play around with it a bit and report my findings. That's what this post is about :)
 
-### What are WebSockets
+## What are WebSockets
 
 Simply put, WebSockets allow push messages, or "live data", to be sent from the server to the client (browser). Usually with HTTP, the client makes a request to the server, specifying that they would like some data please, the server responds with that data or an error and then the connection closes.
 
@@ -47,13 +47,13 @@ Like with any other HTTP request, the browser initiates the connection, but indi
 
 This has the main advantage that the server can now push selective updates to the client. This can come in very handy if you have multiple users viewing the same data, and one user makes an update. Usually, the other clients will not see that update until they actively refetch. WebSockets allow to instantly push those updates in real-time.
 
-### React Query integration
+## React Query integration
 
 Since React Query is primarily a client side async state management library, I will _not_ talk about how to set up WebSockets on the server. I've honestly never done it, and it also depends on which technology you are using in the backend.
 
 React Query doesn't have anything built-in specifically for WebSockets. That doesn't mean that WebSockets are not supported or that they don't work well with the library. It's just that React Query is _very_ agnostic when it comes to how you fetch your data: All it needs is a resolved or rejected _Promise_ to work - the rest is up to you.
 
-### Step by Step
+## Step by Step
 
 The general idea is to setup your queries as usual, as if you wouldn't be working with WebSockets. Most of the time, you will have your usual HTTP endpoints to query and mutate entities.
 
@@ -81,7 +81,7 @@ const useReactQuerySubscription = () => {
 }
 ```
 
-#### Consuming data
+### Consuming data
 
 After we've setup the connection, we will likely have some sort of callback that will be called when data comes in over the WebSocket. Again, what that data is depends entirely on how you'd like to set it up. Inspired by [this message](https://github.com/tannerlinsley/react-query/issues/171#issuecomment-649716718) from [Tanner Linsley](https://github.com/tannerlinsley), I like to send _events_ from the backend instead of complete data objects:
 
@@ -114,7 +114,7 @@ That's really all you need to make list and detail views update when you receive
 
 [Query Invalidation](https://react-query.tanstack.com/guides/query-invalidation) plays really nice together with WebSockets. This approach avoids the problem of over pushing, because if we receive an event for an entity that we are not interested in at the moment, nothing will happen. For example, if we are currently on the _Profile_ page, and we receive an update for _Posts_, _invalidateQueries_ will make sure that the next time we get to our _Posts_ page, it will be refetched. However, it will not refetch it right away, because we have no active observers. If we never go to that page again, the pushed update would be completely unnecessary.
 
-#### Partial data updates
+### Partial data updates
 
 Of course, if you have big data sets that receive small, but frequent updates, you might still want to push partial data down the WebSocket.
 
@@ -152,7 +152,7 @@ It's a bit too dynamic for my taste, doesn't handle addition or deletion, and Ty
 
 Nevertheless, here is a [codesandbox example](https://codesandbox.io/s/react-query-websockets-ep1op) where I'm handling both type of events: invalidation and partial updates. (_Note: The custom hook is a bit more convoluted because in the example, I use the same WebSocket to simulate the server round trip. Don't worry about it if you have a real server_).
 
-### Increasing StaleTime
+## Increasing StaleTime
 
 React Query comes with a [default staleTime](https://react-query.tanstack.com/guides/important-defaults) of _zero_. This means that every query will be immediately considered as stale, which means it will refetch when a new subscriber mounts or when the user refocuses the window. It is aimed to keep your data as up-to-date as necessary.
 

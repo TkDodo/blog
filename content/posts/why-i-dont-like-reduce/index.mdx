@@ -24,7 +24,7 @@ The argument is that Array.reduce will likely result in code that is hard to rea
 
 I have to say: I wholeheartedly agree, and I have personally turned on that rule in some projects.
 
-### What is wrong with reduce?
+## What is wrong with reduce?
 
 For me, there are many reasons why I rarely like to see reduce when reviewing code.
 First and foremost, it is hard to grasp.
@@ -93,7 +93,7 @@ Everyone understands what is going on when we read:
 
 Compare that to the above implementation - I think we can agree that the simplicity is preferred.
 
-### When is it okay to reduce?
+## When is it okay to reduce?
 
 For me, (mostly) only when implementing reusable util methods.
 It usually doesn't matter _how_ they are implemented.
@@ -101,7 +101,7 @@ You give them a good name, a clear purpose, write some tests and that's it.
 
 Most usages of reduce I was reviewing lately fall in one of three categories:
 
-#### 1. Transforming Arrays to Objects
+### 1. Transforming Arrays to Objects
 
 Yes, there is no easy native way to do that, and not even popular util libraries like _lodash_ have no good way of achieving this
 ([keyBy](https://lodash.com/docs/4.17.15#keyBy) is okay, but doesn't transform values).
@@ -128,7 +128,7 @@ toObject(['foo', 'bar', 'baz'], (element) => [
 
 Good name, strong types, ease of use. The rest is implementation detail (including the type assertion for the initial value).
 
-#### 2. Grouping Arrays
+### 2. Grouping Arrays
 
 Again, pick a util library (
 [lodash](https://lodash.com/docs/4.17.15#groupBy),
@@ -136,7 +136,7 @@ Again, pick a util library (
 [remeda](https://remedajs.com/docs#groupBy), ...)
 or write your own util. Encapsulate that complex reduce so that you don't have to re-implement it every time you need it.
 
-#### 3. Do many things at once
+### 3. Do many things at once
 
 Iterating over big lists many times _can_ be costly, so people often fallback to reduce because it can do everything in one go.
 
@@ -148,7 +148,7 @@ If your toObject util does _one_ iteration with a reduce or _two_ iterations wit
 _unless_ you have [measured it](https://cdb.reacttraining.com/react-inline-functions-and-performance-bdff784f5578)
 and found it to be a bottleneck.
 
-### Reduce performance pitfalls
+## Reduce performance pitfalls
 
 Talking about performance and linear iterations, I've learned the hard way _not_ to do this when working with reduce:
 

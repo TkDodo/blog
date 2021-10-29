@@ -29,7 +29,7 @@ It is also mostly pointless to argue about it, as you can quickly drift off into
 Good names are also hard (impossible?) to statically analyze, so the bigger the team gets,
 the tougher it will be to keep naming consistent.
 
-### Why is it important?
+## Why is it important?
 
 > Any fool can write code that a computer can understand.
 > Good programmers write code that humans can understand.
@@ -59,7 +59,7 @@ I can only give you the rules that I personally like a lot.
 They might not work for you. They also might 🤷‍♂️.
 Some of them are very subjective, while others seem more "objectively correct".
 
-### No abbreviations
+## No abbreviations
 
 I dislike (almost all) abbreviations, even the common ones.
 Try using _PR_ with a non-developer, they will most likely think it means _public relations_.
@@ -94,7 +94,7 @@ Even React has `props`, which is technically speaking an abbreviation.
 has a rule that tries to tackle this, but I've always needed an extensive whitelist.
 I think it's just easier to go with conventions and "common sense" here.
 
-### Inline
+## Inline
 
 Inlining functions, as in moving them to the place where they are used, has a couple of advantages.
 First, you don't need to come up with a name at all, which is great, as naming is hard :)
@@ -131,7 +131,7 @@ And no, inline functions are _not_ bad for performance.
 <button onClick={() => login({ username, password })}>Login</button>
 ```
 
-### Name things for what they represent
+## Name things for what they represent
 
 <SpacingBox />
 
@@ -183,7 +183,7 @@ How would you name this condition?
 
 a) `showLoading`<br />b) `isFetchingAndHasNoData`<br />c) `isInitializing`
 
-#### Tying the name to the current usage
+### Tying the name to the current usage
 
 This is what a) does.
 We show a loading spinner, so let's call the condition _showLoading_, _renderLoader_ or _hasLoadingSpinner_.
@@ -202,21 +202,21 @@ _If we should show the loading spinner, we show the loading spinner._
 Great, when is that please?
 We don't know without looking at the implementation, which makes this a bad name for me.
 
-#### Tying the name to the implementation
+### Tying the name to the implementation
 
 b) is the most obvious candidate for a bad name.
 "_And_" has no place in a variable name if you ask me.
 Every time we change the implementation of this condition, we have to adapt the name and all the usages.
 This is very similar to the twenty example from before.
 
-#### isInitializing
+### isInitializing
 
 This is the clear winner for me.
 It describes very well what is happening, but we can do / render whatever we want if we are initializing.
 The name is therefore not tied to a usage, and we can also change what it means to be initializing
 without having to change the name.
 
-#### React event handlers
+### React event handlers
 
 The same applies when you create an event handler, and you call it _handleClick_:
 
@@ -246,7 +246,7 @@ we would now have to re-name our event handler, unless we are fine with `onSubmi
 Naming the event handler something like _loginUser_ or _performLogin_ seems like a minor difference,
 but it's a lot more accurate, descriptive and future proof.
 
-#### Takeaways
+### Takeaways
 
 The two important takeaways are:
 

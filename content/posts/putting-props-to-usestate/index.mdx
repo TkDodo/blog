@@ -30,7 +30,7 @@ I talked about avoiding state all together for derived state.
 This part is about a common scenario, where we want to initialize our state with values we get as props.
 This is something we probably do a lot, and it's not per-se wrong, but it has some potential issues that we need to be aware of.
 
-### The example
+## The example
 
 I will use a classic list / detail use-case as example.
 We have a list of persons, and selecting one of them will result in a detail form being filled.
@@ -93,7 +93,7 @@ function DetailView({ initialEmail }) {
 render(<App />)
 ```
 
-### useState initial value
+## useState initial value
 
 You might notice right away that the example is _not_ working.
 You can edit the email address and click _Apply_, but if you click on _John_, the input field will not update.
@@ -111,7 +111,7 @@ We don't want to update the person Array directly, because we might never click 
 
 I know three ways to handle this and similar use-cases:
 
-### 1. Conditionally render the DetailView
+## 1. Conditionally render the DetailView
 
 We do this a lot when we are using Modals or other components that appear on screen.
 
@@ -218,7 +218,7 @@ I'm sure many of you have done that a lot, and it's a valid solution.
 But be aware that this only works because you are rendering the DetailView in the Modal.
 If you want the DetailView to be renderable everywhere, we would need a different solution.
 
-### 2. Lifting state up
+## 2. Lifting state up
 
 You've probably heard this phrase before, the official React docs also have [a section on that topic](https://reactjs.org/docs/lifting-state-up.html).
 
@@ -296,7 +296,7 @@ Why does the App even care about that, it probably only cares about the new emai
 The third approach is kind of the middle ground between the two:
 Keep the same ux and the scope of the draft state small, but still re-mount your form when you need to.
 
-### 3. Fully uncontrolled with a key
+## 3. Fully uncontrolled with a key
 
 ```js react-live
 const persons = [
@@ -360,7 +360,7 @@ This is exactly the same code as in the first example, with just one small chang
 + <DetailView key={selected.id} initialEmail={selected.email} />
 ```
 
-#### React keys
+### React keys
 
 The `key` attribute on a React component is a special thing.
 Keys are mostly used for lists to signalize stability to React,
@@ -374,7 +374,7 @@ If it changes, compared to the previous render, React will re-run the "mounting"
 
 If you want to know more, please read this [explanation about reconciliation](https://reactjs.org/docs/reconciliation.html).
 
-### The non-solution
+## The non-solution
 
 You might be tempted to solve the problem with an effect that "syncs" props to state:
 
@@ -413,7 +413,7 @@ Would we really want to override the user input in these cases?
 
 So, effects like these open you up to a bunch of hard-to-track errors in corner cases that you'd better avoid.
 
-### Takeaways
+## Takeaways
 
 Personally, I don't have a preferred solution. I have used all three approaches occasionally.
 

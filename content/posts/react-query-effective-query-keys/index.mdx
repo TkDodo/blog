@@ -24,7 +24,8 @@ import Attribution from 'components/Attribution'
 - [#5: Testing React Query](testing-react-query)
 - [#6: React Query and TypeScript](react-query-and-type-script)
 - [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
-- <b>#8: Effective React Query Keys</b>- [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
+- <b>#8: Effective React Query Keys</b>- [#8a: Leveraging the Query Function
+  Context](leveraging-the-query-function-context)
 - [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
 - [#10: React Query as a State Manager](react-query-as-a-state-manager)
 - [#11: React Query Error Handling](react-query-error-handling)
@@ -36,7 +37,7 @@ import Attribution from 'components/Attribution'
 
 Let's quickly have a look what these three points mean before I'll show you how I personally organize Query Keys to be able to do these things most effectively.
 
-### Caching Data
+## Caching Data
 
 Internally, the Query Cache is just a JavaScript object, where the keys are serialized Query Keys and the values are your Query Data plus meta information. The keys are hashed it in a [deterministic way](https://react-query.tanstack.com/guides/query-keys#query-keys-are-hashed-deterministically), so you can use objects as well (on the top level, keys have to be strings or arrays though).
 
@@ -52,7 +53,7 @@ useInfiniteQuery(['todos'], fetchInfiniteTodos)
 useInfiniteQuery(['infiniteTodos'], fetchInfiniteTodos)
 ```
 
-### Automatic Refetching
+## Automatic Refetching
 
 > Queries are declarative.
 
@@ -87,15 +88,15 @@ function Component() {
 
 The re-render triggered by the _setFilters_ update will pass a different Query Key to React Query, which will make it refetch. I have a more in depth example in [#1: Practical React Query - Treat the query key like a dependency array](practical-react-query#treat-the-query-key-like-a-dependency-array).
 
-### Manual Interaction
+## Manual Interaction
 
 Manual Interactions with the Query Cache are where the structure of your Query Keys are most important. Many of those interaction methods, like [invalidateQueries](https://react-query.tanstack.com/reference/QueryClient#queryclientinvalidatequeries) or [setQueriesData](https://react-query.tanstack.com/reference/QueryClient#queryclientsetqueriesdata) support [Query Filters](https://react-query.tanstack.com/guides/filters#query-filters), which allow you to fuzzily match your Query Keys.
 
-### Effective React Query Keys
+## Effective React Query Keys
 
 Please note that these points reflect my personal opinion (as everything on this blog, actually), so don't take it as something that you absolutely must do when working with Query Keys. I have found these strategies to work best when your App becomes more complex, and it also scales quite well. You definitely don't need to do this for a Todo App 😁.
 
-#### Colocate
+### Colocate
 
 If you haven't yet read [Maintainability through colocation](https://kentcdodds.com/blog/colocation) by [Kent C. Dodds](https://twitter.com/kentcdodds), please do. I don't believe that storing all your Query Keys globally in `/src/utils/queryKeys.ts` will make things better. I keep my Query Keys next to their respective queries, co-located in a feature directory, so something like:
 
@@ -114,7 +115,7 @@ If you haven't yet read [Maintainability through colocation](https://kentcdodds.
 
 The _queries_ file will contain everything React Query related. I usually only export custom hooks, so the actual Query Functions as well as Query Keys will stay local.
 
-#### Always use Array Keys
+### Always use Array Keys
 
 Yes, Query Keys can be a string, too, but to keep things unified, I like to always use Arrays. React Query will internally convert them to an Array anyhow, so:
 
@@ -125,7 +126,7 @@ useQuery('todos')
 useQuery(['todos'])
 ```
 
-#### Structure
+### Structure
 
 Structure your Query Keys from _most generic_ to _most specific_, with as many levels of granularity as you see fit in between. Here's how I would structure a todos list that allows for filterable lists as well as detail views:
 
@@ -197,7 +198,7 @@ function useUpdateTitle() {
 }
 ```
 
-#### Use Query Key factories
+### Use Query Key factories
 
 In the examples above, you can see that I've been manually declaring the Query Keys a lot. This is not only error prone, but also makes it harder to change in the future, for example, if you find out that you'd like to add _another_ level of granularity to your keys.
 

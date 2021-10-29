@@ -24,7 +24,7 @@ Or possibly, you just got some weird errors regarding _readonly_, so you decided
 
 In this article, I'd like to clear up the confusion and crush all doubts about const assertions.
 
-### const assertions are _not_ type assertions
+## const assertions are _not_ type assertions
 
 Type assertions are, simply put, evil.
 They are meant to tell the compiler: "I know what I am doing, and I know it better than you".
@@ -140,7 +140,7 @@ Component(props)
 
 This is likely what most of you are doing right now, and it is perfectly fine regarding type-safety.
 
-### Using const assertions
+## Using const assertions
 
 I still think that fixing the issue with const assertions is the preferred way of doing it:
 
@@ -170,7 +170,7 @@ Because you are signalling TypeScript that your object is _really_ constant, the
 
 This will give you a ton of flexibility when working with that constant on type level.
 
-### Extracting Types from Objects or Arrays
+## Extracting Types from Objects or Arrays
 
 Consider the following example:
 
@@ -253,7 +253,7 @@ This is admittedly a bit hackish, as it relies on the fact that const assertions
 But it will make sure that Variant is inferred to _never_ if you forget the const assertion, and that means you won't be able to use it anywhere.
 I'll take that safety any day (and tuck _ExtractValue_ away in a util).
 
-### Use readonly everywhere
+## Use readonly everywhere
 
 Finally, I'd like to point out something that became more apparent to me since I am constantly using const assertions:
 
