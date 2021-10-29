@@ -45,7 +45,7 @@ They might _useContext_. They might _useSelector_. Or they might _useQuery_.
 
 Those components are technically no longer pure, because calling them in different environments leads to different results. When testing them, you need to carefully setup those surrounding environments to get things working.
 
-### Mocking network requests
+## Mocking network requests
 
 Since React Query is an async server state management library, your components will likely make requests to a backend. When testing, this backend is not available to actually deliver data, and even if, you likely don't want to make your tests dependent on that.
 
@@ -65,13 +65,13 @@ It can be your single source of truth when it comes to mocking your apis:
 
 With our network layer being taken care of, we can start talking about React Query specific things to keep an eye on:
 
-### QueryClientProvider
+## QueryClientProvider
 
 Whenever you use React Query, you need a QueryClientProvider and give it a queryClient - a vessel which holds the _QueryCache_. The cache will in turn hold the data of your queries.
 
 I prefer to give each test its own QueryClientProvider and create a _new QueryClient_ for each test. That way, tests are completely isolated from each other. A different approach might be to clear the cache after each test, but I like to keep shared state between tests as minimal as possible. Otherwise, you might get unexpected and flaky results if you run your tests in parallel.
 
-#### For custom hooks
+### For custom hooks
 
 If you are testing custom hooks, I'm quite certain you're using [react-hooks-testing-library](https://react-hooks-testing-library.com/). It's the easiest thing there is to test hooks. With that library, we can wrap our hook in a [wrapper](https://react-hooks-testing-library.com/reference/api#wrapper), which is a React component to wrap the test component in when rendering. I think this is the perfect place to create the QueryClient, because it will be executed once per test:
 
@@ -91,11 +91,11 @@ test("my first test", async () => {
 }
 ```
 
-#### For components
+### For components
 
 If you want to test a Component that uses a _useQuery_ hook, you also need to wrap that Component in QueryClientProvider. A small wrapper around _render_ from [react-testing-library](https://testing-library.com/docs/react-testing-library/intro/) seems like a good choice. Have a look at how React Query does it [internally for their tests](https://github.com/tannerlinsley/react-query/blob/ead2e5dd5237f3d004b66316b5f36af718286d2d/src/react/tests/utils.tsx#L6-L17).
 
-### Turn off retries
+## Turn off retries
 
 It's one of the most common "gotchas" with React Query and testing: The library defaults to three retries with exponential backoff, which means that your tests are likely to timeout if you want to test an erroneous query. The easiest way to turn retries off is, again, via the _QueryClientProvider_. Let's extend the above example:
 
@@ -124,7 +124,7 @@ test("my first test", async () => {
 
 This will set the defaults for all queries in the component tree to "no retries". It is important to know that this will only work if your actual _useQuery_ has no explicit retries set. If you have a query that wants 5 retries, this will still take precedence, because defaults are only taken as a fallback.
 
-#### setQueryDefaults
+### setQueryDefaults
 
 The best advice I can give you for this problem is: Don't set these options on _useQuery_ directly. Try to use and override the defaults as much as possible, and if you really need to change something for specific queries, use [queryClient.setQueryDefaults](https://react-query.tanstack.com/reference/QueryClient#queryclientsetquerydefaults).
 
@@ -172,7 +172,7 @@ function App() {
 
 Here, all queries will retry two times, only _todos_ will retry five times, and I still have the option to turn it off for all queries in my tests 🙌.
 
-#### ReactQueryConfigProvider
+### ReactQueryConfigProvider
 
 Of course, this only works for known query keys. Sometimes, you really want to set some configs on a subset of your component tree. In v2, React Query had a [ReactQueryConfigProvider](https://react-query-v2.tanstack.com/docs/api#reactqueryconfigprovider) for that exact use-case. You can achieve the same thing in v3 with a couple of lines of codes:
 
@@ -196,7 +196,7 @@ const ReactQueryConfigProvider = ({ children, defaultOptions }) => {
 
 You can see this in action in this [codesandbox example](https://codesandbox.io/s/react-query-config-provider-v3-lt00f).
 
-### Always await the query
+## Always await the query
 
 Since React Query is async by nature, when running the hook, you won't immediately get a result. It usually will be in loading state and without data to check. The [async utilities](https://react-hooks-testing-library.com/reference/api#async-utilities) from react-hooks-testing-library offer a lot of ways to solve this problem. For the simplest case, we can just wait until the query has transitioned to success state:
 
@@ -226,7 +226,7 @@ test("my first test", async () => {
 }
 ```
 
-### Silence the error console
+## Silence the error console
 
 Per default, React Query prints errors to the console. I think this is quite disturbing during testing, because you'll see 🔴 in the console even though all tests are 🟢. React Query allows overwriting that default behaviour by [setting a logger](https://react-query.tanstack.com/reference/setLogger), so that's what I'm usually doing:
 
@@ -241,7 +241,7 @@ setLogger({
 })
 ```
 
-### Putting it all together
+## Putting it all together
 
 I've setup a quick repository where all of this comes nicely together: mock-service-worker, react-testing-library and the mentioned wrapper. It contains four tests - basic failure and success tests for custom hooks and components. Have a look here: https://github.com/TkDodo/testing-react-query
 

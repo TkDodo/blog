@@ -20,7 +20,7 @@ Advantages cited usually evolve around safety, clearly documented interfaces, fi
 
 While I totally agree that these are great points in favor of TypeScript, I think there is one advantage that is criminally underrated:
 
-### The ability to safely add code
+## The ability to safely add code
 
 Even though I firmly believe that deleting code is much more fun (and productive) than writing code, what we do most of the time, is adding code.
 
@@ -33,7 +33,7 @@ But no Editor will tell you that you forgot to handle a new branch in your switc
 
 This is where exhaustive matching comes into play.
 
-### What is exhaustive matching?
+## What is exhaustive matching?
 
 Some languages, like `OCaml`, `F#` or `scala` support the concept of _pattern matching_.
 It's a little bit like javascript's switch statement on steroids, as it allows matching a value not only against other values, but also against patterns.
@@ -119,7 +119,7 @@ def renderShape(shape: Shape): String = {
 Notice how we just got rid of the default case completely.
 If we add a _Triangle_ now, it will show us an error again.
 
-### How can we do this in TypeScript?
+## How can we do this in TypeScript?
 
 This is great and all, but TypeScript doesn't support pattern matching, so how are we supposed to do this in TS?
 
@@ -202,7 +202,7 @@ const renderShape = (shape: Shape): string => {
 
 Typescript is happy with this, and we will get a compile time error when we add a new Shape 🎉
 
-### Runtime caveats
+## Runtime caveats
 
 Types don't exist at runtime - all the safety that we have only exists at compile time.
 This is no problem as long as we, with our 100% typescript codebase, are the only callers of that function.
@@ -256,7 +256,7 @@ Here, you can see the whole App in action:
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
 ></iframe>
 
-### Undefined strikes back
+## Undefined strikes back
 
 But then, something else happens: The backend team is _faster_ than expected 😮.
 Their sprint is running great, so they decide to implement the Square right away.
@@ -281,7 +281,7 @@ See it live:
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
 ></iframe>
 
-### Never to the rescue
+## Never to the rescue
 
 In TypeScripts type system, never is it's [bottom type](https://en.wikipedia.org/wiki/Bottom_type).
 It denotes something that can never happen, for example, a function that always throws an Exception or has an infinite loop will return never.
@@ -314,7 +314,7 @@ This approach has two advantages:
 - If we add Square to our Shape type, because we finally catch-up with the backend team and want to implement it as well, we will _still_ get a compile error from TypeScript. You can see that [here](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAKjgQwM5wEoFNkGN4BmUEIcA5FDvmQFA0wCeYWcAQmlgMoAWyzcAXjgBvGnDjAAJgC44AOwCuIAEZYoAbhoBfTY34BhYFFwAbFkPaouvfgDIRYuAGtgcmXABEuI6awfN4lDIksAKqLKKKmqaOvRMLNj4yHIA5maCbBw8fCz2ouIubrIelEmpZv6OAO5SMNwRSqoajtxYwCncMA1RzbF6LJwAjgrIlBmW1jlweY4Fru4eqMOjfgA0s3BmqXWyAOzacfzZ-EKGxukAPphYZWksV0MjlJo0uBByqPBnvhkAFMJwIIhMJwLSyADyIGAMAAPN8zKtPIVJB44FcPFIPAA+ACUgixcF+jhhIQAbliAJJkUjIODec4sGp1QHBULoYRAtlaGEAejJWJoOJebw+8ESMGSdz+AJqkjqiNa7U6oIhUNh4slCKR81R6MxuPxhOJ-I2VJpgJuEvKjOh3DgsuZwgd3C0KDccEVHXgwk9nS0xL5wHJguF70+cAAqnInHIIFU5MdzISAagbCwwSI4KmchEsKS1KC8QICSSg1iozG43I4IneSbXmH4Im-mBiGBwjW0zjZAApTgADQAdABRMwgLByeDFhzicSoJm4O2-VsQduD5F4-Kz7e4Djkem+MjSDbb7eUGAKKDVuE+dKcsICYQrtf31CunkC0+z3dWcilK13EeJ5fhaF5XnAMIata9q1Nwj7Pqgg7Oq6vowPBbaIah76fiBkhYAQyAKCYXTAV+56XteFaxvGzbZsw6Grm+cAfhs-paEAA).
   This is because now, the type is not narrowed to never (since Square is still left), so the type of props for UnknownShape does not match.
 
-### Conclusion
+## Conclusion
 
 Exhaustive matches are a great tool in any language to make your code safer for additions.
 When you have full control over the input, omitting the default branch seems like a good choice.

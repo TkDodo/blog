@@ -19,7 +19,7 @@ import Attribution from 'components/Attribution'
 
 So what are async functions exactly?
 
-### Syntactic sugar
+## Syntactic sugar
 
 When I first learned about async functions, the following sentence stuck with me:
 
@@ -51,7 +51,7 @@ Ah, I believe that reads a lot better, because you can actually see where we are
 
 So, if that is a good mental model for async functions, what's the problem with the above definition? Well, it's just not everything. There are a couple of subtle difference between promise chaining and async functions that I learned the hard way. Let's go through them:
 
-### They always return a promise
+## They always return a promise
 
 This is actually _the_ defining trait of an async function. No matter what you do, it will always return a promise, even if you don't explicitly return one:
 
@@ -66,7 +66,7 @@ This is necessary because you can use the _await_ keyword in async functions, an
 
 In JavaScript however, an async function will stay asynchronous, so the return value _must_ be a promise, and the language construct makes sure of this out of the box. This brings us to the next point:
 
-### It transforms thrown Errors into rejected promises
+## It transforms thrown Errors into rejected promises
 
 You might have seen this in example code involving [the fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), as fetch will not automatically give you a failed promise on erroneous status codes like other libraries, e.g. [axios](https://axios-http.com/), do. To get to a failed promise, you just throw an Error (or anything, really), which will then be transformed into a failed promise. This is happening because, again, an async function always needs to return a promise:
 
@@ -109,7 +109,7 @@ function fetchTodo(id: number | undefined) {
 }
 ```
 
-### They always return a _new_ promise
+## They always return a _new_ promise
 
 I first stumbled upon this when working with [query cancellation in react-query](https://react-query.tanstack.com/guides/query-cancellation). Here, react-query wants us to attach a `.cancel` method on our resulting promise. Surprisingly, this doesn't quite work in async functions:
 
@@ -130,7 +130,7 @@ async function fetchTodos() {
 
 Because we are in an async function, a _new_ promise will be returned at the end of it, even if we already return a promise ourselves! [Here](https://www.carlrippon.com/cancelling-requests-with-react-query/) is a great article if you want to see how query cancellation can work even with async functions.
 
-### Handling errors
+## Handling errors
 
 The default way of handling errors in async functions is with try / catch, which I don't like very much, mainly because the scope of try / catches seems to get very large. If additional, synchronous code happens _after_ the async operation that might fail, we are likely still treating it as if the fetch failed:
 
@@ -162,7 +162,7 @@ const fetchTodos = async (): Promise<Todos | undefined> => {
 }
 ```
 
-### In summary
+## In summary
 
 I hope this gives you a bit of a deeper understanding of what async / await is doing under the hood. I have seen lots of code where the _async_ keyword is just stuck on a function for no good reason, so lastly, here are some examples of patterns that I think should be avoided:
 

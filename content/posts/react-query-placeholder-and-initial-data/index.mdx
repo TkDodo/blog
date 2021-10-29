@@ -41,7 +41,7 @@ Another way is to _synchronously_ pre-fill the cache with data that we think wil
 
 Let's start with what they both have in common before exploring their differences and the situations where one might be better suited than the other.
 
-### Similarities
+## Similarities
 
 As already hinted, they both provide a way to pre-fill the cache with data that we have synchronously available. It further means that if either one of these is supplied, our query will not be in _loading_ state, but will go directly to _success_ state. Also, they can both be either a _value_ or a function that returns a _value_, for those times when computing that value is expensive:
 
@@ -61,13 +61,13 @@ function Component() {
 
 Lastly, neither has an effect if you already have data in your cache. So what difference does it make if I use one or the other? To understand that, we have to briefly take a look at how (and on which "level") the options in React Query work:
 
-#### On cache level
+### On cache level
 
 For each Query Key, there is only one cache entry. This is kinda obvious because part of what makes React Query great is the possibility to share the same data "globally" in our application.
 
 Some options we provide to _useQuery_ will affect that cache entry, prominent examples are _staleTime_ and _cacheTime_. Since there is only _one_ cache entry, those options specify when that entry is considered stale, or when it can be garbage collected.
 
-#### On observer level
+### On observer level
 
 An observer in React Query is, broadly speaking, a subscription created for one cache entry. The observer watches the cache entry for changes and will be informed every time something changes.
 
@@ -79,17 +79,17 @@ By the way, you can see how many observers a query has by the number on the left
 
 Some options that work on observer level would be _select_ or _keepPreviousData_. In fact, what's makes _select_ so great for [data transformations](./react-query-data-transformations#3-using-the-select-option) is the ability to watch the same cache entry, but subscribe to different slices of its data in different components.
 
-### Differences
+## Differences
 
 _InitialData_ works on cache level, while _placeholderData_ works on observer level. This has a couple of implications:
 
-#### Persistence
+### Persistence
 
 First of all, _initialData_ is persisted to the cache. It's one way of telling React Query: I have "good" data for my use-case already, data that is as good as if it were fetched from the backend. Because it works on cache level, there can only be one _initialData_, and that data will be put into the cache as soon as the cache entry is created (meaning when the first observer mounts). If you try to mount a second observer with different _initialData_, it won't do anything.
 
 _PlaceholderData_ on the other hand is _never_ persisted to the cache. I like to see it as "fake-it-till-you-make-it" data. It's "not real". React Query gives it to you so that you can show it while the real data is being fetched. Because it works on observer level, you can theoretically even have different _placeholderData_ for different components.
 
-#### Background refetches
+### Background refetches
 
 With _placeholderData_, you will always get a background refetch when you mount an observer for the first time. Because the data is "not real", React Query will get the real data for you. While this is happening, you will also get an _isPlaceholderData_ flag returned from _useQuery_. You can use this flag to visually hint to your users that the data they are seeing is in fact just placeholderData. It will transition back to _false_ as soon as the real data comes in.
 
@@ -123,7 +123,7 @@ const useTodo = (id) => {
 }
 ```
 
-#### Error transitions
+### Error transitions
 
 Suppose you provide _initialData_ or _placeholderData_, and a background refetch is triggered, which then fails. What do you think will happen in each situation? I've hidden the answers so that you can try to come up with them for yourselves if you want before expanding them.
 
@@ -145,7 +145,7 @@ Suppose you provide _initialData_ or _placeholderData_, and a background refetch
   </details>
 </p>
 
-### When to use what
+## When to use what
 
 As always, that is totally up to you. I personally like to use _initialData_ when pre-filling a query from another query, and I use _placeholderData_ for everything else.
 

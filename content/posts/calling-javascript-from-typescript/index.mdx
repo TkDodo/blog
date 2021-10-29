@@ -32,7 +32,7 @@ Until then, you will need some interoperability between JavaScript and TypeScrip
 Being in a JS file and calling a function defined in a .ts is trivial - it just works&trade;.
 But what about the other way around? Turns out - that's not so easy.
 
-### Example
+## Example
 
 Suppose you have a util function that you would like to import. It could be something as simple as:
 
@@ -43,7 +43,7 @@ export const sum = ({ first, second, third }) =>
 
 A stupid example, I know, but it'll do.
 
-### Setting up tsconfig.json
+## Setting up tsconfig.json
 
 You're gonna have to set `allowJs: true` in your tsconfig if you want to be able to import that file.
 Otherwise, your import will error with:
@@ -65,7 +65,7 @@ export const sum: function({ first: any, second: any, third: any }): any
 Which is good enough, not type-safe at all, but that wasn't part of the requirement.
 With that, we are all set-up. That wasn't hard, so where's the catch?
 
-### The catch
+## The catch
 
 Maybe you've already noticed: The third parameter is actually _optional_.
 So we would like to call our function like that:
@@ -81,11 +81,11 @@ TS2345: Argument of type '{ first: number; second: number; }' is not assignable 
     Property 'third' is missing in type '{ first: number; second: number; }' but required in type '{ first: any; second: any; third: any; }'.
 ```
 
-### Solutions
+## Solutions
 
 There are multiple solutions to this problem, so you'll have to decide for yourself which one is best suited for your specific case:
 
-#### use .d.ts files
+### use .d.ts files
 
 You can turn off `allowJs` and write [declaration files](https://www.typescriptlang.org/docs/handbook/declaration-files/introduction.html)
 for all your JavaScript files.
@@ -98,7 +98,7 @@ export const sum: any
 This is substantially worse than the inferred version. You can of course be more specific than that, but you have to do it manually.
 And you have to remember to keep the both files in sync, so I'm not a big fan of this solution.
 
-#### Don't destruct
+### Don't destruct
 
 The described problem is actually due to typescript performing better inference if you use destructuring.
 We could change the implementation to:
@@ -111,7 +111,7 @@ export const sum = (params) =>
 Now, TypeScript will just infer params as _any_, and we are again good to go.
 Especially if you are working with React components, destructing props is very common, so I'd also give this a pass.
 
-#### Assign default parameters
+### Assign default parameters
 
 <SpacingBox />
 
@@ -135,7 +135,7 @@ export const sum = ({ first, second, third = undefined }) =>
 _undefined_ will also be the default value even if you don't explicitly specify it, but now, TypeScript will let you.
 This is a non-invasive change, so if you have complex types where you can't easily come up with a default value, this seems like a good alternative.
 
-#### Convert the file to TypeScript
+### Convert the file to TypeScript
 
 <SpacingBox />
 
@@ -152,7 +152,7 @@ export const sum = ({ first, second, third }: Params): number =>
 The long-term thing you probably want to do anyways - convert it to TypeScript.
 If it's feasible - go for this option.
 
-#### Use JsDoc
+### Use JsDoc
 
 This is the last option I have to offer, and I kinda like it because it represents the middle ground between things
 just being _any_ and converting the whole file to TypeScript right away.
@@ -175,13 +175,13 @@ export const sum = ({ first, second, third }) =>
 
 Of course, you can also just type them to any or omit the return type. You can be as specific as you want.
 
-##### Bonus: TypeChecking js files
+#### Bonus: TypeChecking js files
 
 If you add the `// @ts-check` comment at the top of your js file,
 it will be type-checked _almost_ like all your typescript files, and JsDoc annotations will be honoured 😮.
 You can read more about the differences [here](https://github.com/Microsoft/TypeScript/wiki/Type-Checking-JavaScript-Files).
 
-### What I ended up doing
+## What I ended up doing
 
 I used [JsDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) for the first time today when I had this exact problem.
 I chose it over the other options because:

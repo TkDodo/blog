@@ -26,7 +26,7 @@ or [recursive conditional types](https://devblogs.microsoft.com/typescript/annou
 I'm pretty sure I will be using [pedantic index signature checks](https://devblogs.microsoft.com/typescript/announcing-typescript-4-1-beta/#no-unchecked-indexed-access)
 whenever I can.
 
-### What is wrong with index signatures
+## What is wrong with index signatures
 
 If you add an _index signature_ to an object, you tell TypeScript that you don't know exactly which keys will be in that object,
 you only know which _type_ the key will have.
@@ -91,7 +91,7 @@ const title: string = widgetIndex['helloWorld']?.title ?? {
 
 [TypeScript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBA6glgEwOYWFAvFA3gKCvqRALigGdgAnOAOyTwODmABsITyracBfHHAYwD21clADuiFMACS1BBAAeJAEoQhFBAB4ONJABpYk1AD4M2evgnJUARhJZCCEgHIrUm84OMWbKM4BigoLOUNx6FuJGwABM9o4ubqjRnlDerC4AQgCGFCFhPHxCImhpvjq0ZokycooA2s4AFhDMzIIwghTMCM4AugD8AHSlUH192KkNcKTSpC5CALZgrMDNIFAAqtSgkN2hQA)
 
-### SafeRecord to the rescue
+## SafeRecord to the rescue
 
 Like many others, I believe this to be a big flaw of the language itself.
 But luckily, you can always implement your own types and use them instead of _Record_:
@@ -109,7 +109,7 @@ This is a fine solution to the problem, but it has some other drawbacks.
 For example, calling _Object.values_ on a SafeRecord will now give you an `Array<T | undefined>`, even though it's really impossible for the
 values to actually be undefined. I still advocate for using SafeRecords whenever an index access is involved.
 
-### What about Arrays?
+## What about Arrays?
 
 Well, Arrays are just as affected. After all, Arrays are (mostly) just objects where the index is a number.
 
@@ -130,7 +130,7 @@ If I find myself needing to access [1] or [2] a lot, I can usually use [Tuples](
 So how can we fix accessing _strings[0]_? Yes, we can do a manual length check upfront, but no one will force us to.
 Having to think about this every single time is quite brittle and error prone, so can we enforce it on type level?
 
-### NonEmptyList
+## NonEmptyList
 
 The concept of a non empty list exists in many programming languages,
 e.g. [Haskell](http://hackage.haskell.org/package/NonEmptyList) or [Scala](https://typelevel.org/cats/datatypes/nel.html).
@@ -173,7 +173,7 @@ if (isNonEmpty(strings)) {
 
 [TypeScript playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAcg9gOwKIFsygIICcsEMQA8AKgHxQC8UA2kQDRQB0T2ehpAugFADGiAzsCgBLPvGRpQFKMSgQAHsAgIAJnygBXBAGsEcAO4ISAClw58ALigt8xEgEpLp1sLVjU6ENbZlyZJ-gYAGyUAc2AACygyAAZOHn5BASwhBBC+Sy8CJJSQn2oAckQIfPp84D04Eqgy8KwIYq54hAEoADMhLAEiOABVMEgsKSNAkWBLNwlPM0Js1PsKMhGBKmj2BmBe-ogsAGFcPggjOziAehOoCJEoPSFAwIvwCABabaxOds7gbr6Bo1m046cM4XcJXK7tBAQThCVpQIwiCYeP7AZKpPh2OxQADenCgeLaHS6m1+-3RnAAvkA)
 
-### --noUncheckedIndexedAccess
+## --noUncheckedIndexedAccess
 
 What does all of this have to do with TypeScript 4.1 you might ask?
 Well, as this has been a feature request of many developers over the course of the years, but the change is also quite breaking for many existing apps,

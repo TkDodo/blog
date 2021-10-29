@@ -28,7 +28,7 @@ Adding features? Haven't dared to do that in a long time, because you don't know
 
 Famous quotes every developer knows, because legacy software is _everywhere_.
 
-### What is legacy software?
+## What is legacy software?
 
 For this article, I don't necessarily mean "old" software when talking about _legacy_ code.
 I am primarily focussing on software that is hard to maintain because it has organically grown.
@@ -61,7 +61,7 @@ until at one point you add feature X and break something completely unrelated.
 It doesn't necessarily take years for a product to become legacy software (by the above standards).
 It's totally possible for a startup to manage that in a couple of months.
 
-### What can we developers do against it?
+## What can we developers do against it?
 
 I concur that some decisions are just out of our hands.
 The sales department has already sold the feature to the customer, and it has to be finished by the end of the month.
@@ -79,7 +79,7 @@ When it comes to what we _can do_ to avoid that our software becomes "legacy", t
 It's a complex topic that you cannot solve with one simple trick.
 There is however one thing that I always put emphasis on when it comes to this topic:
 
-### Documentation
+## Documentation
 
 Generally speaking, we don't document enough, and if we do, it tends to be the wrong things that get documented.
 People focus a lot on the _WHAT_.
@@ -92,7 +92,7 @@ If I don't understand what code is doing during a PR review, I _always_ ask.
 Mostly, there is something that can be done to make the code more understandable.
 Here are my four pillars of how to achieve that:
 
-#### 1. Naming
+### 1. Naming
 
 Naming is hard. Naming is subjective.
 Yet I believe that extracting objectively complex code (code where people often ask: _WHAT_ is this even doing?)
@@ -101,7 +101,7 @@ is going to help a lot. I will probably write a separate blog post about this to
 
 This will also help with the second suggestion:
 
-#### 2. Tests
+### 2. Tests
 
 I don't like (writing) tests. There, I said it. Never have, probably never will.
 But I do understand the value of good tests.
@@ -115,14 +115,14 @@ By looking at the tests, you can see all the cases the developer who wrote the c
 This doesn't mean that tests are exhaustive, almost no one has 100% branch coverage.
 Usually, when a bug emerges, people write another test case, which is good, because it adds more documentation.
 
-#### 3. Use a statically typed language
+### 3. Use a statically typed language
 
 Static type checkers will not only give you confidence when touching / refactoring existing code,
 they also help to document function interfaces.
 When looking at a function for the first time, it helps tremendously to know what can be put into a function and
 what the expected return value is.
 
-#### 4. Comments
+### 4. Comments
 
 > Good code needs to be self-documenting
 
@@ -130,7 +130,7 @@ Well, no.
 Using good names, strong types and quality tests go a long way, but that does _not_ replace the need for writing comments,
 though we need to ask the right question when we talk about comments, and that is:
 
-### _WHY_?
+## _WHY_?
 
 As I said before, I think people focus too much on documenting the _WHAT_, even though that is rarely the problem.
 It might take a developer some time to debug complex code, but they will eventually figure out what is going on,
@@ -160,7 +160,7 @@ Unless of course, you added a comment that explains your intent.
 Thank you, thoughtful developer. Now I know!
 And now that I know, I will have more confidence touching this part of the code.
 
-#### Comments in code
+### Comments in code
 
 If you follow this through, it will become quite excessive really fast.
 Do we really want to add 3 lines of documentation to every css property?
@@ -178,7 +178,7 @@ Is this easy to read?
 I don't know, but the comments describe very well _WHY_ something is happening, not only _WHAT_ is happening,
 so I'd rather have this information as comments in code than _not_ having it at all.
 
-#### Outdated comments
+### Outdated comments
 
 In addition to cluttering up the code, there is another thing I don't like about comments in code.
 Let's go back to my z-index example.
@@ -202,7 +202,7 @@ And the only thing worse than no documentation is _wrong_ documentation.
 So is there a better way to document your intent without cluttering up the code with outdated comments?
 Of course there is, and we use it every day.
 
-### Commit messages
+## Commit messages
 
 I see commit messages as comments-in-time.
 Navigating the git log is like time travelling,
@@ -225,7 +225,7 @@ It can literally be a brain dump of what you currently know about the situation.
 And no one, _no one_, will ever have as much information about a problem as the developer at the time of writing / committing the code.
 To me, that makes writing commit messages a super-power.
 
-#### Good commit message structure
+### Good commit message structure
 
 Here is my rule of thumb for a good commit messages structure:
 
@@ -237,7 +237,7 @@ Here is my rule of thumb for a good commit messages structure:
 This will allow you to use `git log --pretty=oneline` to get a good overview of what happened when.
 GitHub also displays the first line completely and collapses the rest automatically.
 
-#### A note on squashing
+### A note on squashing
 
 I am aware of the fact that many open-source project maintainers squash all commits when accepting a PR.
 I have witnessed this first hand, and I think a lot of information gets lost when doing this.
@@ -259,7 +259,7 @@ It's just a little harder to backtrack.
 [Here](https://github.com/remeda/remeda/pull/95/commits/8b02e05d520676b70799b0c7a33611c50cec508f)
 is one example of a commit I made that has tons of information (even with a link!) that got squashed away.
 
-#### The real world example
+### The real world example
 
 Last week, I got a bug report for a feature I added to a product back in mid 2018 - it doesn't work with the new ios14 (something camera related).
 Great, who doesn't love a nice little ios bug.

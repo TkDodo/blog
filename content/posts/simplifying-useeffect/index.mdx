@@ -24,20 +24,20 @@ import Attribution from 'components/Attribution'
 
 useEffect is about as complex as it can get in ReactJs, and it is very unlikely that you can write an application without it. So let's try and apply some good principles to make working with useEffect more manageable:
 
-### 1. Write fewer effects
+## 1. Write fewer effects
 
 I've already written about a couple of ways to reduce the amount of effects in the [useState pitfalls series](./tags/use-state-pitfalls):
 
 - In [part 1](./dont-over-use-state), we've established that some effects can be replaced with _useMemo_ or even just normal function executions.
 - In [part 2](./putting-props-to-use-state), I've outlined why trying to sync different react states with _useEffect_ is likely an anti-pattern and what you can do instead.
 
-#### Data fetching
+### Data fetching
 
 Data fetching is a very common side effect that is typically managed with _useEffect_. After all, most apps need to fetch data from somewhere. The scenario is so common that there are some very good libraries out there that will not only help you to make the complex logic more declarative, they will also give you a bunch of great additional features.
 
 I'm obviously going to recommend my favourite open source library, [react-query](https://react-query.tanstack.com/) (I doubt that I will be able to write another article without mentioning it 😅), but [SWR](https://swr.vercel.app/), [Apollo](https://apollographql.com/client) and also [RTK-Query](https://rtk-query-docs.netlify.app/) are great as well. The point is: don't try and re-invent the wheel. Some problems have been solved before and are worth abstracting away. The amount of useEffects that I've had to write has been drastically reduced since I'm using react-query.
 
-### 2. Follow the singe responsibility principle
+## 2. Follow the singe responsibility principle
 
 A function or a class should do one thing, and one thing only. Your `processPayment` function is hopefully only going to process the payment and not additionally redirecting the user somewhere, because that is not it's responsibility. The same principle applies to the function that you pass to _useEffect_. There is no need to tuck everything in one _useEffect_:
 
@@ -77,11 +77,11 @@ React.useEffect(() => {
 
 Not only is the code now less buggy, it is also easier to reason about. Each effect is now half the size, so you can look at each one in isolation to better grasp what it is doing.
 
-### 3. Write custom hooks
+## 3. Write custom hooks
 
 I really don't like components where 50% of the code is hook calls. It usually shows that we are mixing our logic with our markup. Tucking them away in a custom hook has multiple advantages, apart from the obvious "you can reuse them":
 
-#### You can name them
+### You can name them
 
 Giving variables and functions [a good name](./on-naming-things) is like writing documentation, and the same applies to hooks. If you are using TypeScript, you will also benefit from a clearly defined interface:
 
@@ -101,7 +101,7 @@ const useTrackVisit = () => {
 
 All our effects are now nicely hidden inside custom hooks with descriptive names. Our component will only have two lines of hook calls instead of six, which means it is more focussed on its main responsibility: producing markup.
 
-#### You can encapsulate logic
+### You can encapsulate logic
 
 This is probably the biggest advantage of custom hooks for me: We can tie things together that belong together, and we don't have to expose everything. The _useTitleSync_ hook is not ideal: it only covers the effect, and each component still needs to manage that title manually. So why don't we put _everything_ title related in the custom hook to encapsulate all the logic with it:
 
@@ -131,7 +131,7 @@ const useTitle = (initialTitle: string) => {
 }
 ```
 
-#### You can test them in isolation
+### You can test them in isolation
 
 Testing the _useTitle_ hook without having to test the component that uses it has the advantage that you don't have to think about all the other things that are going on in that component, like page tracking. Testing custom hooks is very similar to testing any other util function:
 
@@ -149,7 +149,7 @@ describe('useTitle', () => {
 })
 ```
 
-### 4. Give them names
+## 4. Give them names
 
 All the above reasons make me want to write custom hooks even if I only use them once. But if you cannot or don't want to extract it to a custom hook for whatever reason, the function passed to _useEffect_ can still have a name, so consider naming your effects:
 
@@ -161,7 +161,7 @@ React.useEffect(fuction syncTitle() {
 }, [title])
 ```
 
-### 5. Don't lie about dependencies
+## 5. Don't lie about dependencies
 
 Not even, or actually especially not, for functions. I will just defer to Dan here, because I cannot describe it better than he already does in his [complete guide](https://overreacted.io/a-complete-guide-to-useeffect/#dont-lie-to-react-about-dependencies).
 

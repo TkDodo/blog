@@ -26,7 +26,7 @@ import { Divider } from '@theme-ui/components'
 
 When we talk about memoization and keeping references stable, _useMemo_ is usually the first thing that comes to mind. I'm not in the mood for writing much text today,so I'm just gonna lead with a (real-world) example that happened to me this week:
 
-### The Example
+## The Example
 
 Suppose you have a resource that you only want to initialize once per life-time of your app. The recommended pattern is usually to create the instance _outside_ of the component:
 
@@ -79,7 +79,7 @@ Again, this might coincidentally work for some time, but let's have a look at wh
 
 Wait, what? If we should write our code in a way that it still works without _useMemo_, we are basically not making our code any better by adding it. We are not really concerned about performance here, we want true referential stability please. What's the best way to achieve this?
 
-#### state to the rescue
+### state to the rescue
 
 Turns out, it's _state_. State is guaranteed to only update if you call the setter. So all we need to do is _not_ call the setter, and since it's the second part of the returned tuple, we can just _not_ destruct it. We can even combine this very well with the [lazy initializer](things-to-know-about-use-state#2-the-lazy-initializer) to make sure the resource constructor is only invoked once:
 
@@ -97,7 +97,7 @@ const Component = () => {
 
 With this trick, we will make sure that our resource is truly only created once per component lifecycle 🚀.
 
-#### what about refs?
+### what about refs?
 
 I think you can achieve the same with [useRef](https://reactjs.org/docs/hooks-reference.html#useref), and according to the [rules of react](https://gist.github.com/sebmarkbage/75f0838967cd003cd7f9ab938eb1958f), this wouldn't even break purity of the render function:
 

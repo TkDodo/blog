@@ -32,7 +32,7 @@ if (user.age() < legalAge) {
 
 But using them for parameters to a function can be an indication of bad design for various reasons:
 
-### Single responsibility principle
+## Single responsibility principle
 
 A function should do one thing, and one thing only. Passing a "flag" to it often indicates that a function does two things at once, thus violating [this principle](https://en.wikipedia.org/wiki/Single-responsibility_principle). For example:
 
@@ -51,7 +51,7 @@ function createReport(user: User, sendEmail: boolean) {
 
 There seem to be some cases where we want to send the report as email directly after creating it, and some cases where we don't. But why entangle this in the _createReport_ function? That function should only create the report, and nothing else. The caller can decide what they want to do with it.
 
-### They are confusing
+## They are confusing
 
 Flags can be confusing, especially in languages where you don't have named parameters. Take for example this signature of [equals](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/equals.html) from the Kotlin standard library:
 
@@ -70,7 +70,7 @@ As opposed to the first example, the function doesn't do two things at once, it 
 
 How should we know what `true` means in this context. Even worse, what would `false` mean? Does it maybe negate the equals comparison? _Scala_ has solved this differently with two methods: [equals](<https://www.scala-lang.org/api/2.12.3/scala/collection/immutable/StringOps.html#equals(x$1:Any):Boolean>) and [equalsIgnoreCase](<https://www.scala-lang.org/api/2.12.3/scala/collection/immutable/StringOps.html#equalsIgnoreCase(x$1:String):Boolean>). Each does one only one thing - no guesswork here.
 
-#### More guesswork
+### More guesswork
 
 Before you look it up [here](<http://docs.groovy-lang.org/latest/html/groovy-jdk/java/lang/Iterable.html#sort(boolean,%20groovy.lang.Closure)>) - what do you think this boolean flag on Groovy's `List.sort` method means:
 
@@ -84,7 +84,7 @@ In case it isn't obvious to everyone:
 
 Totally logical and intuitive api, not confusing at all 🤷‍♂️
 
-### Impossible states
+## Impossible states
 
 Booleans make it easy to create impossible states. Suppose you have a _metric_ of some sorts, and you want to format that. It might be a "normal" number, but it might also be a percentage value. So you decide to model the formatting function like this:
 
@@ -99,7 +99,7 @@ function formatMetric(value: number, isPercent: boolean): string {
 
 This is rather rudimentary number formatting function, but apart from that, it doesn't look too bad. Frankly, the first "flag" you add to a function usually looks _very innocent_.
 
-#### The second flag
+### The second flag
 
 Requirements change over time (as they tend to do), and now we have to support currencies for some of our metrics as well. Starting from the above formatting function, we are tempted to add _another_ flag, `isCurrency`
 
@@ -131,7 +131,7 @@ formatMetric(100, true, true)
 
 The answer is: you can't know. It's an implementation detail which flag is checked first. It's also an _impossible state_: A metric cannot be _percent_ and _currency_ at the same time. Such impossible states are frequently introduced with boolean parameters. I recently encountered a function with 8 booleans as input - turns out, it only had 3 actual states, the rest were variations thereof.
 
-#### Resist the urge
+### Resist the urge
 
 To avoid impossible states, resist the urge of adding the _first_ boolean parameter. It is infinitely easier for humans to extend existing patterns instead of recognizing anti-patterns and refactoring them. If there is one boolean, there will be a second. If we start of with an enumeration of possible states, it is much more likely that this will be extended instead:
 
@@ -146,7 +146,7 @@ function formatMetric(value: number, variant?: 'percent'): string {
 
 Now we can extend the variant to `'percent' | 'currency'`, and only have three states to work with instead of four. Of course, you can also explicitly include the default (_standard_) variant instead of using _undefined_.
 
-#### Moar advantages
+### Moar advantages
 
 Further advantages of a single variant property include:
 
@@ -183,7 +183,7 @@ We also do the same when creating React components, or have you seen a Button wi
 <Button variant="primary" />
 ```
 
-### The wrong abstraction
+## The wrong abstraction
 
 Oftentimes, flags are added because we see similarities to existing code, and we don't want to repeat ourselves, keeping everything [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself).
 
