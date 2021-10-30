@@ -13,9 +13,9 @@ const DocSearch = () => {
 
   return (
     <AlogliaDocSearch
-      appId="BH4D9OD16A"
+      appId="RZU5DA6ADF"
       indexName="tkdodo"
-      apiKey="0806f620326cb123041c2adec6228168"
+      apiKey="591cc4615be3e8ed13feb3abe602516d"
     />
   )
 }
