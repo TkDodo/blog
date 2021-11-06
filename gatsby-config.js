@@ -164,12 +164,6 @@ module.exports = {
       },
     },
     {
-      resolve: `gatsby-plugin-canonical-urls`,
-      options: {
-        siteUrl: `https://tkdodo.eu/blog`,
-      },
-    },
-    {
       resolve: `gatsby-plugin-feed`,
       options: {
         query: `
