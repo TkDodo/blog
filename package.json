@@ -22,7 +22,6 @@
     "@lekoarts/gatsby-theme-minimal-blog": "^3.0.1",
     "@weknow/gatsby-remark-twitter": "^0.2.3",
     "gatsby": "^3.7.2",
-    "gatsby-plugin-canonical-urls": "^3.7.1",
     "gatsby-plugin-feed": "^3.7.1",
     "gatsby-plugin-manifest": "^3.7.1",
     "gatsby-plugin-offline": "^4.7.1",

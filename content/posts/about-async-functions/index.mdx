@@ -138,7 +138,7 @@ The default way of handling errors in async functions is with try / catch, which
 const fetchTodos = async (): Promise<Todos | undefined> => {
   try {
     const response = await axios.get('/todos')
-    // 🚨 if tranform fails, we will catch it and show a toast :(
+    // 🚨 if transform fails, we will catch it and show a toast :(
     return transform(response.data)
   } catch (error) {
     showToast("Fetch failed: " + error.message)
@@ -198,4 +198,3 @@ That's it for today. Feel free to reach out to me on [twitter](https://twitter.c
 if you have any questions, or just leave a comment below ⬇️
 
 <Comments withSeparator={false} />
-```
