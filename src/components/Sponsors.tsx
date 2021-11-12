@@ -65,7 +65,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>🎗 Supporter ($10 a month)</Text>
+          <Text>🥳 Sponsor ($20 a month)</Text>
         </div>
       </Card>
       <Card>

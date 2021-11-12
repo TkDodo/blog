@@ -44,6 +44,24 @@ const PremiumSponsors = () => (
         React Bricks
       </Link>
     </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img
+        src="./images/workflowgen.png"
+        alt="WorkflowGen"
+        style={{
+          marginRight: '0.875rem',
+          width: '4rem',
+          height: '4rem',
+        }}
+      />
+      <Link
+        href="https://www.workflowgen.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        WorkflowGen
+      </Link>
+    </div>
   </Grid>
 )
 
