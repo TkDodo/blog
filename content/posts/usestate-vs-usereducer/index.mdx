@@ -210,7 +210,7 @@ All of that would happen _inside_ the reducer. Compare that to an example where 
 
 ```jsx:title=🚨-dumb-reducer
 const reducer = (state, action) => {
-  switch (action.payload) {
+  switch (action.type) {
     // 🚨 dumb reducer that doesn't do anything, logic is in the ui
     case 'set':
       return action.value
