@@ -41,7 +41,7 @@ const PremiumSponsors = () => (
         target="_blank"
         rel="noopener noreferrer"
       >
-        React Bricks
+        🥉 React Bricks
       </Link>
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
