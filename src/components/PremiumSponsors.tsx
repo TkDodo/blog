@@ -23,7 +23,7 @@ const PremiumSponsors = () => (
         target="_blank"
         rel="noopener noreferrer"
       >
-        Tanner Linsley
+        🥈 Tanner Linsley
       </Link>
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -59,7 +59,7 @@ const PremiumSponsors = () => (
         target="_blank"
         rel="noopener noreferrer"
       >
-        WorkflowGen
+        🥉 WorkflowGen
       </Link>
     </div>
   </Grid>
