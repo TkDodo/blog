@@ -186,7 +186,7 @@ But with a leaking any on my component, TypeScript would just stay silent. It be
 
 I believe it happens more often than you might think, especially if:
 
-- You're [calling JavaScript from TypeScript](./calling-java-script-from-type-script) - such functions will all just return _any_.
+- You're [calling JavaScript from TypeScript](./calling-java-script-from-type-script) - such functions will very likely just return _any_.
 - You are using a 3rd party library that has weak types ([lodash.get](https://www.npmjs.com/package/lodash.get) for example).
 - You don't annotate your util functions with explicit return values and leak an _any_ from them.
 
