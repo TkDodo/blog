@@ -192,7 +192,11 @@ I believe it happens more often than you might think, especially if:
 
 ---
 
-The best advice I can give for these situations is to keep _any_ confined to a very small scope to avoid it from leaking. You can also statically analyze your [type-coverage](https://github.com/plantain-00/type-coverage) to get informed about places where _any_ is lurking around. If the coverage decreases on a PR, you might have a problem. Further, avoid 3rd party libraries that are written in JavaScript unless they have very good types. Lastly, ensuring that your own util functions don't leak anything can be achieved by explicitly enforcing return types on them, even though I also like to utilize type inference as much as possible. This is certainly a trade-off you'd need to be willing to make.
+> With any, you can do anything, but everything is better than any.
+
+<p style="padding-left: 3rem; margin-top: -1rem">— TkDodo</p>
+
+The best advice I can give for situations where you have to use _any_ is to keep it confined to a very small scope to avoid it from leaking. You can also statically analyze your [type-coverage](https://github.com/plantain-00/type-coverage) to get informed about places where _any_ is lurking around. If the coverage decreases on a PR, you might have a problem. Further, avoid 3rd party libraries that are written in JavaScript unless they have very good types. Lastly, ensuring that your own util functions don't leak anything can be achieved by explicitly enforcing return types on them, even though I also like to utilize type inference as much as possible. This is certainly a trade-off you'd need to be willing to make.
 
 ---
 
