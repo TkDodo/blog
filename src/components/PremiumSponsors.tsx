@@ -59,7 +59,25 @@ const PremiumSponsors = () => (
         target="_blank"
         rel="noopener noreferrer"
       >
-        🥉 WorkflowGen
+        🥳 WorkflowGen
+      </Link>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img
+        src="https://avatars.githubusercontent.com/u/5667718?s=64"
+        alt="Andrew Tian"
+        style={{
+          marginRight: '0.875rem',
+          width: '4rem',
+          height: '4rem',
+        }}
+      />
+      <Link
+        href="https://andrewtian.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        🥳 Andrew Tian
       </Link>
     </div>
   </Grid>
