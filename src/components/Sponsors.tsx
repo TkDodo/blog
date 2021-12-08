@@ -70,6 +70,24 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
+          href="https://andrewtian.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Andrew Tian</h2>
+
+          <img
+            src="https://avatars.githubusercontent.com/u/5667718?s=300"
+            height="300"
+            alt="Andrew Tian"
+          />
+        </Link>
+        <div>
+          <Text>🥳 Sponsor ($20 a month)</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
           href="https://twitter.com/OhansEmmanuel"
           target="_blank"
           rel="noopener noreferrer"
