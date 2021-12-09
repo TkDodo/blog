@@ -46,6 +46,24 @@ const PremiumSponsors = () => (
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <img
+        src="https://avatars.githubusercontent.com/u/6743796?s=64"
+        alt="Clifford Fajardo"
+        style={{
+          marginRight: '0.875rem',
+          width: '4rem',
+          height: '4rem',
+        }}
+      />
+      <Link
+        href="https://www.cliffordfajardo.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        🥉 Clifford Fajardo
+      </Link>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img
         src="./images/workflowgen.png"
         alt="WorkflowGen"
         style={{
