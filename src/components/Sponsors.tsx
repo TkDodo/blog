@@ -52,6 +52,23 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
+          href="https://www.cliffordfajardo.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Clifford Fajardo</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/6743796?s=300"
+            height="300"
+            alt="Clifford Fajardo"
+          />
+        </Link>
+        <div>
+          <Text>🥉 Bronze ($50 a month)</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
           href="https://www.workflowgen.com/"
           target="_blank"
           rel="noopener noreferrer"
