@@ -137,6 +137,19 @@ const Sponsors = () => (
           <Text>🎗 Supporter ($10 a month)</Text>
         </div>
       </Card>
+      <Card>
+        <Link
+          href="https://trpc.io/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>tRPC</h2>
+          <img src="./images/trpc.png" height="300" alt="tRPC" />
+        </Link>
+        <div>
+          <Text>🎗 Supporter ($10 a month)</Text>
+        </div>
+      </Card>
     </Grid>
   </Box>
 )
