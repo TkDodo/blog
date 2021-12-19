@@ -12,7 +12,6 @@ tags:
 
 import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
-import { Divider } from '@theme-ui/components'
 
 <img src="./optimizations.jpeg" />
 
@@ -35,14 +34,14 @@ import { Divider } from '@theme-ui/components'
 - [#11: React Query Error Handling](react-query-error-handling)
 - [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
 
-<Divider />
+---
 
 **Disclaimer**: Render optimizations are an advanced concept for any app. React Query already comes with very good optimizations and defaults out of the box, and most of the time, no further optimizations are needed. "Unneeded re-renders" is a topic that many people tend to put a lot of focus on, which is why I've decided to cover it. But I wanted to point out once again, that usually, for most apps, render optimizations probably don't matter as much as you'd think. Re-renders are a good thing. They make sure your app is up-to-date. I'd take an "unnecessary re-render" over a "missing render-that-should-have-been-there" all day every day. For more on this topic, please read:
 
 - [Fix the slow render before you fix the re-render](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render) by Kent C. Dodds
 - [this article by @ryanflorence about premature optimizations](https://cdb.reacttraining.com/react-inline-functions-and-performance-bdff784f5578)
 
-<Divider />
+---
 
 I've already written quite a bit about render optimizations when describing the select option in [#2: React Query Data Transformations](react-query-data-transformations). However, "Why does React Query re-render my component two times even though nothing changed in my data" is the question I probably needed to answer the most (apart from maybe: "Where can I find the v2 docs" 😅). So let me try to explain it in-depth.
 
@@ -202,7 +201,7 @@ As I've hinted before, for selectors, structural sharing will be done twice: Onc
 
 Have a look at the [replaceEqualDeep tests](https://github.com/tannerlinsley/react-query/blob/80cecef22c3e088d6cd9f8fbc5cd9e2c0aab962f/src/core/tests/utils.test.tsx#L97-L304) if you want to learn more about what happens under the hood.
 
-<Divider />
+---
 
 Phew, this was quite a handful. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
 if you have any questions, or just leave a comment below ⬇️. I'm always happy to help!

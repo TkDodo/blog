@@ -10,11 +10,10 @@ tags:
 ---
 
 import Comments from 'components/Comments'
-import { Divider } from '@theme-ui/components'
 
 <img src="../dont-over-usestate/use-state-pitfalls.png" />
 
-<Divider />
+---
 
 - [#1: Don't over useState](dont-over-use-state)
 - [#2: Putting props to useState](putting-props-to-use-state)
@@ -22,7 +21,7 @@ import { Divider } from '@theme-ui/components'
 - <b>#4: useState for one-time initializations</b>
 - [#5: useState vs. useReducer](use-state-vs-use-reducer)
 
-<Divider />
+---
 
 When we talk about memoization and keeping references stable, _useMemo_ is usually the first thing that comes to mind. I'm not in the mood for writing much text today,so I'm just gonna lead with a (real-world) example that happened to me this week:
 
@@ -118,7 +117,7 @@ const Component = () => {
 
 Honestly, I don't know why you should do it this way - I think this looks rather convoluted, and TypeScript will also not like it, because _resource.current_ can technically be _null_. I prefer to just _useState_ for these cases.
 
-<Divider />
+---
 
 Leave a comment below ⬇️ or reach out to me on [twitter](https://twitter.com/tkdodo) if you have any questions
 
