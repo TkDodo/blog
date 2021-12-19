@@ -1,0 +1,136 @@
+---
+title: 2021 in Review
+description:
+date: 2021-12-19
+banner: ./2021.jpeg
+tags:
+  - 2021
+  - Year in Review
+  - react-query
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+
+<img src="./2021.jpeg" />
+
+<Attribution name="engin akyurt" url="https://unsplash.com/@enginakyurt" />
+
+Since I'm currently sitting at home on my couch, resting after my 3rd Covid-19 vaccine shot with not a lot else to do, I thought I'd reflect a bit on the year I've had and give a bit of an outlook of what's ahead. I decided to do this per-topic rather than time-based, because I have a hard time putting things in order otherwise 😅.
+
+## This Blog
+
+There are two reasons why I started my blog last year: Because I thought it would be fun to setup (narrator: it was not), and because I wanted to have a permanent resource I could link people to. I've also made it a rule that if I see a concept / question / (anti-)pattern at least 3 times, I would blog about it.
+
+That is also the reason why I started my [react-query related series of blog posts](./practical-react-query), which currently spans over 13 articles, as I have gotten a lot of questions around it.
+One major milestone occurred end of August, when my blog became a part of the official React Query docs. I'm very happy that people believe my content is good enough to be "official-docs" material:
+
+https://twitter.com/TkDodo/status/1432083106593480714
+
+### Metrics
+
+I'm afraid I don't really have any comparable metrics over time, because I switched hosting provider and later analytics provider during the year. I am now with [netlify](https://www.netlify.com/) and I'm using [plausible.io](https://plausible.io/) for analytics, and I'm supper happy with both.
+
+For the last 3 months, I can see a stead stream of about 20k visitors and 35k page views per month, which is huge for my perspective, and definitely more than I would've ever thought would happen to my little blog.
+
+## Social Media
+
+### Twitter
+
+This year, I've grown my twitter friends by about 3500% 😮. Of course, that number becomes less impressive if you consider that I started the year with under 100 followers, as percentages are high when the bar is low. I'm still pretty proud of it though, as I seek to provide valuable content for the community. I try not to give random TypeScript tips that you can easily find by going to google, or explain in nice pictures how _Array.map_ works. I think there are enough people on Twitter doing that already. Also, I'm _really_ not in it for the followers. I think there is a sweet spot for Twitter that is right between where you feel like you're shouting into the void (< 1k) vs. your notifications become unbearable (apparently > 10k, but I can't tell yet). I'm right in there, and it feels perfect at the moment 😊.
+
+### Stackoverflow
+
+I'm in the [top 0.37% on stackoverflow](https://stackexchange.com/leagues/1/year/stackoverflow/2021-01-01/8405310#8405310) for this year, where I started to answer questions about React Query and TypeScript. It's impressive what gamification can do 😆.
+
+### Discord
+
+I'm very active on the [TanStack Discord](https://discord.com/invite/WrRKjPJ)
+
+## open source
+
+2021 is definitely the year when I started to take open source seriously. I have contributed a little to open-source before, but the turning point was at around Mai 2021, when Tanner made me an official [react-query](https://react-query.tanstack.com/) maintainer. Around the same time, I also became a maintainer for [remeda](https://remedajs.com/docs), my favorite TypeScript util library.
+
+With those new responsibilities, it became clear that I can't just continue like before. I was already overworked, and to be honest, open-source was a lot more fun than work at that time.
+Being self-employed and catering to three different clients as a contractor, I made the decision to cancel one of my clients where I didn't feel my contributions were making much of a difference anymore, and introduced open-source-friday:
+
+https://twitter.com/TkDodo/status/1414569849448194049
+
+It might sound crazy to cancel a paid engagement to work for free on open-source instead, but it was definitely the right move for me. It gave me a bit of freedom to work on what I believed in, which can be much more fulfilling than a pay-check.
+
+Tanner also convinced me to set up [GitHub sponsors](https://github.com/sponsors/tkdodo), where currently 18 amazing people are sponsoring my open source work 💖.
+
+Oddly enough, being a react-query maintainer led to some amazing new consulting opportunities for me as well. I ❤️ react-query and react + TypeScript in general, and I also enjoy teaching, so combining these two aspects to help teams succeed with this setup is definitely a win-win situation.
+
+### react-query v4
+
+Speaking of react-query: at the end of October, we decided to work towards a new major version of the library, as some inconsistencies have piled up, and some issues couldn't be fixed unless we tackled them holistically with a new approach. We put our minds together and came up with a great new "Network Mode" feature to iron out these inconsistencies and to make react-query even better 🚀.
+
+Version 4 is now in [alpha](https://github.com/tannerlinsley/react-query/releases/tag/v4.0.0-alpha.1), and we are looking forward to making a stable release sometime early next year. I will also very likely write a dedicated blog post about v4 in the near future.
+
+### React 18
+
+In parallel to v4, I've also tried to make React Query ready for concurrent features, which will be shipped in React 18. Similar to redux, React Query has an external store that manages the cache, which our components need to subscribe to. If we keep doing that with our current approach (basically, with _useEffect_ and _useState_), applications might suffer from an issue called _tearing_, where parts of the ui might display outdated values.
+
+If that concept is unfamiliar to you, there is a great talk from [Dasishi Kato](https://twitter.com/dai_shi) at React Conf 2021: [React 18 for External Store Libraries
+](https://www.youtube.com/watch?v=oPfSC5bQPR8&list=PLNG_1j3cPCaZZ7etkzWA7JfdmKWT0pMsa&t=3s) about this topic.
+
+To solve this issue, React 18 will ship with a new hook called [useSyncExternalStore](https://github.com/reactwg/react-18/discussions/86), which libraries like react-query or redux need to adopt.
+
+Right now, we have a [draft PR](https://github.com/tannerlinsley/react-query/pull/3064) that passes all tests against React 17 _and_ React 18. Depending on when React 18 will become stable, we might include this PR in our v4 release as well.
+
+### useMutableSource -> useSyncExternalStore
+
+Speaking of _useSyncExternalStore_: The hook was previously called _useMutableSource_, and it required input selectors to be referentially stable. I stumbled upon this when I reviewed a PR at work, where a co-worker of mine memoized all selectors to a [zustand store](https://zustand.surge.sh/) with _useCallback_, something like:
+
+```js:title=memoized-selectors
+import create from 'zustand'
+
+const useStore = create((set) => ({
+  bears: 0,
+  increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
+}))
+
+// usage:
+
+const bears = useStore(React.useCallback(state => state.bears, []))
+const increasePopulation = useStore(React.useCallback(state => state.increasePopulation, []))
+```
+
+Naturally, that got me thinking. Why would you memoize a selector that just returns a value from the state? That's not expensive, and _useCallback_ is just a performance optimization 🤔.
+
+The answer I got was surprising, as my co-worker said: The zustand docs recommend that!
+
+I looked it up, and yes, [it was really there](https://github.com/pmndrs/zustand/blob/1242610103370a2a2729c1f5ab9b6720d24efb8e/readme.md#memoizing-selectors):
+
+> It is generally recommended to memoize selectors with useCallback. This will prevent unnecessary computations each render. It also allows React to optimize performance in concurrent mode.
+
+So I reached out to DaiShi, the author of zustand, on Twitter and asked him why they are recommending this, and the answer was: Because it will be _required_ in React 18 to avoid infinite loops in concurrent mode.
+
+After that, the discussion escalated a bit, as the redux team around [Mark Erkison](https://twitter.com/acemarke) as well as react maintainers like [Brian Vaughn](https://twitter.com/brian_d_vaughn) got pulled in as well. Eventually, the discussion was shifted towards the [React 18 Working Group](https://github.com/reactwg/react-18/discussions/84), which I was later also invited to, where the hook was renamed and the api was adjusted so that selector stability was not required anymore.
+
+I have to say this is probably my biggest contribution in 2021 - having kicked off the discussion that led to this decision, which probably avoided massive breaking changes for many consumers. Just imagine having to memoize every inline selector in redux 😮.
+
+I do however regret the tone in which I voiced my concerns - I'm really sorry for that. For reference, you can read the whole thread here:
+
+https://twitter.com/TkDodo/status/1427922679152136192
+
+### public speaking
+
+At the end of the year, I got my first invitations to represent React Query at online Panel Discussions. I've probably never been as nervous in my life, and I can't really watch myself on those, but here are the links 🙈:
+
+- GraphQL Client-Side Libraries Panel Discussion - GraphQL Galaxy 2021
+- [State of React | December 2021](https://www.youtube.com/watch?v=7LMsR30p1xM)
+
+## 2022 and beyond
+
+For 2022, I _really_ want to rewrite my blog, and go away from [gatsby](https://www.gatsbyjs.com/) towards either [next.js](https://nextjs.org/) or [remix.run](https://remix.run/) - or whichever framework will be all the rage next year. I don't want to do this because I'm unsatisfied with gatsby (I'm not), but more so for the technical challenge and to keep up-to-date with the latest developments on how to build stuff.
+
+So let me know in the [comments below](#inject-comments) what you think I should be choosing and why. I really hope I find the time to get around to it 😀.
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below ⬇️
+
+<Comments />
