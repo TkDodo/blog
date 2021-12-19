@@ -180,6 +180,8 @@ const useInitializePayload = () => {
 
 The dependency array for this effect would probably be quite large, or we could try to cheat with just `[payload]` as dependency. I find both ways to be inferior to just always running the effect and aborting if necessary.
 
+---
+
 <Comments>
   I hope these tips will reduce complexity for you when working with{' '}
   <i>useEffect</i>. Let me know in the comments below how you prefer to
