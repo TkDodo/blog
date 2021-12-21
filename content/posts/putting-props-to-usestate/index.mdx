@@ -10,11 +10,10 @@ tags:
 ---
 
 import Comments from 'components/Comments'
-import { Divider } from '@theme-ui/components'
 
 <img src="../dont-over-usestate/use-state-pitfalls.png" />
 
-<Divider />
+---
 
 - [#1: Don't over useState](dont-over-use-state)
 - <b>#2: Putting props to useState</b>
@@ -22,7 +21,7 @@ import { Divider } from '@theme-ui/components'
 - [#4: useState for one-time initializations](use-state-for-one-time-initializations)
 - [#5: useState vs. useReducer](use-state-vs-use-reducer)
 
-<Divider />
+---
 
 In the [first part](dont-over-use-state) of the useState pitfalls series,
 I talked about avoiding state all together for derived state.
@@ -428,5 +427,7 @@ To me, this approach is similar to the old _componentWillReceiveProps_ lifecycle
 I don't recall that ending well. [Here](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html)
 is a very good article from 2018 by [Brian Vaughn](https://twitter.com/brian_d_vaughn) on that anti-pattern,
 which also heavily inspired this article.
+
+---
 
 <Comments>Which solution do you prefer? leave a comment below ⬇️</Comments>

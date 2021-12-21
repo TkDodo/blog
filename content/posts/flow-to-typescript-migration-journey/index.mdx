@@ -12,7 +12,6 @@ tags:
 
 import Attribution from 'components/Attribution'
 import Comments from 'components/Comments'
-import { Divider } from '@theme-ui/components'
 
 <img src="./race.jpg" />
 
@@ -48,7 +47,7 @@ TypeScript was somewhere around version 2.2 at that time, so it didn't have many
 
 Maintained by the same company that made ReactJs, this static type checker seemed like a very good alternative. The `//@flow` pragma made it easy to gradually adopt it, and Facebook was dogfooding it a lot, so it seemed like the "safer choice" - or at least the one that plays better with React.
 
-<Divider />
+---
 
 So we chose Flow and started with version 0.39. We began gradually adding flow types to our existing ES6 codebase, which meant reverse-engineering what could actually be passed to functions, and what they should return in which cases. This wasn't easy, and it became apparent that we were making lots of assumptions, or only coding for sunshine cases.
 
@@ -134,7 +133,7 @@ I don't regret the move to TypeScript at all. TypeScript has emerged as the clea
 | Number of commits      |   1,799 |
 | Files changed          |   2,568 |
 
-<Comments withSeparator={false}>
+<Comments>
   Flow, TypeScript or plain ES6? Let me know in the comments below what you
   prefer ⬇️
 </Comments>

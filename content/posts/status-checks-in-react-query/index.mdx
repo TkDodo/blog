@@ -12,7 +12,6 @@ tags:
 
 import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
-import { Divider } from '@theme-ui/components'
 
 <img src="./status-checks.jpeg" />
 
@@ -35,7 +34,7 @@ import { Divider } from '@theme-ui/components'
 - [#11: React Query Error Handling](react-query-error-handling)
 - [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
 
-<Divider />
+---
 
 One advantage of React Query is the easy access to status fields of the query. You instantly know if your query is loading or if it's erroneous. For this, the library exposes a bunch of boolean flags, which are mostly derived from the internal state machine. Looking at [the types](https://github.com/tannerlinsley/react-query/blob/f2137dc4e4553256c4ebc1891b548fe35efe9231/src/core/types.ts#L250), your query can be in one of the following states:
 
@@ -113,7 +112,7 @@ Again, there is no clear principle of what is right, as it is highly dependent o
 
 Special thanks go to [Niek Bosch](https://github.com/boschni) who first highlighted to me why this pattern of status checking can be harmful in some situations.
 
-<Divider />
+---
 
 Feel free to reach out to me on [twitter](https://twitter.com/tkdodo) if you have any questions, or just leave a comment below ⬇️
 

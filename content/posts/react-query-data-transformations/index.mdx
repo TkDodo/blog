@@ -12,7 +12,6 @@ tags:
 
 import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
-import { Divider } from '@theme-ui/components'
 
 <img src="./transformations.jpeg" />
 
@@ -32,7 +31,7 @@ import { Divider } from '@theme-ui/components'
 - [#11: React Query Error Handling](react-query-error-handling)
 - [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
 
-<Divider />
+---
 
 Welcome to Part 2 of "Things I have to say about react-query". As I've become more and more involved with the library and the community around it, I've observed some more patterns people frequently ask about. Initially, I wanted to write them all down in one big article, but then decided to break them down into more manageable pieces. The first one is about a quite common and important task: Data Transformation.
 
@@ -184,9 +183,9 @@ But if you pass a selector, you are now only subscribed to the result of the sel
 🟡 &nbsp; structure can be different for every observer<br/>
 🟡 &nbsp; structural sharing is performed twice (I will also talk about this in more detail in Part 3)
 
-<Divider />
+---
 
 That's all I have for today 👋. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
 if you have any questions, or just leave a comment below ⬇️
 
-<Comments withSeparator={false} />
+<Comments />
