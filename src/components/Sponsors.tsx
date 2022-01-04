@@ -168,6 +168,23 @@ const Sponsors = () => (
           <Text>🎗 Supporter ($10 a month)</Text>
         </div>
       </Card>
+      <Card>
+        <Link
+          href="https://vianneycarel.me/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Vianney Carel</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/1541093?s=300"
+            height="300"
+            alt="Vianney Carel"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter ($10 a month)</Text>
+        </div>
+      </Card>
     </Grid>
   </Box>
 )
