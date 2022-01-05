@@ -185,6 +185,23 @@ const Sponsors = () => (
           <Text>🎗 Supporter ($10 a month)</Text>
         </div>
       </Card>
+      <Card>
+        <Link
+          href="https://invertase.io/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Invertase</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/13588260?s=300"
+            height="300"
+            alt="Invertase"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter ($10 a month)</Text>
+        </div>
+      </Card>
     </Grid>
   </Box>
 )
