@@ -249,7 +249,7 @@ const onSubmit = async () => {
 }
 ```
 
-Handling errors is not necessary with _mutate_, because React Query catches (and discards) the error for you internally. It is literally implemented with: *mutateAsync().catch(noop)*😎
+Handling errors is not necessary with _mutate_, because React Query catches (and discards) the error for you internally. It is literally implemented with: *mutate().catch(noop)*😎
 
 The only situations where I've found _mutateAsync_ to be superior is when you really need the Promise for the sake of having a Promise. This can be necessary if you want to fire off multiple mutations concurrently and want to wait for them all to be finished, or if you have dependent mutations where you'd get into callback hell with the callbacks.
 
