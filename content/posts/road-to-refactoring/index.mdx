@@ -1,0 +1,74 @@
+---
+title: Road to Refactoring
+description: A blogpost series about patterns that have helped me succeed with refactorings
+date: 2022-01-22
+banner: ./road.jpeg
+tags:
+  - principles
+  - road to refactoring
+---
+
+import Comments from 'components/Comments'
+import Highlight from 'components/Highlight'
+import Attribution from 'components/Attribution'
+
+<img alt="Road to Refactoring" src="./road.jpeg" />
+
+<Attribution name="Jesse Bowser" url="https://unsplash.com/@jessebowser" />
+
+Over the years, I've come to work on many medium to large scale code bases. Most of these have organically grown over time, some of them being full of [Lava Layers](https://mikehadlow.blogspot.com/2014/12/the-lava-layer-anti-pattern.html). Doing a [refactoring](https://en.wikipedia.org/wiki/Code_refactoring) in those code bases is often not trivial. Incidental complexity is high, test coverage is low. There are more features than you can count.
+
+Also, where do you start? There are so many things you'd like to tackle and do differently, but everything you touch has the potential to introduce regressions.
+
+In this series, I'm trying to list some of the things that I've done to make refactorings a success rather than a disaster. This is by no means an exhaustive lists, and is heavily biased by my personal experience. Further, it likely doesn't apply to your side-project or early start-up, so as usual, your mileage may vary. That being said, here we go with the first tip 🚀
+
+## Don't mix refactorings with hotfixes
+
+You get a bug report, highest prio, customer is escalating, account management is permanently asking: "what is the ETA on this, what can I tell the customer?"
+
+You look at the code and analyze the issue. Maybe it's in an area of the code base that hasn't been touched for a while, or maybe you've not looked at it in a longer time.
+
+Likely, you won't like what you see. Software patterns, especially in the frontend world, can evolve rapidly. Even if you start with something new, chances are you would do it differently in a couple of months.
+
+Maybe you see a React Class Component that fetches in _componentDidMount_. Wtf, we've moved to [react-query](https://react-query.tanstack.com/) half a year ago, what is this? Or maybe there are some global styles or deprecated components being used. Oh, and this dependency could _really_ need an update...
+
+[Scout's principle](https://www.oreilly.com/library/view/97-things-every/9780596809515/ch08.html) - time to clean up this mess...
+
+<Highlight>Don't. Just don't.</Highlight>
+
+There's a time and a place for everything, but this is not the time for a refactoring. You don't want to prolong the actual fix. As an engineer, you are a problem solver, and your only goal here should be to fix the actual problem. Also, you might introduce another regression, and code reviews will take longer if you add unrelated changes.
+
+### Quality
+
+That doesn't mean we should compromise on quality. Even in those situations, we still:
+
+- Create a branch (no direct merging to _main_)
+- Write proper [commit messages](./avoiding-legacy-systems#commit-messages)
+- Get the required amount of reviews
+- Run the CI pipeline
+
+And make sure that all other quality gates that we have set up still pass. We surely want a fix as fast as possible, but not at all costs.
+
+### A failing test case
+
+This is the flow I usually take when getting a bug report:
+
+https://twitter.com/TkDodo/status/1462821229841338381
+
+Writing a failing test case _before_ you start fixing the issue is something I can really recommend, as it will ensure that:
+
+- the bug is consistently reproducible.
+- the issue stays fixed in the future, for example, when you actually refactor that code.
+
+This presumes that you have a somewhat easy way to add a test case for the bug. If you're in the unfortunate situation that you'd have to introduce a testing framework first to actually write a test - go back to the beginning of this article 😉
+
+## The right time
+
+So when is the right time to refactor the horrible thing we've found? I'll try to answer this in part 2 - so stay tuned 📻
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below ⬇️
+
+<Comments />
