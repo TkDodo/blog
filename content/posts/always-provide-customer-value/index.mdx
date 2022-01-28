@@ -1,0 +1,95 @@
+---
+title: Always provide customer value
+description:
+date: 2022-01-28
+banner: ./value.jpeg
+tags:
+  - principles
+  - road to refactoring
+---
+
+import Comments from 'components/Comments'
+import Highlight from 'components/Highlight'
+import Attribution from 'components/Attribution'
+
+<img alt="Always provide customer value" src="./value.jpeg" />
+
+<Attribution name="Markus Spiske" url="https://unsplash.com/@markusspiske" />
+
+- [#1: Don't mix refactorings with hotfixes](road-to-refactoring)
+- <b>#2: Always provide customer value</b>
+
+---
+
+Last time, I told you when _not_ to start a refactoring and kind of left you hanging when it comes to the question: When is the right time? Let's try to answer that now!
+
+To do that, we must first divide our potential refactorings into groups:
+
+## The small ones
+
+A small refactoring is one that you are comfortable doing at all times. It's those little things that get suggested in a code review right before you actually wanted to ship it, and oftentimes, it's something that can even be automatically done by your IDE.
+
+Renaming a variable. Extracting a function. Inlining an abstraction.
+
+As engineers, it is a) our job and b) in our own best interest to produce great quality code. Whenever the circumstances allow it (see also [#1: Don't mix refactorings with hotfixes](road-to-refactoring)), we should take the liberty to improve maintainability without asking for permission - no matter if we are fixing a bug or adding a feature.
+
+It's like writing tests. Or making sure that our app is accessible.
+
+It is something that I would expect anyone on my team to be passionate about. We care about our codebase, and we want to make it better with everything that we are doing.
+
+Incrementally. One tiny refactoring at a time.
+
+Of course, you'll have more confidence if the part you are touching is sufficiently covered with types and tests. If it is not, I would suggest that's where you start:
+
+- Add types.
+- Add tests.
+- Then refactor.
+
+In that order. If you only make it to one or to two, that's alright. There is always a next time.
+
+## The bigger ones
+
+Yes, not all refactorings are that small. Sometimes, you stumble upon an architecture that is flawed and needs to be changed. Or you see an outdated pattern that you have left behind long ago (or so you thought), and you really don't want to add more code to the mess before cleaning it up.
+
+How far you go with ad-hoc refactorings is up to you and your team, and needs a bit of experience and "feeling" for the codebase. I have started refactorings that I thought were small, only to go from one rabbit hole to the next to reverting everything after two days. It sucks, but you learn from it 😄.
+
+Once you decide that a refactoring is larger than something that you can just do on the fly, you have to somehow plan it into your sprint (or whatever way of working your team has adopted). My advice for these situations would be:
+
+<Highlight>Always provide customer value</Highlight>
+
+Pure refactoring issues, apart from the small ones, are rarely a good idea. It just doesn't sell very well:
+
+> I'm gonna work on this refactoring, it's about 20 story points, it's gonna take a good amount of time, and in the best case scenario, everything will still work exactly the same as before, while in the worst case, I'll introduce a bunch of regressions with it.
+
+<p style="padding-left: 3rem; margin-top: -1rem">
+  — A dev selling a refactoring
+</p>
+
+That doesn't sound too good for a product manager. Why would this be more important than the new feature the customer really wants?
+
+Yes, it's an investment into the future of the product, it makes it more maintainable, and you'll likely have higher velocity later on while also producing fewer bugs. But "bugs we would have in production without this refactoring" is a very hard metric to measure. So likely, if you come up with a proposal like that, it will be squashed for not providing enough _direct value_.
+
+### The right package
+
+For larger refactorings, it is important to wrap them in the right package:
+
+> Yes, we can add this new feature the customer wants, but it's a technical requirement that we also re-architect this page because it will be too hard otherwise.
+
+<p style="padding-left: 3rem; margin-top: -1rem">
+  — selling a feat-factoring
+</p>
+
+That is something most people can get behind. It might take a bit longer to ship the actual feature, but it's a good compromise where both "sides" get their win.
+
+## The huge ones
+
+These don't come up that often, and are likely rewrites of a big part of the application. Maybe you want to replace redux with react-query? Maybe it's time to move to remix?
+
+How on earth can you get everyone on board with such an endeavor? This will be the topic of part 3 - so stay tuned 📻
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below ⬇️
+
+<Comments />
