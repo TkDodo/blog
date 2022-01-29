@@ -1,7 +1,7 @@
 ---
 title: Always provide customer value
-description:
-date: 2022-01-28
+description: Finding the right spot for doing a refactoring can be tricky
+date: 2022-01-29
 banner: ./value.jpeg
 tags:
   - principles
@@ -59,7 +59,7 @@ Once you decide that a refactoring is larger than something that you can just do
 
 Pure refactoring issues, apart from the small ones, are rarely a good idea. It just doesn't sell very well:
 
-> I'm gonna work on this refactoring, it's about 20 story points, it's gonna take a good amount of time, and in the best case scenario, everything will still work exactly the same as before, while in the worst case, I'll introduce a bunch of regressions with it.
+> I'm gonna work on this refactoring, it's about 20 story points, and it's gonna take a good amount of time. In the best case scenario, everything will still work exactly the same as before, while in the worst case, I'll introduce a bunch of regressions with it.
 
 <p style="padding-left: 3rem; margin-top: -1rem">
   — A dev selling a refactoring
@@ -76,16 +76,18 @@ For larger refactorings, it is important to wrap them in the right package:
 > Yes, we can add this new feature the customer wants, but it's a technical requirement that we also re-architect this page because it will be too hard otherwise.
 
 <p style="padding-left: 3rem; margin-top: -1rem">
-  — selling a feat-factoring
+  — selling a "refactoring feature"
 </p>
 
 That is something most people can get behind. It might take a bit longer to ship the actual feature, but it's a good compromise where both "sides" get their win.
 
+As an example, we had a quite complex filter component that we used in some parts of the application. When a new feature for this component was due, we decided to port it to react-query while doing so. This delivered the needed _direct value_ (the feature for the customer), while also providing _implied value_ (less code, better maintainability).
+
 ## The huge ones
 
-These don't come up that often, and are likely rewrites of a big part of the application. Maybe you want to replace redux with react-query? Maybe it's time to move to remix?
+These don't come up that often, and are likely rewrites of a big part of the application. Maybe you want to replace redux-saga with react-query? Maybe it's time to move to [remix](https://remix.run/)? Our migration from [flow to typescript](flow-to-type-script-migration-journey) some time ago would also qualify.
 
-How on earth can you get everyone on board with such an endeavor? This will be the topic of part 3 - so stay tuned 📻
+How on earth can you get everyone on board for such an endeavor? This will be the topic of part 3 - so stay tuned 📻
 
 ---
 
