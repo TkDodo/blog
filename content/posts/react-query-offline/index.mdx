@@ -99,13 +99,13 @@ As _fetching_ and _paused_ are mutually exclusive, we've combined them into the 
 - `paused`: The query is not executing - it is paused until you have regained your connection.
 - `idle`: The query is currently not running.
 
-As a rule of thumb, the _status_ of the query will give you information about the _data_: _success_ means you'll always have data, _loading_ means you don't have data yet. I thought about renaming the _loading_ state to _pending_, but alas, this probably would have been "too breaking" 😅.
+As a rule of thumb, the _status_ of the query will give you information about the _data_: _success_ means you'll always have data, _loading_ means you don't have data yet. I thought about renaming the _loading_ state to _pending_, but alas, this probably would have been "too breaking". 😅
 
 On the other hand, the _fetchStatus_ gives you information about the _queryFn_: is it running or not? The `isFetching` and `isPaused` flags are derived from that status.
 
 ---
 
-Let's take a look at how [case 1](#1-no-data-in-the-cache) from above can look like in v4. Please notice the new network mode toggle button in the RQ devtools. It's pretty cool because it doesn't actually turn off your network - it just makes React Query _believe_ that there is no network for testing purposes. Yes, I am quite proud of it 😊.
+Let's take a look at how [case 1](#1-no-data-in-the-cache) from above can look like in v4. Please notice the new network mode toggle button in the RQ devtools. It's pretty cool because it doesn't actually turn off your network - it just makes React Query _believe_ that there is no network for testing purposes. Yes, I am quite proud of it. 😊
 
 <GifPlayer gif="paused.gif" still="paused.png" />
 
@@ -129,7 +129,7 @@ which means that for the next 60 seconds, if you request that resource again, th
 
 Now those things wouldn't work if React Query would decide to _not_ fire the request because you have no network connection, like the default _online_ mode does. To intercept a fetch request, it must happen :) So if you have this additional cache layer, make sure to use the _offlineFirst_ _networkMode_.
 
-If the first request goes out, and you hit the cache - great, your query will go to _success_ state, and you'll get that data. And if you have a cache miss, you'll likely get a network error, after which React Query will pause the retries, which will put your query into the _paused_ state. It's the best of both worlds 🙌
+If the first request goes out, and you hit the cache - great, your query will go to _success_ state, and you'll get that data. And if you have a cache miss, you'll likely get a network error, after which React Query will pause the retries, which will put your query into the _paused_ state. It's the best of both worlds. 🙌
 
 ## What does all of this mean for me, exactly?
 
@@ -137,7 +137,7 @@ Nothing, unless you want to. You can still decide to ignore that new _fetchStatu
 
 However, if making your app robust for situations where you have no network connection is a priority for you, you now have the option to react to the exposed _fetchStatus_ and act accordingly.
 
-What you do with that new status is up to you. I'm excited to see which ux people will build on top of this 🚀
+What you do with that new status is up to you. I'm excited to see which ux people will build on top of this. 🚀
 
 ---
 
