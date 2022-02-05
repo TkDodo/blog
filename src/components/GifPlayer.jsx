@@ -1,3 +1,4 @@
+import * as React from 'react'
 import Loadable from '@loadable/component'
 import 'react-gif-player/dist/gifplayer.css'
 import { withPrefix } from 'gatsby'
