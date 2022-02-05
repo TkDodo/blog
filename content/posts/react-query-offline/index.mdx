@@ -53,7 +53,7 @@ As I said, in v3, things work well as long as the cache is filled. An edge case 
 - You have a good network connection and navigate to the list view
 - You lose connection and click on a post.
 
-<GifPlayer gif="/loading-forever.gif" still="/loading-forever.png" />
+<GifPlayer gif="loading-forever.gif" still="loading-forever.png" />
 
 What happens is that your query will stay in _loading_ state until you regain connection. Also, you can see a failed network request in the browser devtools. That is because React Query will always fire off the first request, and if that fails, it will pause retries if you have no network connection.
 
@@ -63,7 +63,7 @@ Further, the React Query Devtools will show that your query is _fetching_, which
 
 Similarly, if you have turned off retries altogether in the above scenario, your query will go to error state immediately, with no way of stopping that.
 
-<GifPlayer gif="/network-error.gif" still="/network-error.png" />
+<GifPlayer gif="network-error.gif" still="network-error.png" />
 
 Why do I need _retries_ for my query to _pause_ if I have no network connection 🤷‍♂️?
 
@@ -107,7 +107,7 @@ On the other hand, the _fetchStatus_ gives you information about the _queryFn_: 
 
 Let's take a look at how [case 1](#1-no-data-in-the-cache) from above can look like in v4. Please notice the new network mode toggle button in the RQ devtools. It's pretty cool because it doesn't actually turn off your network - it just makes React Query _believe_ that there is no network for testing purposes. Yes, I am quite proud of it 😊.
 
-<GifPlayer gif="/paused.gif" still="/paused.png" />
+<GifPlayer gif="paused.gif" still="paused.png" />
 
 We can clearly see the state the query is in (_paused_) due to the new purple status badge. Also, the first network request is made once we turn the network back on.
 
