@@ -20,6 +20,7 @@
     "@devular/gatsby-plugin-plausible": "^0.1.8",
     "@docsearch/react": "3.0.0-alpha.41",
     "@lekoarts/gatsby-theme-minimal-blog": "^3.0.1",
+    "@loadable/component": "^5.15.2",
     "@weknow/gatsby-remark-twitter": "^0.2.3",
     "gatsby": "^3.7.2",
     "gatsby-plugin-feed": "^3.7.1",
@@ -34,6 +35,7 @@
     "prettier": "^2.3.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-gif-player": "^0.4.2",
     "typescript": "^4.3.4"
   },
   "devDependencies": {
