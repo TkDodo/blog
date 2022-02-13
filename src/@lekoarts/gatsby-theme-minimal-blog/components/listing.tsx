@@ -15,7 +15,7 @@ const Listing = (props: React.ComponentProps<typeof OriginalListing>) => {
   return (
     <section sx={{ mb: [5, 6, 7] }} className={props.className}>
       <Grid
-        gap={[4, null, null, 5]}
+        gap={4}
         columns={[1, 2, null, 3]}
         sx={{ justifyItems: ['center', null, null, 'stretch'] }}
       >
@@ -51,7 +51,8 @@ const CardListItem = ({
     <Link
       data-sal="zoom-in"
       data-sal-easing="ease"
-      data-sal-duration="300"
+      data-sal-delay="100"
+      data-sal-duration="400"
       to={post.slug}
       sx={(t) => ({
         ...t.styles?.a,
