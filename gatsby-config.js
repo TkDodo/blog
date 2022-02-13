@@ -18,6 +18,9 @@ module.exports = {
   },
   plugins: [
     {
+      resolve: `gatsby-plugin-scroll-reveal`,
+    },
+    {
       resolve: `gatsby-transformer-remark`,
       options: {
         plugins: [

@@ -46,13 +46,20 @@ const CardListItem = ({
 }: Omit<React.ComponentProps<typeof OriginalBlogListLitem>, 'post'> &
   BannerProps) => {
   const url = post.banner?.childImageSharp.resize.src
+
   return (
     <Link
+      data-sal="zoom-in"
+      data-sal-easing="ease"
+      data-sal-duration="300"
       to={post.slug}
       sx={(t) => ({
         ...t.styles?.a,
         fontSize: [1, 2, 3],
         color: `text`,
+        '@media (prefers-reduced-motion: reduce)': {
+          transform: 'none',
+        },
         '&:hover, &:active, &:focus': {
           textDecoration: 'none',
         },
@@ -63,11 +70,15 @@ const CardListItem = ({
           borderRadius: '8px',
           border: `2px solid ${t.colors.background}`,
           padding: '8px',
-          transition:
-            'border 150ms ease-in, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),box-shadow 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)',
           '&:hover, &:active, &:focus': {
             border: `2px solid ${t.colors.primary}`,
-            transform: 'translate3d(0, -8px, 0)',
+          },
+          '@media (prefers-reduced-motion: no-preference)': {
+            transition:
+              'border 150ms ease-in, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),box-shadow 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            '&:hover': {
+              transform: 'translate3d(0, -8px, 0)',
+            },
           },
         })}
       >
