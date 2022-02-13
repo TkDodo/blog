@@ -2,7 +2,7 @@
 import * as React from 'react'
 import OriginalListing from '@lekoarts/gatsby-theme-minimal-blog/src/components/listing'
 import OriginalBlogListLitem from '@lekoarts/gatsby-theme-minimal-blog/src/components/blog-list-item'
-import { Link } from 'gatsby'
+import { Link, withPrefix } from 'gatsby'
 
 import { Image, Card, Grid } from '@theme-ui/components'
 import { jsx } from 'theme-ui'
@@ -71,7 +71,13 @@ const CardListItem = ({
           },
         })}
       >
-        {url && <Image sx={{ borderRadius: '8px' }} src={url} width="300" />}
+        {url && (
+          <Image
+            sx={{ borderRadius: '8px' }}
+            src={`${withPrefix(url)}`}
+            width="300"
+          />
+        )}
         <p>{post.title}</p>
         <p
           sx={{
