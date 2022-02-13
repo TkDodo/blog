@@ -1,0 +1,89 @@
+/** @jsx jsx */
+import * as React from 'react'
+import OriginalListing from '@lekoarts/gatsby-theme-minimal-blog/src/components/listing'
+import OriginalBlogListLitem from '@lekoarts/gatsby-theme-minimal-blog/src/components/blog-list-item'
+import { Link } from 'gatsby'
+
+import { Image, Card, Grid } from '@theme-ui/components'
+import { jsx } from 'theme-ui'
+
+const Listing = (props: React.ComponentProps<typeof OriginalListing>) => {
+  if (props.showTags !== false) {
+    return <OriginalListing {...props} />
+  }
+
+  return (
+    <section sx={{ mb: [5, 6, 7] }} className={props.className}>
+      <Grid
+        gap={[4, null, null, 5]}
+        columns={[1, 2, null, 3]}
+        sx={{ justifyItems: ['center', null, null, 'stretch'] }}
+      >
+        {props.posts.map((post) => (
+          <CardListItem key={post.slug} post={post} />
+        ))}
+      </Grid>
+    </section>
+  )
+}
+
+export default Listing
+
+type BannerProps = {
+  post: React.ComponentProps<typeof OriginalBlogListLitem>['post'] & {
+    banner?: {
+      childImageSharp?: {
+        resize?: {
+          src?: string
+        }
+      }
+    }
+  }
+}
+
+const CardListItem = ({
+  post,
+}: Omit<React.ComponentProps<typeof OriginalBlogListLitem>, 'post'> &
+  BannerProps) => {
+  const url = post.banner?.childImageSharp.resize.src
+  return (
+    <Link
+      to={post.slug}
+      sx={(t) => ({
+        ...t.styles?.a,
+        fontSize: [1, 2, 3],
+        color: `text`,
+        '&:hover, &:active, &:focus': {
+          textDecoration: 'none',
+        },
+      })}
+    >
+      <Card
+        sx={(t) => ({
+          borderRadius: '8px',
+          border: `2px solid ${t.colors.background}`,
+          padding: '8px',
+          transition:
+            'border 150ms ease-in, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),box-shadow 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)',
+          '&:hover, &:active, &:focus': {
+            border: `2px solid ${t.colors.primary}`,
+            transform: 'translate3d(0, -8px, 0)',
+          },
+        })}
+      >
+        {url && <Image sx={{ borderRadius: '8px' }} src={url} width="300" />}
+        <p>{post.title}</p>
+        <p
+          sx={{
+            color: `secondary`,
+            mt: 1,
+            fontSize: [1, 1, 2],
+          }}
+        >
+          <time>{post.date}</time>,{' '}
+          {post.timeToRead && <>{post.timeToRead} min read</>}
+        </p>
+      </Card>
+    </Link>
+  )
+}
