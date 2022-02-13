@@ -52,43 +52,29 @@ const CardListItem = ({
   const image = post.banner?.childImageSharp.resize
 
   return (
-    <Link
+    <Card
       data-sal="zoom-in"
       data-sal-easing="ease"
       data-sal-delay="100"
       data-sal-duration="400"
-      to={post.slug}
       sx={(t) => ({
-        ...t.styles?.a,
-        fontSize: [1, 2, 3],
-        color: `text`,
-        '@media (prefers-reduced-motion: reduce)': {
-          transform: 'none',
-        },
+        borderRadius: '8px',
+        border: `2px solid ${t.colors.background}`,
+        padding: '8px',
         '&:hover, &:active, &:focus': {
-          textDecoration: 'none',
+          border: `2px solid ${t.colors.primary}`,
+        },
+        '@media (prefers-reduced-motion: no-preference)': {
+          transition:
+            'border 150ms ease-in, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),box-shadow 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)',
+          '&:hover': {
+            transform: 'translate3d(0, -8px, 0)',
+          },
         },
       })}
     >
-      <Card
-        sx={(t) => ({
-          height: '100%',
-          borderRadius: '8px',
-          border: `2px solid ${t.colors.background}`,
-          padding: '8px',
-          '&:hover, &:active, &:focus': {
-            border: `2px solid ${t.colors.primary}`,
-          },
-          '@media (prefers-reduced-motion: no-preference)': {
-            transition:
-              'border 150ms ease-in, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),box-shadow 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)',
-            '&:hover': {
-              transform: 'translate3d(0, -8px, 0)',
-            },
-          },
-        })}
-      >
-        {image && (
+      {image && (
+        <Link to={post.slug} tabIndex={-1}>
           <Image
             sx={{ borderRadius: '8px' }}
             src={`${withPrefix(image.src)}`}
@@ -96,20 +82,34 @@ const CardListItem = ({
             height={image.height}
             alt={post.title}
           />
-        )}
-        <p
-          sx={{
-            mt: 1,
-            mb: 1,
-            color: `secondary`,
-            fontSize: [1, 1, 2],
-          }}
+        </Link>
+      )}
+      <p
+        sx={{
+          mt: 1,
+          mb: 1,
+          color: `secondary`,
+          fontSize: [1, 1, 2],
+        }}
+      >
+        <time>{post.date}</time>,{' '}
+        {post.timeToRead && <>{post.timeToRead} min read</>}
+      </p>
+      <p sx={{ mt: 2, fontWeight: 'bold' }}>
+        <Link
+          to={post.slug}
+          sx={(t) => ({
+            ...t.styles?.a,
+            fontSize: [1, 2, 3],
+            color: `text`,
+            '&:hover, &:active, &:focus': {
+              textDecoration: 'none',
+            },
+          })}
         >
-          <time>{post.date}</time>,{' '}
-          {post.timeToRead && <>{post.timeToRead} min read</>}
-        </p>
-        <p sx={{ mt: 2, fontWeight: 'bold' }}>{post.title}</p>
-      </Card>
-    </Link>
+          {post.title}
+        </Link>
+      </p>
+    </Card>
   )
 }
