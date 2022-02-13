@@ -1,5 +1,6 @@
 import { jsx } from 'theme-ui'
 import * as React from 'react'
+import { withPrefix } from 'gatsby'
 
 const noFlashDark = `(function () {
   try {
@@ -38,7 +39,7 @@ export const onPreRenderHTML = ({
     React.createElement('link', {
       key: 'font-inter',
       rel: 'preload',
-      href: '/fonts/Inter.woff2',
+      href: `${withPrefix('fonts/Inter.woff2')}`,
       as: 'font',
       type: 'font/woff2',
       crossOrigin: 'anonymous',
