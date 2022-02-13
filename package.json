@@ -14,7 +14,8 @@
     "start": "rm -rf .cache && gatsby develop",
     "serve": "gatsby serve --prefix-paths",
     "clean": "gatsby clean",
-    "postbuild": "mv public build && mkdir public && mv build public/blog"
+    "postbuild": "mv public build && mkdir public && mv build public/blog",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@devular/gatsby-plugin-plausible": "^0.1.8",
@@ -33,6 +34,7 @@
     "gatsby-remark-autolink-headers": "^5.7.0",
     "gatsby-remark-external-links": "^0.0.4",
     "gatsby-transformer-remark": "^5.7.0",
+    "patch-package": "^6.4.7",
     "prettier": "2.3.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
