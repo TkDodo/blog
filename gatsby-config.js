@@ -6,6 +6,7 @@ const shouldAnalyseBundle = process.env.ANALYSE_BUNDLE
 
 module.exports = {
   pathPrefix: `/blog`,
+  trailingSlash: 'never',
   siteMetadata: {
     author: 'TkDodo',
     siteTitle: "TkDodo's blog",
@@ -133,7 +134,6 @@ module.exports = {
         feed: false,
       },
     },
-    `gatsby-plugin-remove-trailing-slashes`,
     `gatsby-plugin-sitemap`,
     {
       resolve: `gatsby-plugin-manifest`,
