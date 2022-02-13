@@ -5,7 +5,7 @@ const PremiumSponsors = () => (
   <Grid
     gap={[4, null, null, 6]}
     columns={[1, null, null, 2]}
-    sx={{ justifyItems: ['center', null, null, 'stretch'] }}
+    sx={{ justifyItems: ['flex-start', null, null, 'stretch'] }}
   >
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <img
@@ -22,6 +22,9 @@ const PremiumSponsors = () => (
         href="https://tanstack.com/"
         target="_blank"
         rel="noopener noreferrer"
+        style={{
+          fontSize: '1.5rem',
+        }}
       >
         🥈 Tanner Linsley
       </Link>
@@ -34,12 +37,16 @@ const PremiumSponsors = () => (
           marginRight: '0.875rem',
           width: '4rem',
           height: '4rem',
+          borderRadius: '50%',
         }}
       />
       <Link
         href="https://reactbricks.com/"
         target="_blank"
         rel="noopener noreferrer"
+        style={{
+          fontSize: '1.5rem',
+        }}
       >
         🥉 React Bricks
       </Link>
@@ -52,12 +59,16 @@ const PremiumSponsors = () => (
           marginRight: '0.875rem',
           width: '4rem',
           height: '4rem',
+          borderRadius: '50%',
         }}
       />
       <Link
         href="https://www.cliffordfajardo.com/"
         target="_blank"
         rel="noopener noreferrer"
+        style={{
+          fontSize: '1.5rem',
+        }}
       >
         🥉 Clifford Fajardo
       </Link>
@@ -70,12 +81,16 @@ const PremiumSponsors = () => (
           marginRight: '0.875rem',
           width: '4rem',
           height: '4rem',
+          borderRadius: '50%',
         }}
       />
       <Link
         href="https://www.workflowgen.com/"
         target="_blank"
         rel="noopener noreferrer"
+        style={{
+          fontSize: '1.5rem',
+        }}
       >
         🥳 WorkflowGen
       </Link>
@@ -88,12 +103,16 @@ const PremiumSponsors = () => (
           marginRight: '0.875rem',
           width: '4rem',
           height: '4rem',
+          borderRadius: '50%',
         }}
       />
       <Link
         href="https://andrewtian.com/"
         target="_blank"
         rel="noopener noreferrer"
+        style={{
+          fontSize: '1.5rem',
+        }}
       >
         🥳 Andrew Tian
       </Link>
@@ -106,12 +125,16 @@ const PremiumSponsors = () => (
           marginRight: '0.875rem',
           width: '4rem',
           height: '4rem',
+          borderRadius: '50%',
         }}
       />
       <Link
         href="https://daily.dev/"
         target="_blank"
         rel="noopener noreferrer"
+        style={{
+          fontSize: '1.5rem',
+        }}
       >
         🥳 daily.dev
       </Link>
