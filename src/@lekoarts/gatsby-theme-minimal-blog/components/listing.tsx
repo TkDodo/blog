@@ -17,7 +17,9 @@ const Listing = (props: React.ComponentProps<typeof OriginalListing>) => {
       <Grid
         gap={4}
         columns={[1, 2, null, 3]}
-        sx={{ justifyItems: ['center', null, null, 'stretch'] }}
+        sx={{
+          justifyItems: ['center', null, null, 'stretch'],
+        }}
       >
         {props.posts.map((post) => (
           <CardListItem key={post.slug} post={post} />
@@ -68,6 +70,7 @@ const CardListItem = ({
     >
       <Card
         sx={(t) => ({
+          height: '100%',
           borderRadius: '8px',
           border: `2px solid ${t.colors.background}`,
           padding: '8px',
