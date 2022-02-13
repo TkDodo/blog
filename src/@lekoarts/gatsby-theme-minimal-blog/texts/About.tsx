@@ -61,6 +61,7 @@ const About = () => (
             href="https://github.com/sponsors/TkDodo"
             target="_blank"
             rel="noopener noreferrer"
+            sx={{ whiteSpace: 'nowrap' }}
           >
             🎗 sponsor me on Github 🎗
           </Link>
