@@ -1,22 +1,71 @@
 import * as React from 'react'
+import { Text, Link, Box } from 'theme-ui'
 
 const About = () => (
-  <div style={{ display: 'flex', alignItems: 'center' }}>
+  <Box sx={{ display: ['block', 'block', 'flex'] }}>
     <img
-      src="https://avatars.githubusercontent.com/u/1021430?s=64"
+      src="https://avatars.githubusercontent.com/u/1021430?s=128"
       alt="TkDodo"
       style={{
         marginRight: '0.875rem',
-        width: '4rem',
-        height: '4rem',
+        marginTop: '0.5rem',
+        width: '8rem',
+        height: '8rem',
         borderRadius: '50%',
       }}
     />
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <div>Personal blog by TkDodo</div>
-      <div>Opinions are my own</div>
+      <p style={{ marginBottom: 0, marginTop: 0 }}>
+        <Text>Hi 👋, I'm Dominik from Vienna 🇦🇹</Text>
+      </p>
+      <p style={{ marginBottom: 0 }}>
+        <Text>
+          I'm a Web Developer with passion for ReactJs. I ❤️ static types,
+          especially TypeScript.
+        </Text>
+      </p>
+      <p style={{ marginBottom: 0 }}>
+        <Text>
+          I currently co-maintain the popular async state management library{' '}
+          <Link
+            href="https://github.com/tannerlinsley/react-query"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            react-query
+          </Link>
+          , as well as{' '}
+          <Link
+            href="https://github.com/remeda/remeda"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            remeda
+          </Link>
+          , a utility library tailored to TypeScript users.
+        </Text>
+      </p>
+      <p style={{ marginBottom: 0 }}>
+        <Text>
+          Welcome to my personal blog 📚, where I write about all things
+          React, TypeScript and of course react-query.
+        </Text>
+      </p>
+      <p style={{ marginBottom: 0 }}>
+        <Text>
+          If you enjoy my blog posts or want to support my open source work,
+          you can{' '}
+          <Link
+            href="https://github.com/sponsors/TkDodo"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            🎗 sponsor me on Github 🎗
+          </Link>
+        </Text>
+      </p>
     </div>
-  </div>
+  </Box>
 )
 
 export default About
