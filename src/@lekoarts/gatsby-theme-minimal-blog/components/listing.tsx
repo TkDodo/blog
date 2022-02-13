@@ -1,4 +1,5 @@
 /** @jsx jsx */
+import ItemTags from '@lekoarts/gatsby-theme-minimal-blog/src/components/item-tags'
 import * as React from 'react'
 import OriginalListing from '@lekoarts/gatsby-theme-minimal-blog/src/components/listing'
 import OriginalBlogListLitem from '@lekoarts/gatsby-theme-minimal-blog/src/components/blog-list-item'
@@ -8,10 +9,6 @@ import { Image, Card, Grid } from '@theme-ui/components'
 import { jsx } from 'theme-ui'
 
 const Listing = (props: React.ComponentProps<typeof OriginalListing>) => {
-  if (props.showTags !== false) {
-    return <OriginalListing {...props} />
-  }
-
   return (
     <section sx={{ mb: [5, 6, 7] }} className={props.className}>
       <Grid
@@ -22,7 +19,11 @@ const Listing = (props: React.ComponentProps<typeof OriginalListing>) => {
         }}
       >
         {props.posts.map((post) => (
-          <CardListItem key={post.slug} post={post} />
+          <CardListItem
+            key={post.slug}
+            post={post}
+            showTags={props.showTags}
+          />
         ))}
       </Grid>
     </section>
@@ -46,6 +47,7 @@ type BannerProps = {
 }
 
 const CardListItem = ({
+  showTags = true,
   post,
 }: Omit<React.ComponentProps<typeof OriginalBlogListLitem>, 'post'> &
   BannerProps) => {
@@ -110,6 +112,18 @@ const CardListItem = ({
           {post.title}
         </Link>
       </p>
+      {post.tags && showTags && (
+        <p
+          sx={{
+            color: `secondary`,
+            mt: 1,
+            a: { color: `secondary` },
+            fontSize: 1,
+          }}
+        >
+          <ItemTags tags={post.tags} />
+        </p>
+      )}
     </Card>
   )
 }

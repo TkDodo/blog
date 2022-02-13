@@ -1,10 +1,10 @@
 import * as React from 'react'
-import OriginalHomePage from '@lekoarts/gatsby-theme-minimal-blog/src/components/homepage'
+import OriginalBlog from '@lekoarts/gatsby-theme-minimal-blog/src/components/blog'
 import { useStaticQuery, graphql } from 'gatsby'
 
 const query = graphql`
   query {
-    allPost(sort: { fields: date, order: DESC }, limit: 6) {
+    allPost(sort: { fields: date, order: DESC }) {
       nodes {
         slug
         title
@@ -29,11 +29,9 @@ const query = graphql`
   }
 `
 
-const Homepage = (props: React.ComponentProps<typeof OriginalHomePage>) => {
+const Homepage = (props: React.ComponentProps<typeof OriginalBlog>) => {
   const data = useStaticQuery(query)
-  return (
-    <OriginalHomePage {...props} data={data} posts={data.allPost.nodes} />
-  )
+  return <OriginalBlog {...props} posts={data.allPost.nodes} />
 }
 
 export default Homepage
