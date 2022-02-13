@@ -16,7 +16,9 @@ const About = () => (
     />
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <p style={{ marginBottom: 0, marginTop: 0 }}>
-        <Text>Hi 👋, I'm Dominik from Vienna 🇦🇹</Text>
+        <Text sx={{ fontWeight: 'bold' }}>
+          Hi 👋, I'm Dominik from Vienna 🇦🇹
+        </Text>
       </p>
       <p style={{ marginBottom: 0 }}>
         <Text>
