@@ -34,9 +34,11 @@ export default Listing
 type BannerProps = {
   post: React.ComponentProps<typeof OriginalBlogListLitem>['post'] & {
     banner?: {
-      childImageSharp?: {
-        resize?: {
-          src?: string
+      childImageSharp: {
+        resize: {
+          src: string
+          width: number
+          height: number
         }
       }
     }
@@ -47,7 +49,7 @@ const CardListItem = ({
   post,
 }: Omit<React.ComponentProps<typeof OriginalBlogListLitem>, 'post'> &
   BannerProps) => {
-  const url = post.banner?.childImageSharp.resize.src
+  const image = post.banner?.childImageSharp.resize
 
   return (
     <Link
@@ -86,24 +88,27 @@ const CardListItem = ({
           },
         })}
       >
-        {url && (
+        {image && (
           <Image
             sx={{ borderRadius: '8px' }}
-            src={`${withPrefix(url)}`}
-            width="300"
+            src={`${withPrefix(image.src)}`}
+            width={image.width}
+            height={image.height}
+            alt={post.title}
           />
         )}
-        <p>{post.title}</p>
         <p
           sx={{
-            color: `secondary`,
             mt: 1,
+            mb: 1,
+            color: `secondary`,
             fontSize: [1, 1, 2],
           }}
         >
           <time>{post.date}</time>,{' '}
           {post.timeToRead && <>{post.timeToRead} min read</>}
         </p>
+        <p sx={{ mt: 2, fontWeight: 'bold' }}>{post.title}</p>
       </Card>
     </Link>
   )

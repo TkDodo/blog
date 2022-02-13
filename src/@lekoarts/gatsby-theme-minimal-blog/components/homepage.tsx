@@ -17,8 +17,10 @@ const query = graphql`
         }
         banner {
           childImageSharp {
-            resize(width: 300, quality: 90) {
+            resize(width: 300, height: 300, quality: 90) {
               src
+              width
+              height
             }
           }
         }
