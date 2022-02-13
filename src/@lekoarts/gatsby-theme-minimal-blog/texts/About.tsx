@@ -20,7 +20,7 @@ const About = () => (
       </p>
       <p style={{ marginBottom: 0 }}>
         <Text>
-          I'm a Web Developer with passion for ReactJs. I ❤️ static types,
+          I'm a Web Developer with a passion for ReactJs. I ❤️ static types,
           especially TypeScript.
         </Text>
       </p>
