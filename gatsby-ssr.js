@@ -1,4 +1,5 @@
 import { jsx } from 'theme-ui'
+import * as React from 'react'
 
 const noFlashDark = `(function () {
   try {
@@ -27,4 +28,23 @@ export const onRenderBody = ({ setPreBodyComponents }) => {
       },
     }),
   ])
+}
+
+export const onPreRenderHTML = ({
+  getHeadComponents,
+  replaceHeadComponents,
+}) => {
+  const components = [
+    React.createElement('link', {
+      key: 'font-inter',
+      rel: 'preload',
+      href: '/fonts/Inter.woff2',
+      as: 'font',
+      type: 'font/woff2',
+      crossOrigin: 'anonymous',
+    }),
+    ...getHeadComponents(),
+  ]
+
+  replaceHeadComponents(components)
 }
