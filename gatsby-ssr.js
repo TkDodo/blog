@@ -48,6 +48,7 @@ export const onPreRenderHTML = ({
       crossOrigin: 'anonymous',
     }),
     React.createElement('style', {
+      key: 'font-face.inter',
       dangerouslySetInnerHTML: {
         __html: font,
       },

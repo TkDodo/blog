@@ -4,7 +4,9 @@ import { Flex } from '@theme-ui/components'
 
 import DocSearch from './DocSearch'
 
-const HeaderTitle = (props) => {
+const HeaderTitle = (
+  props: React.ComponentProps<typeof OriginalHeaderTitle>
+) => {
   return (
     <Flex sx={{ alignItems: 'center' }}>
       <OriginalHeaderTitle {...props} />

@@ -13,6 +13,17 @@ const theme = {
       fontSize: [1, 1, 2],
     },
   },
+  space: [
+    baseTheme.space[0],
+    baseTheme.space[1],
+    baseTheme.space[2],
+    baseTheme.space[3],
+    baseTheme.space[4],
+    baseTheme.space[5],
+    baseTheme.space[6],
+    baseTheme.space[6],
+    baseTheme.space[6],
+  ],
   useColorSchemeMediaQuery: true,
   alerts: {
     ...baseTheme.alerts,

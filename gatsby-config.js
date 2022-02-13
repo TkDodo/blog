@@ -18,6 +18,19 @@ module.exports = {
   },
   plugins: [
     {
+      resolve: `gatsby-plugin-scroll-reveal`,
+      options: {
+        threshold: 0.1,
+      },
+    },
+    {
+      resolve: `gatsby-plugin-scroll-indicator`,
+      options: {
+        color: 'var(--theme-ui-colors-primary);',
+        paths: ['/blog/*-*'],
+      },
+    },
+    {
       resolve: `gatsby-transformer-remark`,
       options: {
         plugins: [
