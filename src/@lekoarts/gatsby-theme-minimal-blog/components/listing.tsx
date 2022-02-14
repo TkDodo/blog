@@ -78,6 +78,7 @@ const CardListItem = ({
       {image && (
         <Link to={post.slug} tabIndex={-1}>
           <Image
+            loading="lazy"
             sx={{ borderRadius: '8px' }}
             src={`${withPrefix(image.src)}`}
             width={image.width}
