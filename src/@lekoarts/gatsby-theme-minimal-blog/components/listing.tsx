@@ -60,7 +60,7 @@ const CardListItem = ({
       data-sal-delay="100"
       data-sal-duration="400"
       sx={(t) => ({
-        borderRadius: '8px',
+        borderRadius: '12px',
         border: `2px solid ${t.colors.background}`,
         padding: '8px',
         '&:hover, &:active, &:focus': {
@@ -79,7 +79,7 @@ const CardListItem = ({
         <Link to={post.slug} tabIndex={-1}>
           <Image
             loading="lazy"
-            sx={{ borderRadius: '8px' }}
+            sx={{ borderRadius: '6px' }}
             src={`${withPrefix(image.src)}`}
             width={image.width}
             height={image.height}
