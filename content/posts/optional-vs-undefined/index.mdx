@@ -24,7 +24,7 @@ type Data1 = Record<string, unknown>
 type Data2 = { [key in string]: unknown }
 ```
 
-Both definitions are exactly the same. If you hover Data1 it the [TypeScript Playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAIghsOBGKBeKAlCBjA9gJwBMAeAZ2HwEsA7AcwBooBXaga2twHdqA+AKFCRYCOACY0UAN5QA2qwggoNKOSp0AugC5mbDtygBfIA), it even expands to the Data2 syntax. It is perfectly fine to use either way, and it's totally up to developer or team preference to decide what they prefer. Most people I know prefer the first way because it's shorter, and you don't need to invent a name like _key_ - and so do I.
+Both definitions are exactly the same. If you hover Data1 it the [TypeScript Playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAIghsOBGKBeKAlCBjA9gJwBMAeAZ2HwEsA7AcwBooBXaga2twHdqA+AKFCRYCOACY0UAN5QA2qwggoNKOSp0AugC5mbDtygBfIA), it even expands to the Data2 syntax. It is perfectly fine to use either way, and it's totally up to developer or team preference to decide what they want to choose. Most people I know prefer the first way because it's shorter, and you don't need to invent a name like _key_ - and so do I.
 
 ## optional properties
 
@@ -55,7 +55,7 @@ Especially when we create util functions for internal usage, we should ask ourse
 
 This is exactly what happened to me when I refactored the function mentioned above for [react-query v4](https://github.com/tannerlinsley/react-query/blob/1247d7beab39ea4cae1ecb2d59c6f6b49ccd9fec/src/core/retryer.ts#L47-L51). I added this parameter, which is supposed to come from an options object passed by the user. In case it is left empty there, we want to fall back to a default value.
 
-In the first version, I went with the optional parameter, fixed my usage and called it a day. To my surprise, 50% of all tests started to fail 🚨.
+In the first version, I went with the optional parameter, fixed my usage and called it a day. To my surprise, ~50% of all tests started to fail 🚨.
 
 I had of course forgotten to adapt all other usages, because TypeScript was not complaining (I do rely on that a lot), as all calls to _canFetch_ without the parameter were still considered valid:
 
