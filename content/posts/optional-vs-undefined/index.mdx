@@ -1,0 +1,154 @@
+---
+title: optional vs. undefined
+description: There is a subtle difference between optional fields and required, but potentially undefined ones.
+date: 2022-02-10
+banner: ./optional-undefined.jpeg
+tags:
+  - TypeScript
+  - JavaScript
+  - react
+  - react-query
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+
+<img src="./optional-undefined.jpeg" />
+
+<Attribution name="Evan Dennis" url="https://unsplash.com/@evan__bray" />
+
+TypeScript sometimes gives us different ways to represent the same thing. For example, you can define an object with an index signature in many ways:
+
+```ts:title=object-definition
+type Data1 = Record<string, unknown>
+type Data2 = { [key in string]: unknown }
+```
+
+Both definitions are exactly the same. If you hover Data1 it the [TypeScript Playground](https://www.typescriptlang.org/play?#code/C4TwDgpgBAIghsOBGKBeKAlCBjA9gJwBMAeAZ2HwEsA7AcwBooBXaga2twHdqA+AKFCRYCOACY0UAN5QA2qwggoNKOSp0AugC5mbDtygBfIA), it even expands to the Data2 syntax. It is perfectly fine to use either way, and it's totally up to developer or team preference to decide what they prefer. Most people I know prefer the first way because it's shorter, and you don't need to invent a name like _key_ - and so do I.
+
+## optional properties
+
+When it comes to object properties or function parameters that are potentially _undefined_, we also have two common ways of defining them:
+
+```ts:title=optional-properties
+declare function canFetch1(networkMode?: NetworkMode): boolean
+declare function canFetch2(networkMode: NetworkMode | undefined): boolean
+```
+
+Again, most developers will choose the first way without thinking twice (because it's shorter). The difference to the previous example is that those two definitions are _not_ the same.
+
+- The first one means: This parameter is _optional_.
+- The second one means: This parameter is _required_, but can be _undefined_.
+
+This creates a difference in how they can be invoked:
+
+```ts:title=different-invocations
+// ⚠️️️ can be called without the parameter
+canFetch1()
+// 🧐 cannot be called without the parameter
+canFetch2()
+```
+
+Especially when we create util functions for internal usage, we should ask ourselves if it makes sense for our use-case to call the function without parameters at all.
+
+## Refactoring gone wrong
+
+This is exactly what happened to me when I refactored the function mentioned above for [react-query v4](https://github.com/tannerlinsley/react-query/blob/1247d7beab39ea4cae1ecb2d59c6f6b49ccd9fec/src/core/retryer.ts#L47-L51). I added this parameter, which is supposed to come from an options object passed by the user. In case it is left empty there, we want to fall back to a default value.
+
+In the first version, I went with the optional parameter, fixed my usage and called it a day. To my surprise, 50% of all tests started to fail 🚨.
+
+I had of course forgotten to adapt all other usages, because TypeScript was not complaining (I do rely on that a lot), as all calls to _canFetch_ without the parameter were still considered valid:
+
+```diff:title=the-fix
+- canFetch()
++ canFetch(options.networkMode)
+```
+
+After that, I changed the signature to require the parameter. This should also make it easier for future usages when someone wants to call that function.
+
+Optional parameters are often interpreted as: "oh, I can just leave that one out, and it will still work". If that applies to your situation, then it is the correct definition. But if that would be invalid, as in the above case, consider the longer notation. The important part is to know the difference and be explicit about intent.
+
+## A similar solution
+
+As pointed out to me [on twitter](https://twitter.com/Elkingtonne/status/1476916901121036289), we could also pass a required options object into our function with an optional _networkMode_ property:
+
+```ts:title=the-object-solution
+declare function canFetch(options: { networkMode?: NetworkMode }): boolean
+```
+
+I like this solution a lot in this situation, because we can mostly just forward our whole options object. The problem is that you could inadvertently pass in a "wrong" options object that doesn't even have a _networkMode_, because any object, even an empty one, conforms to this interface.
+
+It also doesn't work so well if we try to take this concept to React components, because of the extra object layer that is introduced by _props_:
+
+```tsx:title=react-props
+function CanFetch1({ networkMode }: { networkMode?: NetworkMode })
+function CanFetch2({ networkMode }: { networkMode: NetworkMode | undefined })
+
+function App() {
+  return (
+    <>
+      // 🚨 this is valid, but not what our intention was
+      <CanFetch1 />
+      // ✅ this is invalid, which is what we want
+      <CanFetch2 />
+    </>
+  )
+}
+```
+
+## exactOptionalPropertyTypes
+
+Since Version 4.4, TypeScript has a compiler option called [exactOptionalPropertyTypes](https://www.typescriptlang.org/tsconfig/#exactOptionalPropertyTypes) that can help us distinguish a bit better between the two cases for objects.
+
+With the flag turned on, we cannot pass _undefined_ explicitly to a property that is marked as optional. The other way around was always handled well by TypeScript - we cannot _omit_ a property that is required but potentially _undefined_.
+
+This has a big positive impact when working with the built-in [Partial](https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype) type. That type marks all properties of an object as _optional_, but without exactOptionalPropertyTypes, there is no real difference between a property value being "missing" or "there, but undefined":
+
+```ts:title=dangerous-partial
+type User = {
+  id: number
+  userName: string
+}
+
+// 🚨 is that really a partial user?
+const partialUser: Partial<User> = { id: undefined }
+```
+
+That looks so weird - A user with an id that is set to _undefined_. Definitely not what we wanted to express with Partial...
+
+This becomes especially dangerous when we want to use object spread to merge a partial object onto a full object. This is what state management libraries like [zustand](https://zustand.surge.sh/) allow us to do:
+
+```ts:title=merge-partial
+const merge = <T extends Record<string, unknown>>(
+  obj1: T,
+  obj2: Partial<T>
+): T => ({ ...obj1, ...obj2 })
+
+const user: User = {
+  id: 23,
+  userName: 'TkDodo',
+}
+
+// 🚨 TypeScript is fine with this!
+const newUser = merge(user, { id: undefined })
+
+// 💥 this explodes at runtime
+newUser.id.toFixed()
+```
+
+The object spread will set our id to _undefined_ on our user Record, and TypeScript is fine with that (try the [Playground](https://www.typescriptlang.org/play?exactOptionalPropertyTypes=false#code/C4TwDgpgBAqgzhATlAvFA3gKClAlgEwC4oA7AVwFsAjJbKMhRAOQEMKJi5hFcSBzTAF9MmAMYB7ElyjtEfaGgA8AFSgQAHsAgl8cKACUIExPkVce-ADT0SAaxLiA7iQB8LgBR1xVAFYBGYmVLL18AJmIABRZEYFwWABsVF0wASkDUFyh3dCgAOnzvf2t83MLQqEEUkQkpYHpGYngkVAw6AmJQgGZgnAYkVnZiAHJlWwARcXxxIeDhTAB6eahAXg3ACr2oZXAIAGVRHjA63D0AM15oR1xgAAsoa6OAQjFJaRIIRybkNFl5dz7Eaxy7Rs+Agp1e+AqVQWS2WgFKd25XI5qdRgeKTCB6Fh1RBkEixdiYV7vRi5Ai5YDiABiuHUEHw7hSQA)).
+
+You might not explicitly set your ids to _undefined_, but you might set some fields that can actually be _undefined_ to _undefined_. If you later refactor those fields to be required, we would expect TypeScript to report the wrong call-sides to us.
+
+And that's exactly what you'll get with the new flag turned on (try [this Playground](https://www.typescriptlang.org/play?exactOptionalPropertyTypes=true#code/C4TwDgpgBAqgzhATlAvFA3gKClAlgEwC4oA7AVwFsAjJbKMhRAOQEMKJi5hFcSBzTAF9MmAMYB7ElyjtEfaGgA8AFSgQAHsAgl8cKACUIExPkVce-ADT0SAaxLiA7iQB8LgBR1xVAFYBGYmVLL18AJmIABRZEYFwWABsVF0wASkDUFyh3dCgAOnzvf2t83MLQqEEUkQkpYHpGYngkVAw6AmJQgGZgnAYkVnZiAHJlWwARcXxxIeDhTAB6eahAUHIoZXAIAGVRHjA6pERxRD0HRzFJaRIIRybkNFl5dz7Eaxz2m3wIADNeCHwKlJAA)).
+
+## Summary
+
+Required, but potentially _undefined_ does not have the same intent as _optional_. Try to be explicit with your type declarations and get some help from TypeScript by opting into new features like _exactOptionalPropertyTypes_.
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below ⬇️
+
+<Comments />
