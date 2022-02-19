@@ -109,7 +109,7 @@ export const useTodos = () => {
 
 Maybe you've already spotted the issue: Our _queryKey_ got out of sync with our actual dependencies, and no red squiggly lines are screaming at us about it 😔. In the above case, you'll likely spot the issue very fast (hopefully via an integration test), because changing the sorting does not automatically trigger a refetch. And, let's be honest, it's also pretty obvious in this simple example. I have however seen the _queryKey_ diverge from the actual dependencies a couple of times in the last months, and with greater complexity, those can result in some hard to track issues. There's also a reason why React comes with the [react-hooks/exhaustive-deps eslint rule](https://reactjs.org/docs/hooks-rules.html#eslint-plugin) to avoid that.
 
-So will React Query now come with its own eslint-rule 👀 ?
+So will React Query now come with its own eslint-rule? 👀
 
 Well, that would be one option. There is also the [babel-plugin-react-query-key-gen
 ](https://github.com/dominictwlee/babel-plugin-react-query-key-gen) that solves this problem by generating query keys for you, including all your dependencies. React Query however comes with a different, built-in way of handling dependencies: The `QueryFunctionContext`.
@@ -148,7 +148,7 @@ export const useTodos = () => {
 }
 ```
 
-With this approach, you basically have no way of using any additional parameters in your _queryFn_ without also adding them to the _queryKey_ 🎉.
+With this approach, you basically have no way of using any additional parameters in your _queryFn_ without also adding them to the _queryKey_. 🎉
 
 ## How to type the QueryFunctionContext
 
@@ -266,11 +266,11 @@ This can come in quite handy if you have multiple overlapping scopes that have a
 
 ## Is this worth it?
 
-As always: it depends. I've been loving this approach lately (which is why I wanted to share it with you), but there is certainly a tradeoff here between complexity and type safety. Composing query keys inside the key factory is slightly more complex (because _queryKeys_ still have to be an Array at the top level), and typing the context depending on the return type of the key factory is also not trivial. If your team is small, your api interface is slim and / or you're using plain JavaScript, you might not want to go that route. As per usual, choose whichever tools and approaches make the most sense for your specific situation 🙌
+As always: it depends. I've been loving this approach lately (which is why I wanted to share it with you), but there is certainly a tradeoff here between complexity and type safety. Composing query keys inside the key factory is slightly more complex (because _queryKeys_ still have to be an Array at the top level), and typing the context depending on the return type of the key factory is also not trivial. If your team is small, your api interface is slim and / or you're using plain JavaScript, you might not want to go that route. As per usual, choose whichever tools and approaches make the most sense for your specific situation. 🙌
 
 ---
 
 That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
-if you have any questions, or just leave a comment below ⬇️
+if you have any questions, or just leave a comment below. ⬇️
 
 <Comments />

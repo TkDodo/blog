@@ -1,7 +1,7 @@
 ---
 title: optional vs. undefined
 description: There is a subtle difference between optional fields and required, but potentially undefined ones.
-date: 2022-02-10
+date: 2022-02-19
 banner: ./optional-undefined.jpeg
 tags:
   - TypeScript
@@ -55,7 +55,7 @@ Especially when we create util functions for internal usage, we should ask ourse
 
 This is exactly what happened to me when I refactored the function mentioned above for [react-query v4](https://github.com/tannerlinsley/react-query/blob/1247d7beab39ea4cae1ecb2d59c6f6b49ccd9fec/src/core/retryer.ts#L47-L51). I added this parameter, which is supposed to come from an options object passed by the user. In case it is left empty there, we want to fall back to a default value.
 
-In the first version, I went with the optional parameter, fixed my usage and called it a day. To my surprise, ~50% of all tests started to fail 🚨.
+In the first version, I went with the optional parameter, fixed my usage and called it a day. To my surprise, ~50% of all tests started to fail. 🚨
 
 I had of course forgotten to adapt all other usages, because TypeScript was not complaining (I do rely on that a lot), as all calls to _canFetch_ without the parameter were still considered valid:
 
@@ -149,6 +149,6 @@ Required, but potentially _undefined_ does not have the same intent as _optional
 ---
 
 That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
-if you have any questions, or just leave a comment below ⬇️
+if you have any questions, or just leave a comment below. ⬇️
 
 <Comments />
