@@ -14,7 +14,7 @@ const Comments = ({ children }: Props) => {
     const script = document.createElement('script')
     const parent = document.getElementById(id)
 
-    script.setAttribute('src', 'https://utteranc.es/client.js')
+    script.setAttribute('src', 'https://utteranc.es/client.js?v=2')
     script.setAttribute('repo', 'TkDodo/blog-comments')
     script.setAttribute('issue-term', 'pathname')
     script.setAttribute(
