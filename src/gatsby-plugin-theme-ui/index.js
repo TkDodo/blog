@@ -47,6 +47,33 @@ const theme = {
       },
     },
   },
+  styles: {
+    ...baseTheme.styles,
+    h1: {
+      ...baseTheme.styles.h1,
+      overflowWrap: 'break-word',
+    },
+    h2: {
+      ...baseTheme.styles.h2,
+      overflowWrap: 'break-word',
+    },
+    h3: {
+      ...baseTheme.styles.h3,
+      overflowWrap: 'break-word',
+    },
+    h4: {
+      ...baseTheme.styles.h4,
+      overflowWrap: 'break-word',
+    },
+    h5: {
+      ...baseTheme.styles.h5,
+      overflowWrap: 'break-word',
+    },
+    h6: {
+      ...baseTheme.styles.h6,
+      overflowWrap: 'break-word',
+    },
+  },
 }
 
 export default theme
