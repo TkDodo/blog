@@ -165,7 +165,7 @@ export const toObject = <T, K extends string | number | symbol, V>(
   }, {} as Record<K, V>)
 ```
 
-Why should I be _dirty_ and mutate the result, when I can be super fancy instead and create a new object every time 🤔🤦‍.
+Why should I be _dirty_ and mutate the result, when I can be super fancy instead and create a new object every time. 🤔🤦‍
 
 [Here](https://jsbench.me/svkevt492x/1) is a perf analysis how the two compare when run over an Array with 10k entries:
 
@@ -174,12 +174,12 @@ Why should I be _dirty_ and mutate the result, when I can be super fancy instead
 Yes, it's _that_ slow, because it has to re-create an ever-growing object with every iteration.
 It will get exponentially slower the more entries the array has.
 Mutation is not the root of all evil, it does _not_ have to be avoided at all costs.
-If the scope is small, and the intent is clear - mutate away 🚀.
+If the scope is small, and the intent is clear - mutate away. 🚀
 
 But still - avoid reduce
 
 ---
 
 <Comments>
-  Do you like reduce or not? Let me know in the comments below ⬇️
+  Do you like reduce or not? Let me know in the comments below. ⬇️
 </Comments>
