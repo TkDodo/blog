@@ -3,16 +3,17 @@ require(`dotenv`).config({
 })
 
 const shouldAnalyseBundle = process.env.ANALYSE_BUNDLE
+const siteUrl = 'https://tkdodo.eu/blog'
 
 module.exports = {
   pathPrefix: `/blog`,
-  trailingSlash: 'never',
+  trailingSlash: 'always',
   siteMetadata: {
     author: 'TkDodo',
     siteTitle: "TkDodo's blog",
     siteTitleAlt: `TkDodo's blog`,
     siteHeadline: `TkDodo's blog`,
-    siteUrl: `https://tkdodo.eu/blog`,
+    siteUrl,
     siteDescription: `A technical blog about frontend-development, TypeScript and React`,
     siteLanguage: `en`,
   },
@@ -168,6 +169,12 @@ module.exports = {
       },
     },
     `gatsby-plugin-offline`,
+    {
+      resolve: `gatsby-plugin-canonical-urls`,
+      options: {
+        siteUrl,
+      },
+    },
     {
       resolve: `@devular/gatsby-plugin-plausible`,
       options: {
