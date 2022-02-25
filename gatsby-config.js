@@ -7,7 +7,7 @@ const siteUrl = 'https://tkdodo.eu/blog'
 
 module.exports = {
   pathPrefix: `/blog`,
-  trailingSlash: 'always',
+  trailingSlash: 'never',
   siteMetadata: {
     author: 'TkDodo',
     siteTitle: "TkDodo's blog",
