@@ -18,6 +18,7 @@ import Attribution from 'components/Attribution'
 
 - [#1: Don't mix refactorings with hotfixes](road-to-refactoring)
 - <b>#2: Always provide customer value</b>
+- [#3: Use urgency](use-urgency)
 
 ---
 
@@ -51,7 +52,7 @@ In that order. If you only make it to one or to two, that's alright. There is al
 
 Yes, not all refactorings are that small. Sometimes, you stumble upon an architecture that is flawed and needs to be changed. Or you see an outdated pattern that you have left behind long ago (or so you thought), and you really don't want to add more code to the mess before cleaning it up.
 
-How far you go with ad-hoc refactorings is up to you and your team, and needs a bit of experience and "feeling" for the codebase. I have started refactorings that I thought were small, only to go from one rabbit hole to the next to reverting everything after two days. It sucks, but you learn from it 😄.
+How far you go with ad-hoc refactorings is up to you and your team, and needs a bit of experience and "feeling" for the codebase. I have started refactorings that I thought were small, only to go from one rabbit hole to the next to reverting everything after two days. It sucks, but you learn from it. 😄
 
 Once you decide that a refactoring is larger than something that you can just do on the fly, you have to somehow plan it into your sprint (or whatever way of working your team has adopted). My advice for these situations would be:
 
@@ -87,7 +88,7 @@ As an example, we had a quite complex filter component that we used in some part
 
 These don't come up that often, and are likely rewrites of a big part of the application. Maybe you want to replace redux-saga with react-query? Maybe it's time to move to [remix](https://remix.run/)? Our migration from [flow to typescript](flow-to-type-script-migration-journey) some time ago would also qualify.
 
-How on earth can you get everyone on board for such an endeavor? This will be the topic of part 3 - so stay tuned 📻
+How on earth can you get everyone on board for such an endeavor? This will be the topic of [part 3](use-urgency) - so stay tuned! 📻
 
 ---
 
