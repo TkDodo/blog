@@ -30,7 +30,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>🥈 Silver ($100 a month)</Text>
+          <Text>🥇 Gold ($300 a month)</Text>
         </div>
       </Card>
       <Card>
@@ -196,6 +196,23 @@ const Sponsors = () => (
             src="https://avatars.githubusercontent.com/u/13588260?s=300"
             height="300"
             alt="Invertase"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter ($10 a month)</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://github.com/msutkowski"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Matt Sutkowski</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/784953?s=300"
+            height="300"
+            alt="Matt Sutkowski"
           />
         </Link>
         <div>
