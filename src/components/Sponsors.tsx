@@ -30,7 +30,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>🥇 Gold ($300 a month)</Text>
+          <Text>💎 Diamond ($300 a month)</Text>
         </div>
       </Card>
       <Card>
