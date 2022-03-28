@@ -26,7 +26,7 @@ const PremiumSponsors = () => (
           fontSize: '1.5rem',
         }}
       >
-        🥈 Tanner Linsley
+        💎 Tanner Linsley
       </Link>
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
