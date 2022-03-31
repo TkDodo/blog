@@ -245,7 +245,7 @@ const fetchTodos = async ({
 export const useTodos = () => {
   const { state, sorting } = useTodoParams()
 
-  return useQuery(todoKeys.list(state, sorting), fetchTodos)
+  return useQuery(todoKeys.list(state, sorting), () => fetchTodos)
 }
 ```
 
