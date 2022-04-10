@@ -1,0 +1,271 @@
+---
+title: React Query and Forms
+description: Forms tend to blur the line between server and client state, so let's see how that plays together with React Query.
+date: 2022-04-10
+banner: ./forms.jpeg
+tags:
+  - react
+  - react-query
+  - TypeScript
+  - JavaScript
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+
+<img src="./forms.jpeg" />
+
+<Attribution name="Kelly Sikkema" url="https://unsplash.com/@kellysikkema" />
+
+- [#1: Practical React Query](practical-react-query)
+- [#2: React Query Data Transformations](react-query-data-transformations)
+- [#3: React Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in React Query](status-checks-in-react-query)
+- [#5: Testing React Query](testing-react-query)
+- [#6: React Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
+- [#8: Effective React Query Keys](effective-react-query-keys)
+  - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
+- [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
+- [#10: React Query as a State Manager](react-query-as-a-state-manager)
+- [#11: React Query Error Handling](react-query-error-handling)
+- [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
+- [#13: Offline React Query](offline-react-query)
+- <b>#14: React Query and Forms</b>
+
+---
+
+> **Disclaimer**: Please note that I will be using [react-hook-form](https://react-hook-form.com/) throughout this article, merely because I think it's a great library. That doesn't mean that the shown patterns will only work with react-hook-form - the concepts are applicable to any form library, and also if you are not using a form library at all.
+
+---
+
+Forms are an important part in many web applications as the primary means to update data. We are using React Query not only to fetch data ([queries](react-query-as-a-state-manager)), but also to modify it ([mutations](mastering-mutations-in-react-query)), so we need to somehow integrate our beloved async state manager with forms.
+
+The good news is that realistically, there isn't anything special about forms: It is still just a bunch of html elements that we render in order to display some data. However, as we'd also like to _change_ that data, the lines between what is Server State and what is Client State start to blur a bit, which is where the complexity might come in.
+
+## Server State vs. Client State
+
+To recap, _Server State_ is state that we do not own, that is mostly async and where we only see a snapshot of how the data looked like the last time we fetched it.
+
+_Client State_ is state that the frontend has full control over, is mostly synchronous and where we know the accurate value of it at all times.
+
+When we display a list of Persons, that is undoubtedly Server State. But what happens when we click on a Person to show their details in a Form with the intention of maybe updating some values? Does that Server State now become Client State? Is it a hybrid?
+
+## The simple approach
+
+I have gone on the record already about how I am not a fan of copying state from one state manager to another, be it [putting props to state](putting-props-to-use-state) or copying state from [React Query to local state](practical-react-query#keep-server-and-client-state-separate).
+
+I do think that forms can be an exception to this rule though, if you are doing it deliberately and know about the tradeoffs (everything is a tradeoff after all). When rendering our Person form, we very likely want to treat the Server State as _initial_ data only. We fetch the firstName and lastName, put it into the form state, and then let the user update it.
+
+Let's take a look at an example:
+
+```js:title=simple-form
+function PersonDetail({ id }) {
+  const { data } = useQuery(['person', id], () => fetchPerson(id))
+  const { register, handleSubmit } = useForm()
+  const { mutate } = useMutation((values) => updatePerson(values))
+
+  if (data) {
+    return (
+      <form onSubmit={handleSubmit(mutate)}>
+        <div>
+          <label htmlFor="firstName">First Name</label>
+          <input {...register('firstName')} defaultValue={data.firstName} />
+        </div>
+        <div>
+          <label htmlFor="lastName">Last Name</label>
+          <input {...register('lastName')} defaultValue={data.lastName} />
+        </div>
+        <input type="submit" />
+      </form>
+    )
+  }
+
+  return 'loading...'
+}
+```
+
+This works incredibly well - so what are those tradeoffs?
+
+### Data might be undefined
+
+You might know that _useForm_ would also take defaultValues directly for the whole form, which would be pretty nice for larger forms. However, because we cannot call hooks conditionally, and because our _data_ is _undefined_ on the first render cycle (as we need to fetch it first), we cannot just do this in the same component:
+
+```js:title=no-default-values
+const { data } = useQuery(['person', id], () => fetchPerson(id))
+// 🚨 this will initialize our form with undefined
+const { register, handleSubmit } = useForm({ defaultValues: data })
+```
+
+We'd have the same problem when copying into _useState_, or when using uncontrolled forms (which react-hook-form does under the hood by the way). The best solution to this would be to split up the form into its own component:
+
+```js:title=separate-form {6}
+function PersonDetail({ id }) {
+  const { data } = useQuery(['person', id], () => fetchPerson(id))
+  const { mutate } = useMutation((values) => updatePerson(values))
+
+  if (data) {
+    return <PersonForm person={data} onSubmit={mutate} />
+  }
+
+  return 'loading...'
+}
+
+function PersonForm({ person, onSubmit }) {
+  const { register, handleSubmit } = useForm({ defaultValues: person })
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div>
+        <label htmlFor="firstName">First Name</label>
+        <input {...register('firstName')} />
+      </div>
+      <div>
+        <label htmlFor="lastName">Last Name</label>
+        <input {...register('lastName')} />
+      </div>
+      <input type="submit" />
+    </form>
+  )
+}
+```
+
+This is not too bad, as it separates our data fetching from the presentation. I'm personally not a big fan of such a split, but it does get the job done here.
+
+### No background updates
+
+React Query is all about keeping your UI up-to-date with Server State. As soon as we copy that state somewhere else, React Query cannot do its job anymore. if a background refetch happens for whatever reason, and it yields new data, our form state will not update with it. This is likely not problematic if we are the only one working on that form state (like a form for our profile page). If that's the case, we should likely at least disable background updates by setting a higher _staleTime_ on our query. After all, why would we keep querying our server if the updates will not be reflected on the screen?
+
+```js:title=no-background-updates
+// ✅ opt out of background updates
+const { data } = useQuery(['person', id], () => fetchPerson(id), {
+  staleTime: Infinity,
+})
+```
+
+---
+
+This approach can get problematic on bigger forms and in collaborative environments. The bigger the form, the longer it takes our users to fill it out. If multiple people work on the same form, but on different fields, whoever updates last might override the values that others have changed, because they still see a partially outdated version on their screen.
+
+Now react hook form allows you to detect which fields have been changed by the user and only send "dirty" fields to the server with some user land code (see [the example here](https://codesandbox.io/s/react-hook-form-submit-only-dirty-fields-ol5d2)), which is pretty cool. However, this still doesn't show the latest values with updates made by other users to you. Maybe you would change your input had you known that a certain field was changed in the meantime by someone else.
+
+So what would we need to do to still reflect background updates while we are editing our form?
+
+## Keeping background updates on
+
+One approach is to rigorously separate the states. We'll keep the Server State in React Query, and only track the changes the user has made with our Client State. The source of truth that we display then to our users is _derived state_ from those two: If the user has changed a field, we show the Client State. If not, we fall back to the Server State:
+
+```js:title=separate-states {15-17,27}
+function PersonDetail({ id }) {
+  const { data } = useQuery(['person', id], () => fetchPerson(id))
+  const { control, handleSubmit } = useForm()
+  const { mutate } = useMutation((values) => updatePerson(values))
+
+  if (data) {
+    return (
+      <form onSubmit={handleSubmit(mutate)}>
+        <div>
+          <label htmlFor="firstName">First Name</label>
+          <Controller
+            name="firstName"
+            control={control}
+            render={({ field }) => (
+              // ✅ derive state from field value (client state)
+              // and data (server state)
+              <input {...field} value={field.value ?? data.firstName} />
+            )}
+          />
+        </div>
+        <div>
+          <label htmlFor="lastName">Last Name</label>
+          <Controller
+            name="lastName"
+            control={control}
+            render={({ field }) => (
+              <input {...field} value={field.value ?? data.lastName} />
+            )}
+          />
+        </div>
+        <input type="submit" />
+      </form>
+    )
+  }
+
+  return 'loading...'
+}
+```
+
+With that approach, we can keep background updates on, because it will still be relevant for untouched fields. We are no longer bound to the initialState that we had when we first rendered the form. As always, there are caveats here as well:
+
+### You need controlled fields
+
+As far as I'm aware, there is no good way to achieve this with uncontrolled fields, which is why I've resorted to using controlled fields in the above example. Please let me know if I'm missing something.
+
+### Deriving state might be difficult
+
+This approach works best for shallow forms, where you can easily fall back to the Server State using nullish coalesce, but it could be more difficult to merge properly with nested objects. It might also sometimes be a questionable user experience to just change form values in the background. A better idea might be to just highlight values that are out of sync with the Server State and let the user decide what to do.
+
+---
+
+Whichever way you choose, try to be aware of the advantages / disadvantages that each approach brings.
+
+## Tips and Tricks
+
+Apart from those two principal ways of setting up your form, here are some smaller, but nonetheless important tricks to integrate React Query with forms:
+
+### Double submit prevention
+
+To prevent a form from being submitted twice, you can use the _isLoading_ prop returned from _useMutation_, as it will be true for as long as our mutation is running. To disable the form itself, all you need to do is to disable the primary submit button:
+
+```js:title=disabled-submit
+const { mutate, isLoading } = useMutation((values) => updatePerson(values))
+<input type="submit" disabled={isLoading} />
+```
+
+### Invalidate and reset after mutation
+
+If you do not redirect to a different page right after the form submission, it might be a good idea to reset the form _after_ the invalidation has completed. As described in [Mastering Mutations](mastering-mutations-in-react-query#some-callbacks-might-not-fire), you'd likely want to do that in the _onSuccess_ callback of _mutate_. This also works best if you keep state seperated, as you only need to reset to _undefined_ in order for the server state to be picked up again:
+
+```js:title=reset-form {5-9,14-17}
+function PersonDetail({ id }) {
+  const queryClient = useQueryClient()
+  const { data } = useQuery(['person', id], () => fetchPerson(id))
+  const { control, handleSubmit, reset } = useForm()
+  const { mutate } = useMutation(updatePerson, {
+    // ✅ return Promise from invalidation
+    // so that it will be awaited
+    onSuccess: () => queryClient.invalidateQueries(['person', id]),
+  })
+
+  if (data) {
+    return (
+      <form
+        onSubmit={handleSubmit((values) =>
+          // ✅ rest client state back to undefined
+          mutate(values, { onSuccess: () => reset() })
+        )}
+      >
+        <div>
+          <label htmlFor="firstName">First Name</label>
+          <Controller
+            name="firstName"
+            control={control}
+            render={({ field }) => (
+              <input {...field} value={field.value ?? data.firstName} />
+            )}
+          />
+        </div>
+        <input type="submit" />
+      </form>
+    )
+  }
+
+  return 'loading...'
+}
+```
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />
