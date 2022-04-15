@@ -1,44 +1,33 @@
 import * as React from 'react'
-import { useColorMode, Box, Divider } from 'theme-ui'
+import Giscus from '@giscus/react'
+import { useColorMode, Box } from 'theme-ui'
 
 const id = 'inject-comments'
 
-type Props = {
-  children?: React.ReactNode
-}
-
-const Comments = ({ children }: Props) => {
+const Comments = () => {
   const [colorMode] = useColorMode()
+  const [mounted, setMounted] = React.useState(false)
 
   React.useEffect(() => {
-    const script = document.createElement('script')
-    const parent = document.getElementById(id)
+    setMounted(true)
+  }, [])
 
-    script.setAttribute('src', 'https://utteranc.es/client.js?v=2')
-    script.setAttribute('repo', 'TkDodo/blog-comments')
-    script.setAttribute('issue-term', 'pathname')
-    script.setAttribute(
-      'theme',
-      colorMode === 'dark' ? 'github-dark' : 'github-light'
-    )
-
-    script.setAttribute('crossorigin', 'anonymous')
-    script.setAttribute('async', 'true')
-    parent.appendChild(script)
-
-    return () => {
-      while (parent.firstChild) {
-        parent.removeChild(parent.lastChild)
-      }
-    }
-  }, [colorMode])
-
-  return (
-    <>
-      {children && <Box sx={{ fontSize: [1, 1, 2] }}>{children}</Box>}
-      <div id={id} />
-    </>
-  )
+  return mounted ? (
+    <Giscus
+      id={id}
+      repo="tkdodo/blog-comments"
+      repoId="MDEwOlJlcG9zaXRvcnkyOTE1MzI1NjI="
+      category="Announcements"
+      categoryId="DIC_kwDOEWBvEs4COl22"
+      mapping="pathname"
+      reactionsEnabled="1"
+      emitMetadata="0"
+      inputPosition="top"
+      theme={colorMode === 'dark' ? 'dark' : 'light'}
+      lang="en"
+      loading="lazy"
+    />
+  ) : null
 }
 
 export default Comments
