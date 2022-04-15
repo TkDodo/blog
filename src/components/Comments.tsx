@@ -6,8 +6,13 @@ const id = 'inject-comments'
 
 const Comments = () => {
   const [colorMode] = useColorMode()
+  const [mounted, setMounted] = React.useState(false)
 
-  return (
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  return mounted ? (
     <Giscus
       id={id}
       repo="tkdodo/blog-comments"
@@ -22,7 +27,7 @@ const Comments = () => {
       lang="en"
       loading="lazy"
     />
-  )
+  ) : null
 }
 
 export default Comments
