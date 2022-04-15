@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { useColorMode, Box, Divider } from 'theme-ui'
+import Giscus from '@giscus/react'
+import { useColorMode, Box } from 'theme-ui'
 
 const id = 'inject-comments'
 
@@ -10,33 +11,23 @@ type Props = {
 const Comments = ({ children }: Props) => {
   const [colorMode] = useColorMode()
 
-  React.useEffect(() => {
-    const script = document.createElement('script')
-    const parent = document.getElementById(id)
-
-    script.setAttribute('src', 'https://utteranc.es/client.js?v=2')
-    script.setAttribute('repo', 'TkDodo/blog-comments')
-    script.setAttribute('issue-term', 'pathname')
-    script.setAttribute(
-      'theme',
-      colorMode === 'dark' ? 'github-dark' : 'github-light'
-    )
-
-    script.setAttribute('crossorigin', 'anonymous')
-    script.setAttribute('async', 'true')
-    parent.appendChild(script)
-
-    return () => {
-      while (parent.firstChild) {
-        parent.removeChild(parent.lastChild)
-      }
-    }
-  }, [colorMode])
-
   return (
     <>
       {children && <Box sx={{ fontSize: [1, 1, 2] }}>{children}</Box>}
-      <div id={id} />
+      <Giscus
+        id={id}
+        repo="tkdodo/blog-comments"
+        repoId="MDEwOlJlcG9zaXRvcnkyOTE1MzI1NjI="
+        category="Announcements"
+        categoryId="DIC_kwDOEWBvEs4COl22"
+        mapping="pathname"
+        reactionsEnabled="1"
+        emitMetadata="0"
+        inputPosition="top"
+        theme={colorMode === 'dark' ? 'github-dark' : 'github-light'}
+        lang="en"
+        loading="lazy"
+      />
     </>
   )
 }
