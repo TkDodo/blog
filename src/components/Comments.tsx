@@ -24,7 +24,7 @@ const Comments = ({ children }: Props) => {
         reactionsEnabled="1"
         emitMetadata="0"
         inputPosition="top"
-        theme={colorMode === 'dark' ? 'github-dark' : 'github-light'}
+        theme={colorMode === 'dark' ? 'dark' : 'light'}
         lang="en"
         loading="lazy"
       />
