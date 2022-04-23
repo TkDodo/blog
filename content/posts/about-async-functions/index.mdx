@@ -15,6 +15,8 @@ import Attribution from 'components/Attribution'
 
 <Attribution name="WanderLabs" url="https://unsplash.com/@wanderlabs" />
 
+**Last Update: 23.04.2022**
+
 [Async functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function) are great, especially if you have to call multiple functions in a row that return promises. With async / await, code becomes easier to reason about for humans, because the data flow mimics synchronous code, which is what we are used to reading.
 
 So what are async functions exactly?
@@ -129,6 +131,10 @@ async function fetchTodos() {
 ```
 
 Because we are in an async function, a _new_ promise will be returned at the end of it, even if we already return a promise ourselves! [Here](https://www.carlrippon.com/cancelling-requests-with-react-query/) is a great article if you want to see how query cancellation can work even with async functions.
+
+**Update**
+
+Since [v3.30.0](https://react-query.tanstack.com/guides/query-cancellation), React Query will directly provide you the AbortSignal. There is no need to add a _cancel_ method to the promise, and this way of cancelling queries has been entirely removed in v4.
 
 ## Handling errors
 

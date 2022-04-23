@@ -18,6 +18,8 @@ import Attribution from 'components/Attribution'
 
 <Attribution name="Piret Ilver" url="https://unsplash.com/@saltsup" />
 
+**Last Update: 23.04.2022**
+
 ---
 
 - [#1: Don't over useState](dont-over-use-state)
@@ -159,6 +161,8 @@ It's also an often used way to implement _forceUpdate_ (which almost every globa
 ```js:title=force-update-with-use-reducer
 const forceUpdate = React.useReducer((state) => state + 1, 0)[1]
 ```
+
+**Update**: React 18 provides the [useSyncExternalStore](https://reactjs.org/docs/hooks-reference.html#usesyncexternalstore) hook, so libraries are moving away from _forceUpdate_.
 
 None of these implementations are particularly complex, and I think it really shows the flexibility of _useReducer_. That being said, it also shines when you update multiple parts of your state from different "actions", e.g. when implementing a multi-step wizard. You might want to initialize the second step depending on data chosen in the first step, or you might want to discard data of the third step when going back to the second.
 

@@ -17,6 +17,8 @@ import Attribution from 'components/Attribution'
 
 <Attribution name="Chunli Ju" url="https://unsplash.com/@chunlea" />
 
+**Last Update: 23.04.2022**
+
 - [#1: Practical React Query](practical-react-query)
 - [#2: React Query Data Transformations](react-query-data-transformations)
 - [#3: React Query Render Optimizations](react-query-render-optimizations)
@@ -135,6 +137,8 @@ useQuery('todos')
 useQuery(['todos'])
 ```
 
+**Update**: With React Query v4, all keys need to be Arrays.
+
 ### Structure
 
 Structure your Query Keys from _most generic_ to _most specific_, with as many levels of granularity as you see fit in between. Here's how I would structure a todos list that allows for filterable lists as well as detail views:
@@ -206,6 +210,8 @@ function useUpdateTitle() {
   })
 }
 ```
+
+**Update**: In v4, _refetchActive_ has been replaced with _refetchType_. In the above example, that would be `refetchType: 'none'`, because we don't want to refetch anything.
 
 ### Use Query Key factories
 

@@ -20,6 +20,8 @@ import Attribution from 'components/Attribution'
   url="https://unsplash.com/@kyndallramirez"
 />
 
+**Last Update: 23.04.2022**
+
 - [#1: Practical React Query](practical-react-query)
 - [#2: React Query Data Transformations](react-query-data-transformations)
 - [#3: React Query Render Optimizations](react-query-render-optimizations)
@@ -40,12 +42,16 @@ import Attribution from 'components/Attribution'
 
 One advantage of React Query is the easy access to status fields of the query. You instantly know if your query is loading or if it's erroneous. For this, the library exposes a bunch of boolean flags, which are mostly derived from the internal state machine. Looking at [the types](https://github.com/tannerlinsley/react-query/blob/f2137dc4e4553256c4ebc1891b548fe35efe9231/src/core/types.ts#L250), your query can be in one of the following states:
 
-- `success`: Your query was successful and you have _data_ for it
+- `success`: Your query was successful, and you have _data_ for it
 - `error`: Your query did not work, and an _error_ is set
 - `loading`: Your query has no data and is currently _loading_ for the first time
 - `idle`: Your query has never run because it's not _enabled_
 
+**Update**: In v4 of React Query, the idle state has been removed.
+
 Note that the `isFetching` flag is _not_ part of the internal state machine - it is an additional flag that will be true whenever a request is in-flight. You can be fetching and success, you can be fetching and error - but you cannot be loading and success at the same time. The state machine makes sure of that.
+
+**Update**: In v4, the `isFetching` flag is derived from a secondary `fetchStatus` - just like the new `isPaused` flag. You can read more about this in [#13: Offline React Query](offline-react-query).
 
 ## The standard example
 
