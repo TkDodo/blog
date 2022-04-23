@@ -20,6 +20,8 @@ import Attribution from 'components/Attribution'
   url="https://unsplash.com/@girlwithredhat"
 />
 
+**Last Update: 23.04.2022**
+
 - [#1: Practical React Query](practical-react-query)
 - [#2: React Query Data Transformations](react-query-data-transformations)
 - [#3: React Query Render Optimizations](react-query-render-optimizations)
@@ -227,6 +229,25 @@ test("my first test", async () => {
 }
 ```
 
+**Update**:
+
+[@testing-library/react v13.1.0](https://github.com/testing-library/react-testing-library/releases/tag/v13.1.0) also has a new [renderHook](https://testing-library.com/docs/react-testing-library/api/#renderhook) that you can use. However, it doesn't return its own _waitFor_ util, so you'll have to use the one you can [import from @testing-library/react](https://testing-library.com/docs/dom-testing-library/api-async/#waitfor) instead. The API is a bit different, as it doesn't allow to return a _boolean_, but expects a _Promise_ instead. That means we must adapt our code slightly:
+
+```tsx:title=new-render-hook
+import { waitFor, renderHook } from '@testing-library/react'
+
+test("my first test", async () => {
+  const { result } = renderHook(() => useCustomHook(), {
+    wrapper: createWrapper()
+  })
+
+  // ✅ return a Promise via expect to waitFor
+  await waitFor(() => expect(result.current.isSuccess).toBe(true))
+
+  expect(result.current.data).toBeDefined()
+}
+```
+
 ## Silence the error console
 
 Per default, React Query prints errors to the console. I think this is quite disturbing during testing, because you'll see 🔴 in the console even though all tests are 🟢. React Query allows overwriting that default behaviour by [setting a logger](https://react-query.tanstack.com/reference/setLogger), so that's what I'm usually doing:
@@ -242,9 +263,26 @@ setLogger({
 })
 ```
 
+**Update**
+
+_setLogger_ was removed in v4. Instead, you can pass your custom logger as prop to the _QueryClient_ you create:
+
+```js:title=logger-prop
+const queryClient = new QueryClient({
+  logger: {
+    log: console.log,
+    warn: console.warn,
+    // ✅ no more errors on the console
+    error: () => {},
+  }
+})
+```
+
+Also, errors are not logged in production mode anymore to avoid confusion.
+
 ## Putting it all together
 
-I've setup a quick repository where all of this comes nicely together: mock-service-worker, react-testing-library and the mentioned wrapper. It contains four tests - basic failure and success tests for custom hooks and components. Have a look here: https://github.com/TkDodo/testing-react-query
+I've set up a quick repository where all of this comes nicely together: mock-service-worker, react-testing-library and the mentioned wrapper. It contains four tests - basic failure and success tests for custom hooks and components. Have a look here: https://github.com/TkDodo/testing-react-query
 
 ---
 

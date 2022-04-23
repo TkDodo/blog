@@ -15,6 +15,8 @@ import Attribution from 'components/Attribution'
 
 <Attribution name="Sheri Hooley" url="https://unsplash.com/@sherihoo" />
 
+**Last Update: 23.04.2022**
+
 It is already well known in the frontend development community that adopting TypeScript is a good idea for (almost) every project that reaches a certain size.
 Advantages cited usually evolve around safety, clearly documented interfaces, finding errors before they go to production and being able to refactor safely.
 
@@ -271,6 +273,8 @@ This happens because now, we fall through our switch statement, and because we h
 
 > Nothing was returned from render. This usually means a return statement is missing. Or, to render nothing, return null.
 
+**Update**: Since [React 18.0](https://reactjs.org/blog/2022/03/29/react-v18.html), React [can render undefined](https://github.com/facebook/react/pull/21869). It behaves the same as rendering `null` now, so this fallthrough is not such a big problem anymore.
+
 See it live:
 
 <iframe
@@ -283,7 +287,7 @@ See it live:
 
 ## Never to the rescue
 
-In TypeScripts type system, never is it's [bottom type](https://en.wikipedia.org/wiki/Bottom_type).
+In TypeScripts type system, never is its [bottom type](https://en.wikipedia.org/wiki/Bottom_type).
 It denotes something that can never happen, for example, a function that always throws an Exception or has an infinite loop will return never.
 
 How is this helpful?

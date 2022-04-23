@@ -19,6 +19,8 @@ import Attribution from 'components/Attribution'
   url="https://unsplash.com/@hue12_photography"
 />
 
+**Last Update: 23.04.2022**
+
 - [#1: Practical React Query](practical-react-query)
 - [#2: React Query Data Transformations](react-query-data-transformations)
 - [#3: React Query Render Optimizations](react-query-render-optimizations)
@@ -235,6 +237,8 @@ This has nothing to do with React Query, it is just how TypeScript works. [@danv
 
 https://twitter.com/danvdk/status/1363614288103964672
 
+**Update**: TypeScript 4.6 has added [control flow analysis for destructured discriminated unions](https://devblogs.microsoft.com/typescript/announcing-typescript-4-6/#cfa-destructured-discriminated-unions), which makes the above example work. So this is no longer an issue. 🙌
+
 ## Type safety with the enabled option
 
 I've expressed my ♥️ for the [enabled option](./practical-react-query#the-enabled-option-is-very-powerful) right from the start, but it can be a bit tricky on type level if you want to use it for [dependent queries](https://react-query.tanstack.com/guides/dependent-queries) and disable your query for as long as some parameters are not yet defined:
@@ -277,6 +281,8 @@ function useGroup(id: number | undefined) {
 Getting optimistic updates right in TypeScript is not an easy feat, so we've decided to add it as a comprehensive [example](https://react-query.tanstack.com/examples/optimistic-updates-typescript) to the docs.
 
 The important part is: You have to explicitly type the _variables_ argument passed to _onMutate_ in order to get the best type inference. I don't fully comprehend why that is, but it again seems to have something to do with inference of Generics. Have a look [at this comment](https://github.com/tannerlinsley/react-query/pull/1366#discussion_r538459890) for more information.
+
+**Update**: TypeScript 4.7 has added [Improved Function Inference in Objects and Methods](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7-beta/#improved-function-inference-in-objects-and-methods), which fixes the issue. Optimistic updates should now infer types for context correctly without extra work. 🥳
 
 ## useInfiniteQuery
 
@@ -332,7 +338,7 @@ const queryClient = new QueryClient({
 })
 ```
 
-I think this shows quite well why _unknown_ is such a great (and underused) type compared to _any_. It has become my favourite type lately - but that is subject for another blog post 😊.
+I think this shows quite well why _unknown_ is such a great (and underused) type compared to _any_. It has become my favourite type lately - but that is subject for another blog post. 😊
 
 ---
 

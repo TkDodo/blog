@@ -204,7 +204,7 @@ const fetchTodos = async (state: State): Promise<Todos> => {
 export const useTodosQuery = (state: State) =>
   useQuery(['todos', state], () => fetchTodos(state), {
     initialData: () => {
-      const allTodos = queryCache.getQuery<Todos>(['todos', 'all'])
+      const allTodos = queryClient.getQueryData<Todos>(['todos', 'all'])
       const filteredData =
         allTodos?.filter((todo) => todo.state === state) ?? []
 
@@ -280,7 +280,7 @@ Here is a short list of things that we were able to accomplish thanks to this op
 
 ### Don't use the queryCache as a local state manager
 
-If you tamper with the queryCache (_queryCache.setData_), it should only be for optimistic updates
+If you tamper with the queryCache (_queryClient.setQueryData_), it should only be for optimistic updates
 or for writing data that you receive from the backend after a mutation.
 Remember that every background refetch might override that data, so
 [use](https://reactjs.org/docs/hooks-state.html)
