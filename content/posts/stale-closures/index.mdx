@@ -206,7 +206,7 @@ We only care about _value_ for our render result, so what's wrong with this appr
 
 The answer lies again in _stale closures_: If the caller component re-creates _onChange_ for some reason, but _value_ doesn't change, we are not taking a new picture of our SlowComponent, which means it still sees the old _onChange_ function:
 
-```js
+```js:title=a-stale-closure
 function User({ name }) {
   const [count, increment] = React.useReducer((prev) => prev + 1, 1)
 
@@ -241,4 +241,3 @@ That's it for today. Feel free to reach out to me on [twitter](https://twitter.c
 if you have any questions, or just leave a comment below. ⬇️
 
 <Comments />
-```
