@@ -13,6 +13,16 @@ const theme = {
       fontSize: [1, 1, 2],
     },
   },
+  badges: {
+    ...baseTheme.badges,
+    outline: {
+      color: 'primary',
+      bg: 'transparent',
+      borderRadius: '8px',
+      paddingY: 2,
+      boxShadow: 'inset 0 0 0 1px',
+    },
+  },
   space: [
     baseTheme.space[0],
     baseTheme.space[1],

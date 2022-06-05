@@ -13,6 +13,7 @@ tags:
 import Comments from 'components/Comments'
 import Highlight from 'components/Highlight'
 import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
 
 <img src="./people-holding-smartphones.jpeg" />
 
@@ -20,6 +21,10 @@ import Attribution from 'components/Attribution'
   name="David Sarkisov"
   url="https://unsplash.com/@david_sarkisov_photography"
 />
+
+<Translations>{[]}</Translations>
+
+---
 
 Working with [closures](<https://en.wikipedia.org/wiki/Closure_(computer_programming)>) is something that can become quite tricky, especially when dealing with hooks that have dependencies in React (think _useEffect_, _useMemo_, _useCallback_). A lot of bugs and frustration are tied pretty closely to that concept - even though it is nothing that React itself introduced. It's rather a language concept that hooks rely upon.
 
