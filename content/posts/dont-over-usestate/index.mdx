@@ -8,6 +8,9 @@ tags:
   - useState pitfalls
 ---
 
+import Comments from 'components/Comments'
+import Translations from 'components/Translations'
+
 <img src="./use-state-pitfalls.png" />
 
 ---
@@ -17,6 +20,10 @@ tags:
 - [#3: Things to know about useState](things-to-know-about-use-state)
 - [#4: useState for one-time initializations](use-state-for-one-time-initializations)
 - [#5: useState vs. useReducer](use-state-vs-use-reducer)
+
+---
+
+<Translations>{[]}</Translations>
 
 ---
 
@@ -196,8 +203,6 @@ If the next person wants to calculate categories differently, they have to do it
 With that, we will always have a clear picture of what categories are and where they come from.
 
 A single source of truth.
-
-import Comments from 'components/Comments'
 
 ---
 

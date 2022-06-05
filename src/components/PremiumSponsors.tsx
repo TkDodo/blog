@@ -97,28 +97,6 @@ const PremiumSponsors = () => (
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <img
-        src="https://avatars.githubusercontent.com/u/5667718?s=64"
-        alt="Andrew Tian"
-        style={{
-          marginRight: '0.875rem',
-          width: '4rem',
-          height: '4rem',
-          borderRadius: '50%',
-        }}
-      />
-      <Link
-        href="https://andrewtian.com/"
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          fontSize: '1.5rem',
-        }}
-      >
-        🥳 Andrew Tian
-      </Link>
-    </div>
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <img
         src="https://avatars.githubusercontent.com/u/41463883?s=64"
         alt="daily.dev"
         style={{
