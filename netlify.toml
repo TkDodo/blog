@@ -4,6 +4,11 @@
   status = 301
 
 [[redirects]]
+  from = "/images/*"
+  to = "/blog/images/:splat"
+  status = 301
+
+[[redirects]]
   from = "/js/script.js"
   to = "https://plausible.io/js/plausible.js"
   status = 200
