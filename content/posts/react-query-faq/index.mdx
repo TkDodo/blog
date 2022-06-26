@@ -45,7 +45,7 @@ import Translations from 'components/Translations'
 
 ---
 
-I have been answering _a lot_ of questions over the last 18 months regarding React Query. Being involved in the community and answering questions was what got me involved in open-source in the first place, and it was also a big factor for writing this React Query related series of articles.
+I have been answering _a lot_ of questions over the last 18 months regarding React Query. Being involved in the community and answering questions was what got me into open-source in the first place, and it was also a big factor for writing this React Query related series of articles.
 
 I'm still excited to answer questions, especially if they are well formulated and of the non-standard kind. Please see my post [How can I?](./how-can-i) if you don't know what I mean or want to know what makes a question a good question.
 
@@ -92,24 +92,21 @@ The declarative approach also makes sure that no matter where or how you update 
 You also don't have to store that id in _useState_ - it can be done in any way to store client side state ([zustand](https://zustand.surge.sh/), [redux](https://redux-toolkit.js.org/), ...). In the above example, the URL would be a good place to store the id, too:
 
 ```jsx:title=url-state
-const navigate = useNavigate()
 const { id } = useParams()
 
 const { data } = useQuery(['item', id], () => fetchItem({ id }))
 
-<button onClick={() => {
-  // ✅ change url, make useParams pick it up
-  navigate('/2')
-}})>Show Item 2</button>
+// ✅ change url, make useParams pick it up
+<Link to="/2">Show Item 2</Link>
 ```
 
-The best part about this approach is that you don't have to manage state, that you get sharable urls and that the browser back button will also just work for your users.
+The best part about this approach is that you don't have to manage state, that you get sharable urls and that the browser back button will also just work for your users to navigate between items.
 
 ### Loading states
 
 You might notice that switching query keys will put your query into hard loading state again. That is expected, because we change keys and there is no data for that key yet.
 
-There are a bunch of ways to ease the transition, like setting a [placeholderData](placeholder-and-initial-data-in-react-query) for that key. A nice approach to tackle this problem is to instruct the query to keep previous data:
+There are a bunch of ways to ease the transition, like setting a [placeholderData](placeholder-and-initial-data-in-react-query) for that key or [prefetching](https://react-query.tanstack.com/guides/prefetching) data for the new key ahead of time. A nice approach to tackle this problem is to instruct the query to keep previous data:
 
 ```js:title=keep-previous-data {4,5}
 const { data, isPreviousData } = useQuery(
@@ -218,7 +215,7 @@ Here are a couple of reasons why using the hook is preferred:
 
 When you call _useQuery_, we call _useQueryClient_ under the hood. This will look up the nearest client in React Context. Not a big deal, but if you ever get into the situation where the client you import is different from the one in context you'll have a hard to trace bug that could be avoided.
 
-### 2: it decouples your app from the client
+### 2: It decouples your app from the client
 
 The client you define in your _App_ is your production client. It might have some default settings that work well in production. However, in testing, it might make sense to use different default values. One example is [turning off retries](testing-react-query#turn-off-retries) during testing, because testing erroneous queries might time out the test otherwise.
 
@@ -254,14 +251,16 @@ export default function App() {
 }
 ```
 
-So if you create your _queryClient_ like that, there is no way that you can just export it and import it in your App. My best guess on why you would want that is if you're working with a legacy class component that needs to do some query invalidation. If that is the case, consider creating a render props version:
+So if you create your _queryClient_ like that, there is no way that you can just export it and import it in your App.
 
-```js:title=render-props
-const WithQueryClient = ({ children }) => children(useQueryClient())
+My best guess on why you would want to export the client is if you're working with a legacy class component that needs to do some query invalidation - and you can't use hooks there. If that is the case, and you can't refactor to a functional component easily, consider creating a render props version:
+
+```js:title=useQueryClient-render-props
+const UseQueryClient = ({ children }) => children(useQueryClient())
 ```
 
 ```jsx:title=usage
-<WithQueryClient>
+<UseQueryClient>
   {(queryClient) => (
     <button
       onClick={() => queryClient.invalidateQueries(['items'])}
@@ -269,7 +268,21 @@ const WithQueryClient = ({ children }) => children(useQueryClient())
       invalidate items
     </button>
   )}
-</WithQueryClient>
+</UseQueryClient>
+```
+
+And by the way, you can do the same thing for useQuery, or any other hook for that matter:
+
+```js:title=useQuery-render-props
+const UseQuery = ({ children, ...props }) => children(useQuery(props))
+```
+
+```jsx:title=usage
+<UseQuery queryKey={["items"]} queryFn={fetchItems}>
+  {({ data, isLoading, isError }) => (
+    // 🙌 return jsx here
+  )}
+</UseQueryClient>
 ```
 
 ---
