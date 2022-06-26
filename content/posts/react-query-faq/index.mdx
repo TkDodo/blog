@@ -1,0 +1,293 @@
+---
+title: React Query FAQs
+description: Answering the top 3 most frequently asked React Query questions
+date: 2022-06-24
+banner: ./faq.jpeg
+tags:
+  - ReactJs
+  - React Query
+  - TypeScript
+  - JavaScript
+  - FAQ
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+
+<img src="./faq.jpeg" />
+
+<Attribution
+  name="Mahesh Patel "
+  url="https://pixabay.com/users/readyelements-8569947"
+/>
+
+- [#1: Practical React Query](practical-react-query)
+- [#2: React Query Data Transformations](react-query-data-transformations)
+- [#3: React Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in React Query](status-checks-in-react-query)
+- [#5: Testing React Query](testing-react-query)
+- [#6: React Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
+- [#8: Effective React Query Keys](effective-react-query-keys)
+  - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
+- [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
+- [#10: React Query as a State Manager](react-query-as-a-state-manager)
+- [#11: React Query Error Handling](react-query-error-handling)
+- [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
+- [#13: Offline React Query](offline-react-query)
+- [#14: React Query and Forms](react-query-and-forms)
+- <b>#15: React Query FAQs</b>
+
+---
+
+<Translations>{[]}</Translations>
+
+---
+
+I have been answering _a lot_ of questions over the last 18 months regarding React Query. Being involved in the community and answering questions was what got me into open-source in the first place, and it was also a big factor for writing this React Query related series of articles.
+
+I'm still excited to answer questions, especially if they are well formulated and of the non-standard kind. Please see my post [How can I?](./how-can-i) if you don't know what I mean or want to know what makes a question a good question.
+
+However, I have also seen a couple of repetitive questions that are mostly straight-forward for me to answer, but still require a bit of effort to get into writing. That's what this article is mainly about: To give myself yet another resource to point people towards when I see those questions again.
+
+Without further ado, here are the top three questions and my two cents on them:
+
+## How can I pass parameters to refetch?
+
+The short answer is still: you cannot. But there's a very good reason for that. Every time you _think_ that's what you want, you usually don't.
+
+Mostly, code that wants to refetch with parameters looks something like this:
+
+```jsx:title=refetch-with-parameters
+const { data, refetch } = useQuery(['item'], () => fetchItem({ id: 1 }))
+
+<button onClick={() => {
+  // 🚨 this is not how it works
+  refetch({ id: 2 })
+}})>Show Item 2</button>
+```
+
+Parameters or Variables are dependencies to your query. In the above code, we define a QueryKey `['item']`, so whatever we fetch will be stored under that key. If we were to refetch with a _different_ id, it would still write to the same place in the cache, because the key stays the same. So id 2 would then overwrite data for id 1. If you were to switch back to id 1, that data would be gone.
+
+Caching different responses under different query keys is one of React Query's greatest strengths. The hypothetical "refetch-with-parameters" api would take that feature away. This is why _refetch_ is only meant to replay the request with the same variables. So in essence, you don't really want a _refetch_: You want a _new fetch_ for a different id!
+
+To use React Query effectively, you have to embrace the declarative approach: The query key defines all dependencies that the query function needs to fetch data. If you stick to that, all you have to do to get refetches is to update the dependency. A more realistic example would look like this:
+
+```jsx:title=dynamic-query-key
+const [id, setId] = useState(1)
+
+const { data } = useQuery(['item', id], () => fetchItem({ id }))
+
+<button onClick={() => {
+  // ✅ set id without explicitly refetching
+  setId(2)
+}})>Show Item 2</button>
+```
+
+_setId_ will re-render the component, React Query will pick up the new key and start fetching for that key. It will also cache it separately from id 1.
+
+The declarative approach also makes sure that no matter where or how you update the id, your query data will always be "in sync" with it. So your thinking goes from: "If I click that button, I want to refetch" towards: "I always want to see data for the current id".
+
+You also don't have to store that id in _useState_ - it can be done in any way to store client side state ([zustand](https://zustand.surge.sh/), [redux](https://redux-toolkit.js.org/), ...). In the above example, the URL would be a good place to store the id, too:
+
+```jsx:title=url-state
+const { id } = useParams()
+
+const { data } = useQuery(['item', id], () => fetchItem({ id }))
+
+// ✅ change url, make useParams pick it up
+<Link to="/2">Show Item 2</Link>
+```
+
+The best part about this approach is that you don't have to manage state, that you get sharable urls and that the browser back button will also just work for your users to navigate between items.
+
+### Loading states
+
+You might notice that switching query keys will put your query into hard loading state again. That is expected, because we change keys and there is no data for that key yet.
+
+There are a bunch of ways to ease the transition, like setting a [placeholderData](placeholder-and-initial-data-in-react-query) for that key or [prefetching](https://react-query.tanstack.com/guides/prefetching) data for the new key ahead of time. A nice approach to tackle this problem is to instruct the query to keep previous data:
+
+```js:title=keep-previous-data {4,5}
+const { data, isPreviousData } = useQuery(
+  ['item', id],
+  () => fetchItem({ id }),
+  // ⬇️ like this️
+  { keepPreviousData: true }
+)
+```
+
+With this flag on, React Query will still show data for id 1 while data for id 2 is being fetched. Additionally, the _isPreviousData_ flag on the query result will be set to true, so that you can act accordingly in the UI. Maybe you want to show a background loading spinner in addition to the data, or you'd like to add opacity to the shown data, indicating that it's stale. That is totally up to you - React Query just gives you the means to do that. 🙌
+
+## Why are updates not shown?
+
+When interacting with the Query Cache directly, be that because you want to perform an [update from a mutation response](https://react-query.tanstack.com/guides/updates-from-mutation-responses) or because you want to [invalidate from mutations](https://react-query.tanstack.com/guides/invalidations-from-mutations), I sometimes get reports that the updates are not reflected on the screen, or that it simply "doesn't work". If that's the case, it mostly boils down to one of two issues:
+
+### 1: Query Keys are not matching
+
+Query Keys are hashed deterministically, so you don't have to keep referential stability or object key order in mind. However, when you call _queryClient.setQueryData_, the key must still match the existing key fully. As an example, those two keys do not match:
+
+```json:title=non-matching-keys
+['item', '1']
+['item', 1]
+```
+
+The second value of the key array is a _string_ in the first example and a _number_ in the second. This can happen if you usually work with numbers, but get a string if you read from the URL with _useParams_.
+
+The React Query Devtools are your best friend in this case, as you can clearly see which keys exist and which keys are currently fetching. Keep an eye on those pesky details though!
+
+I recommend using [TypeScript](https://www.typescriptlang.org/) and [Query Key Factories](effective-react-query-keys) to help with that problem.
+
+### 2: The QueryClient is not stable
+
+In most examples, we create the queryClient _outside_ of the _App_ component, which makes it referentially stable:
+
+```jsx:title=standard-example
+// ✅ created outside of the App
+const queryClient = new QueryClient()
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Example />
+    </QueryClientProvider>
+  )
+}
+```
+
+The _QueryClient_ holds the _QueryCache_, so if you create a new client, you also get a new cache, which will be empty. If you move the client creation into the _App_ component, and your component re-renders for some other reason (e.g. a route change), your cache will be thrown away:
+
+```jsx:title=unstable-query-client {2,3}
+export default function App() {
+  // 🚨 this is not good
+  const queryClient = new QueryClient()
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Example />
+    </QueryClientProvider>
+  )
+}
+```
+
+If you have to create your client inside the _App_, make sure that it is referentially stable by using an instance ref or React state:
+
+```jsx:title=stable-query-client {2,3}
+export default function App() {
+  // ✅ this is stable
+  const [queryClient] = React.useState(() => new QueryClient())
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Example />
+    </QueryClientProvider>
+  )
+}
+```
+
+I do have a separate blog post on that topic: [useState for one-time initializations
+](use-state-for-one-time-initializations).
+
+## Why should I useQueryClient()...
+
+... if I can just as well import the client?
+
+The _QueryClientProvider_ puts the created _queryClient_ into React Context to distribute it throughout your app. You can best read it with _useQueryClient_. This does not create any extra subscriptions and will not cause any additional re-renders (if the client is stable - see above) - it just avoids having to pass the client down as a prop.
+
+Alternatively, you could export the client and just import it wherever you need to:
+
+```jsx:title=exported-query-client {1,2}
+// ⬇️ exported so that we can import it
+export const queryClient = new QueryClient()
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Example />
+    </QueryClientProvider>
+  )
+}
+```
+
+Here are a couple of reasons why using the hook is preferred:
+
+### 1: useQuery uses the hook too
+
+When you call _useQuery_, we call _useQueryClient_ under the hood. This will look up the nearest client in React Context. Not a big deal, but if you ever get into the situation where the client you import is different from the one in context you'll have a hard to trace bug that could be avoided.
+
+### 2: It decouples your app from the client
+
+The client you define in your _App_ is your production client. It might have some default settings that work well in production. However, in testing, it might make sense to use different default values. One example is [turning off retries](testing-react-query#turn-off-retries) during testing, because testing erroneous queries might time out the test otherwise.
+
+A big advantage of React Context when used as a dependency injection mechanism is that it decouples your app from its dependencies. _useQueryClient_ just expects any client to be in the tree above - not a specific client. You'll lose that advantage if you import the production client directly.
+
+### 3: You sometimes can't export
+
+It is sometimes necessary to create the _queryClient_ inside the App component (as shown above). One example is when using server side rendering, because you want to avoid having multiple users share the same client.
+
+The same is true when you work with microfrontends - Apps should be isolated. If you create the client outside the App, then use the same App twice on the same page, they'll share a client.
+
+Lastly, if you want to use other hooks in the default values of the _queryClient_, you also need to create it inside the App. Consider a global error handler that wants to show a toast for every failing mutation:
+
+```jsx:title=use-other-hooks {2,3,8,9}
+export default function App() {
+  // ✅ we couldn't useToast outside of the App
+  const toast = useToast()
+  const [queryClient] = React.useState(
+    () =>
+      new QueryClient({
+        mutationCache: new MutationCache({
+          // ⬇️ but we need it here
+          onError: (error) => toast.show({ type: 'error', error }),
+        }),
+      })
+  )
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Example />
+    </QueryClientProvider>
+  )
+}
+```
+
+So if you create your _queryClient_ like that, there is no way that you can just export it and import it in your App.
+
+My best guess on why you would want to export the client is if you're working with a legacy class component that needs to do some query invalidation - and you can't use hooks there. If that is the case, and you can't refactor to a functional component easily, consider creating a render props version:
+
+```js:title=useQueryClient-render-props
+const UseQueryClient = ({ children }) => children(useQueryClient())
+```
+
+```jsx:title=usage
+<UseQueryClient>
+  {(queryClient) => (
+    <button
+      onClick={() => queryClient.invalidateQueries(['items'])}
+    >
+      invalidate items
+    </button>
+  )}
+</UseQueryClient>
+```
+
+And by the way, you can do the same thing for useQuery, or any other hook for that matter:
+
+```js:title=useQuery-render-props
+const UseQuery = ({ children, ...props }) => children(useQuery(props))
+```
+
+```jsx:title=usage
+<UseQuery queryKey={["items"]} queryFn={fetchItems}>
+  {({ data, isLoading, isError }) => (
+    // 🙌 return jsx here
+  )}
+</UseQuery>
+```
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />
