@@ -9,8 +9,6 @@
   "scripts": {
     "build": "gatsby clean && gatsby build --prefix-paths",
     "develop": "gatsby develop",
-    "develop:cypress": "cross-env CYPRESS_SUPPORT=y yarn develop",
-    "build:cypress": "cross-env CYPRESS_SUPPORT=y yarn build",
     "start": "rm -rf .cache && gatsby develop",
     "serve": "gatsby serve --prefix-paths",
     "clean": "gatsby clean",
