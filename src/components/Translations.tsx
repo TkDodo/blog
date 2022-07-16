@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Flex, Badge, Link, Text } from '@theme-ui/components'
+import { Flex, Badge, Link } from '@theme-ui/components'
 
 type Props = {
   children: ReadonlyArray<{ language: string; url: string }>
@@ -12,6 +12,7 @@ const Translations = ({ children }: Props) => (
       alignItems: 'center',
       padding: 0,
       gap: 3,
+      flexWrap: 'wrap',
     }}
   >
     {children.length > 0 ? (
@@ -30,13 +31,15 @@ const Translations = ({ children }: Props) => (
     ) : (
       <i>No translations available.</i>
     )}
-    <Link
-      href="https://github.com/TkDodo/blog/blob/main/CONTRIBUTING.md#translations"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Add translation
-    </Link>
+    <Flex as="li">
+      <Link
+        href="https://github.com/TkDodo/blog/blob/main/CONTRIBUTING.md#translations"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Add translation
+      </Link>
+    </Flex>
   </Flex>
 )
 
