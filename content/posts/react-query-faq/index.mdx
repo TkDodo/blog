@@ -1,6 +1,6 @@
 ---
 title: React Query FAQs
-description: Answering the top 3 most frequently asked React Query questions
+description: Answering the most frequently asked React Query questions
 date: 2022-06-24
 banner: ./faq.jpeg
 tags:
@@ -21,6 +21,8 @@ import Translations from 'components/Translations'
   name="Mahesh Patel "
   url="https://pixabay.com/users/readyelements-8569947"
 />
+
+**Last Update: 17.07.2022**
 
 - [#1: Practical React Query](practical-react-query)
 - [#2: React Query Data Transformations](react-query-data-transformations)
@@ -51,7 +53,7 @@ I'm still excited to answer questions, especially if they are well formulated an
 
 However, I have also seen a couple of repetitive questions that are mostly straight-forward for me to answer, but still require a bit of effort to get into writing. That's what this article is mainly about: To give myself yet another resource to point people towards when I see those questions again.
 
-Without further ado, here are the top three questions and my two cents on them:
+Without further ado, here are the top questions and my two cents on them:
 
 ## How can I pass parameters to refetch?
 
@@ -284,6 +286,87 @@ const UseQuery = ({ children, ...props }) => children(useQuery(props))
   )}
 </UseQuery>
 ```
+
+## Why do I not get errors ?
+
+If your network request fails, you'd ideally want your query to go to the _error_ state. If that doesn't happen, and you still see a successful query instead, that means that your _queryFn_ did not return a failed Promise.
+
+Remember: React Query doesn't know (or care) about status codes or network requests at all. It needs a resolved or rejected Promise that the _queryFn_ needs to provide.
+
+If React Query sees a rejected Promise, it can potentially start retries, pause queries if you are offline and eventually put the query into the error state, so it's quite an important thing to get right.
+
+### The fetch API
+
+Luckily, many data fetching libraries like [axios](https://axios-http.com/) or [ky](https://github.com/sindresorhus/ky) transform erroneous status codes like 4xx or 5xx into failed Promises, so if your network request fails, your query fails too. The notable exception is the built-in [fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), which will only give you a failed Promise if the request failed due to a network error.
+
+This is of course [documented here](https://tanstack.com/query/v4/docs/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default), but it's still a stumbling block if you've missed this.
+
+```js:title=wrong-fetch-api-example
+useQuery(['todos', todoId], async () => {
+  const response = await fetch('/todos/' + todoId)
+  // 🚨 4xx or 5xx are not treated as errors
+  return response.json()
+})
+```
+
+To overcome this, you need to check if the response was _ok_ and transform it into a rejected Promise if it wasn't:
+
+```js:title=correct-fetch-api-example {3-6}
+useQuery(['todos', todoId], async () => {
+  const response = await fetch('/todos/' + todoId)
+  // ✅ transforms 4xx and 5xx into failed Promises
+  if (!response.ok) {
+    throw new Error('Network response was not ok')
+  }
+  return response.json()
+})
+```
+
+### Logging
+
+The second reason I've seen a lot is that errors are caught inside the _queryFn_ for logging purposes. If you do that without re-throwing the error, you will again return a successful Promise implicitly:
+
+```ts:title=wrong-logging-example
+useQuery(['todos', todoId], async () => {
+  try {
+    const { data } = await axios.get('/todos/' + todoId)
+    return data
+  } catch (error) {
+    console.error(error)
+    // 🚨 here, an "empty" Promise<void> is returned
+  }
+})
+```
+
+If you want to do this, remember to re-throw the error:
+
+```ts:title=correct-logging-example {7-8}
+useQuery(['todos', todoId], async () => {
+  try {
+    const { data } = await axios.get('/todos/' + todoId)
+    return data
+  } catch (error) {
+    console.error(error)
+    // ✅ here, a failed Promise is returned
+    throw error
+  }
+})
+```
+
+An alternative and not so verbose way to handle errors is to use the _onError_ callback of _useQuery_:
+
+```ts:title=using-on-error
+useQuery(
+  ['todos', todoId],
+  async () => {
+    const { data } = await axios.get('/todos/' + todoId)
+    return data
+  },
+  { onError: (error) => console.error(error) }
+)
+```
+
+I definitely prefer the callbacks, and you can read more about differnt ways to handle errors in [#11: React Query Error Handling](react-query-error-handling).
 
 ---
 
