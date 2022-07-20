@@ -46,8 +46,8 @@ import Translations from 'components/Translations'
     },
     {
       language: 'Português',
-      url: 'https://dbrno.vercel.app/pt-BR/blog/practical-react-query'
-    }
+      url: 'https://dbrno.vercel.app/pt-BR/blog/practical-react-query',
+    },
   ]}
 </Translations>
 
@@ -110,7 +110,7 @@ On top of that, it is also very flexible and lets you customize various settings
 This article is not going to be an introduction to React Query though.
 
 I think the docs are great at explaining Guides & Concepts,
-there are [Videos](https://react-query.tanstack.com/docs/videos) from various Talks that you can watch,
+there are [Videos](https://react-query.tanstack.com/videos) from various Talks that you can watch,
 and Tanner has a React Query [Essentials Course](https://learn.tanstack.com/) you can take if you want to get familiar with the library.
 
 I want to focus more on some practical tips that go beyond the docs, which might be useful when you are already working with the library.
@@ -119,7 +119,7 @@ but also got involved in the React Query community, answering questions on Disco
 
 ### The Defaults explained
 
-I believe the React Query [Defaults](https://react-query.tanstack.com/docs/guides/important-defaults)
+I believe the React Query [Defaults](https://react-query.tanstack.com/guides/important-defaults)
 are very well chosen, but they can catch you off guard from time to time, especially at the beginning.
 
 First of all: React Query does _not_ invoke the _queryFn_ on every re-render, even with the default _staleTime_ of zero.
@@ -145,14 +145,14 @@ Secondly, there seems to be a bit of confusion between _cacheTime_ and _staleTim
 - StaleTime: The duration until a query transitions from fresh to stale.
   As long as the query is fresh, data will always be read from the cache only - no network request will happen!
   If the query is stale (which per default is: instantly), you will still get data from the cache,
-  but a background refetch can happen [under certain conditions](https://react-query.tanstack.com/docs/guides/caching).
+  but a background refetch can happen [under certain conditions](https://react-query.tanstack.com/guides/caching).
 - CacheTime: The duration until inactive queries will be removed from the cache. This defaults to 5 minutes.
   Queries transition to the inactive state as soon as there are no observers registered,
   so when all components which use that query have unmounted.
 
 Most of the time, if you want to change one of these settings, it's the _staleTime_ that needs adjusting.
 I have rarely ever needed to tamper with the _cacheTime_.
-There is a good [explanation by example](https://react-query.tanstack.com/docs/guides/caching#a-detailed-caching-example)
+There is a good [explanation by example](https://react-query.tanstack.com/guides/caching#a-detailed-caching-example)
 in the docs as well.
 
 ### Use the React Query DevTools
@@ -206,7 +206,7 @@ Because the query key is used as a key for the cache, you will get a new cache e
 when you switch for the first time.
 This is certainly not ideal, so you can either use the _keepPreviousData_ option for these cases,
 or, if possible, pre-fill the newly created cache entry with
-[initialData](https://react-query.tanstack.com/docs/guides/initial-query-data#initial-data-from-cache).
+[initialData](https://react-query.tanstack.com/guides/initial-query-data#initial-data-from-cache).
 The above example is perfect for that, because we can do some client side pre-filtering on our todos:
 
 ```ts:title=pre-filtering {15-20}
