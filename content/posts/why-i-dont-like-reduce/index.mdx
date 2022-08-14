@@ -149,7 +149,7 @@ Even when working with very large lists (tens of thousands of entries),
 I have made the experience that performance is rarely negatively impacted as long as you keep iterations linear.
 
 If your toObject util does _one_ iteration with a reduce or _two_ iterations with a _map_ followed by _Object.fromEntries_ is irrelevant,
-_unless_ you have [measured it](https://cdb.reacttraining.com/react-inline-functions-and-performance-bdff784f5578)
+_unless_ you have [measured it](https://reacttraining.com/blog/react-inline-functions-and-performance)
 and found it to be a bottleneck.
 
 ## Reduce performance pitfalls
