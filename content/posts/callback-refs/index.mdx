@@ -56,7 +56,7 @@ React.useEffect(() => {
 return <input ref={ref} defaultValue="Hello world" />
 ```
 
-This is mostly fine and doesn't violate any rules. The empty dependency array is okay because the only thing used inside is the ref, which is stable. The linter won't complain about adding it to the dependency array, and the ref is also not read during render (which might be troublesome with concurrent react features).
+This is mostly fine and doesn't violate any rules. The empty dependency array is okay because the only thing used inside is the ref, which is stable. The linter won't complain about adding it to the dependency array, and the ref is also not read during render (which might be troublesome with concurrent React features).
 
 The effect will run once "on mount" ([twice in strict mode](https://reactjs.org/docs/strict-mode.html#ensuring-reusable-state)). By that time, React has already populated the ref with the DOM node, so we can focus it.
 
@@ -109,9 +109,9 @@ This is where callback refs come into play. If you've ever looked at the [type d
 type Ref<T> = RefCallback<T> | RefObject<T> | null
 ```
 
-Conceptually, I like to think about refs on react elements as functions that are called after the component has rendered. This function gets the rendered DOM node passed as argument. If the react element unmounts, it will be called once more with _null_.
+Conceptually, I like to think about refs on React elements as functions that are called after the component has rendered. This function gets the rendered DOM node passed as argument. If the React element unmounts, it will be called once more with _null_.
 
-Passing a ref from _useRef_ (a RefObject) to a react element is therefore just syntactic sugar for:
+Passing a ref from _useRef_ (a RefObject) to a React element is therefore just syntactic sugar for:
 
 ```jsx:title=callback-ref {2-4}
 <input
@@ -157,9 +157,9 @@ const ref = React.useCallback((node) => {
 return <input ref={ref} defaultValue="Hello world" />
 ```
 
-Comparing this to the initial version, it's less code and only uses one hook instead of two. Also, it will work in all situations because the callback ref is bound to the lifecycle of the dom node, not of the component that mounts it. Further, it will not execute twice in strict mode (when running in the development environment), which seems to be important to many.
+Comparing this to the initial version, it's less code and only uses one hook instead of two. Also, it will work in all situations because the callback ref is bound to the lifecycle of the DOM node, not of the component that mounts it. Further, it will not execute twice in strict mode (when running in the development environment), which seems to be important to many.
 
-And as shown in this [hidden gem in the (old) react docs](https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node), you can use it to run any sort of side effects, e.g. call _setState_ in it. I'll just leave the example here because it's actually pretty good:
+And as shown in this [hidden gem in the (old) React docs](https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node), you can use it to run any sort of side effects, e.g. call _setState_ in it. I'll just leave the example here because it's actually pretty good:
 
 ```jsx:title=measure-a-dom-node
 function MeasureExample() {
