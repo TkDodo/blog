@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { StaticImage } from "gatsby-plugin-image"
 import { Grid, Link } from '@theme-ui/components'
 
 const PremiumSponsors = () => (
@@ -30,13 +31,14 @@ const PremiumSponsors = () => (
       </Link>
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
-      <img
-        src="./images/reactbricks.svg"
+      <StaticImage
+        placeholder="blurred"
+        src="../../static/images/reactbricks.svg"
         alt="React Bricks"
+        width="64"
+        height="64"
         style={{
           marginRight: '0.875rem',
-          width: '4rem',
-          height: '4rem',
           borderRadius: '50%',
         }}
       />
@@ -74,13 +76,14 @@ const PremiumSponsors = () => (
       </Link>
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
-      <img
-        src="./images/workflowgen.png"
+      <StaticImage
+        placeholder="blurred"
+        src="../../static/images/workflowgen.png"
         alt="WorkflowGen"
+        width="64"
+        height="64"
         style={{
           marginRight: '0.875rem',
-          width: '4rem',
-          height: '4rem',
           borderRadius: '50%',
         }}
       />
