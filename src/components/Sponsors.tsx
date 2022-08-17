@@ -42,7 +42,8 @@ const Sponsors = () => (
         >
           <h2>React Bricks</h2>
           <StaticImage
-            src="./images/reactbricks.svg"
+            placeholder="blurred"
+            src="../../static/images/reactbricks.svg"
             height="300"
             alt="React Bricks"
           />
@@ -77,7 +78,8 @@ const Sponsors = () => (
           <h2>WorkflowGen</h2>
 
           <StaticImage
-            src="./images/workflowgen.png"
+            placeholder="blurred"
+            src="../../static/images/workflowgen.png"
             height="300"
             alt="WorkflowGen"
           />
@@ -145,7 +147,7 @@ const Sponsors = () => (
           rel="noopener noreferrer"
         >
           <h2>tRPC</h2>
-          <StaticImage src="./images/trpc.png" height="300" alt="tRPC" />
+          <StaticImage placeholder="blurred" src="../../static/images/trpc.png" height="300" alt="tRPC" />
         </Link>
         <div>
           <Text>🎗 Supporter ($10 a month)</Text>
@@ -210,7 +212,8 @@ const Sponsors = () => (
         >
           <h2>Thomas Ballinger</h2>
           <StaticImage
-            src="./images/ballingt.jpg"
+            placeholder="blurred"
+            src="../../static/images/ballingt.jpg"
             height="300"
             alt="Thomas Ballinger"
           />
