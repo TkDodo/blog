@@ -72,6 +72,7 @@ const CardListItem = ({
     <Card
       {...sal}
       sx={(t) => ({
+        maxWidth: '320px',
         borderRadius: '12px',
         border: `2px solid ${t.colors.background}`,
         padding: '8px',
