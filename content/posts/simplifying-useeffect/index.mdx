@@ -21,7 +21,14 @@ import Translations from 'components/Translations'
   url="https://unsplash.com/@christopher__burns"
 />
 
-<Translations>{[]}</Translations>
+<Translations>
+  {[
+    {
+      language: '한국어',
+      url: 'https://onlydev.tistory.com/156',
+    },
+  ]}
+</Translations>
 
 ---
 
@@ -42,7 +49,7 @@ Data fetching is a very common side effect that is typically managed with _useEf
 
 I'm obviously going to recommend my favourite open source library, [react-query](https://react-query.tanstack.com/) (I doubt that I will be able to write another article without mentioning it 😅), but [SWR](https://swr.vercel.app/), [Apollo](https://apollographql.com/client) and also [RTK-Query](https://rtk-query-docs.netlify.app/) are great as well. The point is: don't try and re-invent the wheel. Some problems have been solved before and are worth abstracting away. The amount of useEffects that I've had to write has been drastically reduced since I'm using react-query.
 
-## 2. Follow the singe responsibility principle
+## 2. Follow the single responsibility principle
 
 A function or a class should do one thing, and one thing only. Your `processPayment` function is hopefully only going to process the payment and not additionally redirecting the user somewhere, because that is not it's responsibility. The same principle applies to the function that you pass to _useEffect_. There is no need to tuck everything in one _useEffect_:
 
