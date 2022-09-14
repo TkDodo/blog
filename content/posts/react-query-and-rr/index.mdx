@@ -47,7 +47,7 @@ import Highlight from 'components/Highlight'
 
 ---
 
-[Remix](https://remix.run/) is changing the game, and they are bringing their data fetching concepts (loaders and actions) to purely client side rendered applications with [React Router 6.4](https://beta.reactrouter.com/en/dev). At the time of this writing, v6.4 is still in beta, but I went through their great [tutorial](https://beta.reactrouter.com/en/dev/getting-started/tutorial) that shows the concept very well and demonstrates how you can quickly build a small, but feature-rich app.
+[Remix](https://remix.run/) is changing the game, and they are bringing their data fetching concepts (loaders and actions) to purely client side rendered applications with [React Router 6.4](https://reactrouter.com/en/6.4.0/start/overview). I went through their great [tutorial](https://reactrouter.com/en/6.4.0/start/tutorial) that shows the concept very well and demonstrates how you can quickly build a small, but feature-rich app.
 
 With React Router coming into the data fetching game, it is naturally interesting to understand how this competes or correlates with existing data fetching and caching libraries like React Query. So let me spoil it right here:
 
@@ -55,7 +55,7 @@ With React Router coming into the data fetching game, it is naturally interestin
 
 ## A router that fetches data
 
-To recap: React Router will allow you to define [loaders](https://beta.reactrouter.com/en/dev/route/loader) on each route, which will be called when the route is visited. In the route component itself, you can `useLoaderData()` to get access to that data. Updating data is as simple as submitting a _Form_, which will call an [action](https://beta.reactrouter.com/en/dev/route/action) function. Actions invalidate all active loaders, so you'll automagically see updated data on your screen.
+To recap: React Router will allow you to define [loaders](https://reactrouter.com/en/6.4.0/route/loader) on each route, which will be called when the route is visited. In the route component itself, you can `useLoaderData()` to get access to that data. Updating data is as simple as submitting a _Form_, which will call an [action](https://reactrouter.com/en/6.4.0/route/action) function. Actions invalidate all active loaders, so you'll automagically see updated data on your screen.
 
 If this sounds very similar to _queries_ and _mutations_ - you are right, it does. So the questions that have been popping up after the announcement of [Remixing React Router](https://remix.run/blog/remixing-react-router) are:
 
@@ -182,7 +182,7 @@ The loader is not a hook, so we can't _useQueryClient_. Importing the QueryClien
 
 ### _getQueryData_ ?? _fetchQuery_
 
-We want the loader to wait for our data to be ready and return it to get a good experience on the first loads. We also want errors to be thrown to the [errorElement](https://beta.reactrouter.com/en/dev/route/error-element), so _fetchQuery_ is the best option. Note that _prefetchQuery_ doesn't return anything and catches errors internally (otherwise, they are equivalent).
+We want the loader to wait for our data to be ready and return it to get a good experience on the first loads. We also want errors to be thrown to the [errorElement](https://reactrouter.com/en/6.4.0/route/error-element), so _fetchQuery_ is the best option. Note that _prefetchQuery_ doesn't return anything and catches errors internally (otherwise, they are equivalent).
 
 _getQueryData_ does the trick for returning any data we have in the cache, even if it's stale. This ensures that recurring visits to a page will show data immediately. Only if _getQueryData_ returns _undefined_ (meaning nothing is in the cache), we'll actually do the fetch.
 
