@@ -94,21 +94,29 @@ export default function Contact() {
 }
 ```
 
-```jsx:title=src/main.jsx {1,9-10}
+```jsx:title=src/main.jsx {1,15-16}
 import Contact, { loader as contactLoader } from './routes/contact'
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <DataBrowserRouter>
-    <Route path="/" element={<Root />}>
-      <Route
-        path="contacts/:contactId"
-        element={<Contact />}
-        // ⬇️ pass the loader to the route
-        loader={contactLoader}
-      />
-    </Route>
-  </DataBrowserRouter>
-)
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Root />,
+    children: [
+      {
+        path: 'contacts',
+        element: <Contacts />,
+        children: [
+          {
+            path: 'contacts/:contactId',
+            element: <Contact />,
+            // ⬇️ this is the loader for the detail route
+            loader: contactLoader,
+          },
+        ],
+      },
+    ],
+  },
+])
 ```
 
 If you navigate to `contacts/1`, data for that contact will be fetched _before_ the component is rendered. By the time we want to show the Contact, _useLoaderData_ will have data readily available. This is awesome as it not only improves the user experience, but look at that developer experience of co-located data fetching and rendering! I love it. 🥰
@@ -155,23 +163,29 @@ export default function Contact() {
 }
 ```
 
-```jsx:title=src/main.jsx {10-11}
+```jsx:title=src/main.jsx {15-16}
 const queryClient = new QueryClient()
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <QueryClientProvider client={queryClient}>
-    <DataBrowserRouter>
-      <Route path="/" element={<Root />}>
-        <Route
-          path="contacts/:contactId"
-          element={<Contact />}
-          // ⬇️ pass the queryClient to the route
-          loader={contactLoader(queryClient)}
-        />
-      </Route>
-    </DataBrowserRouter>
-  </QueryClientProvider>
-)
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Root />,
+    children: [
+      {
+        path: 'contacts',
+        element: <Contacts />,
+        children: [
+          {
+            path: 'contacts/:contactId',
+            element: <Contact />,
+            // ⬇️ pass the queryClient to the route
+            loader: contactLoader(queryClient),
+          },
+        ],
+      },
+    ],
+  },
+])
 ```
 
 There are a couple of things going on here, so let's break it down:
