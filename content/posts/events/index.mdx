@@ -32,7 +32,7 @@ import Translations from 'components/Translations'
 
 I hope that after reading part one about [stale closures in React](hooks-dependencies-and-stale-closures), you now have a good understanding of why they can occur and how to avoid them.
 
-However, it is sometimes quite cumbersome to have to think about referential stability when passing functions around, and it can also get a bit boilerplate-y with all those _useCallbacks_ floating around.
+However, it is sometimes quite cumbersome to have to think about referential stability when passing functions around, and it can also get a bit boilerplate-y with all those additional _useCallbacks_.
 
 I left a bunch of clues already in the previous article that there might be a way to make this easier, so here we go:
 
@@ -42,7 +42,7 @@ Remember this sentence?
 
 > The thing about the picture is - it cannot change. Once we have taken it, its content is sealed (unless we use photoshop).
 
-In React, we almost always think in immutability. _props_ cannot be changed (from within a component), and _state_ updates are merely scheduled and also need to happen in an immutable way. Everything we see and work with is a _const_.
+In React, we almost always think in immutability. _Props_ cannot be changed (from within a component), and _state_ updates are merely scheduled and also need to happen in an immutable way. Everything we see and work with is essentially a _const_.
 
 We always see the things from the time they were created, but if they are _mutated_ in place, we would still see the latest value. Let's take the basic example from part 1 and store the value in a mutable variable outside the React component:
 
@@ -161,7 +161,7 @@ export const useDebouncedState = (callback, delay) => {
 }
 ```
 
-Admittedly, this does add more boilerplate, but it pays off - especially for libraries or reusable hooks because due to the improved developer experience for consumers of the hook. Also, hold on tight because React might actually ship a hook that does this for us in the future:
+Admittedly, this does add more boilerplate, but it pays off - especially for libraries or reusable hooks due to the improved developer experience for consumers of the hook. Also, hold on tight because React might actually ship a hook that does this for us in the future:
 
 ## useEvent
 
