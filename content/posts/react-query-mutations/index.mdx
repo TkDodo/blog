@@ -167,7 +167,9 @@ const useUpdateTitle = (id) => {
   const queryClient = useQueryClient()
 
   return useMutation(
-    (newTitle) => axios.patch(`/posts/${id}`, { title: newTitle }),
+    (newTitle) => axios
+      .patch(`/posts/${id}`, { title: newTitle })
+      .then(response => response.data),
     {
       // 💡 response of the mutation is passed to onSuccess
       onSuccess: (newPost) => {
