@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StaticImage } from "gatsby-plugin-image"
+import { StaticImage } from 'gatsby-plugin-image'
 import { Grid, Link } from '@theme-ui/components'
 
 const PremiumSponsors = () => (
@@ -27,7 +27,7 @@ const PremiumSponsors = () => (
           fontSize: '1.5rem',
         }}
       >
-        💎 Tanner Linsley
+        💍 Tanner Linsley
       </Link>
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -35,8 +35,8 @@ const PremiumSponsors = () => (
         placeholder="blurred"
         src="../../static/images/reactbricks.svg"
         alt="React Bricks"
-        width="64"
-        height="64"
+        width={64}
+        height={64}
         style={{
           marginRight: '0.875rem',
           borderRadius: '50%',
@@ -80,8 +80,8 @@ const PremiumSponsors = () => (
         placeholder="blurred"
         src="../../static/images/workflowgen.png"
         alt="WorkflowGen"
-        width="64"
-        height="64"
+        width={64}
+        height={64}
         style={{
           marginRight: '0.875rem',
           borderRadius: '50%',

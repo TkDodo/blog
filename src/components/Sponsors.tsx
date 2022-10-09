@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StaticImage } from "gatsby-plugin-image"
+import { StaticImage } from 'gatsby-plugin-image'
 import { Box, Grid, Card, Link, Text } from '@theme-ui/components'
 
 const Sponsors = () => (
@@ -31,7 +31,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>💎 Diamond ($300 a month)</Text>
+          <Text>💍 Platinum ($500 a month)</Text>
         </div>
       </Card>
       <Card>
@@ -44,7 +44,7 @@ const Sponsors = () => (
           <StaticImage
             placeholder="blurred"
             src="../../static/images/reactbricks.svg"
-            height="300"
+            height={300}
             alt="React Bricks"
           />
         </Link>
@@ -80,7 +80,7 @@ const Sponsors = () => (
           <StaticImage
             placeholder="blurred"
             src="../../static/images/workflowgen.png"
-            height="300"
+            height={300}
             alt="WorkflowGen"
           />
         </Link>
@@ -147,7 +147,12 @@ const Sponsors = () => (
           rel="noopener noreferrer"
         >
           <h2>tRPC</h2>
-          <StaticImage placeholder="blurred" src="../../static/images/trpc.png" height="300" alt="tRPC" />
+          <StaticImage
+            placeholder="blurred"
+            src="../../static/images/trpc.png"
+            height={300}
+            alt="tRPC"
+          />
         </Link>
         <div>
           <Text>🎗 Supporter ($10 a month)</Text>
@@ -214,7 +219,7 @@ const Sponsors = () => (
           <StaticImage
             placeholder="blurred"
             src="../../static/images/ballingt.jpg"
-            height="300"
+            height={300}
             alt="Thomas Ballinger"
           />
         </Link>
