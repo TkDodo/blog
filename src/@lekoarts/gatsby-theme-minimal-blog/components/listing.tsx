@@ -53,24 +53,8 @@ const CardListItem = ({
   BannerProps) => {
   const image = post.banner?.childImageSharp.resize
 
-  const [animate, toggleAnimate] = React.useReducer((v) => !v, true)
-
-  const sal = animate
-    ? {
-        'data-sal': 'zoom-in',
-        'data-sal-easing': 'ease',
-        'data-sal-delay': '100',
-        'data-sal-duration': '400',
-      }
-    : undefined
-
-  React.useEffect(() => {
-    toggleAnimate()
-  }, [])
-
   return (
     <Card
-      {...sal}
       sx={(t) => ({
         maxWidth: '320px',
         borderRadius: '12px',
