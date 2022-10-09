@@ -20,12 +20,6 @@ module.exports = {
     `gatsby-plugin-image`,
     `gatsby-plugin-sharp`,
     {
-      resolve: `gatsby-plugin-scroll-reveal`,
-      options: {
-        threshold: 0.1,
-      },
-    },
-    {
       resolve: `gatsby-plugin-scroll-indicator`,
       options: {
         color: 'var(--theme-ui-colors-primary);',

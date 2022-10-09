@@ -29,7 +29,6 @@
     "gatsby-plugin-offline": "^5.7.0",
     "gatsby-plugin-sitemap": "^5.7.0",
     "gatsby-plugin-sharp": "^4.21.0",
-    "gatsby-plugin-scroll-reveal": "^0.0.7",
     "gatsby-plugin-scroll-indicator": "^1.0.1",
     "gatsby-plugin-webpack-bundle-analyser-v2": "^1.1.26",
     "gatsby-remark-autolink-headers": "^5.7.0",
