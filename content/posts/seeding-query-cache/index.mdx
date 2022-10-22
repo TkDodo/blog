@@ -50,7 +50,7 @@ A new RFC about [first class support for Promises](https://github.com/reactjs/rf
 
 A waterfall describes a situation where one request is made, and we wait for it to complete before firing another request.
 
-Sometimes, this is unavoidable, because the first request contains information that is needed to make the second request. We also refer to this as [dependent queries](https://tanstack.com/query/v4/docs/guides/dependent-queries).
+Sometimes, this is unavoidable, because the first request contains information that is needed to make the second request. We also refer to these as [dependent queries](https://tanstack.com/query/v4/docs/guides/dependent-queries):
 
 <img
   src="./dependent-queries.png"
@@ -71,7 +71,7 @@ In React Query, we can do that in two different ways:
 const issues = useQuery({ queryKey: ['issues'], queryFn: fetchIssues })
 const labels = useQuery({ queryKey: ['labels'], queryFn: fetchLabels })
 
-// 2. Use the `useQueries` hook
+// 2. Use the useQueries hook
 const [issues, labels] = useQueries([
   { queryKey: ['issues'], queryFn: fetchUser },
   { queryKey: ['labels'], queryFn: fetchPosts },
@@ -88,7 +88,7 @@ As described in the above linked RFC, suspense a way to unwrap promises with Rea
 
 When rendering components, we are mostly interested in the success scenario. Handling loading and error states in each and every component can be tedious, and suspense is aimed at solving this problem.
 
-When a promise is _pending_, React will unmount the component tree and render a fallback component defined by a _Suspense_ boundary component. In case of errors, the error is bubbled up to the nearest _ErrorBoundary_.
+When a promise is _pending_, React will unmount the component tree and render a fallback defined by a _Suspense_ boundary component. In case of errors, the error is bubbled up to the nearest _ErrorBoundary_.
 
 This will decouple our components from handling those states, and we can focus on the happy path. It almost acts like synchronous code that just _reads_ a value from a cache:
 
@@ -150,7 +150,7 @@ So this is nice and all, but it can backfire when you use multiple queries in th
 - Second query is fetched
 - Component finally renders successfully
 
-This will have pretty impactful implication on your application's performance, because you'll see that fallback for waaay longer than necessary.
+This will have pretty impactful implications on your application's performance, because you'll see that fallback for waaay longer than necessary.
 
 The best way to circumvent this problem is to make sure that there is already data in the cache when the component tries to read it.
 
@@ -246,7 +246,7 @@ const useTodo = (id: number) => {
 
 ### Push approach
 
-Alternatively, you can create detail caches whenever you fetch the list query. This has the advantage that staleness is automatically measured from when the list was fetched, because, well, that's when we create the detail entry as well.
+Alternatively, you can create detail caches whenever you fetch the list query. This has the advantage that staleness is automatically measured from when the list was fetched, because, well, that's when we create the detail entry.
 
 However, there is no good callback to hook into when a query is fetched. _onSuccess_ on _useQuery_ would technically work, but it would be executed for every instance of _useQuery_. If we have multiple observers, this would lead to the same data being written to the cache multiple times. The global _onSuccess_ callback on the cache itself might also work, but it would be executed for every query, so we'd have to narrow it down to the right query key.
 
@@ -271,10 +271,11 @@ const useTodos = () => {
 
 This would create a detail entry for each item in the list immediately. Since there is no one interested in those queries at the moment, those would be seen as _inactive_, which means they might be garbage collected after _cacheTime_ has elapsed (default: 15 minutes).
 
-So if you use the push approach, the detail entries you've created here might no longer be available once the user actually navigates to the detail view.
+So if you use the push approach, the detail entries you've created here might no longer be available once the user actually navigates to the detail view. Also, if your list is long, you might be creating way too many entries that will never be needed.
 
 🟢 &nbsp; staleTime is automatically respected<br/>
 🟡 &nbsp; there is no good callback<br/>
+🟡 &nbsp; might create unnecessary cache entries<br/>
 🔴 &nbsp; pushed data might be garbage collected too early
 
 ---
