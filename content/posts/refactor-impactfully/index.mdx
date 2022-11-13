@@ -1,0 +1,76 @@
+---
+title: Refactor impactfully
+description: Why not every refactoring is worth doing...
+date: 2022-11-13
+banner: ./impact.jpeg
+tags:
+  - principles
+  - road to refactoring
+---
+
+import Comments from 'components/Comments'
+import Highlight from 'components/Highlight'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+
+<img alt="Refactor impactfully" src="./impact.jpeg" />
+
+<Attribution name="Francisco Suarez" url="https://unsplash.com/@fsuarez" />
+
+- [#1: Don't mix refactorings with hotfixes](road-to-refactoring)
+- [#2: Always provide customer value](always-provide-customer-value)
+- [#3: Use urgency](use-urgency)
+- <b>#4: Refactor impactfully</b>
+
+---
+
+<Translations>{[]}</Translations>
+
+---
+
+Apart from [the small refactorings](always-provide-customer-value#the-small-ones) that you, as a responsible developer, should be doing with every feature request without asking for permission, a larger refactoring always costs in some way. Even if you [package them well](always-provide-customer-value#the-right-package), someone will likely question if it's really necessary to do, or if we couldn't use the time and resources better.
+
+That's why it's so important to choose the _right_ things to refactor. In most apps, there's tons of code that could be changed. As someone who likes a tidy tech stack and clean code, I could do nothing but refactor 24/7. From the technical side, it _feels good_ to have things tidied up.
+
+## The restaurant kitchen
+
+I love this comparison, so this feels like a good time to make it:
+
+Our company is like a restaurant that wants to serve dishes to customers. We developers work in the kitchen to make sure the meals can be cooked. Shipping features is like cooking a meal. Every time we do it, the kitchen gets a bit more dirty. So in order to keep cooking, we have to clean the kitchen from time to time. If we don't do this at all, we won't have any clean pans or knives left to keep cooking.
+
+That cleaning is refactoring, or paying back the _tech debt_ we have amassed while trying to ship things.
+
+However, a tidy kitchen is useless if there are no customers in the restaurant. So we cannot have cleaning be the only thing we do all day - we have to balance it.
+
+As we can't refactor everything, my tip is:
+
+<Highlight>Choose the most impactful things for refactoring</Highlight>
+
+To stay with the kitchen example: Should we replace the broken dishwasher or get new plates because they are shinier? I hope it's clear that the dishwasher has a much bigger impact.
+
+## Practical example
+
+As I looked through our codebase, I saw that we are using [axios](https://github.com/axios/axios) for data fetching. Why are we doing that if all browsers we support now have a built-in [fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)?
+
+Small wrappers around fetch with a similar api to axios, like [ky](https://github.com/sindresorhus/ky) are like three times smaller. And we wouldn't be using XMLHttp requests anymore...
+
+I was excited about this, such a nice opportunity to make things more modern.
+
+### Why we didn't do it
+
+Frankly speaking, because it didn't matter. At all. The size improvements are irrelevant - we're talking 3kb vs 9kb. One is not "faster" or "more maintainable" than the other. We don't really have a problem with axios.
+
+The refactoring would be quite _cosmetic_. Something developers would _like_ to do, but there's no _need_ to do it. We had at least ten other things to touch that would have more impact on both user experience and maintainability.
+
+### It's a trap
+
+It would also be kind of risky. Our api layer is used on every page, so the refactoring would need massive amount of testing. That's kind of the worst of both worlds: Barely any impact and a rather large risk of introducing regressions.
+
+Try not to fall into that trap when choosing what to refactor. Be mindful about if the things you're about to change really make an impact on either your users or your fellow developers.
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />
