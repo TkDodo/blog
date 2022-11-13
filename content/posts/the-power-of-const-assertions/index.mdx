@@ -222,7 +222,7 @@ type Variant = typeof options[number]['id']
 We are basically telling the compiler: Walk through every item of options and give me the type of the id.
 Much terser syntax, the type will still be correctly inferred to `primary | secondary`, and we now have one single source of truth.
 
-Of course, this only works because of the const assertion, and if you remove it or forget it, _Variant_ will just be of type number.
+Of course, this only works because of the const assertion, and if you remove it or forget it, _Variant_ will just be of type string.
 This is a problem because it relies on developers not making mistakes, and if we wanted to rely on that, we could also just write JavaScript.
 
 Luckily, we can also tell the compiler to only make this work with readonly Arrays:
