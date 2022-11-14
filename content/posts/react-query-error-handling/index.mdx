@@ -19,23 +19,23 @@ import Translations from 'components/Translations'
 
 <Attribution name="Sigmund" url="https://unsplash.com/@sigmund" />
 
-- [#1: Practical TanStack Query](practical-react-query)
-- [#2: TanStack Query Data Transformations](react-query-data-transformations)
-- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
-- [#5: Testing TanStack Query](testing-react-query)
-- [#6: TanStack Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
-- [#8: Effective TanStack Query Keys](effective-react-query-keys)
+- [#1: Practical TanStack Query](practical-tanstack-query)
+- [#2: TanStack Query Data Transformations](tanstack-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](tanstack-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-tanstack-query)
+- [#5: Testing TanStack Query](testing-tanstack-query)
+- [#6: TanStack Query and TypeScript](tanstack-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-tanstack-query)
+- [#8: Effective TanStack Query Keys](effective-tanstack-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
-- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-tanstack-query)
+- [#10: TanStack Query as a State Manager](tanstack-query-as-a-state-manager)
 - <b>#11: TanStack Query Error Handling</b>
-- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
-- [#13: Offline TanStack Query](offline-react-query)
-- [#14: TanStack Query and Forms](react-query-and-forms)
-- [#15: TanStack Query FAQs](react-query-fa-qs)
-- [#16: TanStack Query meets React Router](react-query-meets-react-router)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-tanstack-query)
+- [#13: Offline TanStack Query](offline-tanstack-query)
+- [#14: TanStack Query and Forms](tanstack-query-and-forms)
+- [#15: TanStack Query FAQs](tanstack-query-fa-qs)
+- [#16: TanStack Query meets React Router](tanstack-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -95,7 +95,7 @@ Here, we're handling error situations by checking for the _isError_ boolean flag
 
 This is certainly okay for some scenarios, but has a couple of drawbacks, too:
 
-1. It doesn't handle background errors very well: Would we really want to unmount our complete Todo List just because a background refetch failed? Maybe the api is temporarily down, or we reached a rate limit, in which case it might work again in a few minutes. You can have a look at [#4: Status Checks in TanStack Query](status-checks-in-react-query) to find out how to improve that situation.
+1. It doesn't handle background errors very well: Would we really want to unmount our complete Todo List just because a background refetch failed? Maybe the api is temporarily down, or we reached a rate limit, in which case it might work again in a few minutes. You can have a look at [#4: Status Checks in TanStack Query](status-checks-in-tanstack-query) to find out how to improve that situation.
 
 2. It can become quite boilerplate-y if you have to do this in every component that wants to use a query.
 
@@ -130,7 +130,7 @@ function TodoList() {
 }
 ```
 
-Starting with [v3.23.0](https://github.com/tannerlinsley/react-query/releases/tag/v3.23.0), you can even customize which errors should go towards an Error Boundary, and which ones you'd rather handle locally by providing a function to _useErrorBoundary_:
+Starting with [v3.23.0](https://github.com/tannerlinsley/tanstack-query/releases/tag/v3.23.0), you can even customize which errors should go towards an Error Boundary, and which ones you'd rather handle locally by providing a function to _useErrorBoundary_:
 
 ```js:title=granular-error-boundaries
 useQuery(['todos'], fetchTodos, {

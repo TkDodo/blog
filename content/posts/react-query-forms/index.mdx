@@ -18,23 +18,23 @@ import Translations from 'components/Translations'
 
 <Attribution name="Kelly Sikkema" url="https://unsplash.com/@kellysikkema" />
 
-- [#1: Practical TanStack Query](practical-react-query)
-- [#2: TanStack Query Data Transformations](react-query-data-transformations)
-- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
-- [#5: Testing TanStack Query](testing-react-query)
-- [#6: TanStack Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
-- [#8: Effective TanStack Query Keys](effective-react-query-keys)
+- [#1: Practical TanStack Query](practical-tanstack-query)
+- [#2: TanStack Query Data Transformations](tanstack-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](tanstack-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-tanstack-query)
+- [#5: Testing TanStack Query](testing-tanstack-query)
+- [#6: TanStack Query and TypeScript](tanstack-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-tanstack-query)
+- [#8: Effective TanStack Query Keys](effective-tanstack-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
-- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
-- [#11: TanStack Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
-- [#13: Offline TanStack Query](offline-react-query)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-tanstack-query)
+- [#10: TanStack Query as a State Manager](tanstack-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](tanstack-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-tanstack-query)
+- [#13: Offline TanStack Query](offline-tanstack-query)
 - <b>#14: TanStack Query and Forms</b>
-- [#15: TanStack Query FAQs](react-query-fa-qs)
-- [#16: TanStack Query meets React Router](react-query-meets-react-router)
+- [#15: TanStack Query FAQs](tanstack-query-fa-qs)
+- [#16: TanStack Query meets React Router](tanstack-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -54,7 +54,7 @@ import Translations from 'components/Translations'
 
 ---
 
-Forms are an important part in many web applications as the primary means to update data. We are using TanStack Query not only to fetch data ([queries](react-query-as-a-state-manager)), but also to modify it ([mutations](mastering-mutations-in-react-query)), so we need to somehow integrate our beloved async state manager with forms.
+Forms are an important part in many web applications as the primary means to update data. We are using TanStack Query not only to fetch data ([queries](tanstack-query-as-a-state-manager)), but also to modify it ([mutations](mastering-mutations-in-tanstack-query)), so we need to somehow integrate our beloved async state manager with forms.
 
 The good news is that realistically, there isn't anything special about forms: It is still just a bunch of html elements that we render in order to display some data. However, as we'd also like to _change_ that data, the lines between what is Server State and what is Client State start to blur a bit, which is where the complexity might come in.
 
@@ -68,7 +68,7 @@ When we display a list of Persons, that is undoubtedly Server State. But what ha
 
 ## The simple approach
 
-I have gone on the record already about how I am not a fan of copying state from one state manager to another, be it [putting props to state](putting-props-to-use-state) or copying state from [TanStack Query to local state](practical-react-query#keep-server-and-client-state-separate).
+I have gone on the record already about how I am not a fan of copying state from one state manager to another, be it [putting props to state](putting-props-to-use-state) or copying state from [TanStack Query to local state](practical-tanstack-query#keep-server-and-client-state-separate).
 
 I do think that forms can be an exception to this rule though, if you are doing it deliberately and know about the tradeoffs (everything is a tradeoff after all). When rendering our Person form, we very likely want to treat the Server State as _initial_ data only. We fetch the firstName and lastName, put it into the form state, and then let the user update it.
 
@@ -238,7 +238,7 @@ const { mutate, isLoading } = useMutation((values) => updatePerson(values))
 
 ### Invalidate and reset after mutation
 
-If you do not redirect to a different page right after the form submission, it might be a good idea to reset the form _after_ the invalidation has completed. As described in [Mastering Mutations](mastering-mutations-in-react-query#some-callbacks-might-not-fire), you'd likely want to do that in the _onSuccess_ callback of _mutate_. This also works best if you keep state seperated, as you only need to reset to _undefined_ in order for the server state to be picked up again:
+If you do not redirect to a different page right after the form submission, it might be a good idea to reset the form _after_ the invalidation has completed. As described in [Mastering Mutations](mastering-mutations-in-tanstack-query#some-callbacks-might-not-fire), you'd likely want to do that in the _onSuccess_ callback of _mutate_. This also works best if you keep state seperated, as you only need to reset to _undefined_ in order for the server state to be picked up again:
 
 ```js:title=reset-form {5-9,14-17}
 function PersonDetail({ id }) {

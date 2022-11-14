@@ -50,7 +50,7 @@ The question about which state management solution to use might be just as old a
 
 It depends on the type of state. It depends on update frequency. It depends on scoping.
 
-If you know me, you know I have strong preferences on what to do with [server state](react-query-as-a-state-manager). So lets keep that out of the picture and look at everything that's left:
+If you know me, you know I have strong preferences on what to do with [server state](tanstack-query-as-a-state-manager). So lets keep that out of the picture and look at everything that's left:
 
 ## Client State
 
@@ -268,7 +268,7 @@ function App() {
 }
 ```
 
-This goes very well with the concept of [separating server and client state](practical-react-query#keep-server-and-client-state-separate), and it actually wouldn't work at all if you'd pass _data_ as _initialValue_, because when the reducer first runs, _data_ will be _undefined_ (as we still need to fetch it first).
+This goes very well with the concept of [separating server and client state](practical-tanstack-query#keep-server-and-client-state-separate), and it actually wouldn't work at all if you'd pass _data_ as _initialValue_, because when the reducer first runs, _data_ will be _undefined_ (as we still need to fetch it first).
 
 So you'd wind up creating effects that try to sync the state into the reducer, which can get you in all sorts of troubles with background updates.
 

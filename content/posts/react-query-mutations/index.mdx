@@ -20,23 +20,23 @@ import Translations from 'components/Translations'
 
 <Attribution name="Braňo" url="https://unsplash.com/@3dparadise" />
 
-- [#1: Practical TanStack Query](practical-react-query)
-- [#2: TanStack Query Data Transformations](react-query-data-transformations)
-- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
-- [#5: Testing TanStack Query](testing-react-query)
-- [#6: TanStack Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
-- [#8: Effective TanStack Query Keys](effective-react-query-keys)
+- [#1: Practical TanStack Query](practical-tanstack-query)
+- [#2: TanStack Query Data Transformations](tanstack-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](tanstack-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-tanstack-query)
+- [#5: Testing TanStack Query](testing-tanstack-query)
+- [#6: TanStack Query and TypeScript](tanstack-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-tanstack-query)
+- [#8: Effective TanStack Query Keys](effective-tanstack-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
-- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
-- [#11: TanStack Query Error Handling](react-query-error-handling)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-tanstack-query)
+- [#10: TanStack Query as a State Manager](tanstack-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](tanstack-query-error-handling)
 - <b>#12: Mastering Mutations in TanStack Query</b>
-- [#13: Offline TanStack Query](offline-react-query)
-- [#14: TanStack Query and Forms](react-query-and-forms)
-- [#15: TanStack Query FAQs](react-query-fa-qs)
-- [#16: TanStack Query meets React Router](react-query-meets-react-router)
+- [#13: Offline TanStack Query](offline-tanstack-query)
+- [#14: TanStack Query and Forms](tanstack-query-and-forms)
+- [#15: TanStack Query FAQs](tanstack-query-fa-qs)
+- [#16: TanStack Query meets React Router](tanstack-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -77,7 +77,7 @@ console.log(myArray) //  [1]
 console.log(newArray) // [1, 2]
 ```
 
-As the name indicates, _useMutation_ also has some sort of side effect. Since we are in the context of [managing server state](react-query-as-a-state-manager) with TanStack Query, mutations describe a function that performs such a side effect _on the server_. Creating a todo in your database would be a mutation. Logging in a user is also a classic mutation, because it performs the side effect of creating a token for the user.
+As the name indicates, _useMutation_ also has some sort of side effect. Since we are in the context of [managing server state](tanstack-query-as-a-state-manager) with TanStack Query, mutations describe a function that performs such a side effect _on the server_. Creating a todo in your database would be a mutation. Logging in a user is also a classic mutation, because it performs the side effect of creating a token for the user.
 
 In some aspects, _useMutation_ is very similar to _useQuery_. In others, it is quite different.
 
@@ -184,7 +184,7 @@ const useUpdateTitle = (id) => {
 
 Putting data into the cache directly via _setQueryData_ will act as if this data was returned from the backend, which means that all components using that query will re-render accordingly.
 
-I'm showing some more examples of direct updates and the combination of both approaches in [#8: Effective TanStack Query Keys](effective-react-query-keys#structure).
+I'm showing some more examples of direct updates and the combination of both approaches in [#8: Effective TanStack Query Keys](effective-tanstack-query-keys#structure).
 
 ---
 
@@ -286,7 +286,7 @@ const mutation = useMutation(({ title, body }) => updateTodo(title, body))
 mutation.mutate({ title: 'hello', body: 'world' })
 ```
 
-To read more on why that is currently necessary, have a look at [this discussion](https://github.com/tannerlinsley/react-query/discussions/1226).
+To read more on why that is currently necessary, have a look at [this discussion](https://github.com/tannerlinsley/tanstack-query/discussions/1226).
 
 ### Some callbacks might not fire
 

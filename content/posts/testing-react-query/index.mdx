@@ -23,23 +23,23 @@ import Translations from 'components/Translations'
 
 **Last Update: 23.04.2022**
 
-- [#1: Practical TanStack Query](practical-react-query)
-- [#2: TanStack Query Data Transformations](react-query-data-transformations)
-- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
+- [#1: Practical TanStack Query](practical-tanstack-query)
+- [#2: TanStack Query Data Transformations](tanstack-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](tanstack-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-tanstack-query)
 - <b>#5: Testing TanStack Query</b>
-- [#6: TanStack Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
-- [#8: Effective TanStack Query Keys](effective-react-query-keys)
+- [#6: TanStack Query and TypeScript](tanstack-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-tanstack-query)
+- [#8: Effective TanStack Query Keys](effective-tanstack-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
-- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
-- [#11: TanStack Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
-- [#13: Offline TanStack Query](offline-react-query)
-- [#14: TanStack Query and Forms](react-query-and-forms)
-- [#15: TanStack Query FAQs](react-query-fa-qs)
-- [#16: TanStack Query meets React Router](react-query-meets-react-router)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-tanstack-query)
+- [#10: TanStack Query as a State Manager](tanstack-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](tanstack-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-tanstack-query)
+- [#13: Offline TanStack Query](offline-tanstack-query)
+- [#14: TanStack Query and Forms](tanstack-query-and-forms)
+- [#15: TanStack Query FAQs](tanstack-query-fa-qs)
+- [#16: TanStack Query meets React Router](tanstack-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -52,11 +52,11 @@ import Translations from 'components/Translations'
     },
     {
       language: 'Português',
-      url: 'https://dbrno.vercel.app/pt-BR/blog/testing-react-query',
+      url: 'https://dbrno.vercel.app/pt-BR/blog/testing-tanstack-query',
     },
     {
       language: 'Español',
-      url: 'https://rubenvara.io/react-query/tests-react-query',
+      url: 'https://rubenvara.io/tanstack-query/tests-tanstack-query',
     },
   ]}
 </Translations>
@@ -119,7 +119,7 @@ test("my first test", async () => {
 
 ### For components
 
-If you want to test a Component that uses a _useQuery_ hook, you also need to wrap that Component in QueryClientProvider. A small wrapper around _render_ from [react-testing-library](https://testing-library.com/docs/react-testing-library/intro/) seems like a good choice. Have a look at how TanStack Query does it [internally for their tests](https://github.com/tannerlinsley/react-query/blob/ead2e5dd5237f3d004b66316b5f36af718286d2d/src/react/tests/utils.tsx#L6-L17).
+If you want to test a Component that uses a _useQuery_ hook, you also need to wrap that Component in QueryClientProvider. A small wrapper around _render_ from [react-testing-library](https://testing-library.com/docs/react-testing-library/intro/) seems like a good choice. Have a look at how TanStack Query does it [internally for their tests](https://github.com/tannerlinsley/tanstack-query/blob/ead2e5dd5237f3d004b66316b5f36af718286d2d/src/react/tests/utils.tsx#L6-L17).
 
 ## Turn off retries
 
@@ -200,7 +200,7 @@ Here, all queries will retry two times, only _todos_ will retry five times, and 
 
 ### ReactQueryConfigProvider
 
-Of course, this only works for known query keys. Sometimes, you really want to set some configs on a subset of your component tree. In v2, TanStack Query had a [ReactQueryConfigProvider](https://react-query-v2.tanstack.com/docs/api#reactqueryconfigprovider) for that exact use-case. You can achieve the same thing in v3 with a couple of lines of codes:
+Of course, this only works for known query keys. Sometimes, you really want to set some configs on a subset of your component tree. In v2, TanStack Query had a [ReactQueryConfigProvider](https://tanstack-query-v2.tanstack.com/docs/api#reactqueryconfigprovider) for that exact use-case. You can achieve the same thing in v3 with a couple of lines of codes:
 
 ```jsx:title=ReactQueryConfigProvider
 const ReactQueryConfigProvider = ({ children, defaultOptions }) => {
@@ -220,7 +220,7 @@ const ReactQueryConfigProvider = ({ children, defaultOptions }) => {
 }
 ```
 
-You can see this in action in this [codesandbox example](https://codesandbox.io/s/react-query-config-provider-v3-lt00f).
+You can see this in action in this [codesandbox example](https://codesandbox.io/s/tanstack-query-config-provider-v3-lt00f).
 
 ## Always await the query
 
@@ -276,7 +276,7 @@ test("my first test", async () => {
 Per default, TanStack Query prints errors to the console. I think this is quite disturbing during testing, because you'll see 🔴 in the console even though all tests are 🟢. TanStack Query allows overwriting that default behaviour by [setting a logger](https://react-query.tanstack.com/reference/setLogger), so that's what I'm usually doing:
 
 ```ts:title=silence-errors
-import { setLogger } from 'react-query'
+import { setLogger } from 'tanstack-query'
 
 setLogger({
   log: console.log,
@@ -305,7 +305,7 @@ Also, errors are not logged in production mode anymore to avoid confusion.
 
 ## Putting it all together
 
-I've set up a quick repository where all of this comes nicely together: mock-service-worker, react-testing-library and the mentioned wrapper. It contains four tests - basic failure and success tests for custom hooks and components. Have a look here: https://github.com/TkDodo/testing-react-query
+I've set up a quick repository where all of this comes nicely together: mock-service-worker, react-testing-library and the mentioned wrapper. It contains four tests - basic failure and success tests for custom hooks and components. Have a look here: https://github.com/TkDodo/testing-tanstack-query
 
 ---
 

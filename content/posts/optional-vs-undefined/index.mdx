@@ -58,7 +58,7 @@ Especially when we create util functions for internal usage, we should ask ourse
 
 ## Refactoring gone wrong
 
-This is exactly what happened to me when I refactored the function mentioned above for [react-query v4](https://github.com/tannerlinsley/react-query/blob/1247d7beab39ea4cae1ecb2d59c6f6b49ccd9fec/src/core/retryer.ts#L47-L51). I added this parameter, which is supposed to come from an options object passed by the user. In case it is left empty there, we want to fall back to a default value.
+This is exactly what happened to me when I refactored the function mentioned above for [tanstack-query v4](https://github.com/tannerlinsley/tanstack-query/blob/1247d7beab39ea4cae1ecb2d59c6f6b49ccd9fec/src/core/retryer.ts#L47-L51). I added this parameter, which is supposed to come from an options object passed by the user. In case it is left empty there, we want to fall back to a default value.
 
 In the first version, I went with the optional parameter, fixed my usage and called it a day. To my surprise, ~50% of all tests started to fail. 🚨
 

@@ -2,7 +2,7 @@
 title: TanStack Query and TypeScript
 description: Combine two of the most powerful tools for React Apps to produce great user experience, developer experience and type safety.
 date: 2021-05-16
-banner: ./react-query-typescript.jpeg
+banner: ./tanstack-query-typescript.jpeg
 tags:
   - ReactJs
   - TanStack Query
@@ -13,7 +13,7 @@ import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 
-<img src="./react-query-typescript.jpeg" />
+<img src="./tanstack-query-typescript.jpeg" />
 
 <Attribution
   name="hue12 photography"
@@ -22,23 +22,23 @@ import Translations from 'components/Translations'
 
 **Last Update: 23.04.2022**
 
-- [#1: Practical TanStack Query](practical-react-query)
-- [#2: TanStack Query Data Transformations](react-query-data-transformations)
-- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
-- [#5: Testing TanStack Query](testing-react-query)
+- [#1: Practical TanStack Query](practical-tanstack-query)
+- [#2: TanStack Query Data Transformations](tanstack-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](tanstack-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-tanstack-query)
+- [#5: Testing TanStack Query](testing-tanstack-query)
 - <b>#6: TanStack Query and TypeScript</b>
-- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
-- [#8: Effective TanStack Query Keys](effective-react-query-keys)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-tanstack-query)
+- [#8: Effective TanStack Query Keys](effective-tanstack-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
-- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
-- [#11: TanStack Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
-- [#13: Offline TanStack Query](offline-react-query)
-- [#14: TanStack Query and Forms](react-query-and-forms)
-- [#15: TanStack Query FAQs](react-query-fa-qs)
-- [#16: TanStack Query meets React Router](react-query-meets-react-router)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-tanstack-query)
+- [#10: TanStack Query as a State Manager](tanstack-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](tanstack-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-tanstack-query)
+- [#13: Offline TanStack Query](offline-tanstack-query)
+- [#14: TanStack Query and Forms](tanstack-query-and-forms)
+- [#15: TanStack Query FAQs](tanstack-query-fa-qs)
+- [#16: TanStack Query meets React Router](tanstack-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -51,7 +51,7 @@ import Translations from 'components/Translations'
     },
     {
       language: 'Español',
-      url: 'https://rubenvara.io/react-query/react-query-typescript',
+      url: 'https://rubenvara.io/tanstack-query/tanstack-query-typescript',
     },
   ]}
 </Translations>
@@ -136,7 +136,7 @@ let result = identity<number>(23)
 let result: number = identity(23)
 
 // 😎 infers correctly to `string`
-let result = identity('react-query')
+let result = identity('tanstack-query')
 ```
 
 ### Partial Type Argument Inference
@@ -260,7 +260,7 @@ https://twitter.com/danvdk/status/1363614288103964672
 
 ## Type safety with the enabled option
 
-I've expressed my ♥️ for the [enabled option](./practical-react-query#the-enabled-option-is-very-powerful) right from the start, but it can be a bit tricky on type level if you want to use it for [dependent queries](https://react-query.tanstack.com/guides/dependent-queries) and disable your query for as long as some parameters are not yet defined:
+I've expressed my ♥️ for the [enabled option](./practical-tanstack-query#the-enabled-option-is-very-powerful) right from the start, but it can be a bit tricky on type level if you want to use it for [dependent queries](https://react-query.tanstack.com/guides/dependent-queries) and disable your query for as long as some parameters are not yet defined:
 
 ```ts:title=the-enabled-option
 function fetchGroup(id: number): Promise<Group> {
@@ -299,7 +299,7 @@ function useGroup(id: number | undefined) {
 
 Getting optimistic updates right in TypeScript is not an easy feat, so we've decided to add it as a comprehensive [example](https://react-query.tanstack.com/examples/optimistic-updates-typescript) to the docs.
 
-The important part is: You have to explicitly type the _variables_ argument passed to _onMutate_ in order to get the best type inference. I don't fully comprehend why that is, but it again seems to have something to do with inference of Generics. Have a look [at this comment](https://github.com/tannerlinsley/react-query/pull/1366#discussion_r538459890) for more information.
+The important part is: You have to explicitly type the _variables_ argument passed to _onMutate_ in order to get the best type inference. I don't fully comprehend why that is, but it again seems to have something to do with inference of Generics. Have a look [at this comment](https://github.com/tannerlinsley/tanstack-query/pull/1366#discussion_r538459890) for more information.
 
 **Update**: TypeScript 4.7 has added [Improved Function Inference in Objects and Methods](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7-beta/#improved-function-inference-in-objects-and-methods), which fixes the issue. Optimistic updates should now infer types for context correctly without extra work. 🥳
 

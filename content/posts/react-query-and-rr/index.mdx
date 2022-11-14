@@ -23,22 +23,22 @@ import Highlight from 'components/Highlight'
   url="https://unsplash.com/@ashkfor121"
 />
 
-- [#1: Practical TanStack Query](practical-react-query)
-- [#2: TanStack Query Data Transformations](react-query-data-transformations)
-- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
-- [#5: Testing TanStack Query](testing-react-query)
-- [#6: TanStack Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
-- [#8: Effective TanStack Query Keys](effective-react-query-keys)
+- [#1: Practical TanStack Query](practical-tanstack-query)
+- [#2: TanStack Query Data Transformations](tanstack-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](tanstack-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-tanstack-query)
+- [#5: Testing TanStack Query](testing-tanstack-query)
+- [#6: TanStack Query and TypeScript](tanstack-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-tanstack-query)
+- [#8: Effective TanStack Query Keys](effective-tanstack-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
-- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
-- [#11: TanStack Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
-- [#13: Offline TanStack Query](offline-react-query)
-- [#14: TanStack Query and Forms](react-query-and-forms)
-- [#15: TanStack Query FAQs](react-query-fa-qs)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-tanstack-query)
+- [#10: TanStack Query as a State Manager](tanstack-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](tanstack-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-tanstack-query)
+- [#13: Offline TanStack Query](offline-tanstack-query)
+- [#14: TanStack Query and Forms](tanstack-query-and-forms)
+- [#15: TanStack Query FAQs](tanstack-query-fa-qs)
 - <b>#16: TanStack Query meets React Router</b>
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
@@ -142,7 +142,7 @@ What if we can use the loader to pre-fill the TanStack Query Cache, but still _u
 Let's try to move the example in that direction:
 
 ```jsx:title=src/routes/contacts.jsx {10-11,15-19,24-25}
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/tanstack-query'
 import { getContact } from '../contacts'
 
 // ⬇️ define your query
@@ -200,7 +200,7 @@ There are a couple of things going on here, so let's break it down:
 
 ### The loader needs access to the QueryClient.
 
-The loader is not a hook, so we can't _useQueryClient_. Importing the QueryClient directly is something that [I'm not recommending](react-query-fa-qs#why-should-i-usequeryclient), so passing it explicitly seems like the best alternative.
+The loader is not a hook, so we can't _useQueryClient_. Importing the QueryClient directly is something that [I'm not recommending](tanstack-query-fa-qs#why-should-i-usequeryclient), so passing it explicitly seems like the best alternative.
 
 ### _getQueryData_ ?? _fetchQuery_
 

@@ -118,7 +118,7 @@ function fetchTodo(id: number | undefined) {
 
 ## They always return a _new_ promise
 
-I first stumbled upon this when working with [query cancellation in react-query](https://react-query.tanstack.com/guides/query-cancellation). Here, react-query wants us to attach a `.cancel` method on our resulting promise. Surprisingly, this doesn't quite work in async functions:
+I first stumbled upon this when working with [query cancellation in tanstack-query](https://react-query.tanstack.com/guides/query-cancellation). Here, tanstack-query wants us to attach a `.cancel` method on our resulting promise. Surprisingly, this doesn't quite work in async functions:
 
 ```js:title=query-cancellation
 async function fetchTodos() {
@@ -135,7 +135,7 @@ async function fetchTodos() {
 }
 ```
 
-Because we are in an async function, a _new_ promise will be returned at the end of it, even if we already return a promise ourselves! [Here](https://www.carlrippon.com/cancelling-requests-with-react-query/) is a great article if you want to see how query cancellation can work even with async functions.
+Because we are in an async function, a _new_ promise will be returned at the end of it, even if we already return a promise ourselves! [Here](https://www.carlrippon.com/cancelling-requests-with-tanstack-query/) is a great article if you want to see how query cancellation can work even with async functions.
 
 **Update**
 

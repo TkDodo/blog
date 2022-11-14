@@ -19,23 +19,23 @@ import Translations from 'components/Translations'
 
 <Attribution name="OpticalNomad" url="https://unsplash.com/@opticalnomad" />
 
-- [#1: Practical TanStack Query](practical-react-query)
-- [#2: TanStack Query Data Transformations](react-query-data-transformations)
-- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
-- [#5: Testing TanStack Query](testing-react-query)
-- [#6: TanStack Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
-- [#8: Effective TanStack Query Keys](effective-react-query-keys)
+- [#1: Practical TanStack Query](practical-tanstack-query)
+- [#2: TanStack Query Data Transformations](tanstack-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](tanstack-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-tanstack-query)
+- [#5: Testing TanStack Query](testing-tanstack-query)
+- [#6: TanStack Query and TypeScript](tanstack-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-tanstack-query)
+- [#8: Effective TanStack Query Keys](effective-tanstack-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-tanstack-query)
 - <b>#10: TanStack Query as a State Manager</b>
-- [#11: TanStack Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
-- [#13: Offline TanStack Query](offline-react-query)
-- [#14: TanStack Query and Forms](react-query-and-forms)
-- [#15: TanStack Query FAQs](react-query-fa-qs)
-- [#16: TanStack Query meets React Router](react-query-meets-react-router)
+- [#11: TanStack Query Error Handling](tanstack-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-tanstack-query)
+- [#13: Offline TanStack Query](offline-tanstack-query)
+- [#14: TanStack Query and Forms](tanstack-query-and-forms)
+- [#15: TanStack Query FAQs](tanstack-query-fa-qs)
+- [#16: TanStack Query meets React Router](tanstack-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -48,11 +48,11 @@ import Translations from 'components/Translations'
     },
     {
       language: 'Português',
-      url: 'https://dbrno.vercel.app/pt-BR/blog/react-query-as-a-state-manager',
+      url: 'https://dbrno.vercel.app/pt-BR/blog/tanstack-query-as-a-state-manager',
     },
     {
       language: '日本語',
-      url: 'https://makotot.dev/posts/react-query-as-a-state-manager-translation-ja',
+      url: 'https://makotot.dev/posts/tanstack-query-as-a-state-manager-translation-ja',
     },
   ]}
 </Translations>
@@ -230,7 +230,7 @@ There is also no "correct" value for _staleTime_. In many situations, the defaul
 
 #### Bonus: using setQueryDefaults
 
-Since v3, TanStack Query supports a great way of setting default values per Query Key via [QueryClient.setQueryDefaults](https://react-query.tanstack.com/reference/QueryClient#queryclientsetquerydefaults). So if you follow the patterns I've outlined in [#8: Effective TanStack Query Keys](effective-react-query-keys), you can set defaults for any granularity you want, because passing Query Keys to _setQueryDefaults_ follows the standard partial matching that e.g. [Query Filters](https://react-query.tanstack.com/guides/filters#query-filters) also have:
+Since v3, TanStack Query supports a great way of setting default values per Query Key via [QueryClient.setQueryDefaults](https://react-query.tanstack.com/reference/QueryClient#queryclientsetquerydefaults). So if you follow the patterns I've outlined in [#8: Effective TanStack Query Keys](effective-tanstack-query-keys), you can set defaults for any granularity you want, because passing Query Keys to _setQueryDefaults_ follows the standard partial matching that e.g. [Query Filters](https://react-query.tanstack.com/guides/filters#query-filters) also have:
 
 ```tsx:title=setQueryDefaults
 const queryClient = new QueryClient({

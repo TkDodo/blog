@@ -24,23 +24,23 @@ import Translations from 'components/Translations'
 
 **Last Update: 17.07.2022**
 
-- [#1: Practical TanStack Query](practical-react-query)
-- [#2: TanStack Query Data Transformations](react-query-data-transformations)
-- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
-- [#5: Testing TanStack Query](testing-react-query)
-- [#6: TanStack Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
-- [#8: Effective TanStack Query Keys](effective-react-query-keys)
+- [#1: Practical TanStack Query](practical-tanstack-query)
+- [#2: TanStack Query Data Transformations](tanstack-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](tanstack-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-tanstack-query)
+- [#5: Testing TanStack Query](testing-tanstack-query)
+- [#6: TanStack Query and TypeScript](tanstack-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-tanstack-query)
+- [#8: Effective TanStack Query Keys](effective-tanstack-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
-- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
-- [#11: TanStack Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
-- [#13: Offline TanStack Query](offline-react-query)
-- [#14: TanStack Query and Forms](react-query-and-forms)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-tanstack-query)
+- [#10: TanStack Query as a State Manager](tanstack-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](tanstack-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-tanstack-query)
+- [#13: Offline TanStack Query](offline-tanstack-query)
+- [#14: TanStack Query and Forms](tanstack-query-and-forms)
 - <b>#15: TanStack Query FAQs</b>
-- [#16: TanStack Query meets React Router](react-query-meets-react-router)
+- [#16: TanStack Query meets React Router](tanstack-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -49,7 +49,7 @@ import Translations from 'components/Translations'
   {[
     {
       language: '한국어',
-      url: 'https://velog.io/@cnsrn1874/%EB%B2%88%EC%97%AD-React-Query-FAQs',
+      url: 'https://velog.io/@cnsrn1874/%EB%B2%88%EC%97%AD-tanstack-query-FAQs',
     },
   ]}
 </Translations>
@@ -117,7 +117,7 @@ The best part about this approach is that you don't have to manage state, that y
 
 You might notice that switching query keys will put your query into hard loading state again. That is expected, because we change keys and there is no data for that key yet.
 
-There are a bunch of ways to ease the transition, like setting a [placeholderData](placeholder-and-initial-data-in-react-query) for that key or [prefetching](https://react-query.tanstack.com/guides/prefetching) data for the new key ahead of time. A nice approach to tackle this problem is to instruct the query to keep previous data:
+There are a bunch of ways to ease the transition, like setting a [placeholderData](placeholder-and-initial-data-in-tanstack-query) for that key or [prefetching](https://react-query.tanstack.com/guides/prefetching) data for the new key ahead of time. A nice approach to tackle this problem is to instruct the query to keep previous data:
 
 ```js:title=keep-previous-data {4,5}
 const { data, isPreviousData } = useQuery(
@@ -147,7 +147,7 @@ The second value of the key array is a _string_ in the first example and a _numb
 
 The TanStack Query Devtools are your best friend in this case, as you can clearly see which keys exist and which keys are currently fetching. Keep an eye on those pesky details though!
 
-I recommend using [TypeScript](https://www.typescriptlang.org/) and [Query Key Factories](effective-react-query-keys) to help with that problem.
+I recommend using [TypeScript](https://www.typescriptlang.org/) and [Query Key Factories](effective-tanstack-query-keys) to help with that problem.
 
 ### 2: The QueryClient is not stable
 
@@ -228,7 +228,7 @@ When you call _useQuery_, we call _useQueryClient_ under the hood. This will loo
 
 ### 2: It decouples your app from the client
 
-The client you define in your _App_ is your production client. It might have some default settings that work well in production. However, in testing, it might make sense to use different default values. One example is [turning off retries](testing-react-query#turn-off-retries) during testing, because testing erroneous queries might time out the test otherwise.
+The client you define in your _App_ is your production client. It might have some default settings that work well in production. However, in testing, it might make sense to use different default values. One example is [turning off retries](testing-tanstack-query#turn-off-retries) during testing, because testing erroneous queries might time out the test otherwise.
 
 A big advantage of React Context when used as a dependency injection mechanism is that it decouples your app from its dependencies. _useQueryClient_ just expects any client to be in the tree above - not a specific client. You'll lose that advantage if you import the production client directly.
 
@@ -375,7 +375,7 @@ useQuery(
 )
 ```
 
-I definitely prefer the callbacks, and you can read more about differnt ways to handle errors in [#11: TanStack Query Error Handling](react-query-error-handling).
+I definitely prefer the callbacks, and you can read more about differnt ways to handle errors in [#11: TanStack Query Error Handling](tanstack-query-error-handling).
 
 ---
 

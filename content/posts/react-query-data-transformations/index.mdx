@@ -1,6 +1,6 @@
 ---
 title: TanStack Query Data Transformations
-description: Learn the possibilities to perform the quite common and important task of transforming your data with react-query
+description: Learn the possibilities to perform the quite common and important task of transforming your data with tanstack-query
 date: 2021-03-10
 banner: ./transformations.jpeg
 tags:
@@ -18,23 +18,23 @@ import Translations from 'components/Translations'
 
 <Attribution name="Joshua Sukoff" url="https://unsplash.com/@joshuas" />
 
-- [#1: Practical TanStack Query](practical-react-query)
+- [#1: Practical TanStack Query](practical-tanstack-query)
 - <b>#2: TanStack Query Data Transformations</b>
-- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
-- [#5: Testing TanStack Query](testing-react-query)
-- [#6: TanStack Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
-- [#8: Effective TanStack Query Keys](effective-react-query-keys)
+- [#3: TanStack Query Render Optimizations](tanstack-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-tanstack-query)
+- [#5: Testing TanStack Query](testing-tanstack-query)
+- [#6: TanStack Query and TypeScript](tanstack-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-tanstack-query)
+- [#8: Effective TanStack Query Keys](effective-tanstack-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
-- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
-- [#11: TanStack Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
-- [#13: Offline TanStack Query](offline-react-query)
-- [#14: TanStack Query and Forms](react-query-and-forms)
-- [#15: TanStack Query FAQs](react-query-fa-qs)
-- [#16: TanStack Query meets React Router](react-query-meets-react-router)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-tanstack-query)
+- [#10: TanStack Query as a State Manager](tanstack-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](tanstack-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-tanstack-query)
+- [#13: Offline TanStack Query](offline-tanstack-query)
+- [#14: TanStack Query and Forms](tanstack-query-and-forms)
+- [#15: TanStack Query FAQs](tanstack-query-fa-qs)
+- [#16: TanStack Query meets React Router](tanstack-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -51,7 +51,7 @@ import Translations from 'components/Translations'
     },
     {
       language: 'Español',
-      url: 'https://rubenvara.io/react-query/transformacion-data-react-query/',
+      url: 'https://rubenvara.io/tanstack-query/transformacion-data-tanstack-query/',
     },
     {
       language: '简体中文',
@@ -62,13 +62,13 @@ import Translations from 'components/Translations'
 
 ---
 
-Welcome to Part 2 of "Things I have to say about react-query". As I've become more and more involved with the library and the community around it, I've observed some more patterns people frequently ask about. Initially, I wanted to write them all down in one big article, but then decided to break them down into more manageable pieces. The first one is about a quite common and important task: Data Transformation.
+Welcome to Part 2 of "Things I have to say about tanstack-query". As I've become more and more involved with the library and the community around it, I've observed some more patterns people frequently ask about. Initially, I wanted to write them all down in one big article, but then decided to break them down into more manageable pieces. The first one is about a quite common and important task: Data Transformation.
 
 ## Data Transformation
 
 Let's face it - most of us are _not_ using GraphQL. If you do, then you can be very happy because you have the luxury of requesting your data in the format that you desire.
 
-If you are working with REST though, you are constrained by what the backend returns. So how and where do you best transform data when working with react-query? The only answer worth a damn in software development applies here as well:
+If you are working with REST though, you are constrained by what the backend returns. So how and where do you best transform data when working with tanstack-query? The only answer worth a damn in software development applies here as well:
 
 > It depends.
 
@@ -100,9 +100,9 @@ const fetchTodos = async (): Promise<Todos> => {
 export const useTodosQuery = () => useQuery(['todos'], fetchTodos)
 ```
 
-On the frontend, you can then work with this data "as if it came like this from the backend". No where in your code will you actually work with todo names that are _not_ upper-cased. You will also _not_ have access to the original structure. If you look at the react-query-devtools, you will see the transformed structure. If you look at the network trace, you'll see the original structure. This might be confusing, so keep that in mind.
+On the frontend, you can then work with this data "as if it came like this from the backend". No where in your code will you actually work with todo names that are _not_ upper-cased. You will also _not_ have access to the original structure. If you look at the tanstack-query-devtools, you will see the transformed structure. If you look at the network trace, you'll see the original structure. This might be confusing, so keep that in mind.
 
-Also, there is no optimization that react-query can do for you here. Every time a fetch is executed, your transformation will run. If it's expensive, consider one of the other alternatives. Some companies also have a shared api layer that abstracts data fetching, so you might not have access to this layer to do your transformations.
+Also, there is no optimization that tanstack-query can do for you here. Every time a fetch is executed, your transformation will run. If it's expensive, consider one of the other alternatives. Some companies also have a shared api layer that abstracts data fetching, so you might not have access to this layer to do your transformations.
 
 🟢 &nbsp; very "close to the backend" in terms of co-location<br/>
 🟡 &nbsp; the transformed structure winds up in the cache, so you don't have access to the original structure<br/>
@@ -111,7 +111,7 @@ Also, there is no optimization that react-query can do for you here. Every time 
 
 ### 2. In the render function
 
-As advised in [Part 1](practical-react-query), if you create custom hooks, you can easily do transformations there:
+As advised in [Part 1](practical-tanstack-query), if you create custom hooks, you can easily do transformations there:
 
 ```ts:title=render-transformation
 const fetchTodos = async (): Promise<Todos> => {
@@ -205,7 +205,7 @@ export const useTodo = (id) =>
 
 Here, we've created a [useSelector](https://react-redux.js.org/api/hooks#useselector) like API by passing a custom selector to our _useTodosQuery_. The custom hooks still works like before, as _select_ will be _undefined_ if you don't pass it, so the whole state will be returned.
 
-But if you pass a selector, you are now only subscribed to the result of the selector function. This is quite powerful, because it means that even if we update the name of a todo, our component that only subscribes to the count via _useTodosCount_ will _not_ rerender. The count hasn't changed, so react-query can choose to _not_ inform this observer about the update 🥳 (Please note that this is a bit simplified here and technically not entirely true - I will talk in more detail about render optimizations in Part 3).
+But if you pass a selector, you are now only subscribed to the result of the selector function. This is quite powerful, because it means that even if we update the name of a todo, our component that only subscribes to the count via _useTodosCount_ will _not_ rerender. The count hasn't changed, so tanstack-query can choose to _not_ inform this observer about the update 🥳 (Please note that this is a bit simplified here and technically not entirely true - I will talk in more detail about render optimizations in Part 3).
 
 🟢 &nbsp; best optimizations<br/>
 🟢 &nbsp; allows for partial subscriptions<br/>

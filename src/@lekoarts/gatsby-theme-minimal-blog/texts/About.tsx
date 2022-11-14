@@ -30,11 +30,11 @@ const About = () => (
         <Text>
           I currently co-maintain the popular async state management library{" "}
           <Link
-            href="https://github.com/tannerlinsley/react-query"
+            href="https://github.com/tannerlinsley/tanstack-query"
             target="_blank"
             rel="noreferrer noopener"
           >
-            react-query
+            tanstack-query
           </Link>
           , as well as{" "}
           <Link

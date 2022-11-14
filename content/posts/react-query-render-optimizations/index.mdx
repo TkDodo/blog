@@ -23,23 +23,23 @@ import Translations from 'components/Translations'
 
 **Last Update: 23.04.2022**
 
-- [#1: Practical TanStack Query](practical-react-query)
-- [#2: TanStack Query Data Transformations](react-query-data-transformations)
+- [#1: Practical TanStack Query](practical-tanstack-query)
+- [#2: TanStack Query Data Transformations](tanstack-query-data-transformations)
 - <b>#3: TanStack Query Render Optimizations</b>
-- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
-- [#5: Testing TanStack Query](testing-react-query)
-- [#6: TanStack Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
-- [#8: Effective TanStack Query Keys](effective-react-query-keys)
+- [#4: Status Checks in TanStack Query](status-checks-in-tanstack-query)
+- [#5: Testing TanStack Query](testing-tanstack-query)
+- [#6: TanStack Query and TypeScript](tanstack-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-tanstack-query)
+- [#8: Effective TanStack Query Keys](effective-tanstack-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
-- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
-- [#11: TanStack Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
-- [#13: Offline TanStack Query](offline-react-query)
-- [#14: TanStack Query and Forms](react-query-and-forms)
-- [#15: TanStack Query FAQs](react-query-fa-qs)
-- [#16: TanStack Query meets React Router](react-query-meets-react-router)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-tanstack-query)
+- [#10: TanStack Query as a State Manager](tanstack-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](tanstack-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-tanstack-query)
+- [#13: Offline TanStack Query](offline-tanstack-query)
+- [#14: TanStack Query and Forms](tanstack-query-and-forms)
+- [#15: TanStack Query FAQs](tanstack-query-fa-qs)
+- [#16: TanStack Query meets React Router](tanstack-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -56,7 +56,7 @@ import Translations from 'components/Translations'
     },
     {
       language: 'Español',
-      url: 'https://rubenvara.io/react-query/optimizacion-renderizado-react-query/',
+      url: 'https://rubenvara.io/tanstack-query/optimizacion-renderizado-tanstack-query/',
     },
   ]}
 </Translations>
@@ -70,11 +70,11 @@ import Translations from 'components/Translations'
 
 ---
 
-I've already written quite a bit about render optimizations when describing the select option in [#2: TanStack Query Data Transformations](react-query-data-transformations). However, "Why does TanStack Query re-render my component two times even though nothing changed in my data" is the question I probably needed to answer the most (apart from maybe: "Where can I find the v2 docs" 😅). So let me try to explain it in-depth.
+I've already written quite a bit about render optimizations when describing the select option in [#2: TanStack Query Data Transformations](tanstack-query-data-transformations). However, "Why does TanStack Query re-render my component two times even though nothing changed in my data" is the question I probably needed to answer the most (apart from maybe: "Where can I find the v2 docs" 😅). So let me try to explain it in-depth.
 
 ## isFetching transition
 
-I haven't been entirely honest in the [last example](react-query-data-transformations#3-using-the-select-option) when I said that this component will only re-render if the length of todos change:
+I haven't been entirely honest in the [last example](tanstack-query-data-transformations#3-using-the-select-option) when I said that this component will only re-render if the length of todos change:
 
 ```tsx:title=count-component
 export const useTodosQuery = (select) =>
@@ -108,7 +108,7 @@ export const useTodosCount = () =>
   useTodosQuery((data) => data.length, ['data'])
 ```
 
-You can see this in action in the [optimistic-updates-typescript](https://github.com/tannerlinsley/react-query/blob/9023b0d1f01567161a8c13da5d8d551a324d6c23/examples/optimistic-updates-typescript/pages/index.tsx#L35-L48) example in the docs.
+You can see this in action in the [optimistic-updates-typescript](https://github.com/tannerlinsley/tanstack-query/blob/9023b0d1f01567161a8c13da5d8d551a324d6c23/examples/optimistic-updates-typescript/pages/index.tsx#L35-L48) example in the docs.
 
 ### Staying in sync
 
@@ -228,7 +228,7 @@ const { data } = useTodo(2)
 
 As I've hinted before, for selectors, structural sharing will be done twice: Once on the result returned from the _queryFn_ to determine if anything changed at all, and then once more on the _result_ of the selector function. In some instances, especially when having very large datasets, structural sharing _can_ be a bottleneck. It also only works on json-serializable data. If you don't need this optimization, you can turn it off by setting _structuralSharing: false_ on any query.
 
-Have a look at the [replaceEqualDeep tests](https://github.com/tannerlinsley/react-query/blob/80cecef22c3e088d6cd9f8fbc5cd9e2c0aab962f/src/core/tests/utils.test.tsx#L97-L304) if you want to learn more about what happens under the hood.
+Have a look at the [replaceEqualDeep tests](https://github.com/tannerlinsley/tanstack-query/blob/80cecef22c3e088d6cd9f8fbc5cd9e2c0aab962f/src/core/tests/utils.test.tsx#L97-L304) if you want to learn more about what happens under the hood.
 
 ---
 
