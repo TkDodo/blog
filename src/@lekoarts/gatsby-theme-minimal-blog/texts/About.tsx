@@ -1,22 +1,22 @@
-import * as React from 'react'
-import { Text, Link, Box } from 'theme-ui'
+import * as React from "react";
+import { Text, Link, Box } from "theme-ui";
 
 const About = () => (
-  <Box sx={{ display: ['block', 'block', 'flex'] }}>
+  <Box sx={{ display: ["block", "block", "flex"] }}>
     <img
       src="https://avatars.githubusercontent.com/u/1021430?s=128"
       alt="TkDodo"
       style={{
-        marginRight: '0.875rem',
-        marginTop: '0.5rem',
-        width: '8rem',
-        height: '8rem',
-        borderRadius: '50%',
+        marginRight: "0.875rem",
+        marginTop: "0.5rem",
+        width: "8rem",
+        height: "8rem",
+        borderRadius: "50%",
       }}
     />
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <div style={{ display: "flex", flexDirection: "column" }}>
       <p style={{ marginBottom: 0, marginTop: 0 }}>
-        <Text sx={{ fontWeight: 'bold' }}>
+        <Text sx={{ fontWeight: "bold" }}>
           Hi 👋, I'm Dominik from Vienna 🇦🇹
         </Text>
       </p>
@@ -28,7 +28,7 @@ const About = () => (
       </p>
       <p style={{ marginBottom: 0 }}>
         <Text>
-          I currently co-maintain the popular async state management library{' '}
+          I currently co-maintain the popular async state management library{" "}
           <Link
             href="https://github.com/tannerlinsley/react-query"
             target="_blank"
@@ -36,7 +36,7 @@ const About = () => (
           >
             react-query
           </Link>
-          , as well as{' '}
+          , as well as{" "}
           <Link
             href="https://github.com/remeda/remeda"
             target="_blank"
@@ -49,19 +49,19 @@ const About = () => (
       </p>
       <p style={{ marginBottom: 0 }}>
         <Text>
-          Welcome to my personal blog 📚, where I write about all things
-          React, TypeScript and of course react-query.
+          Welcome to my personal blog 📚, where I write about all things React,
+          TypeScript and of course TanStack Query.
         </Text>
       </p>
       <p style={{ marginBottom: 0 }}>
         <Text>
-          If you enjoy my blog posts or want to support my open source work,
-          you can{' '}
+          If you enjoy my blog posts or want to support my open source work, you
+          can{" "}
           <Link
             href="https://github.com/sponsors/TkDodo"
             target="_blank"
             rel="noopener noreferrer"
-            sx={{ whiteSpace: 'nowrap' }}
+            sx={{ whiteSpace: "nowrap" }}
           >
             🎗 sponsor me on Github 🎗
           </Link>
@@ -69,6 +69,6 @@ const About = () => (
       </p>
     </div>
   </Box>
-)
+);
 
-export default About
+export default About;
