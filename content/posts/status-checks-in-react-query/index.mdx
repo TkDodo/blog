@@ -1,11 +1,11 @@
 ---
-title: Status Checks in React Query
+title: Status Checks in TanStack Query
 description: How the wrong status check order can negatively impact user experience
 date: 2021-03-27
 banner: ./status-checks.jpeg
 tags:
   - react
-  - React Query
+  - TanStack Query
   - JavaScript
   - TypeScript
 ---
@@ -23,23 +23,23 @@ import Translations from 'components/Translations'
 
 **Last Update: 23.04.2022**
 
-- [#1: Practical React Query](practical-react-query)
-- [#2: React Query Data Transformations](react-query-data-transformations)
-- [#3: React Query Render Optimizations](react-query-render-optimizations)
-- <b>#4: Status Checks in React Query</b>
-- [#5: Testing React Query](testing-react-query)
-- [#6: React Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
-- [#8: Effective React Query Keys](effective-react-query-keys)
+- [#1: Practical TanStack Query](practical-react-query)
+- [#2: TanStack Query Data Transformations](react-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
+- <b>#4: Status Checks in TanStack Query</b>
+- [#5: Testing TanStack Query](testing-react-query)
+- [#6: TanStack Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
+- [#8: Effective TanStack Query Keys](effective-react-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
-- [#10: React Query as a State Manager](react-query-as-a-state-manager)
-- [#11: React Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
-- [#13: Offline React Query](offline-react-query)
-- [#14: React Query and Forms](react-query-and-forms)
-- [#15: React Query FAQs](react-query-fa-qs)
-- [#16: React Query meets React Router](react-query-meets-react-router)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
+- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](react-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
+- [#13: Offline TanStack Query](offline-react-query)
+- [#14: TanStack Query and Forms](react-query-and-forms)
+- [#15: TanStack Query FAQs](react-query-fa-qs)
+- [#16: TanStack Query meets React Router](react-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -59,18 +59,18 @@ import Translations from 'components/Translations'
 
 ---
 
-One advantage of React Query is the easy access to status fields of the query. You instantly know if your query is loading or if it's erroneous. For this, the library exposes a bunch of boolean flags, which are mostly derived from the internal state machine. Looking at [the types](https://github.com/tannerlinsley/react-query/blob/f2137dc4e4553256c4ebc1891b548fe35efe9231/src/core/types.ts#L250), your query can be in one of the following states:
+One advantage of TanStack Query is the easy access to status fields of the query. You instantly know if your query is loading or if it's erroneous. For this, the library exposes a bunch of boolean flags, which are mostly derived from the internal state machine. Looking at [the types](https://github.com/tannerlinsley/react-query/blob/f2137dc4e4553256c4ebc1891b548fe35efe9231/src/core/types.ts#L250), your query can be in one of the following states:
 
 - `success`: Your query was successful, and you have _data_ for it
 - `error`: Your query did not work, and an _error_ is set
 - `loading`: Your query has no data and is currently _loading_ for the first time
 - `idle`: Your query has never run because it's not _enabled_
 
-**Update**: In v4 of React Query, the idle state has been removed.
+**Update**: In v4 of TanStack Query, the idle state has been removed.
 
 Note that the `isFetching` flag is _not_ part of the internal state machine - it is an additional flag that will be true whenever a request is in-flight. You can be fetching and success, you can be fetching and error - but you cannot be loading and success at the same time. The state machine makes sure of that.
 
-**Update**: In v4, the `isFetching` flag is derived from a secondary `fetchStatus` - just like the new `isPaused` flag. You can read more about this in [#13: Offline React Query](offline-react-query).
+**Update**: In v4, the `isFetching` flag is derived from a secondary `fetchStatus` - just like the new `isPaused` flag. You can read more about this in [#13: Offline TanStack Query](offline-react-query).
 
 ## The standard example
 
@@ -91,7 +91,7 @@ return <div>{todos.data.map(renderTodo)}</div>
 
 Here, we check for loading and error first, and then display our data. This is probably fine for some use-cases, but not for others. Many data fetching solutions, especially hand-crafted ones, have no refetch mechanism, or only refetch on explicit user interactions.
 
-But React Query does.
+But TanStack Query does.
 
 It refetches quite aggressively per default, and does so without the user actively requesting a refetch. The concepts of _refetchOnMount_, _refetchOnWindowFocus_ and _refetchOnReconnect_ are great for keeping your data accurate, but they might cause a confusing ux if such an automatic background refetch fails.
 
@@ -99,7 +99,7 @@ It refetches quite aggressively per default, and does so without the user active
 
 In many situations, if a background refetch fails, it could be silently ignored. But the code above does not do that. Let's look at two examples:
 
-- The user opens a page, and the initial query loads successfully. They are working on the page for some time, then switch browser tabs to check emails. They come back some minutes later, and React Query will do a background refetch. Now that fetch fails.
+- The user opens a page, and the initial query loads successfully. They are working on the page for some time, then switch browser tabs to check emails. They come back some minutes later, and TanStack Query will do a background refetch. Now that fetch fails.
 - Our user is on page with a list view, and they click on one item to drill down to the detail view. This works fine, so they go back to the list view. Once they go to the detail view again, they will see data from the cache. This is great - except if the background refetch fails.
 
 In both situations, our query will be in the following state:
@@ -112,13 +112,13 @@ In both situations, our query will be in the following state:
 }
 ```
 
-As you can see, we will have _both_ an error _and_ the stale data available. This is what makes React Query great - it embraces the stale-while-revalidate caching mechanism, which means it will always give you data if it exists, even if it's stale.
+As you can see, we will have _both_ an error _and_ the stale data available. This is what makes TanStack Query great - it embraces the stale-while-revalidate caching mechanism, which means it will always give you data if it exists, even if it's stale.
 
 Now it's up to us to decide what we display. Is it important to show the error? Is it enough to show the stale data only, if we have any? Should we show both, maybe with a little _background error_ indicator?
 
 There is no clear answer to this question - it depends on your exact use-case. However, given the two above examples, I think it would be a somewhat confusing user experience if data would be replaced with an error screen.
 
-This is even more relevant when we take into account that React Query will retry failed queries three times per default with exponential backoff, so it might take a couple of seconds until the stale data is replaced with the error screen. If you also have no background fetching indicator, this can be really perplexing.
+This is even more relevant when we take into account that TanStack Query will retry failed queries three times per default with exponential backoff, so it might take a couple of seconds until the stale data is replaced with the error screen. If you also have no background fetching indicator, this can be really perplexing.
 
 This is why I usually check for data-availability first:
 

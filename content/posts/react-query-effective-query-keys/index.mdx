@@ -1,11 +1,11 @@
 ---
-title: Effective React Query Keys
-description: Learn how to structure React Query Keys effectively as your App grows
+title: Effective TanStack Query Keys
+description: Learn how to structure TanStack Query Keys effectively as your App grows
 date: 2021-06-13
 banner: ./keys.jpeg
 tags:
   - ReactJs
-  - React Query
+  - TanStack Query
   - JavaScript
   - TypeScript
 ---
@@ -20,14 +20,14 @@ import Translations from 'components/Translations'
 
 **Last Update: 23.04.2022**
 
-- [#1: Practical React Query](practical-react-query)
-- [#2: React Query Data Transformations](react-query-data-transformations)
-- [#3: React Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in React Query](status-checks-in-react-query)
-- [#5: Testing React Query](testing-react-query)
-- [#6: React Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
-- <b>#8: Effective React Query Keys</b>
+- [#1: Practical TanStack Query](practical-react-query)
+- [#2: TanStack Query Data Transformations](react-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
+- [#5: Testing TanStack Query](testing-react-query)
+- [#6: TanStack Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
+- <b>#8: Effective TanStack Query Keys</b>
   <br />
   <ul>
     <li>
@@ -36,14 +36,14 @@ import Translations from 'components/Translations'
       </a>
     </li>
   </ul>
-- [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
-- [#10: React Query as a State Manager](react-query-as-a-state-manager)
-- [#11: React Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
-- [#13: Offline React Query](offline-react-query)
-- [#14: React Query and Forms](react-query-and-forms)
-- [#15: React Query FAQs](react-query-fa-qs)
-- [#16: React Query meets React Router](react-query-meets-react-router)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
+- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](react-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
+- [#13: Offline TanStack Query](offline-react-query)
+- [#14: TanStack Query and Forms](react-query-and-forms)
+- [#15: TanStack Query FAQs](react-query-fa-qs)
+- [#16: TanStack Query meets React Router](react-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -59,7 +59,7 @@ import Translations from 'components/Translations'
 
 ---
 
-[Query Keys](https://react-query.tanstack.com/guides/query-keys) are a very important core concept in React Query. They are necessary so that the library can internally cache your data correctly and refetch automatically when a dependency to your query changes. Lastly, it will allow you to interact with the Query Cache manually when needed, for example, when updating data after a mutation or when you need to manually invalidate some queries.
+[Query Keys](https://react-query.tanstack.com/guides/query-keys) are a very important core concept in TanStack Query. They are necessary so that the library can internally cache your data correctly and refetch automatically when a dependency to your query changes. Lastly, it will allow you to interact with the Query Cache manually when needed, for example, when updating data after a mutation or when you need to manually invalidate some queries.
 
 Let's quickly have a look at what these three points mean before showing you how I personally organize Query Keys to be able to do these things more effectively.
 
@@ -67,7 +67,7 @@ Let's quickly have a look at what these three points mean before showing you how
 
 Internally, the Query Cache is just a JavaScript object, where the keys are serialized Query Keys and the values are your Query Data plus meta information. The keys are hashed in a [deterministic way](https://react-query.tanstack.com/guides/query-keys#query-keys-are-hashed-deterministically), so you can use objects as well (on the top level, keys have to be strings or arrays though).
 
-The most important part is that keys need to be _unique_ for your queries. If React Query finds an entry for a key in the cache, it will use it. Please also be aware that you cannot use the same key for _useQuery_ _and_ _useInfiniteQuery_. There is, after all, only _one_ Query Cache, and you would share the data between these two. That is not good because infinite queries have a fundamentally different structure than "normal" queries.
+The most important part is that keys need to be _unique_ for your queries. If TanStack Query finds an entry for a key in the cache, it will use it. Please also be aware that you cannot use the same key for _useQuery_ _and_ _useInfiniteQuery_. There is, after all, only _one_ Query Cache, and you would share the data between these two. That is not good because infinite queries have a fundamentally different structure than "normal" queries.
 
 ```ts:title=dont-mix-keys
 useQuery(['todos'], fetchTodos)
@@ -100,7 +100,7 @@ The answer is: **You don't.**
 
 That's not what _refetch_ is for - it's for refetching _with the same parameters_.
 
-If you have some _state_ that changes your data, all you need to do is to put it in the Query Key, because React Query will trigger a refetch automatically whenever the key changes. So when you want to apply your filters, just change your _client state_:
+If you have some _state_ that changes your data, all you need to do is to put it in the Query Key, because TanStack Query will trigger a refetch automatically whenever the key changes. So when you want to apply your filters, just change your _client state_:
 
 ```jsx:title=query-key-drives-the-query {2-3, 5}
 function Component() {
@@ -112,13 +112,13 @@ function Component() {
 }
 ```
 
-The re-render triggered by the _setFilters_ update will pass a different Query Key to React Query, which will make it refetch. I have a more in-depth example in [#1: Practical React Query - Treat the query key like a dependency array](practical-react-query#treat-the-query-key-like-a-dependency-array).
+The re-render triggered by the _setFilters_ update will pass a different Query Key to TanStack Query, which will make it refetch. I have a more in-depth example in [#1: Practical TanStack Query - Treat the query key like a dependency array](practical-react-query#treat-the-query-key-like-a-dependency-array).
 
 ## Manual Interaction
 
 Manual Interactions with the Query Cache are where the structure of your Query Keys is most important. Many of those interaction methods, like [invalidateQueries](https://react-query.tanstack.com/reference/QueryClient#queryclientinvalidatequeries) or [setQueriesData](https://react-query.tanstack.com/reference/QueryClient#queryclientsetqueriesdata) support [Query Filters](https://react-query.tanstack.com/guides/filters#query-filters), which allow you to fuzzily match your Query Keys.
 
-## Effective React Query Keys
+## Effective TanStack Query Keys
 
 Please note that these points reflect my personal opinion (as everything on this blog, actually), so don't take it as something that you absolutely must do when working with Query Keys. I have found these strategies to work best when your App becomes more complex, and they also scale quite well. You definitely don't need to do this for a Todo App 😁.
 
@@ -139,11 +139,11 @@ If you haven't yet read [Maintainability through colocation](https://kentcdodds.
 
 ```
 
-The _queries_ file will contain everything React Query related. I usually only export custom hooks, so the actual Query Functions as well as Query Keys will stay local.
+The _queries_ file will contain everything TanStack Query related. I usually only export custom hooks, so the actual Query Functions as well as Query Keys will stay local.
 
 ### Always use Array Keys
 
-Yes, Query Keys can be a string, too, but to keep things unified, I like to always use Arrays. React Query will internally convert them to an Array anyhow, so:
+Yes, Query Keys can be a string, too, but to keep things unified, I like to always use Arrays. TanStack Query will internally convert them to an Array anyhow, so:
 
 ```ts:title=always-use-array-keys
 // 🚨 will be transformed to ['todos'] anyhow
@@ -152,7 +152,7 @@ useQuery('todos')
 useQuery(['todos'])
 ```
 
-**Update**: With React Query v4, all keys need to be Arrays.
+**Update**: With TanStack Query v4, all keys need to be Arrays.
 
 ### Structure
 

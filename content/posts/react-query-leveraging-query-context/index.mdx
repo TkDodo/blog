@@ -1,11 +1,11 @@
 ---
 title: Leveraging the Query Function Context
-description: Use what React Query provides for optimal type safety
+description: Use what TanStack Query provides for optimal type safety
 date: 2021-10-26
 banner: ./context.jpeg
 tags:
   - ReactJs
-  - React Query
+  - TanStack Query
   - JavaScript
   - TypeScript
 ---
@@ -24,23 +24,23 @@ import Translations from 'components/Translations'
   url="https://unsplash.com/@mohammadtkh"
 />
 
-- [#1: Practical React Query](practical-react-query)
-- [#2: React Query Data Transformations](react-query-data-transformations)
-- [#3: React Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in React Query](status-checks-in-react-query)
-- [#5: Testing React Query](testing-react-query)
-- [#6: React Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
-- [#8: Effective React Query Keys](effective-react-query-keys)
+- [#1: Practical TanStack Query](practical-react-query)
+- [#2: TanStack Query Data Transformations](react-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
+- [#5: Testing TanStack Query](testing-react-query)
+- [#6: TanStack Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
+- [#8: Effective TanStack Query Keys](effective-react-query-keys)
   - <b>#8a: Leveraging the Query Function Context</b>
-- [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
-- [#10: React Query as a State Manager](react-query-as-a-state-manager)
-- [#11: React Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
-- [#13: Offline React Query](offline-react-query)
-- [#14: React Query and Forms](react-query-and-forms)
-- [#15: React Query FAQs](react-query-fa-qs)
-- [#16: React Query meets React Router](react-query-meets-react-router)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
+- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](react-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
+- [#13: Offline TanStack Query](offline-react-query)
+- [#14: TanStack Query and Forms](react-query-and-forms)
+- [#15: TanStack Query FAQs](react-query-fa-qs)
+- [#16: TanStack Query meets React Router](react-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -58,9 +58,9 @@ import Translations from 'components/Translations'
 
 We all strive to improve as engineers, and as time goes by, we hopefully succeed in that endeavour. Maybe we learn new things that invalidate or challenge our previous thinking. Or we realise that patterns that we thought ideal would not scale to the level we now need them to.
 
-Quite some time has passed since I first started to use React Query. I think I learned a great deal on that journey, and I've also "seen" a lot. I want my blog to be as up-to-date as possible, so that you can come back here and re-read it, knowing that the concepts are still valid. This is now more relevant than ever since [Tanner Linsley](https://twitter.com/tannerlinsley) agreed to link to my blog from the official [React Query documentation](https://react-query.tanstack.com/community/tkdodos-blog).
+Quite some time has passed since I first started to use TanStack Query. I think I learned a great deal on that journey, and I've also "seen" a lot. I want my blog to be as up-to-date as possible, so that you can come back here and re-read it, knowing that the concepts are still valid. This is now more relevant than ever since [Tanner Linsley](https://twitter.com/tannerlinsley) agreed to link to my blog from the official [TanStack Query documentation](https://react-query.tanstack.com/community/tkdodos-blog).
 
-That's why I've decided to write this addendum to my [Effective React Query Keys](effective-react-query-keys) article. Please make sure to read it first to have an understanding of what we are talking about.
+That's why I've decided to write this addendum to my [Effective TanStack Query Keys](effective-react-query-keys) article. Please make sure to read it first to have an understanding of what we are talking about.
 
 ## Hot take
 
@@ -97,7 +97,7 @@ export const useTodos = () => {
 }
 ```
 
-Maybe you recognize the example - It's a slight variation of [#1: Practical React Query - Treat the query key like a dependency array](practical-react-query#treat-the-query-key-like-a-dependency-array). This works great for simple examples, but it has a quite substantial problem when having lots of parameters. In bigger apps, it's not unheard of to have lots of filter and sorting options, and I've personally seen up to 10 params being passed.
+Maybe you recognize the example - It's a slight variation of [#1: Practical TanStack Query - Treat the query key like a dependency array](practical-react-query#treat-the-query-key-like-a-dependency-array). This works great for simple examples, but it has a quite substantial problem when having lots of parameters. In bigger apps, it's not unheard of to have lots of filter and sorting options, and I've personally seen up to 10 params being passed.
 
 Suppose we want to add sorting to our query. I like to approach these things from the bottom up - starting with the _queryFn_ and letting the compiler tell me what I need to change next:
 
@@ -125,10 +125,10 @@ export const useTodos = () => {
 
 Maybe you've already spotted the issue: Our _queryKey_ got out of sync with our actual dependencies, and no red squiggly lines are screaming at us about it 😔. In the above case, you'll likely spot the issue very fast (hopefully via an integration test), because changing the sorting does not automatically trigger a refetch. And, let's be honest, it's also pretty obvious in this simple example. I have however seen the _queryKey_ diverge from the actual dependencies a couple of times in the last months, and with greater complexity, those can result in some hard to track issues. There's also a reason why React comes with the [react-hooks/exhaustive-deps eslint rule](https://reactjs.org/docs/hooks-rules.html#eslint-plugin) to avoid that.
 
-So will React Query now come with its own eslint-rule? 👀
+So will TanStack Query now come with its own eslint-rule? 👀
 
 Well, that would be one option. There is also the [babel-plugin-react-query-key-gen
-](https://github.com/dominictwlee/babel-plugin-react-query-key-gen) that solves this problem by generating query keys for you, including all your dependencies. React Query however comes with a different, built-in way of handling dependencies: The `QueryFunctionContext`.
+](https://github.com/dominictwlee/babel-plugin-react-query-key-gen) that solves this problem by generating query keys for you, including all your dependencies. TanStack Query however comes with a different, built-in way of handling dependencies: The `QueryFunctionContext`.
 
 ## QueryFunctionContext
 
@@ -144,9 +144,9 @@ useInfiniteQuery('projects', fetchProjects, {
 })
 ```
 
-React Query uses that object to inject information about the _query_ to the _queryFn_. In case of _infinite queries_, you'll get the return value of _getNextPageParam_ injected as _pageParam_.
+TanStack Query uses that object to inject information about the _query_ to the _queryFn_. In case of _infinite queries_, you'll get the return value of _getNextPageParam_ injected as _pageParam_.
 
-However, the context also contains the _queryKey_ that is used for this query (and we're about to add more cool things to the context), which means you actually don't have to closure over things, as they will be provided for you by React Query:
+However, the context also contains the _queryKey_ that is used for this query (and we're about to add more cool things to the context), which means you actually don't have to closure over things, as they will be provided for you by TanStack Query:
 
 ```js:title=query-function-context {1,3,12}
 const fetchTodos = async ({ queryKey }) => {
@@ -168,7 +168,7 @@ With this approach, you basically have no way of using any additional parameters
 
 ## How to type the QueryFunctionContext
 
-One of the ambitions for this approach was to get full type safety and infer the type of the _QueryFunctionContext_ from the _queryKey_ passed to _useQuery_. This wasn't easy, but React Query supports that since [v3.13.3](https://github.com/tannerlinsley/react-query/releases/tag/v3.13.3). If you inline the _queryFn_, you'll see that the types are properly inferred (thank you, Generics):
+One of the ambitions for this approach was to get full type safety and infer the type of the _QueryFunctionContext_ from the _queryKey_ passed to _useQuery_. This wasn't easy, but TanStack Query supports that since [v3.13.3](https://github.com/tannerlinsley/react-query/releases/tag/v3.13.3). If you inline the _queryFn_, you'll see that the types are properly inferred (thank you, Generics):
 
 ```ts:title=query-key-type-inference {6,9}
 export const useTodos = () => {
@@ -221,7 +221,7 @@ export const useTodos = () => {
 }
 ```
 
-The type _QueryFunctionContext_ is exported by React Query. It takes one generic, which defines the type of the _queryKey_. In the above example, we set it to be equal to whatever the _list_ function of our key factory returns. Since we use [const assertions](the-power-of-const-assertions), all our keys will be strictly typed tuples - so if we try to use a key that doesn't conform to that structure, we will get a type error.
+The type _QueryFunctionContext_ is exported by TanStack Query. It takes one generic, which defines the type of the _queryKey_. In the above example, we set it to be equal to whatever the _list_ function of our key factory returns. Since we use [const assertions](the-power-of-const-assertions), all our keys will be strictly typed tuples - so if we try to use a key that doesn't conform to that structure, we will get a type error.
 
 ## Object Query Keys
 

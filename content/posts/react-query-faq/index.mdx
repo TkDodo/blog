@@ -1,11 +1,11 @@
 ---
-title: React Query FAQs
-description: Answering the most frequently asked React Query questions
+title: TanStack Query FAQs
+description: Answering the most frequently asked TanStack Query questions
 date: 2022-06-24
 banner: ./faq.jpeg
 tags:
   - ReactJs
-  - React Query
+  - TanStack Query
   - TypeScript
   - JavaScript
   - FAQ
@@ -24,23 +24,23 @@ import Translations from 'components/Translations'
 
 **Last Update: 17.07.2022**
 
-- [#1: Practical React Query](practical-react-query)
-- [#2: React Query Data Transformations](react-query-data-transformations)
-- [#3: React Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in React Query](status-checks-in-react-query)
-- [#5: Testing React Query](testing-react-query)
-- [#6: React Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
-- [#8: Effective React Query Keys](effective-react-query-keys)
+- [#1: Practical TanStack Query](practical-react-query)
+- [#2: TanStack Query Data Transformations](react-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
+- [#5: Testing TanStack Query](testing-react-query)
+- [#6: TanStack Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
+- [#8: Effective TanStack Query Keys](effective-react-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
-- [#10: React Query as a State Manager](react-query-as-a-state-manager)
-- [#11: React Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
-- [#13: Offline React Query](offline-react-query)
-- [#14: React Query and Forms](react-query-and-forms)
-- <b>#15: React Query FAQs</b>
-- [#16: React Query meets React Router](react-query-meets-react-router)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
+- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](react-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
+- [#13: Offline TanStack Query](offline-react-query)
+- [#14: TanStack Query and Forms](react-query-and-forms)
+- <b>#15: TanStack Query FAQs</b>
+- [#16: TanStack Query meets React Router](react-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -56,7 +56,7 @@ import Translations from 'components/Translations'
 
 ---
 
-I have been answering _a lot_ of questions over the last 18 months regarding React Query. Being involved in the community and answering questions was what got me into open-source in the first place, and it was also a big factor for writing this React Query related series of articles.
+I have been answering _a lot_ of questions over the last 18 months regarding TanStack Query. Being involved in the community and answering questions was what got me into open-source in the first place, and it was also a big factor for writing this TanStack Query related series of articles.
 
 I'm still excited to answer questions, especially if they are well formulated and of the non-standard kind. Please see my post [How can I?](./how-can-i) if you don't know what I mean or want to know what makes a question a good question.
 
@@ -81,9 +81,9 @@ const { data, refetch } = useQuery(['item'], () => fetchItem({ id: 1 }))
 
 Parameters or Variables are dependencies to your query. In the above code, we define a QueryKey `['item']`, so whatever we fetch will be stored under that key. If we were to refetch with a _different_ id, it would still write to the same place in the cache, because the key stays the same. So id 2 would then overwrite data for id 1. If you were to switch back to id 1, that data would be gone.
 
-Caching different responses under different query keys is one of React Query's greatest strengths. The hypothetical "refetch-with-parameters" api would take that feature away. This is why _refetch_ is only meant to replay the request with the same variables. So in essence, you don't really want a _refetch_: You want a _new fetch_ for a different id!
+Caching different responses under different query keys is one of TanStack Query's greatest strengths. The hypothetical "refetch-with-parameters" api would take that feature away. This is why _refetch_ is only meant to replay the request with the same variables. So in essence, you don't really want a _refetch_: You want a _new fetch_ for a different id!
 
-To use React Query effectively, you have to embrace the declarative approach: The query key defines all dependencies that the query function needs to fetch data. If you stick to that, all you have to do to get refetches is to update the dependency. A more realistic example would look like this:
+To use TanStack Query effectively, you have to embrace the declarative approach: The query key defines all dependencies that the query function needs to fetch data. If you stick to that, all you have to do to get refetches is to update the dependency. A more realistic example would look like this:
 
 ```jsx:title=dynamic-query-key
 const [id, setId] = useState(1)
@@ -96,7 +96,7 @@ const { data } = useQuery(['item', id], () => fetchItem({ id }))
 }})>Show Item 2</button>
 ```
 
-_setId_ will re-render the component, React Query will pick up the new key and start fetching for that key. It will also cache it separately from id 1.
+_setId_ will re-render the component, TanStack Query will pick up the new key and start fetching for that key. It will also cache it separately from id 1.
 
 The declarative approach also makes sure that no matter where or how you update the id, your query data will always be "in sync" with it. So your thinking goes from: "If I click that button, I want to refetch" towards: "I always want to see data for the current id".
 
@@ -128,7 +128,7 @@ const { data, isPreviousData } = useQuery(
 )
 ```
 
-With this flag on, React Query will still show data for id 1 while data for id 2 is being fetched. Additionally, the _isPreviousData_ flag on the query result will be set to true, so that you can act accordingly in the UI. Maybe you want to show a background loading spinner in addition to the data, or you'd like to add opacity to the shown data, indicating that it's stale. That is totally up to you - React Query just gives you the means to do that. 🙌
+With this flag on, TanStack Query will still show data for id 1 while data for id 2 is being fetched. Additionally, the _isPreviousData_ flag on the query result will be set to true, so that you can act accordingly in the UI. Maybe you want to show a background loading spinner in addition to the data, or you'd like to add opacity to the shown data, indicating that it's stale. That is totally up to you - TanStack Query just gives you the means to do that. 🙌
 
 ## Why are updates not shown?
 
@@ -145,7 +145,7 @@ Query Keys are hashed deterministically, so you don't have to keep referential s
 
 The second value of the key array is a _string_ in the first example and a _number_ in the second. This can happen if you usually work with numbers, but get a string if you read from the URL with _useParams_.
 
-The React Query Devtools are your best friend in this case, as you can clearly see which keys exist and which keys are currently fetching. Keep an eye on those pesky details though!
+The TanStack Query Devtools are your best friend in this case, as you can clearly see which keys exist and which keys are currently fetching. Keep an eye on those pesky details though!
 
 I recommend using [TypeScript](https://www.typescriptlang.org/) and [Query Key Factories](effective-react-query-keys) to help with that problem.
 
@@ -300,9 +300,9 @@ const UseQuery = ({ children, ...props }) => children(useQuery(props))
 
 If your network request fails, you'd ideally want your query to go to the _error_ state. If that doesn't happen, and you still see a successful query instead, that means that your _queryFn_ did not return a failed Promise.
 
-Remember: React Query doesn't know (or care) about status codes or network requests at all. It needs a resolved or rejected Promise that the _queryFn_ needs to provide.
+Remember: TanStack Query doesn't know (or care) about status codes or network requests at all. It needs a resolved or rejected Promise that the _queryFn_ needs to provide.
 
-If React Query sees a rejected Promise, it can potentially start retries, pause queries if you are offline and eventually put the query into the error state, so it's quite an important thing to get right.
+If TanStack Query sees a rejected Promise, it can potentially start retries, pause queries if you are offline and eventually put the query into the error state, so it's quite an important thing to get right.
 
 ### The fetch API
 
@@ -375,7 +375,7 @@ useQuery(
 )
 ```
 
-I definitely prefer the callbacks, and you can read more about differnt ways to handle errors in [#11: React Query Error Handling](react-query-error-handling).
+I definitely prefer the callbacks, and you can read more about differnt ways to handle errors in [#11: TanStack Query Error Handling](react-query-error-handling).
 
 ---
 

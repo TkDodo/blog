@@ -1,11 +1,11 @@
 ---
-title: Using WebSockets with React Query
+title: Using WebSockets with TanStack Query
 description: A step-by-step guide on how to make real-time notifications work with react-query
 date: 2021-06-06
 banner: ./react-query-websockets.jpeg
 tags:
   - ReactJs
-  - React Query
+  - TanStack Query
   - JavaScript
   - TypeScript
 ---
@@ -18,23 +18,23 @@ import Translations from 'components/Translations'
 
 <Attribution name="Maxim Hopman" url="https://unsplash.com/@nampoh" />
 
-- [#1: Practical React Query](practical-react-query)
-- [#2: React Query Data Transformations](react-query-data-transformations)
-- [#3: React Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in React Query](status-checks-in-react-query)
-- [#5: Testing React Query](testing-react-query)
-- [#6: React Query and TypeScript](react-query-and-type-script)
-- <b>#7: Using WebSockets with React Query</b>
-- [#8: Effective React Query Keys](effective-react-query-keys)
+- [#1: Practical TanStack Query](practical-react-query)
+- [#2: TanStack Query Data Transformations](react-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
+- [#5: Testing TanStack Query](testing-react-query)
+- [#6: TanStack Query and TypeScript](react-query-and-type-script)
+- <b>#7: Using WebSockets with TanStack Query</b>
+- [#8: Effective TanStack Query Keys](effective-react-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
-- [#10: React Query as a State Manager](react-query-as-a-state-manager)
-- [#11: React Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
-- [#13: Offline React Query](offline-react-query)
-- [#14: React Query and Forms](react-query-and-forms)
-- [#15: React Query FAQs](react-query-fa-qs)
-- [#16: React Query meets React Router](react-query-meets-react-router)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
+- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](react-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
+- [#13: Offline TanStack Query](offline-react-query)
+- [#14: TanStack Query and Forms](react-query-and-forms)
+- [#15: TanStack Query FAQs](react-query-fa-qs)
+- [#16: TanStack Query meets React Router](react-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -54,7 +54,7 @@ import Translations from 'components/Translations'
 
 ---
 
-How to handle live data using WebSockets together with React Query has been one of the most asked questions lately, so I thought I'd give it a try, play around with it a bit and report my findings. That's what this post is about :)
+How to handle live data using WebSockets together with TanStack Query has been one of the most asked questions lately, so I thought I'd give it a try, play around with it a bit and report my findings. That's what this post is about :)
 
 ## What are WebSockets
 
@@ -68,11 +68,11 @@ Like with any other HTTP request, the browser initiates the connection, but indi
 
 This has the main advantage that the server can now push selective updates to the client. This can come in very handy if you have multiple users viewing the same data, and one user makes an update. Usually, the other clients will not see that update until they actively refetch. WebSockets allow to instantly push those updates in real-time.
 
-## React Query integration
+## TanStack Query integration
 
-Since React Query is primarily a client side async state management library, I will _not_ talk about how to set up WebSockets on the server. I've honestly never done it, and it also depends on which technology you are using in the backend.
+Since TanStack Query is primarily a client side async state management library, I will _not_ talk about how to set up WebSockets on the server. I've honestly never done it, and it also depends on which technology you are using in the backend.
 
-React Query doesn't have anything built-in specifically for WebSockets. That doesn't mean that WebSockets are not supported or that they don't work well with the library. It's just that React Query is _very_ agnostic when it comes to how you fetch your data: All it needs is a resolved or rejected _Promise_ to work - the rest is up to you.
+TanStack Query doesn't have anything built-in specifically for WebSockets. That doesn't mean that WebSockets are not supported or that they don't work well with the library. It's just that TanStack Query is _very_ agnostic when it comes to how you fetch your data: All it needs is a resolved or rejected _Promise_ to work - the rest is up to you.
 
 ## Step by Step
 
@@ -175,7 +175,7 @@ Nevertheless, here is a [codesandbox example](https://codesandbox.io/s/react-que
 
 ## Increasing StaleTime
 
-React Query comes with a [default staleTime](https://react-query.tanstack.com/guides/important-defaults) of _zero_. This means that every query will be immediately considered as stale, which means it will refetch when a new subscriber mounts or when the user refocuses the window. It is aimed to keep your data as up-to-date as necessary.
+TanStack Query comes with a [default staleTime](https://react-query.tanstack.com/guides/important-defaults) of _zero_. This means that every query will be immediately considered as stale, which means it will refetch when a new subscriber mounts or when the user refocuses the window. It is aimed to keep your data as up-to-date as necessary.
 
 This goal overlaps a lot with WebSockets, which update your data in real-time. Why would I need to refetch at all if I just manually _invalidated_ because the server just told me to do so via a dedicated message?
 

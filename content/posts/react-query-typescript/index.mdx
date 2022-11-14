@@ -1,11 +1,11 @@
 ---
-title: React Query and TypeScript
+title: TanStack Query and TypeScript
 description: Combine two of the most powerful tools for React Apps to produce great user experience, developer experience and type safety.
 date: 2021-05-16
 banner: ./react-query-typescript.jpeg
 tags:
   - ReactJs
-  - React Query
+  - TanStack Query
   - TypeScript
 ---
 
@@ -22,23 +22,23 @@ import Translations from 'components/Translations'
 
 **Last Update: 23.04.2022**
 
-- [#1: Practical React Query](practical-react-query)
-- [#2: React Query Data Transformations](react-query-data-transformations)
-- [#3: React Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in React Query](status-checks-in-react-query)
-- [#5: Testing React Query](testing-react-query)
-- <b>#6: React Query and TypeScript</b>
-- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
-- [#8: Effective React Query Keys](effective-react-query-keys)
+- [#1: Practical TanStack Query](practical-react-query)
+- [#2: TanStack Query Data Transformations](react-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
+- [#5: Testing TanStack Query](testing-react-query)
+- <b>#6: TanStack Query and TypeScript</b>
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
+- [#8: Effective TanStack Query Keys](effective-react-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
-- [#10: React Query as a State Manager](react-query-as-a-state-manager)
-- [#11: React Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
-- [#13: Offline React Query](offline-react-query)
-- [#14: React Query and Forms](react-query-and-forms)
-- [#15: React Query FAQs](react-query-fa-qs)
-- [#16: React Query meets React Router](react-query-meets-react-router)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
+- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](react-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
+- [#13: Offline TanStack Query](offline-react-query)
+- [#14: TanStack Query and Forms](react-query-and-forms)
+- [#15: TanStack Query FAQs](react-query-fa-qs)
+- [#16: TanStack Query meets React Router](react-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -60,13 +60,13 @@ import Translations from 'components/Translations'
 
 [TypeScript](https://www.typescriptlang.org/) is 🔥 - this seems to be a common understanding now in the frontend community. Many developers expect libraries to either be written in TypeScript, or at least provide good type definitions. For me, if a library is written in TypeScript, the type definitions are the best documentation there is. It's never wrong because it directly reflects the implementation. I frequently look at type definitions before I read API docs.
 
-React Query was initially written in JavaScript (v1), and was then re-written to TypeScript with v2. This means that right now, there is very good support for TypeScript consumers.
+TanStack Query was initially written in JavaScript (v1), and was then re-written to TypeScript with v2. This means that right now, there is very good support for TypeScript consumers.
 
-There are however a couple of "gotchas" when working with TypeScript due to how dynamic and unopinionated React Query is. Let's go through them one by one to make your experience with it even better.
+There are however a couple of "gotchas" when working with TypeScript due to how dynamic and unopinionated TanStack Query is. Let's go through them one by one to make your experience with it even better.
 
 ## Generics
 
-React Query heavily uses [Generics](https://www.typescriptlang.org/docs/handbook/2/generics.html). This is necessary because the library does not actually fetch data for you, and it cannot know what _type_ the data will have that your api returns.
+TanStack Query heavily uses [Generics](https://www.typescriptlang.org/docs/handbook/2/generics.html). This is necessary because the library does not actually fetch data for you, and it cannot know what _type_ the data will have that your api returns.
 
 The TypeScript section in the [official docs](https://react-query.tanstack.com/typescript) is not very extensive, and it tells us to explicitly specify the Generics that _useQuery_ expects when calling it:
 
@@ -76,7 +76,7 @@ function useGroups() {
 }
 ```
 
-Over time, React Query has added more Generics to the _useQuery_ hook (there are now four of them), mainly because more functionality was added. The above code works, and it will make sure that the _data_ property of our custom hook is correctly typed to `Group[] | undefined` as well as that our _error_ will be of type `Error | undefined`. But it will not work like that for more advanced use-cases, especially when the other two Generics are needed.
+Over time, TanStack Query has added more Generics to the _useQuery_ hook (there are now four of them), mainly because more functionality was added. The above code works, and it will make sure that the _data_ property of our custom hook is correctly typed to `Group[] | undefined` as well as that our _error_ will be of type `Error | undefined`. But it will not work like that for more advanced use-cases, especially when the other two Generics are needed.
 
 ### The four Generics
 
@@ -141,7 +141,7 @@ let result = identity('react-query')
 
 ### Partial Type Argument Inference
 
-...doesn't exist in TypeScript yet (see this [open issue](https://github.com/microsoft/TypeScript/issues/26242)). This basically means that if you provide _one_ Generic, you have to provide _all_ of them. But because React Query has default values for Generics, we might not notice right away that they will be taken. The resulting error messages can be quite cryptic. Let's look at an example where this actually backfires:
+...doesn't exist in TypeScript yet (see this [open issue](https://github.com/microsoft/TypeScript/issues/26242)). This basically means that if you provide _one_ Generic, you have to provide _all_ of them. But because TanStack Query has default values for Generics, we might not notice right away that they will be taken. The resulting error messages can be quite cryptic. Let's look at an example where this actually backfires:
 
 ```ts:title=default-generics
 function useGroupCount() {
@@ -181,7 +181,7 @@ function useGroups() {
 }
 ```
 
-If you (like me) like to keep your api layer separated from your queries, you'll need to add type definitions anyways to avoid _implicit any_, so React Query can infer the rest:
+If you (like me) like to keep your api layer separated from your queries, you'll need to add type definitions anyways to avoid _implicit any_, so TanStack Query can infer the rest:
 
 ```ts:title=inferred-types
 function fetchGroups(): Promise<Group[]> {
@@ -218,7 +218,7 @@ throw undefined
 throw Symbol('foo')
 ```
 
-Since React Query is not in charge of the function that returns the Promise, it also can't know what type of errors it might produce. So _unknown_ is correct. Once TypeScript allows skipping some generics when calling a function with multiple generics (see [this issue for more information](https://github.com/microsoft/TypeScript/issues/10571)), we could handle this better, but for now, if we need to work with errors and don't want to resort to passing Generics, we can narrow the type with an instanceof check:
+Since TanStack Query is not in charge of the function that returns the Promise, it also can't know what type of errors it might produce. So _unknown_ is correct. Once TypeScript allows skipping some generics when calling a function with multiple generics (see [this issue for more information](https://github.com/microsoft/TypeScript/issues/10571)), we could handle this better, but for now, if we need to work with errors and don't want to resort to passing Generics, we can narrow the type with an instanceof check:
 
 ```ts:title=narrow-with-instanceof
 const groups = useGroups()
@@ -238,7 +238,7 @@ Since we need to make some kind of check anyways to see if we have an error, the
 
 ## Type Narrowing
 
-I rarely use destructuring when working with React Query. First of all, names like _data_ and _error_ are quite universal (purposefully so), so you'll likely rename them anyway. Keeping the whole object will keep the context of what data it is or where the error is coming from. It will further help TypeScript to narrow types when using the status field or one of the status booleans, which it cannot do if you use destructuring:
+I rarely use destructuring when working with TanStack Query. First of all, names like _data_ and _error_ are quite universal (purposefully so), so you'll likely rename them anyway. Keeping the whole object will keep the context of what data it is or where the error is coming from. It will further help TypeScript to narrow types when using the status field or one of the status booleans, which it cannot do if you use destructuring:
 
 ```ts:title=type-narrowing
 const { data, isSuccess } = useGroups()
@@ -252,7 +252,7 @@ if (groupsQuery.isSuccess) {
 }
 ```
 
-This has nothing to do with React Query, it is just how TypeScript works. [@danvdk](https://twitter.com/danvdk) has a good explanation for this behaviour
+This has nothing to do with TanStack Query, it is just how TypeScript works. [@danvdk](https://twitter.com/danvdk) has a good explanation for this behaviour
 
 https://twitter.com/danvdk/status/1363614288103964672
 
@@ -338,7 +338,7 @@ const queryClient = new QueryClient({
 })
 ```
 
-This just works, however, _url_ is inferred to type _unknown_, because the whole _queryKey_ is an _unknown Array_. At the time of the creation of the queryClient, there is absolutely no guarantee how the queryKeys will be constructed when calling _useQuery_, so there is only so much React Query can do. That is just the nature of this highly dynamic feature. It's not a bad thing though because it means you now have to work defensively and narrow the type with runtime checks to work with it, for example:
+This just works, however, _url_ is inferred to type _unknown_, because the whole _queryKey_ is an _unknown Array_. At the time of the creation of the queryClient, there is absolutely no guarantee how the queryKeys will be constructed when calling _useQuery_, so there is only so much TanStack Query can do. That is just the nature of this highly dynamic feature. It's not a bad thing though because it means you now have to work defensively and narrow the type with runtime checks to work with it, for example:
 
 ```ts:title=narrow-with-typeof {6-12}
 const queryClient = new QueryClient({

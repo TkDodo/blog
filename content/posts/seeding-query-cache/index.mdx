@@ -5,7 +5,7 @@ date: 2022-10-22
 banner: ./seeding.jpeg
 tags:
   - ReactJs
-  - React Query
+  - TanStack Query
   - TypeScript
   - JavaScript
   - Suspense
@@ -20,23 +20,23 @@ import Highlight from 'components/Highlight'
 
 <Attribution name="Markus Spiske" url="https://unsplash.com/@markusspiske" />
 
-- [#1: Practical React Query](practical-react-query)
-- [#2: React Query Data Transformations](react-query-data-transformations)
-- [#3: React Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in React Query](status-checks-in-react-query)
-- [#5: Testing React Query](testing-react-query)
-- [#6: React Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
-- [#8: Effective React Query Keys](effective-react-query-keys)
+- [#1: Practical TanStack Query](practical-react-query)
+- [#2: TanStack Query Data Transformations](react-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
+- [#5: Testing TanStack Query](testing-react-query)
+- [#6: TanStack Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
+- [#8: Effective TanStack Query Keys](effective-react-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
-- [#10: React Query as a State Manager](react-query-as-a-state-manager)
-- [#11: React Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
-- [#13: Offline React Query](offline-react-query)
-- [#14: React Query and Forms](react-query-and-forms)
-- [#15: React Query FAQs](react-query-fa-qs)
-- [#16: React Query meets React Router](react-query-meets-react-router)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
+- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](react-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
+- [#13: Offline TanStack Query](offline-react-query)
+- [#14: TanStack Query and Forms](react-query-and-forms)
+- [#15: TanStack Query FAQs](react-query-fa-qs)
+- [#16: TanStack Query meets React Router](react-query-meets-react-router)
 - <b>#17: Seeding the Query Cache</b>
 
 ---
@@ -65,7 +65,7 @@ In many cases though, we can actually fetch all the data we need in parallel, be
   alt="component mounts, both /issues and /labels are fetched at the same time"
 />
 
-In React Query, we can do that in two different ways:
+In TanStack Query, we can do that in two different ways:
 
 ```tsx:title=parallel-queries
 // 1. Use useQuery twice
@@ -79,11 +79,11 @@ const [issues, labels] = useQueries([
 ])
 ```
 
-In both variants, React Query will kick off data fetching in parallel. So where do waterfalls come in?
+In both variants, TanStack Query will kick off data fetching in parallel. So where do waterfalls come in?
 
 ### Suspense
 
-_**Note**: Please keep in mind that at the time of this writing, suspense for data fetching is still experimental! In the following examples, I will not be using the proposal from the RFC, but rather the suspense implementation that is already available in React Query (which is also experimental)._
+_**Note**: Please keep in mind that at the time of this writing, suspense for data fetching is still experimental! In the following examples, I will not be using the proposal from the RFC, but rather the suspense implementation that is already available in TanStack Query (which is also experimental)._
 
 As described in the above linked RFC, suspense a way to unwrap promises with React. A defining trait of promises is that they can be in three different states: pending, fulfilled or rejected.
 
@@ -190,7 +190,7 @@ As we can see, the query will still suspend until both are done fetching, but be
 
 ### The use RFC
 
-I don't know enough about the RFC yet to properly comment on it. A big part is still missing, namely how the cache API will work. I do think it is a bit problematic that the default behaviour will lead to waterfalls unless developers explicitly seed the cache early on. I'm still pretty excited about it because it will likely make internals of React Query easier to understand and maintain. It remains to be seen if it is something that will be used in userland a lot.
+I don't know enough about the RFC yet to properly comment on it. A big part is still missing, namely how the cache API will work. I do think it is a bit problematic that the default behaviour will lead to waterfalls unless developers explicitly seed the cache early on. I'm still pretty excited about it because it will likely make internals of TanStack Query easier to understand and maintain. It remains to be seen if it is something that will be used in userland a lot.
 
 ## Seeding details from lists
 
@@ -222,7 +222,7 @@ If the _initialData_ function returns _undefined_, the query will proceed as nor
 
 Be advised that if you have _staleTime_ set, no further background refetch will occur, as initialData is seen as _fresh_. This might not be what you want if your list was last fetched twenty minutes ago.
 
-As shown [in the docs](https://tanstack.com/query/v4/docs/guides/initial-query-data#initial-data-from-the-cache-with-initialdataupdatedat), we can additionally specify _initialDataUpdatedAt_ on our detail query. It will tell React Query when the data we are passing in as _initialData_ was originally fetched, so it can determine staleness correctly. Conveniently, React Query also knows when the list was last fetched, so we can just pass that in:
+As shown [in the docs](https://tanstack.com/query/v4/docs/guides/initial-query-data#initial-data-from-the-cache-with-initialdataupdatedat), we can additionally specify _initialDataUpdatedAt_ on our detail query. It will tell TanStack Query when the data we are passing in as _initialData_ was originally fetched, so it can determine staleness correctly. Conveniently, TanStack Query also knows when the list was last fetched, so we can just pass that in:
 
 ```tsx:title=initialDataUpdatedAt {11-13}
 const useTodo = (id: number) => {
@@ -281,7 +281,7 @@ So if you use the push approach, the detail entries you've created here might no
 
 ---
 
-Keep in mind that both approaches only work well if the structure of your detail query is exactly the same (or at least assignable to) the structure of the list query. If the detail view has a mandatory field that doesn't exist in the list, seeding via _initialData_ is not a good idea. This is where _placeholderData_ comes in, and I've written a comparison about the two in [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query).
+Keep in mind that both approaches only work well if the structure of your detail query is exactly the same (or at least assignable to) the structure of the list query. If the detail view has a mandatory field that doesn't exist in the list, seeding via _initialData_ is not a good idea. This is where _placeholderData_ comes in, and I've written a comparison about the two in [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query).
 
 ---
 

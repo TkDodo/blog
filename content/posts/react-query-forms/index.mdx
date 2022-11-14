@@ -1,11 +1,11 @@
 ---
-title: React Query and Forms
-description: Forms tend to blur the line between server and client state, so let's see how that plays together with React Query.
+title: TanStack Query and Forms
+description: Forms tend to blur the line between server and client state, so let's see how that plays together with TanStack Query.
 date: 2022-04-10
 banner: ./forms.jpeg
 tags:
   - ReactJs
-  - React Query
+  - TanStack Query
   - TypeScript
   - JavaScript
 ---
@@ -18,23 +18,23 @@ import Translations from 'components/Translations'
 
 <Attribution name="Kelly Sikkema" url="https://unsplash.com/@kellysikkema" />
 
-- [#1: Practical React Query](practical-react-query)
-- [#2: React Query Data Transformations](react-query-data-transformations)
-- [#3: React Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in React Query](status-checks-in-react-query)
-- [#5: Testing React Query](testing-react-query)
-- [#6: React Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
-- [#8: Effective React Query Keys](effective-react-query-keys)
+- [#1: Practical TanStack Query](practical-react-query)
+- [#2: TanStack Query Data Transformations](react-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
+- [#5: Testing TanStack Query](testing-react-query)
+- [#6: TanStack Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
+- [#8: Effective TanStack Query Keys](effective-react-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
-- [#10: React Query as a State Manager](react-query-as-a-state-manager)
-- [#11: React Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
-- [#13: Offline React Query](offline-react-query)
-- <b>#14: React Query and Forms</b>
-- [#15: React Query FAQs](react-query-fa-qs)
-- [#16: React Query meets React Router](react-query-meets-react-router)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
+- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](react-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
+- [#13: Offline TanStack Query](offline-react-query)
+- <b>#14: TanStack Query and Forms</b>
+- [#15: TanStack Query FAQs](react-query-fa-qs)
+- [#16: TanStack Query meets React Router](react-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -54,7 +54,7 @@ import Translations from 'components/Translations'
 
 ---
 
-Forms are an important part in many web applications as the primary means to update data. We are using React Query not only to fetch data ([queries](react-query-as-a-state-manager)), but also to modify it ([mutations](mastering-mutations-in-react-query)), so we need to somehow integrate our beloved async state manager with forms.
+Forms are an important part in many web applications as the primary means to update data. We are using TanStack Query not only to fetch data ([queries](react-query-as-a-state-manager)), but also to modify it ([mutations](mastering-mutations-in-react-query)), so we need to somehow integrate our beloved async state manager with forms.
 
 The good news is that realistically, there isn't anything special about forms: It is still just a bunch of html elements that we render in order to display some data. However, as we'd also like to _change_ that data, the lines between what is Server State and what is Client State start to blur a bit, which is where the complexity might come in.
 
@@ -68,7 +68,7 @@ When we display a list of Persons, that is undoubtedly Server State. But what ha
 
 ## The simple approach
 
-I have gone on the record already about how I am not a fan of copying state from one state manager to another, be it [putting props to state](putting-props-to-use-state) or copying state from [React Query to local state](practical-react-query#keep-server-and-client-state-separate).
+I have gone on the record already about how I am not a fan of copying state from one state manager to another, be it [putting props to state](putting-props-to-use-state) or copying state from [TanStack Query to local state](practical-react-query#keep-server-and-client-state-separate).
 
 I do think that forms can be an exception to this rule though, if you are doing it deliberately and know about the tradeoffs (everything is a tradeoff after all). When rendering our Person form, we very likely want to treat the Server State as _initial_ data only. We fetch the firstName and lastName, put it into the form state, and then let the user update it.
 
@@ -148,7 +148,7 @@ This is not too bad, as it separates our data fetching from the presentation. I'
 
 ### No background updates
 
-React Query is all about keeping your UI up-to-date with Server State. As soon as we copy that state somewhere else, React Query cannot do its job anymore. if a background refetch happens for whatever reason, and it yields new data, our form state will not update with it. This is likely not problematic if we are the only one working on that form state (like a form for our profile page). If that's the case, we should likely at least disable background updates by setting a higher _staleTime_ on our query. After all, why would we keep querying our server if the updates will not be reflected on the screen?
+TanStack Query is all about keeping your UI up-to-date with Server State. As soon as we copy that state somewhere else, TanStack Query cannot do its job anymore. if a background refetch happens for whatever reason, and it yields new data, our form state will not update with it. This is likely not problematic if we are the only one working on that form state (like a form for our profile page). If that's the case, we should likely at least disable background updates by setting a higher _staleTime_ on our query. After all, why would we keep querying our server if the updates will not be reflected on the screen?
 
 ```js:title=no-background-updates
 // ✅ opt out of background updates
@@ -167,7 +167,7 @@ So what would we need to do to still reflect background updates while we are edi
 
 ## Keeping background updates on
 
-One approach is to rigorously separate the states. We'll keep the Server State in React Query, and only track the changes the user has made with our Client State. The source of truth that we display then to our users is _derived state_ from those two: If the user has changed a field, we show the Client State. If not, we fall back to the Server State:
+One approach is to rigorously separate the states. We'll keep the Server State in TanStack Query, and only track the changes the user has made with our Client State. The source of truth that we display then to our users is _derived state_ from those two: If the user has changed a field, we show the Client State. If not, we fall back to the Server State:
 
 ```js:title=separate-states {15-17,27}
 function PersonDetail({ id }) {
@@ -225,7 +225,7 @@ Whichever way you choose, try to be aware of the advantages / disadvantages that
 
 ## Tips and Tricks
 
-Apart from those two principal ways of setting up your form, here are some smaller, but nonetheless important tricks to integrate React Query with forms:
+Apart from those two principal ways of setting up your form, here are some smaller, but nonetheless important tricks to integrate TanStack Query with forms:
 
 ### Double submit prevention
 

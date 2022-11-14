@@ -1,11 +1,11 @@
 ---
-title: React Query Render Optimizations
-description: An advanced guide to minimize component re-renderings when using React Query
+title: TanStack Query Render Optimizations
+description: An advanced guide to minimize component re-renderings when using TanStack Query
 date: 2021-03-20
 banner: ./optimizations.jpeg
 tags:
   - ReactJs
-  - React Query
+  - TanStack Query
   - JavaScript
   - TypeScript
 ---
@@ -23,23 +23,23 @@ import Translations from 'components/Translations'
 
 **Last Update: 23.04.2022**
 
-- [#1: Practical React Query](practical-react-query)
-- [#2: React Query Data Transformations](react-query-data-transformations)
-- <b>#3: React Query Render Optimizations</b>
-- [#4: Status Checks in React Query](status-checks-in-react-query)
-- [#5: Testing React Query](testing-react-query)
-- [#6: React Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
-- [#8: Effective React Query Keys](effective-react-query-keys)
+- [#1: Practical TanStack Query](practical-react-query)
+- [#2: TanStack Query Data Transformations](react-query-data-transformations)
+- <b>#3: TanStack Query Render Optimizations</b>
+- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
+- [#5: Testing TanStack Query](testing-react-query)
+- [#6: TanStack Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
+- [#8: Effective TanStack Query Keys](effective-react-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
-- [#10: React Query as a State Manager](react-query-as-a-state-manager)
-- [#11: React Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
-- [#13: Offline React Query](offline-react-query)
-- [#14: React Query and Forms](react-query-and-forms)
-- [#15: React Query FAQs](react-query-fa-qs)
-- [#16: React Query meets React Router](react-query-meets-react-router)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
+- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](react-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
+- [#13: Offline TanStack Query](offline-react-query)
+- [#14: TanStack Query and Forms](react-query-and-forms)
+- [#15: TanStack Query FAQs](react-query-fa-qs)
+- [#16: TanStack Query meets React Router](react-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -63,14 +63,14 @@ import Translations from 'components/Translations'
 
 ---
 
-**Disclaimer**: Render optimizations are an advanced concept for any app. React Query already comes with very good optimizations and defaults out of the box, and most of the time, no further optimizations are needed. "Unneeded re-renders" is a topic that many people tend to put a lot of focus on, which is why I've decided to cover it. But I wanted to point out once again, that usually, for most apps, render optimizations probably don't matter as much as you'd think. Re-renders are a good thing. They make sure your app is up-to-date. I'd take an "unnecessary re-render" over a "missing render-that-should-have-been-there" all day every day. For more on this topic, please read:
+**Disclaimer**: Render optimizations are an advanced concept for any app. TanStack Query already comes with very good optimizations and defaults out of the box, and most of the time, no further optimizations are needed. "Unneeded re-renders" is a topic that many people tend to put a lot of focus on, which is why I've decided to cover it. But I wanted to point out once again, that usually, for most apps, render optimizations probably don't matter as much as you'd think. Re-renders are a good thing. They make sure your app is up-to-date. I'd take an "unnecessary re-render" over a "missing render-that-should-have-been-there" all day every day. For more on this topic, please read:
 
 - [Fix the slow render before you fix the re-render](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render) by Kent C. Dodds
 - [this article by @ryanflorence about premature optimizations](https://reacttraining.com/blog/react-inline-functions-and-performance)
 
 ---
 
-I've already written quite a bit about render optimizations when describing the select option in [#2: React Query Data Transformations](react-query-data-transformations). However, "Why does React Query re-render my component two times even though nothing changed in my data" is the question I probably needed to answer the most (apart from maybe: "Where can I find the v2 docs" 😅). So let me try to explain it in-depth.
+I've already written quite a bit about render optimizations when describing the select option in [#2: TanStack Query Data Transformations](react-query-data-transformations). However, "Why does TanStack Query re-render my component two times even though nothing changed in my data" is the question I probably needed to answer the most (apart from maybe: "Where can I find the v2 docs" 😅). So let me try to explain it in-depth.
 
 ## isFetching transition
 
@@ -95,11 +95,11 @@ Every time you make a background refetch, this component will re-render twice wi
 { status: 'success', data: 2, isFetching: false }
 ```
 
-That is because React Query exposes a lot of meta information for each query, and _isFetching_ is one of them. This flag will always be true when a request is in-flight. This is quite useful if you want to display a background loading indicator. But it's also kinda unnecessary if you don't do that.
+That is because TanStack Query exposes a lot of meta information for each query, and _isFetching_ is one of them. This flag will always be true when a request is in-flight. This is quite useful if you want to display a background loading indicator. But it's also kinda unnecessary if you don't do that.
 
 ### notifyOnChangeProps
 
-For this use-case, React Query has the _notifyOnChangeProps_ option. It can be set on a per-observer level to tell React Query: Please only inform this observer about changes if one of these props change. By setting this option to `['data']`, we will find the optimized version we seek:
+For this use-case, TanStack Query has the _notifyOnChangeProps_ option. It can be set on a per-observer level to tell TanStack Query: Please only inform this observer about changes if one of these props change. By setting this option to `['data']`, we will find the optimized version we seek:
 
 ```ts:title=optimized-with-notifyOnChangeProps
 export const useTodosQuery = (select, notifyOnChangeProps) =>
@@ -135,7 +135,7 @@ As I have hinted in the disclaimer in the beginning, I think this is way worse t
 
 ### Tracked Queries
 
-I'm quite proud of this feature, given that it was my first major contribution to the library. If you set _notifyOnChangeProps_ to `'tracked'`, React Query will keep track of the fields you are using during render, and will use this to compute the list. This will optimize exactly the same way as specifying the list manually, except that you don't have to think about it. You can also turn this on globally for all your queries:
+I'm quite proud of this feature, given that it was my first major contribution to the library. If you set _notifyOnChangeProps_ to `'tracked'`, TanStack Query will keep track of the fields you are using during render, and will use this to compute the list. This will optimize exactly the same way as specifying the list manually, except that you don't have to think about it. You can also turn this on globally for all your queries:
 
 ```tsx:title=tracked-queries
 const queryClient = new QueryClient({
@@ -193,16 +193,16 @@ if (someCondition()) {
 }
 ```
 
-**Update**: Starting with v4, tracked queries are turned on per default in React Query, and you can opt out of the feature with _notifyOnChangeProps: 'all'_.
+**Update**: Starting with v4, tracked queries are turned on per default in TanStack Query, and you can opt out of the feature with _notifyOnChangeProps: 'all'_.
 
 ## Structural sharing
 
-A different, but no less important render optimization that React Query has turned on out of the box is _structural sharing_. This feature makes sure that we keep referential identity of our _data_ on every level. As an example, suppose you have the following data structure:
+A different, but no less important render optimization that TanStack Query has turned on out of the box is _structural sharing_. This feature makes sure that we keep referential identity of our _data_ on every level. As an example, suppose you have the following data structure:
 
 ```json
 [
   { "id": 1, "name": "Learn React", "status": "active" },
-  { "id": 2, "name": "Learn React Query", "status": "todo" }
+  { "id": 2, "name": "Learn TanStack Query", "status": "todo" }
 ]
 ```
 
@@ -212,11 +212,11 @@ Now suppose we transition our first todo into the _done_ state, and we make a ba
 [
 -  { "id": 1, "name": "Learn React", "status": "active" },
 +  { "id": 1, "name": "Learn React", "status": "done" },
-  { "id": 2, "name": "Learn React Query", "status": "todo" }
+  { "id": 2, "name": "Learn TanStack Query", "status": "todo" }
 ]
 ```
 
-Now React Query will attempt to compare the old state and the new and keep as much of the previous state as possible. In our example, the todos array will be new, because we updated a todo. The object with id 1 will also be new, but the object for id 2 will be the same reference as the one in the previous state - React Query will just copy it over to the new result because nothing has changed in it.
+Now TanStack Query will attempt to compare the old state and the new and keep as much of the previous state as possible. In our example, the todos array will be new, because we updated a todo. The object with id 1 will also be new, but the object for id 2 will be the same reference as the one in the previous state - TanStack Query will just copy it over to the new result because nothing has changed in it.
 
 This comes in very handy when using selectors for partial subscriptions:
 

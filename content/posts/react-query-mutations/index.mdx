@@ -1,11 +1,11 @@
 ---
-title: Mastering Mutations in React Query
-description: Learn all about the concept of performing side effects on the server with React Query.
+title: Mastering Mutations in TanStack Query
+description: Learn all about the concept of performing side effects on the server with TanStack Query.
 date: 2021-10-09
 banner: ./mutations.jpeg
 tags:
   - ReactJs
-  - React Query
+  - TanStack Query
   - JavaScript
   - TypeScript
 ---
@@ -20,23 +20,23 @@ import Translations from 'components/Translations'
 
 <Attribution name="Braňo" url="https://unsplash.com/@3dparadise" />
 
-- [#1: Practical React Query](practical-react-query)
-- [#2: React Query Data Transformations](react-query-data-transformations)
-- [#3: React Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in React Query](status-checks-in-react-query)
-- [#5: Testing React Query](testing-react-query)
-- [#6: React Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
-- [#8: Effective React Query Keys](effective-react-query-keys)
+- [#1: Practical TanStack Query](practical-react-query)
+- [#2: TanStack Query Data Transformations](react-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
+- [#5: Testing TanStack Query](testing-react-query)
+- [#6: TanStack Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
+- [#8: Effective TanStack Query Keys](effective-react-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
-- [#10: React Query as a State Manager](react-query-as-a-state-manager)
-- [#11: React Query Error Handling](react-query-error-handling)
-- <b>#12: Mastering Mutations in React Query</b>
-- [#13: Offline React Query](offline-react-query)
-- [#14: React Query and Forms](react-query-and-forms)
-- [#15: React Query FAQs](react-query-fa-qs)
-- [#16: React Query meets React Router](react-query-meets-react-router)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
+- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](react-query-error-handling)
+- <b>#12: Mastering Mutations in TanStack Query</b>
+- [#13: Offline TanStack Query](offline-react-query)
+- [#14: TanStack Query and Forms](react-query-and-forms)
+- [#15: TanStack Query FAQs](react-query-fa-qs)
+- [#16: TanStack Query meets React Router](react-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -52,9 +52,9 @@ import Translations from 'components/Translations'
 
 ---
 
-We've covered a lot of ground already when it comes to the features and concepts React Query provides. Most of them are about _retrieving_ data - via the _useQuery_ hook. There is however a second, integral part to working with data: updating it.
+We've covered a lot of ground already when it comes to the features and concepts TanStack Query provides. Most of them are about _retrieving_ data - via the _useQuery_ hook. There is however a second, integral part to working with data: updating it.
 
-For this use-case, React Query offers the _useMutation_ hook.
+For this use-case, TanStack Query offers the _useMutation_ hook.
 
 ## What are mutations?
 
@@ -77,7 +77,7 @@ console.log(myArray) //  [1]
 console.log(newArray) // [1, 2]
 ```
 
-As the name indicates, _useMutation_ also has some sort of side effect. Since we are in the context of [managing server state](react-query-as-a-state-manager) with React Query, mutations describe a function that performs such a side effect _on the server_. Creating a todo in your database would be a mutation. Logging in a user is also a classic mutation, because it performs the side effect of creating a token for the user.
+As the name indicates, _useMutation_ also has some sort of side effect. Since we are in the context of [managing server state](react-query-as-a-state-manager) with TanStack Query, mutations describe a function that performs such a side effect _on the server_. Creating a todo in your database would be a mutation. Logging in a user is also a classic mutation, because it performs the side effect of creating a token for the user.
 
 In some aspects, _useMutation_ is very similar to _useQuery_. In others, it is quite different.
 
@@ -94,9 +94,9 @@ You'll also get the same nice callbacks that _useQuery_ has: _onSuccess_, _onErr
   <i>useQuery</i> is declarative, <i>useMutation</i> is imperative.
 </Highlight>
 
-By that, I mean that queries mostly run automatically. You define the dependencies, but React Query takes care of running the query immediately, and then also performs smart background updates when deemed necessary. That works great for queries because we want to keep what we see on the screen _in sync_ with the actual data on the backend.
+By that, I mean that queries mostly run automatically. You define the dependencies, but TanStack Query takes care of running the query immediately, and then also performs smart background updates when deemed necessary. That works great for queries because we want to keep what we see on the screen _in sync_ with the actual data on the backend.
 
-For mutations, that wouldn't work well. Imagine a new todo would be created every time you focus your browser window 🤨. So instead of running the mutation instantly, React Query gives you a function that you can invoke whenever you want to make the mutation:
+For mutations, that wouldn't work well. Imagine a new todo would be created every time you focus your browser window 🤨. So instead of running the mutation instantly, TanStack Query gives you a function that you can invoke whenever you want to make the mutation:
 
 ```jsx:title=imperative-mutate
 function AddComment({ id }) {
@@ -124,13 +124,13 @@ Another difference is that mutations don't share state like _useQuery_ does. You
 
 ## Tying mutations to queries
 
-Mutations are, per design, not directly coupled to queries. A mutation that likes a blog post has no ties towards the query that fetches that blog post. For that to work, you would need some sort of underlying schema, which React Query doesn't have.
+Mutations are, per design, not directly coupled to queries. A mutation that likes a blog post has no ties towards the query that fetches that blog post. For that to work, you would need some sort of underlying schema, which TanStack Query doesn't have.
 
-To have a mutation reflect the changes it made on our queries, React Query primarily offers two ways:
+To have a mutation reflect the changes it made on our queries, TanStack Query primarily offers two ways:
 
 ### Invalidation
 
-This is conceptually the simplest way to get your screen up-to-date. Remember, with server state, you're only ever displaying a snapshot of data from a given point in time. React Query tries to keep that up-to-date of course, but if you're deliberately changing server state with a mutation, this is a great point in time to tell React Query that some data you have cached is now "invalid". React Query will then go and refetch that data if it's currently in use, and your screen will update automatically for you once the fetch is completed. The only thing you have to tell the library is _which_ queries you want to invalidate:
+This is conceptually the simplest way to get your screen up-to-date. Remember, with server state, you're only ever displaying a snapshot of data from a given point in time. TanStack Query tries to keep that up-to-date of course, but if you're deliberately changing server state with a mutation, this is a great point in time to tell TanStack Query that some data you have cached is now "invalid". TanStack Query will then go and refetch that data if it's currently in use, and your screen will update automatically for you once the fetch is completed. The only thing you have to tell the library is _which_ queries you want to invalidate:
 
 ```jsx:title=invalidation-from-mutation
 const useAddComment = (id) => {
@@ -184,7 +184,7 @@ const useUpdateTitle = (id) => {
 
 Putting data into the cache directly via _setQueryData_ will act as if this data was returned from the backend, which means that all components using that query will re-render accordingly.
 
-I'm showing some more examples of direct updates and the combination of both approaches in [#8: Effective React Query Keys](effective-react-query-keys#structure).
+I'm showing some more examples of direct updates and the combination of both approaches in [#8: Effective TanStack Query Keys](effective-react-query-keys#structure).
 
 ---
 
@@ -192,7 +192,7 @@ I personally think that most of the time, invalidation should be preferred. Of c
 
 ## Optimistic updates
 
-Optimistic updates are one of the key selling points for using React Query mutations. The _useQuery_ cache give us data instantly when switching between queries, especially when combined with [prefetching](https://react-query.tanstack.com/guides/prefetching). Our whole UI feels very snappy because of it, so why not get the same advantage for mutations as well?
+Optimistic updates are one of the key selling points for using TanStack Query mutations. The _useQuery_ cache give us data instantly when switching between queries, especially when combined with [prefetching](https://react-query.tanstack.com/guides/prefetching). Our whole UI feels very snappy because of it, so why not get the same advantage for mutations as well?
 
 A lot of the time, we are quite certain that an update will go through. Why should the user wait for a couple of seconds until we get the okay from the backend to show the result in the UI? The idea of optimistic updates is to fake the success of a mutation even before we have sent it to the server. Once we get a successful response back, all we have to do is invalidate our view again to see the real data. In case the request fails, we're going to roll back our UI to the state from before the mutation.
 
@@ -218,7 +218,7 @@ Finally, let's dive into some things that are good to know when dealing with mut
 
 ### awaited Promises
 
-Promises returned from the mutation callbacks are awaited by React Query, and as it so happens, _invalidateQueries_ returns a Promise. If you want your mutation to stay in _loading_ state while your related queries update, you have to return the result of _invalidateQueries_ from the callback:
+Promises returned from the mutation callbacks are awaited by TanStack Query, and as it so happens, _invalidateQueries_ returns a Promise. If you want your mutation to stay in _loading_ state while your related queries update, you have to return the result of _invalidateQueries_ from the callback:
 
 ```js:title=awaited-promises
 {
@@ -268,7 +268,7 @@ const onSubmit = async () => {
 }
 ```
 
-Handling errors is not necessary with _mutate_, because React Query catches (and discards) the error for you internally. It is literally implemented with: *mutateAsync().catch(noop)*😎
+Handling errors is not necessary with _mutate_, because TanStack Query catches (and discards) the error for you internally. It is literally implemented with: *mutateAsync().catch(noop)*😎
 
 The only situations where I've found _mutateAsync_ to be superior is when you really need the Promise for the sake of having a Promise. This can be necessary if you want to fire off multiple mutations concurrently and want to wait for them all to be finished, or if you have dependent mutations where you'd get into callback hell with the callbacks.
 

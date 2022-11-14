@@ -1,11 +1,11 @@
 ---
-title: Practical React Query
-description: Let me share with you the experiences I have made lately with React Query. Fetching data in React has never been this delightful...
+title: Practical TanStack Query
+description: Let me share with you the experiences I have made lately with TanStack Query. Fetching data in React has never been this delightful...
 date: 2020-11-16
 banner: ./react-query.png
 tags:
   - ReactJs
-  - React Query
+  - TanStack Query
 ---
 
 import Comments from 'components/Comments'
@@ -15,23 +15,23 @@ import Translations from 'components/Translations'
 
 ---
 
-- <b>#1: Practical React Query</b>
-- [#2: React Query Data Transformations](react-query-data-transformations)
-- [#3: React Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in React Query](status-checks-in-react-query)
-- [#5: Testing React Query](testing-react-query)
-- [#6: React Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
-- [#8: Effective React Query Keys](effective-react-query-keys)
+- <b>#1: Practical TanStack Query</b>
+- [#2: TanStack Query Data Transformations](react-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
+- [#5: Testing TanStack Query](testing-react-query)
+- [#6: TanStack Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
+- [#8: Effective TanStack Query Keys](effective-react-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
-- [#10: React Query as a State Manager](react-query-as-a-state-manager)
-- [#11: React Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
-- [#13: Offline React Query](offline-react-query)
-- [#14: React Query and Forms](react-query-and-forms)
-- [#15: React Query FAQs](react-query-fa-qs)
-- [#16: React Query meets React Router](react-query-meets-react-router)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
+- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](react-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
+- [#13: Offline TanStack Query](offline-react-query)
+- [#14: TanStack Query and Forms](react-query-and-forms)
+- [#15: TanStack Query FAQs](react-query-fa-qs)
+- [#16: TanStack Query meets React Router](react-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -101,7 +101,7 @@ If we can leverage the cache to display data that we do not own,
 there isn't really much left that is real client state that _also_ needs to be made available to the whole app.
 That made me understand why many think that Apollo can replace redux in lots of instances.
 
-## React Query
+## TanStack Query
 
 I have never had the chance to use GraphQL.
 We have an existing REST API, don't really experience problems with over-fetching, it just works, etc.
@@ -111,32 +111,32 @@ especially given that you'd also have to adapt the backend, which isn't quite so
 Yet I still envied the simplicity of how data fetching can look like on the frontend,
 including the handling of loading and error states. If only there were something similar in React for REST APIs...
 
-Enter [React Query](https://react-query.tanstack.com/).
+Enter [TanStack Query](https://react-query.tanstack.com/).
 
 Made by the open sourcerer [Tanner Linsley](https://github.com/tannerlinsley) in late 2019,
-React Query takes the good parts of Apollo and brings them to REST.
+TanStack Query takes the good parts of Apollo and brings them to REST.
 It works with any function that returns a Promise and embraces the _stale-while-revalidate_ caching strategy.
 The library operates on sane defaults that try to keep your data as fresh as possible
 while at the same time showing data to the user as early as possible,
 making it feel near instant at times and thus providing a great UX.
 On top of that, it is also very flexible and lets you customize various settings for when the defaults are not enough.
 
-This article is not going to be an introduction to React Query though.
+This article is not going to be an introduction to TanStack Query though.
 
 I think the docs are great at explaining Guides & Concepts,
 there are [Videos](https://react-query.tanstack.com/videos) from various Talks that you can watch,
-and Tanner has a React Query [Essentials Course](https://learn.tanstack.com/) you can take if you want to get familiar with the library.
+and Tanner has a TanStack Query [Essentials Course](https://learn.tanstack.com/) you can take if you want to get familiar with the library.
 
 I want to focus more on some practical tips that go beyond the docs, which might be useful when you are already working with the library.
 These are things I have picked up over the last couple of months when I was not only actively using the library at work,
-but also got involved in the React Query community, answering questions on Discord and in GitHub Discussions.
+but also got involved in the TanStack Query community, answering questions on Discord and in GitHub Discussions.
 
 ### The Defaults explained
 
-I believe the React Query [Defaults](https://react-query.tanstack.com/guides/important-defaults)
+I believe the TanStack Query [Defaults](https://react-query.tanstack.com/guides/important-defaults)
 are very well chosen, but they can catch you off guard from time to time, especially at the beginning.
 
-First of all: React Query does _not_ invoke the _queryFn_ on every re-render, even with the default _staleTime_ of zero.
+First of all: TanStack Query does _not_ invoke the _queryFn_ on every re-render, even with the default _staleTime_ of zero.
 Your app can re-render for various reasons at any time, so fetching every time would be insane!
 
 > Always code for re-renders, and a lot of them. I like to call it render resiliency.
@@ -144,7 +144,7 @@ Your app can re-render for various reasons at any time, so fetching every time w
 <p style="padding-left: 3rem; margin-top: -1rem">— Tanner Linsley</p>
 
 If you see a refetch that you are not expecting, it is likely because you just focused the window
-and React Query is doing a _refetchOnWindowFocus_, which is a great feature for production:
+and TanStack Query is doing a _refetchOnWindowFocus_, which is a great feature for production:
 If the user goes to a different browser tab, and then comes back to your app,
 a background refetch will be triggered automatically,
 and data on the screen will be updated if something has changed on the server in the meantime.
@@ -169,7 +169,7 @@ I have rarely ever needed to tamper with the _cacheTime_.
 There is a good [explanation by example](https://react-query.tanstack.com/guides/caching#a-detailed-caching-example)
 in the docs as well.
 
-### Use the React Query DevTools
+### Use the TanStack Query DevTools
 
 This will help you immensely in understanding the state a query is in.
 The DevTools will also tell you what data is currently in the cache, so you'll have an easier time debugging.
@@ -184,7 +184,7 @@ which I assume you are familiar with.
 
 Why are these two similar?
 
-Because React Query will trigger a refetch whenever the query key changes.
+Because TanStack Query will trigger a refetch whenever the query key changes.
 So when we pass a variable parameter to our _queryFn_, we almost always want to fetch data when that value changes.
 Instead of orchestrating complex effects to manually trigger a refetch, we can utilize the query key:
 
@@ -208,7 +208,7 @@ export const useTodosQuery = (state: State) =>
 Here, imagine that our UI displays a list of todos along with a filter option.
 We would have some local state to store that filtering,
 and as soon as the user changes their selection, we would update that local state,
-and React Query will automatically trigger the refetch for us, because the query key changes.
+and TanStack Query will automatically trigger the refetch for us, because the query key changes.
 We are thus keeping the user's filter selection _in sync_ with the query function,
 which is very similar to what a dependency array represents for useEffect.
 I don't think I have ever passed a variable to the _queryFn_ that was _not_ part of the _queryKey_, too.
@@ -261,7 +261,7 @@ I think this is a great ux improvement for just a few lines of code.
 This goes hand in hand with [putting-props-to-use-state](./putting-props-to-use-state),
 an article I have written last month:
 If you get data from _useQuery_, try not to put that data into local state.
-The main reason is that you implicitly opt out of all background updates that React Query does for you,
+The main reason is that you implicitly opt out of all background updates that TanStack Query does for you,
 because the state "copy" will not update with it.
 
 This is fine if you want to e.g. fetch some default values for a Form,
@@ -294,7 +294,7 @@ I have prepared a little codesandbox example:
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
 ></iframe>
 
-The important part of this demo is that we never put the value that we get from React Query into local state.
+The important part of this demo is that we never put the value that we get from TanStack Query into local state.
 This makes sure that we always see the latest data, because there is no local "copy" of it.
 
 ### The enabled option is very powerful

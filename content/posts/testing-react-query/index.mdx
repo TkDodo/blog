@@ -1,11 +1,11 @@
 ---
-title: Testing React Query
+title: Testing TanStack Query
 description: Let's take a look at how to efficiently test custom useQuery hooks and components using them.
 date: 2021-04-04
 banner: ./testing.jpeg
 tags:
   - ReactJs
-  - React Query
+  - TanStack Query
   - JavaScript
   - TypeScript
 ---
@@ -23,23 +23,23 @@ import Translations from 'components/Translations'
 
 **Last Update: 23.04.2022**
 
-- [#1: Practical React Query](practical-react-query)
-- [#2: React Query Data Transformations](react-query-data-transformations)
-- [#3: React Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in React Query](status-checks-in-react-query)
-- <b>#5: Testing React Query</b>
-- [#6: React Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
-- [#8: Effective React Query Keys](effective-react-query-keys)
+- [#1: Practical TanStack Query](practical-react-query)
+- [#2: TanStack Query Data Transformations](react-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
+- <b>#5: Testing TanStack Query</b>
+- [#6: TanStack Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
+- [#8: Effective TanStack Query Keys](effective-react-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
-- [#10: React Query as a State Manager](react-query-as-a-state-manager)
-- [#11: React Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
-- [#13: Offline React Query](offline-react-query)
-- [#14: React Query and Forms](react-query-and-forms)
-- [#15: React Query FAQs](react-query-fa-qs)
-- [#16: React Query meets React Router](react-query-meets-react-router)
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
+- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](react-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
+- [#13: Offline TanStack Query](offline-react-query)
+- [#14: TanStack Query and Forms](react-query-and-forms)
+- [#15: TanStack Query FAQs](react-query-fa-qs)
+- [#16: TanStack Query meets React Router](react-query-meets-react-router)
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -63,7 +63,7 @@ import Translations from 'components/Translations'
 
 ---
 
-Questions around the testing topic come up quite often together with React Query, so I'll try to answer some of them here. I think one reason for that is that testing "smart" components (also called [container components](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0)) is not the easiest thing to do. With the rise of hooks, this split has been largely deprecated. It is now encouraged to consume hooks directly where you need them rather than doing a mostly arbitrary split and drill props down.
+Questions around the testing topic come up quite often together with TanStack Query, so I'll try to answer some of them here. I think one reason for that is that testing "smart" components (also called [container components](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0)) is not the easiest thing to do. With the rise of hooks, this split has been largely deprecated. It is now encouraged to consume hooks directly where you need them rather than doing a mostly arbitrary split and drill props down.
 
 I think this is generally a very good improvement for colocation and code readability, but we now have more components that consume dependencies outside of "just props".
 
@@ -73,7 +73,7 @@ Those components are technically no longer pure, because calling them in differe
 
 ## Mocking network requests
 
-Since React Query is an async server state management library, your components will likely make requests to a backend. When testing, this backend is not available to actually deliver data, and even if, you likely don't want to make your tests dependent on that.
+Since TanStack Query is an async server state management library, your components will likely make requests to a backend. When testing, this backend is not available to actually deliver data, and even if, you likely don't want to make your tests dependent on that.
 
 There are tons of articles out there on how to mock data with jest. You can mock your api client if you have one. You can mock fetch or axios directly. I can only second what Kent C. Dodds has written in his article [Stop mocking fetch](https://kentcdodds.com/blog/stop-mocking-fetch):
 
@@ -89,11 +89,11 @@ It can be your single source of truth when it comes to mocking your apis:
 
 ---
 
-With our network layer being taken care of, we can start talking about React Query specific things to keep an eye on:
+With our network layer being taken care of, we can start talking about TanStack Query specific things to keep an eye on:
 
 ## QueryClientProvider
 
-Whenever you use React Query, you need a QueryClientProvider and give it a queryClient - a vessel which holds the _QueryCache_. The cache will in turn hold the data of your queries.
+Whenever you use TanStack Query, you need a QueryClientProvider and give it a queryClient - a vessel which holds the _QueryCache_. The cache will in turn hold the data of your queries.
 
 I prefer to give each test its own QueryClientProvider and create a _new QueryClient_ for each test. That way, tests are completely isolated from each other. A different approach might be to clear the cache after each test, but I like to keep shared state between tests as minimal as possible. Otherwise, you might get unexpected and flaky results if you run your tests in parallel.
 
@@ -119,11 +119,11 @@ test("my first test", async () => {
 
 ### For components
 
-If you want to test a Component that uses a _useQuery_ hook, you also need to wrap that Component in QueryClientProvider. A small wrapper around _render_ from [react-testing-library](https://testing-library.com/docs/react-testing-library/intro/) seems like a good choice. Have a look at how React Query does it [internally for their tests](https://github.com/tannerlinsley/react-query/blob/ead2e5dd5237f3d004b66316b5f36af718286d2d/src/react/tests/utils.tsx#L6-L17).
+If you want to test a Component that uses a _useQuery_ hook, you also need to wrap that Component in QueryClientProvider. A small wrapper around _render_ from [react-testing-library](https://testing-library.com/docs/react-testing-library/intro/) seems like a good choice. Have a look at how TanStack Query does it [internally for their tests](https://github.com/tannerlinsley/react-query/blob/ead2e5dd5237f3d004b66316b5f36af718286d2d/src/react/tests/utils.tsx#L6-L17).
 
 ## Turn off retries
 
-It's one of the most common "gotchas" with React Query and testing: The library defaults to three retries with exponential backoff, which means that your tests are likely to timeout if you want to test an erroneous query. The easiest way to turn retries off is, again, via the _QueryClientProvider_. Let's extend the above example:
+It's one of the most common "gotchas" with TanStack Query and testing: The library defaults to three retries with exponential backoff, which means that your tests are likely to timeout if you want to test an erroneous query. The easiest way to turn retries off is, again, via the _QueryClientProvider_. Let's extend the above example:
 
 ```tsx:title=no-retries {2-9}
 const createWrapper = () => {
@@ -200,7 +200,7 @@ Here, all queries will retry two times, only _todos_ will retry five times, and 
 
 ### ReactQueryConfigProvider
 
-Of course, this only works for known query keys. Sometimes, you really want to set some configs on a subset of your component tree. In v2, React Query had a [ReactQueryConfigProvider](https://react-query-v2.tanstack.com/docs/api#reactqueryconfigprovider) for that exact use-case. You can achieve the same thing in v3 with a couple of lines of codes:
+Of course, this only works for known query keys. Sometimes, you really want to set some configs on a subset of your component tree. In v2, TanStack Query had a [ReactQueryConfigProvider](https://react-query-v2.tanstack.com/docs/api#reactqueryconfigprovider) for that exact use-case. You can achieve the same thing in v3 with a couple of lines of codes:
 
 ```jsx:title=ReactQueryConfigProvider
 const ReactQueryConfigProvider = ({ children, defaultOptions }) => {
@@ -224,7 +224,7 @@ You can see this in action in this [codesandbox example](https://codesandbox.io/
 
 ## Always await the query
 
-Since React Query is async by nature, when running the hook, you won't immediately get a result. It usually will be in loading state and without data to check. The [async utilities](https://react-hooks-testing-library.com/reference/api#async-utilities) from react-hooks-testing-library offer a lot of ways to solve this problem. For the simplest case, we can just wait until the query has transitioned to success state:
+Since TanStack Query is async by nature, when running the hook, you won't immediately get a result. It usually will be in loading state and without data to check. The [async utilities](https://react-hooks-testing-library.com/reference/api#async-utilities) from react-hooks-testing-library offer a lot of ways to solve this problem. For the simplest case, we can just wait until the query has transitioned to success state:
 
 ```tsx:title=waitFor {19-22}
 const createWrapper = () => {
@@ -273,7 +273,7 @@ test("my first test", async () => {
 
 ## Silence the error console
 
-Per default, React Query prints errors to the console. I think this is quite disturbing during testing, because you'll see 🔴 in the console even though all tests are 🟢. React Query allows overwriting that default behaviour by [setting a logger](https://react-query.tanstack.com/reference/setLogger), so that's what I'm usually doing:
+Per default, TanStack Query prints errors to the console. I think this is quite disturbing during testing, because you'll see 🔴 in the console even though all tests are 🟢. TanStack Query allows overwriting that default behaviour by [setting a logger](https://react-query.tanstack.com/reference/setLogger), so that's what I'm usually doing:
 
 ```ts:title=silence-errors
 import { setLogger } from 'react-query'

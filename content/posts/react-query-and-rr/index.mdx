@@ -1,11 +1,11 @@
 ---
-title: React Query meets React Router
-description: React Query and React Router are a match made in heaven.
+title: TanStack Query meets React Router
+description: TanStack Query and React Router are a match made in heaven.
 date: 2022-08-28
 banner: ./rq-rr.jpeg
 tags:
   - ReactJs
-  - React Query
+  - TanStack Query
   - React Router
   - TypeScript
   - JavaScript
@@ -23,23 +23,23 @@ import Highlight from 'components/Highlight'
   url="https://unsplash.com/@ashkfor121"
 />
 
-- [#1: Practical React Query](practical-react-query)
-- [#2: React Query Data Transformations](react-query-data-transformations)
-- [#3: React Query Render Optimizations](react-query-render-optimizations)
-- [#4: Status Checks in React Query](status-checks-in-react-query)
-- [#5: Testing React Query](testing-react-query)
-- [#6: React Query and TypeScript](react-query-and-type-script)
-- [#7: Using WebSockets with React Query](using-web-sockets-with-react-query)
-- [#8: Effective React Query Keys](effective-react-query-keys)
+- [#1: Practical TanStack Query](practical-react-query)
+- [#2: TanStack Query Data Transformations](react-query-data-transformations)
+- [#3: TanStack Query Render Optimizations](react-query-render-optimizations)
+- [#4: Status Checks in TanStack Query](status-checks-in-react-query)
+- [#5: Testing TanStack Query](testing-react-query)
+- [#6: TanStack Query and TypeScript](react-query-and-type-script)
+- [#7: Using WebSockets with TanStack Query](using-web-sockets-with-react-query)
+- [#8: Effective TanStack Query Keys](effective-react-query-keys)
   - [#8a: Leveraging the Query Function Context](leveraging-the-query-function-context)
-- [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query)
-- [#10: React Query as a State Manager](react-query-as-a-state-manager)
-- [#11: React Query Error Handling](react-query-error-handling)
-- [#12: Mastering Mutations in React Query](mastering-mutations-in-react-query)
-- [#13: Offline React Query](offline-react-query)
-- [#14: React Query and Forms](react-query-and-forms)
-- [#15: React Query FAQs](react-query-fa-qs)
-- <b>#16: React Query meets React Router</b>
+- [#9: Placeholder and Initial Data in TanStack Query](placeholder-and-initial-data-in-react-query)
+- [#10: TanStack Query as a State Manager](react-query-as-a-state-manager)
+- [#11: TanStack Query Error Handling](react-query-error-handling)
+- [#12: Mastering Mutations in TanStack Query](mastering-mutations-in-react-query)
+- [#13: Offline TanStack Query](offline-react-query)
+- [#14: TanStack Query and Forms](react-query-and-forms)
+- [#15: TanStack Query FAQs](react-query-fa-qs)
+- <b>#16: TanStack Query meets React Router</b>
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 
 ---
@@ -57,7 +57,7 @@ import Highlight from 'components/Highlight'
 
 [Remix](https://remix.run/) is changing the game, and they are bringing their data fetching concepts (loaders and actions) to purely client side rendered applications with [React Router 6.4](https://reactrouter.com/en/6.4.0/start/overview). I went through their great [tutorial](https://reactrouter.com/en/6.4.0/start/tutorial) that shows the concept very well and demonstrates how you can quickly build a small, but feature-rich app.
 
-With React Router coming into the data fetching game, it is naturally interesting to understand how this competes or correlates with existing data fetching and caching libraries like React Query. So let me spoil it right here:
+With React Router coming into the data fetching game, it is naturally interesting to understand how this competes or correlates with existing data fetching and caching libraries like TanStack Query. So let me spoil it right here:
 
 <Highlight>They are a match made in heaven</Highlight>
 
@@ -67,8 +67,8 @@ To recap: React Router will allow you to define [loaders](https://reactrouter.co
 
 If this sounds very similar to _queries_ and _mutations_ - you are right, it does. So the questions that have been popping up after the announcement of [Remixing React Router](https://remix.run/blog/remixing-react-router) are:
 
-- Would we still want React Query now that we can fetch in the route?
-- If we already use React Query, do we want to (and how can we) leverage the new React Router features?
+- Would we still want TanStack Query now that we can fetch in the route?
+- If we already use TanStack Query, do we want to (and how can we) leverage the new React Router features?
 
 ### It's not a cache
 
@@ -131,11 +131,11 @@ If you navigate to `contacts/1`, data for that contact will be fetched _before_ 
 
 ### Fetching too often
 
-The big drawback of not having a cache shows when you go to Contact 2 and then back to Contact 1 again. If you are used to React Query, you will know that data for Contact 1 is cached already, so we can show it instantly and kick of a background refetch if data is considered stale. With the loader approach, we will have to fetch that data again (and wait for it to finish fetching!), even though we have already fetched it before.
+The big drawback of not having a cache shows when you go to Contact 2 and then back to Contact 1 again. If you are used to TanStack Query, you will know that data for Contact 1 is cached already, so we can show it instantly and kick of a background refetch if data is considered stale. With the loader approach, we will have to fetch that data again (and wait for it to finish fetching!), even though we have already fetched it before.
 
-And that is exactly where React Query comes in.
+And that is exactly where TanStack Query comes in.
 
-What if we can use the loader to pre-fill the React Query Cache, but still _useQuery_ in the component to get all the React Query goodies like _refetchOnWindowFocus_ and showing stale data instantly? To me, this sounds like the best of both worlds. The router is responsible for fetching data early (if we don't have it), and React Query is responsible for caching and keeping the data fresh.
+What if we can use the loader to pre-fill the TanStack Query Cache, but still _useQuery_ in the component to get all the TanStack Query goodies like _refetchOnWindowFocus_ and showing stale data instantly? To me, this sounds like the best of both worlds. The router is responsible for fetching data early (if we don't have it), and TanStack Query is responsible for caching and keeping the data fresh.
 
 ## Querifying the example
 
@@ -228,7 +228,7 @@ Setting _staleTime_ to _Infinity_ is almost equivalent to the _getQueryData_ app
 
 With this, it is guaranteed that calling _useQuery_ in the component will have some data available, just like calling _useLoaderData_ would. However, TypeScript has no way of knowing this - the data returned is of type `Contact | undefined`.
 
-Thanks to [Matt Pocock](https://twitter.com/mattpocockuk) and his [contribution](https://github.com/TanStack/query/pull/3834) to React Query v4, we can now exclude _undefined_ from the union if _initialData_ is provided.
+Thanks to [Matt Pocock](https://twitter.com/mattpocockuk) and his [contribution](https://github.com/TanStack/query/pull/3834) to TanStack Query v4, we can now exclude _undefined_ from the union if _initialData_ is provided.
 
 And where would we get _initialData_ from? _useLoaderData_ of course! We can even infer the type from the loader function:
 
@@ -251,7 +251,7 @@ But it will nicely narrow the type of the _useQuery_ result, which is what we wa
 
 ## Invalidating in actions
 
-The next piece of the puzzle involves query invalidation. Here is how an action would look without React Query, straight from the tutorial (yes, this is all it takes to perform an update):
+The next piece of the puzzle involves query invalidation. Here is how an action would look without TanStack Query, straight from the tutorial (yes, this is all it takes to perform an update):
 
 ```jsx:title=src/routes/edit.jsx
 export const action = async ({ request, params }) => {
@@ -303,9 +303,9 @@ If multiple invalidations are involved, you can also mix and match the two appro
 
 ## Summary
 
-I'm very excited about the new React Router release. It's a great step forward to enable all applications to trigger fetches as early as possible. However, it is not a replacement for caching - so go ahead and combine React Router with React Query to get the best of both worlds. 🚀
+I'm very excited about the new React Router release. It's a great step forward to enable all applications to trigger fetches as early as possible. However, it is not a replacement for caching - so go ahead and combine React Router with TanStack Query to get the best of both worlds. 🚀
 
-If you want to explore this topic some more, I've implemented the app from the tutorial and added React Query on top of it - you can find it in [the examples of the official docs](https://tanstack.com/query/v4/docs/examples/react/react-router).
+If you want to explore this topic some more, I've implemented the app from the tutorial and added TanStack Query on top of it - you can find it in [the examples of the official docs](https://tanstack.com/query/v4/docs/examples/react/react-router).
 
 ---
 
