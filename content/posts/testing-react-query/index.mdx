@@ -198,12 +198,12 @@ function App() {
 
 Here, all queries will retry two times, only _todos_ will retry five times, and I still have the option to turn it off for all queries in my tests 🙌.
 
-### ReactQueryConfigProvider
+### TanStackQueryConfigProvider
 
-Of course, this only works for known query keys. Sometimes, you really want to set some configs on a subset of your component tree. In v2, TanStack Query had a [ReactQueryConfigProvider](https://tanstack-query-v2.tanstack.com/docs/api#reactqueryconfigprovider) for that exact use-case. You can achieve the same thing in v3 with a couple of lines of codes:
+Of course, this only works for known query keys. Sometimes, you really want to set some configs on a subset of your component tree. In v2, TanStack Query had a [TanStackQueryConfigProvider](https://tanstack-query-v2.tanstack.com/docs/api#TanStackqueryconfigprovider) for that exact use-case. You can achieve the same thing in v3 with a couple of lines of codes:
 
-```jsx:title=ReactQueryConfigProvider
-const ReactQueryConfigProvider = ({ children, defaultOptions }) => {
+```jsx:title=TanStackQueryConfigProvider
+const TanStackQueryConfigProvider = ({ children, defaultOptions }) => {
   const client = useQueryClient()
   const [newClient] = React.useState(
     () =>

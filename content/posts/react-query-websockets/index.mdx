@@ -87,8 +87,8 @@ const usePost = (id) =>
 
 Additionally, you can setup an app-wide _useEffect_ that connects you to your WebSocket endpoint. How that works totally depends on which technology you are using. I've seen people subscribe to live data from [Hasura](https://github.com/tannerlinsley/tanstack-query/issues/171#issuecomment-649810136). There's a great article about connecting to [Firebase](https://aggelosarvanitakis.medium.com/a-real-time-hook-with-firebase-tanstack-query-f7eb537d5145). In my example, I will simply use the browser's native [WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket):
 
-```jsx:title=useReactQuerySubscription
-const useReactQuerySubscription = () => {
+```jsx:title=useTanStackQuerySubscription
+const useTanStackQuerySubscription = () => {
   React.useEffect(() => {
     const websocket = new WebSocket('wss://echo.websocket.org/')
     websocket.onopen = () => {
@@ -107,7 +107,7 @@ const useReactQuerySubscription = () => {
 After we've setup the connection, we will likely have some sort of callback that will be called when data comes in over the WebSocket. Again, what that data is depends entirely on how you'd like to set it up. Inspired by [this message](https://github.com/tannerlinsley/tanstack-query/issues/171#issuecomment-649716718) from [Tanner Linsley](https://github.com/tannerlinsley), I like to send _events_ from the backend instead of complete data objects:
 
 ```jsx:title=event-based-subscriptions {8-12}
-const useReactQuerySubscription = () => {
+const useTanStackQuerySubscription = () => {
   const queryClient = useQueryClient()
   React.useEffect(() => {
     const websocket = new WebSocket('wss://echo.websocket.org/')
@@ -146,7 +146,7 @@ For these partial updates, you can use [queryClient.setQueryData](https://react-
 This will be a bit more cumbersome if you have multiple query keys for the same data, e.g. if you have multiple filter criteria as part of the query key, or if you want to update list _and_ detail view with the same message. [queryClient.setQueriesData](https://react-query.tanstack.com/reference/QueryClient#queryclientsetqueriesdata) is a relatively new addition to the library that will allow you to tackle this use-case as well:
 
 ```jsx:title=partial-updates {10-14}
-const useReactQuerySubscription = () => {
+const useTanStackQuerySubscription = () => {
   const queryClient = useQueryClient()
   React.useEffect(() => {
     const websocket = new WebSocket('wss://echo.websocket.org/')
