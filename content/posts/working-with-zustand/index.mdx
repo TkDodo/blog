@@ -1,0 +1,202 @@
+---
+title: Working with Zustand
+description: Let's dive into some tips for working with Zustand - one of my favourite client state management libraries in React.
+date: 2022-11-20
+banner: ./bear.jpeg
+tags:
+  - ReactJs
+  - State Management
+  - Zustand
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+
+<img src="./bear.jpeg" alt="The Zustand bear logo" />
+
+<Attribution
+  prefix="Source:"
+  name="Zustand GitHub Repository"
+  url="https://github.com/pmndrs/zustand/blob/2b29d736841dc7b3fd7dec8cbfea50fee7295974/bear.jpg"
+/>
+
+<Translations>{[]}</Translations>
+
+---
+
+Global (client) state management wasn't always like it is today. I distinctly remember a time when our best option was Redux with higher order components using [connect](https://react-redux.js.org/api/connect) plus _mapStateToProps_ and _mapDispatchToProps_.
+
+Even the context api, initially, wasn't as ergonomic to use (pun intended), as it only supported render props [when it came out](https://reactjs.org/blog/2018/03/29/react-v-16-3.html#official-context-api).
+
+Of course, everything changed when [hooks](https://reactjs.org/blog/2019/02/06/react-v16.8.0.html) were released. Not only did existing solutions became much easier to use, but new ones were born.
+
+## Zustand
+
+One of them that I quickly grew to like was [Zustand](https://zustand.surge.sh/). It's a very small library that provides a simple API to create global state stores and subscribe to them via selectors. The principle is known to many developers because it's pretty similar to what Redux is doing, conceptually.
+
+Much like React itself, Zustand is not opinionated. You _can_ combine it [with immer](https://github.com/pmndrs/zustand/tree/2b29d736841dc7b3fd7dec8cbfea50fee7295974#sick-of-reducers-and-changing-nested-state-use-immer) if you want to. You can [dispatch actions](https://github.com/pmndrs/zustand/tree/2b29d736841dc7b3fd7dec8cbfea50fee7295974#cant-live-without-redux-like-reducers-and-action-types), but you don't have to. It has powerful [middlewares](https://github.com/pmndrs/zustand/tree/2b29d736841dc7b3fd7dec8cbfea50fee7295974#middleware), but they are totally optional.
+
+I do like that about the library. It provides the bear minimum to get you started (hence the logo), and it's flexible enough to scale to your needs. It does however leave you with a bunch of decisions to take - analogous to how React doesn't prescribe a way do styling.
+
+It's also "not magical". It doesn't track which fields you are using like other libraries do - you have to subscribe "manually" with selectors. And in my opinion, that's a good thing, because it's a very explicit way to state your dependencies, which pays off as the app grows, even though it might be a little bit more to write.
+
+I've been working with Zustand since 2018, in projects small and large, and I've also [contributed](https://github.com/pmndrs/zustand/pulls?q=is%3Apr+author%3ATkDodo+is%3Aclosed) a bit to the library. Here are a couple of tips I've picked up along the way:
+
+## Only export custom hooks
+
+This is my number one tip for working with ... everything in React really. I've listed many [advantages of custom hooks](simplifying-use-effect#3-write-custom-hooks) before, and to me, they apply to working with Zustand as well.
+
+```js:title=custom-hooks
+// ⬇️ not exported, so no one can subscribe to the whole store
+const useBearStore = create((set) => ({
+  bears: 0,
+  fish: 0,
+  increasePopulation: (by) => set((state) => ({ bears: state.bears + by })),
+  eatFish: () => set((state) => ({ fish: state.fish - 1 })),
+  removeAllBears: () => set({ bears: 0 }),
+}))
+
+// 💡 exported - consumers don't need to write selectors
+export const useBears = () => useBearStore((state) => state.bears)
+```
+
+They'll give you cleaner interface and you don't need to write the selector in all places where you want to subscribe to just one value of the state. Also, it avoids accidentally subscribing to the whole store:
+
+```js:title=subscribe-to-the-whole-store
+// ❌ we could do this if useBearStore was exported
+const { bears } = useBearStore()
+```
+
+While the result might be the same (you'll get the number of bears), the code above will subscribe you to the whole store, which means your component will be informed about a state update (=re-rendered) even if bears did _not_ change, e.g. because someone ate a fish.
+
+Selectors are optional in Zustand, but to me, they really are not. Even if we have a store with just a single state value, I'd write the custom hook just to be able to add more state in the future.
+
+## Prefer atomic selectors
+
+This is already explained [in the docs](https://github.com/pmndrs/zustand/tree/2b29d736841dc7b3fd7dec8cbfea50fee7295974#selecting-multiple-state-slices), so I'll keep it brief, but it's still quite important because it can lead to degraded rendering performance if you "get it wrong".
+
+Zustand decides when to inform your component (that the state it is interested in has changed) by comparing the result of the selector with the result of the previous render. Per default, it does so with a [strict equality check](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality).
+
+Effectively, this means that selectors have to return _stable_ results. If you return a new Array or Object, it will always be considered a change, even if the content is the same:
+
+```js:title=ineffective-selectors
+// 🚨 selector returns a new Object in every invocation
+const { bears, fish } = useBearStore((state) => ({
+  bears: state.bears,
+  fish: state.fish,
+}))
+
+// 😮 so these two are equivalent
+const { bears, fish } = useBearStore()
+```
+
+If you want to return an Object or Array from a selector, you can adjust the comparison function to use shallow comparison:
+
+```js:title=shallow-comparison
+import shallow from 'zustand/shallow'
+
+// ⬇️ much better, because optimized
+const { bears, fish } = useBearStore(
+  (state) => ({ bears: state.bears, fish: state.fish }),
+  shallow
+)
+```
+
+However, I really prefer to just export two separate selectors:
+
+```js:title=atomic-selectors
+export const useBears = () => useBearStore((state) => state.bears)
+export const useFish = () => useBearStore((state) => state.fish)
+```
+
+If a component really needs both values, it can consume both hooks.
+
+## Separate Actions from State
+
+Actions are static functions that never change and that update a value in your store, so they aren't really "state". Separating them as an extra object in our store will allow us to expose them as one hook, which we can then use in our components:
+
+```js:title=separate-actions
+const useBearStore = create((set) => ({
+  bears: 0,
+  fish: 0,
+  // ⬇️ separate "namespace" for actions
+  actions: {
+    increasePopulation: (by) =>
+      set((state) => ({ bears: state.bears + by })),
+    eatFish: () => set((state) => ({ fish: state.fish - 1 })),
+    removeAllBears: () => set({ bears: 0 }),
+  },
+}))
+
+export const useBears = () => useBearStore((state) => state.bears)
+export const useFish = () => useBearStore((state) => state.fish)
+
+// 🎉 one selector for all our actions
+export const useBearActions = () => useBearStore((state) => state.actions)
+```
+
+Note that it's totally fine to now destruct actions and only "use" one of them:
+
+```js:title=useBearActions
+const { increasePopulation } = useBearActions()
+```
+
+This might sound like the opposite of the "atomic selectors" tip above, but it really isn't. As actions never change, it doesn't matter that we subscribe to "all of them". The actions object can be seen as one atomic piece.
+
+## Model Actions as Events, not Setters
+
+This is a general tip, no matter if you're working with [useReducer](https://tkdodo.eu/blog/use-state-vs-use-reducer#event-driven-reducers), Redux or Zustand. In fact, this tip is straight from the magnificent [Redux style guide](https://redux.js.org/style-guide/style-guide#model-actions-as-events-not-setters). It will help you keep your business logic inside your store, and not in your components.
+
+The examples above have already been using this pattern - the logic (e.g. "increase population") lives in the store. The component just calls the action, and the store decides what to do with it.
+
+## Keep the scope of your store small
+
+Unlike Redux, where you're supposed to have a single store for your whole app, Zustand encourages you to have multiple, small stores. Each store can be responsible for a single piece of state. If you need to combine them, you can do that with - of course - custom hooks:
+
+```js:title=combine-stores
+const currentUser = useCredentialsStore((state) => state.currentUser)
+const user = useUsersStore((state) => state.users[currentUser])
+```
+
+**Note:** Zustand does have another way to [combine stores into slices](https://github.com/pmndrs/zustand/blob/2b29d736841dc7b3fd7dec8cbfea50fee7295974/docs/guides/slices-pattern.md#slicing-the-store-into-smaller-stores), but I've never needed that. It doesn't look super straightforward to me, especially when TypeScript is involved. If I really needed that, I would probably just go with [Redux Toolkit](https://redux-toolkit.js.org/).
+
+### Combinations with other libraries
+
+I honestly haven't needed combining multiple Zustand stores very often, because most state in apps is either server state or url state. I'm much more likely to combine a Zustand store with, say, _useQuery_ or _useParams_ than I am to combine two stores.
+
+The same principle applies though: if you need to combine another hook with a Zustand store, custom hooks are your best friend:
+
+```js:title=combine-with-useQuery
+const useFilterStore = create((set) => ({
+  applied: [],
+  actions: {
+    addFilter: (filter) =>
+      set((state) => ({ applied: [...state.applied, filter] })),
+  },
+}))
+
+export const useAppliedFilters = () =>
+  useFilterStore((state) => state.applied)
+
+export const useFiltersActions = () =>
+  useFilterStore((state) => state.actions)
+
+// 🚀 combine the zustand store with a query
+export const useFilteredTodos = () => {
+  const filters = useAppliedFilters()
+  return useQuery({
+    queryKey: ['todos', filters],
+    queryFn: () => getTodos(filters),
+  })
+}
+```
+
+Here, the applied filters _drive_ the query, because the filters are part of the query key. Every time you call _addFilter_, which you can do anywhere in your UI, you will automatically trigger a new query, which could also be used anywhere in your UI. I find this to be pretty declarative and minimal, without being too magical.
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />
