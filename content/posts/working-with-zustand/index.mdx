@@ -61,7 +61,7 @@ const useBearStore = create((set) => ({
 export const useBears = () => useBearStore((state) => state.bears)
 ```
 
-They'll give you a cleaner interface, and you don't need to write the selector in all the places where you want to subscribe to just one value in the store. Also, it avoids accidentally subscribing to the entire store:
+They'll give you a cleaner interface, and you don't need to write the selector repeatedly everywhere you want to subscribe to just one value in the store. Also, it avoids accidentally subscribing to the entire store:
 
 ```js:title=subscribe-to-the-entire-store
 // ❌ we could do this if useBearStore was exported
