@@ -116,7 +116,7 @@ const Sponsors = () => (
           <img
             src="https://avatars.githubusercontent.com/u/10930234?s=300"
             height="300"
-            alt="WorkflowGen"
+            alt="Ohans Emmanuel"
           />
         </Link>
         <div>
@@ -221,6 +221,23 @@ const Sponsors = () => (
             src="../../static/images/ballingt.jpg"
             height={300}
             alt="Thomas Ballinger"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter ($10 a month)</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://linkedin.com/in/dev-mike/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Mike Murray</h2>
+          <img
+            src="https://mmmikem.github.io/assets/photo.173b7bbb.webp"
+            height="300"
+            alt="Mike Murray"
           />
         </Link>
         <div>
