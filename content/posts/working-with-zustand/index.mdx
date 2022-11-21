@@ -37,7 +37,7 @@ One of them that I quickly grew to like was [Zustand](https://zustand.surge.sh/)
 
 Much like React itself, Zustand is not opinionated. You _can_ combine it [with immer](https://github.com/pmndrs/zustand/tree/2b29d736841dc7b3fd7dec8cbfea50fee7295974#sick-of-reducers-and-changing-nested-state-use-immer) if you want to. You can [dispatch actions](https://github.com/pmndrs/zustand/tree/2b29d736841dc7b3fd7dec8cbfea50fee7295974#cant-live-without-redux-like-reducers-and-action-types), but you don't have to. It has powerful [middlewares](https://github.com/pmndrs/zustand/tree/2b29d736841dc7b3fd7dec8cbfea50fee7295974#middleware), but they are totally optional.
 
-I do like that about the library. It provides the bear minimum to get you started (hence the logo), and it's flexible enough to scale to your needs. It does however leave you with a bunch of decisions to take - analogous to how React doesn't prescribe a way do styling.
+I do like that about the library. It provides the bear minimum to get you started (hence the logo), and it's flexible enough to scale to your needs. It does however leave you with a bunch of decisions to take - analogous to how React doesn't prescribe a way to do styling.
 
 It's also "not magical". It doesn't track which fields you are using like other libraries do - you have to subscribe "manually" with selectors. And in my opinion, that's a good thing, because it's a very explicit way to state your dependencies, which pays off as the app grows, even though it might be a little bit more to write.
 
