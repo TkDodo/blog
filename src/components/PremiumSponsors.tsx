@@ -120,6 +120,29 @@ const PremiumSponsors = () => (
         🥳 daily.dev
       </Link>
     </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <StaticImage
+        placeholder="blurred"
+        src="../../static/images/trpc.png"
+        alt="tRPC"
+        width={64}
+        height={64}
+        style={{
+          marginRight: '0.875rem',
+          borderRadius: '50%',
+        }}
+      />
+      <Link
+        href="https://trpc.io/"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          fontSize: '1.5rem',
+        }}
+      >
+        🥳 tRPC
+      </Link>
+    </div>
   </Grid>
 )
 

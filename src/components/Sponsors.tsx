@@ -108,6 +108,24 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
+          href="https://trpc.io/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>tRPC</h2>
+          <StaticImage
+            placeholder="blurred"
+            src="../../static/images/trpc.png"
+            height={300}
+            alt="tRPC"
+          />
+        </Link>
+        <div>
+          <Text>🥳 Sponsor ($20 a month)</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
           href="https://twitter.com/OhansEmmanuel"
           target="_blank"
           rel="noopener noreferrer"
@@ -134,24 +152,6 @@ const Sponsors = () => (
             src="https://avatars.githubusercontent.com/u/1130549?s=300"
             height="300"
             alt="Juan Olvera"
-          />
-        </Link>
-        <div>
-          <Text>🎗 Supporter ($10 a month)</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
-          href="https://trpc.io/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>tRPC</h2>
-          <StaticImage
-            placeholder="blurred"
-            src="../../static/images/trpc.png"
-            height={300}
-            alt="tRPC"
           />
         </Link>
         <div>
@@ -238,6 +238,23 @@ const Sponsors = () => (
             src="https://mmmikem.github.io/assets/photo.173b7bbb.webp"
             height="300"
             alt="Mike Murray"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter ($10 a month)</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://github.com/PabloRosales"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Pablo Rosales</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/2329117?s=300"
+            height="300"
+            alt="PabloRosales"
           />
         </Link>
         <div>
