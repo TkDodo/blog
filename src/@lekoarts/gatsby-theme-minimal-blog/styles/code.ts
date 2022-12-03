@@ -16,4 +16,10 @@ export default {
     background: `#629CBC !important`,
   },
   ...baseCode,
+  'p > code, li > code': {
+    bg: `codebg`,
+    color: `text`,
+    padding: '0.2rem 0.3rem',
+    borderRadius: `2px`,
+  },
 }
