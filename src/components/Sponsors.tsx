@@ -261,6 +261,23 @@ const Sponsors = () => (
           <Text>🎗 Supporter ($10 a month)</Text>
         </div>
       </Card>
+      <Card>
+        <Link
+          href="https://github.com/fedorish"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Patrik</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/22777727?s=300"
+            height="300"
+            alt="Patrik"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter ($10 a month)</Text>
+        </div>
+      </Card>
     </Grid>
   </Box>
 )
