@@ -44,16 +44,18 @@ const theme = {
   },
   colors: {
     ...baseTheme.colors,
+    codebg: 'var(--theme-ui-colors-gray-2)',
     primary: '#a10f15',
     modes: {
       ...baseTheme.colors.modes,
       light: {
         ...baseTheme.colors.modes.light,
-        background: '#F5F5F5',
+        // background: '#F5F5F5',
       },
       dark: {
         ...baseTheme.colors.modes.dark,
         primary: '#f0666b',
+        codebg: 'var(--theme-ui-colors-gray-8)',
       },
     },
   },
