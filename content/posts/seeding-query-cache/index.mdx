@@ -20,6 +20,8 @@ import Highlight from 'components/Highlight'
 
 <Attribution name="Markus Spiske" url="https://unsplash.com/@markusspiske" />
 
+**Last Update: 11.12.2022**
+
 - [#1: Practical React Query](practical-react-query)
 - [#2: React Query Data Transformations](react-query-data-transformations)
 - [#3: React Query Render Optimizations](react-query-render-optimizations)
@@ -97,7 +99,7 @@ As described in the above linked RFC, suspense a way to unwrap promises with Rea
 
 When rendering components, we are mostly interested in the success scenario. Handling loading and error states in each and every component can be tedious, and suspense is aimed at solving this problem.
 
-When a promise is _pending_, React will unmount the component tree and render a fallback defined by a _Suspense_ boundary component. In case of errors, the error is bubbled up to the nearest _ErrorBoundary_.
+When a promise is _pending_, React will unmount the component tree and render a fallback defined by a `Suspense` boundary component. In case of errors, the error is bubbled up to the nearest `ErrorBoundary`.
 
 This will decouple our components from handling those states, and we can focus on the happy path. It almost acts like synchronous code that just _reads_ a value from a cache:
 
@@ -136,9 +138,9 @@ function App() {
 
 #### A note on TypeScript
 
-Sadly, when using TypeScript, data will still be potentially _undefined_ in the above example, as _suspense_ is just a flag on _useQuery_ that can be turned on and off at will. It can also be combined with the _enabled_ option, which will make the query not fire and thus make the component _not_ suspend at all.
+Sadly, when using TypeScript, data will still be potentially `undefined` in the above example, as `suspense` is just a flag on `useQuery` that can be turned on and off at will. It can also be combined with the `enabled` option, which will make the query not fire and thus make the component _not_ suspend at all.
 
-We might change this in the future with a dedicated _useSuspenseQuery_ hook.
+We might change this in the future with a dedicated `useSuspenseQuery` hook.
 
 ### Suspense waterfalls
 
@@ -170,7 +172,7 @@ The earlier you initiate a fetch, the better, because the sooner it starts, the 
 - If your architecture supports server side rendering - consider [fetching on the server](https://tanstack.com/query/v4/docs/guides/ssr).
 - If you have a router that supports loaders, consider [prefetching there](https://tanstack.com/query/v4/docs/guides/ssr).
 
-But even if that's not the case, you can still use _prefetchQuery_ to initiate a fetch before the component is rendered:
+But even if that's not the case, you can still use `prefetchQuery` to initiate a fetch before the component is rendered:
 
 ```tsx:title=prefetching {3-4}
 const issuesQuery = { queryKey: ['issues'], queryFn: fetchIssues }
@@ -183,7 +185,7 @@ function Issues() {
 }
 ```
 
-The call to _prefetchQueries_ is executed as soon as your JavaScript bundle is evaluated. This works very well if you do [route base code splitting](https://reactjs.org/docs/code-splitting.html#route-based-code-splitting), because it means the code for a certain page will be lazily loaded and evaluated as soon as the user navigates to that page.
+The call to `prefetchQuery` is executed as soon as your JavaScript bundle is evaluated. This works very well if you do [route base code splitting](https://reactjs.org/docs/code-splitting.html#route-based-code-splitting), because it means the code for a certain page will be lazily loaded and evaluated as soon as the user navigates to that page.
 
 This means it will still be kicked off before the component renders. If you do this for both queries in our example, you will get those parallel queries back even when using suspense.
 
@@ -194,7 +196,9 @@ This means it will still be kicked off before the component renders. If you do t
 
 As we can see, the query will still suspend until both are done fetching, but because we've triggered them in parallel, the waiting time is now drastically reduced.
 
-**Note**: _useQueries_ doesn't support _suspense_ right now, but it might do in the future. If we add support, the goal is to trigger all fetches in parallel to avoid those waterfalls.
+**Note**: `useQueries` doesn't support `suspense` right now, but it might do in the future. If we add support, the goal is to trigger all fetches in parallel to avoid those waterfalls.
+
+**Update**: `useQueries` now supports `suspense` since [v4.15.0](https://github.com/TanStack/query/releases/tag/v4.15.0). 🎉
 
 ### The use RFC
 
@@ -226,11 +230,11 @@ const useTodo = (id: number) => {
 }
 ```
 
-If the _initialData_ function returns _undefined_, the query will proceed as normal and fetch the data from the server. And if something is found, it will be put into the cache directly.
+If the `initialData` function returns `undefined`, the query will proceed as normal and fetch the data from the server. And if something is found, it will be put into the cache directly.
 
-Be advised that if you have _staleTime_ set, no further background refetch will occur, as initialData is seen as _fresh_. This might not be what you want if your list was last fetched twenty minutes ago.
+Be advised that if you have `staleTime` set, no further background refetch will occur, as initialData is seen as _fresh_. This might not be what you want if your list was last fetched twenty minutes ago.
 
-As shown [in the docs](https://tanstack.com/query/v4/docs/guides/initial-query-data#initial-data-from-the-cache-with-initialdataupdatedat), we can additionally specify _initialDataUpdatedAt_ on our detail query. It will tell React Query when the data we are passing in as _initialData_ was originally fetched, so it can determine staleness correctly. Conveniently, React Query also knows when the list was last fetched, so we can just pass that in:
+As shown [in the docs](https://tanstack.com/query/v4/docs/guides/initial-query-data#initial-data-from-the-cache-with-initialdataupdatedat), we can additionally specify `initialDataUpdatedAt` on our detail query. It will tell React Query when the data we are passing in as `initialData` was originally fetched, so it can determine staleness correctly. Conveniently, React Query also knows when the list was last fetched, so we can just pass that in:
 
 ```tsx:title=initialDataUpdatedAt {11-13}
 const useTodo = (id: number) => {
@@ -257,9 +261,9 @@ const useTodo = (id: number) => {
 
 Alternatively, you can create detail caches whenever you fetch the list query. This has the advantage that staleness is automatically measured from when the list was fetched, because, well, that's when we create the detail entry.
 
-However, there is no good callback to hook into when a query is fetched. _onSuccess_ on _useQuery_ would technically work, but it would be executed for every instance of _useQuery_. If we have multiple observers, this would lead to the same data being written to the cache multiple times. The global _onSuccess_ callback on the cache itself might also work, but it would be executed for every query, so we'd have to narrow it down to the right query key.
+However, there is no good callback to hook into when a query is fetched. `onSuccess` on `useQuery` would technically work, but it would be executed for every instance of `useQuery`. If we have multiple observers, this would lead to the same data being written to the cache multiple times. The global `onSuccess` callback on the cache itself might also work, but it would be executed for every query, so we'd have to narrow it down to the right query key.
 
-The best way I've found to execute the push approach is to do it directly in the _queryFn_, after data has been fetched:
+The best way I've found to execute the push approach is to do it directly in the `queryFn`, after data has been fetched:
 
 ```tsx:title=push-approach {7-11}
 const useTodos = () => {
@@ -278,7 +282,7 @@ const useTodos = () => {
 }
 ```
 
-This would create a detail entry for each item in the list immediately. Since there is no one interested in those queries at the moment, those would be seen as _inactive_, which means they might be garbage collected after _cacheTime_ has elapsed (default: 15 minutes).
+This would create a detail entry for each item in the list immediately. Since there is no one interested in those queries at the moment, those would be seen as _inactive_, which means they might be garbage collected after `cacheTime` has elapsed (default: 15 minutes).
 
 So if you use the push approach, the detail entries you've created here might no longer be available once the user actually navigates to the detail view. Also, if your list is long, you might be creating way too many entries that will never be needed.
 
@@ -289,7 +293,7 @@ So if you use the push approach, the detail entries you've created here might no
 
 ---
 
-Keep in mind that both approaches only work well if the structure of your detail query is exactly the same (or at least assignable to) the structure of the list query. If the detail view has a mandatory field that doesn't exist in the list, seeding via _initialData_ is not a good idea. This is where _placeholderData_ comes in, and I've written a comparison about the two in [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query).
+Keep in mind that both approaches only work well if the structure of your detail query is exactly the same (or at least assignable to) the structure of the list query. If the detail view has a mandatory field that doesn't exist in the list, seeding via `initialData` is not a good idea. This is where `placeholderData` comes in, and I've written a comparison about the two in [#9: Placeholder and Initial Data in React Query](placeholder-and-initial-data-in-react-query).
 
 ---
 
