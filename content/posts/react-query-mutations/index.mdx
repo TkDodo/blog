@@ -201,7 +201,7 @@ This works great for small mutations where instant user feedback is actually req
 
 ### Example
 
-I've decided to _not_ show an additional example. The [official docs](https://react-query.tanstack.com/guides/optimistic-updates) cover that topic very well, and they also have a codesandbox example [in JavaScript](https://react-query.tanstack.com/examples/optimistic-updates) and [in TypeScript](https://react-query.tanstack.com/examples/optimistic-updates-typescript).
+I've decided to _not_ show an additional example. The [official docs](https://react-query.tanstack.com/guides/optimistic-updates) cover that topic very well, and they also have a codesandbox example [in TypeScript](https://tanstack.com/query/v4/docs/examples/react/optimistic-updates-typescript).
 
 I further think that optimistic updates are a bit over-used. Not every mutation needs to be done optimistically. You should really be sure that it rarely fails, because the UX for a rollback is not great. Imagine a Form in a Dialog that closes when you submit it, or a redirect from a detail view to a list view after an update. If those are done prematurely, they are hard to undo.
 
