@@ -77,7 +77,10 @@ Let's take a look at an example:
 
 ```js:title=simple-form
 function PersonDetail({ id }) {
-  const { data } = useQuery(['person', id], () => fetchPerson(id))
+  const { data } = useQuery({
+    queryKey: ['person', id],
+    queryFn: () => fetchPerson(id),
+  })
   const { register, handleSubmit } = useForm()
   const { mutate } = useMutation((values) => updatePerson(values))
 
@@ -105,19 +108,25 @@ This works incredibly well - so what are those tradeoffs?
 
 ### Data might be undefined
 
-You might know that _useForm_ would also take defaultValues directly for the whole form, which would be pretty nice for larger forms. However, because we cannot call hooks conditionally, and because our _data_ is _undefined_ on the first render cycle (as we need to fetch it first), we cannot just do this in the same component:
+You might know that `useForm` would also take defaultValues directly for the whole form, which would be pretty nice for larger forms. However, because we cannot call hooks conditionally, and because our `data` is `undefined` on the first render cycle (as we need to fetch it first), we cannot just do this in the same component:
 
 ```js:title=no-default-values
-const { data } = useQuery(['person', id], () => fetchPerson(id))
+const { data } = useQuery({
+  queryKey: ['person', id],
+  queryFn: () => fetchPerson(id),
+})
 // 🚨 this will initialize our form with undefined
 const { register, handleSubmit } = useForm({ defaultValues: data })
 ```
 
-We'd have the same problem when copying into _useState_, or when using uncontrolled forms (which react-hook-form does under the hood by the way). The best solution to this would be to split up the form into its own component:
+We'd have the same problem when copying into `useState`, or when using uncontrolled forms (which react-hook-form does under the hood by the way). The best solution to this would be to split up the form into its own component:
 
-```js:title=separate-form {6}
+```js:title=separate-form {9}
 function PersonDetail({ id }) {
-  const { data } = useQuery(['person', id], () => fetchPerson(id))
+  const { data } = useQuery({
+    queryKey: ['person', id],
+    queryFn: () => fetchPerson(id),
+  })
   const { mutate } = useMutation((values) => updatePerson(values))
 
   if (data) {
@@ -149,11 +158,13 @@ This is not too bad, as it separates our data fetching from the presentation. I'
 
 ### No background updates
 
-React Query is all about keeping your UI up-to-date with Server State. As soon as we copy that state somewhere else, React Query cannot do its job anymore. if a background refetch happens for whatever reason, and it yields new data, our form state will not update with it. This is likely not problematic if we are the only one working on that form state (like a form for our profile page). If that's the case, we should likely at least disable background updates by setting a higher _staleTime_ on our query. After all, why would we keep querying our server if the updates will not be reflected on the screen?
+React Query is all about keeping your UI up-to-date with Server State. As soon as we copy that state somewhere else, React Query cannot do its job anymore. if a background refetch happens for whatever reason, and it yields new data, our form state will not update with it. This is likely not problematic if we are the only one working on that form state (like a form for our profile page). If that's the case, we should likely at least disable background updates by setting a higher `staleTime` on our query. After all, why would we keep querying our server if the updates will not be reflected on the screen?
 
 ```js:title=no-background-updates
 // ✅ opt out of background updates
-const { data } = useQuery(['person', id], () => fetchPerson(id), {
+const { data } = useQuery({
+  queryKey: ['person', id],
+  queryFn: () => fetchPerson(id),
   staleTime: Infinity,
 })
 ```
@@ -170,9 +181,12 @@ So what would we need to do to still reflect background updates while we are edi
 
 One approach is to rigorously separate the states. We'll keep the Server State in React Query, and only track the changes the user has made with our Client State. The source of truth that we display then to our users is _derived state_ from those two: If the user has changed a field, we show the Client State. If not, we fall back to the Server State:
 
-```js:title=separate-states {15-17,27}
+```js:title=separate-states {18-20,30}
 function PersonDetail({ id }) {
-  const { data } = useQuery(['person', id], () => fetchPerson(id))
+  const { data } = useQuery({
+    queryKey: ['person', id],
+    queryFn: () => fetchPerson(id),
+  })
   const { control, handleSubmit } = useForm()
   const { mutate } = useMutation((values) => updatePerson(values))
 
@@ -230,23 +244,29 @@ Apart from those two principal ways of setting up your form, here are some small
 
 ### Double submit prevention
 
-To prevent a form from being submitted twice, you can use the _isLoading_ prop returned from _useMutation_, as it will be true for as long as our mutation is running. To disable the form itself, all you need to do is to disable the primary submit button:
+To prevent a form from being submitted twice, you can use the `isLoading` prop returned from `useMutation`, as it will be true for as long as our mutation is running. To disable the form itself, all you need to do is to disable the primary submit button:
 
 ```js:title=disabled-submit
-const { mutate, isLoading } = useMutation((values) => updatePerson(values))
+const { mutate, isLoading } = useMutation({
+  mutationFn: (values) => updatePerson(values)
+})
 <input type="submit" disabled={isLoading} />
 ```
 
 ### Invalidate and reset after mutation
 
-If you do not redirect to a different page right after the form submission, it might be a good idea to reset the form _after_ the invalidation has completed. As described in [Mastering Mutations](mastering-mutations-in-react-query#some-callbacks-might-not-fire), you'd likely want to do that in the _onSuccess_ callback of _mutate_. This also works best if you keep state seperated, as you only need to reset to _undefined_ in order for the server state to be picked up again:
+If you do not redirect to a different page right after the form submission, it might be a good idea to reset the form _after_ the invalidation has completed. As described in [Mastering Mutations](mastering-mutations-in-react-query#some-callbacks-might-not-fire), you'd likely want to do that in the `onSuccess` callback of `mutate`. This also works best if you keep state seperated, as you only need to reset to `undefined` in order for the server state to be picked up again:
 
-```js:title=reset-form {5-9,14-17}
+```js:title=reset-form {8-13,18-21}
 function PersonDetail({ id }) {
   const queryClient = useQueryClient()
-  const { data } = useQuery(['person', id], () => fetchPerson(id))
+  const { data } = useQuery({
+    queryKey: ['person', id],
+    queryFn: () => fetchPerson(id),
+  })
   const { control, handleSubmit, reset } = useForm()
-  const { mutate } = useMutation(updatePerson, {
+  const { mutate } = useMutation({
+    mutationFn: updatePerson,
     // ✅ return Promise from invalidation
     // so that it will be awaited
     onSuccess: () => queryClient.invalidateQueries(['person', id]),
