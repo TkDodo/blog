@@ -53,13 +53,13 @@ import Translations from 'components/Translations'
 
 ---
 
-We've covered a lot of ground already when it comes to the features and concepts React Query provides. Most of them are about _retrieving_ data - via the _useQuery_ hook. There is however a second, integral part to working with data: updating it.
+We've covered a lot of ground already when it comes to the features and concepts React Query provides. Most of them are about _retrieving_ data - via the `useQuery` hook. There is however a second, integral part to working with data: updating it.
 
-For this use-case, React Query offers the _useMutation_ hook.
+For this use-case, React Query offers the `useMutation` hook.
 
 ## What are mutations?
 
-Generally speaking, mutations are functions that have a side effect. As an example, have a look at the _push_ method of Arrays: It has the side effect of _changing_ the array in place where you're pushing a value to:
+Generally speaking, mutations are functions that have a side effect. As an example, have a look at the `push` method of Arrays: It has the side effect of _changing_ the array in place where you're pushing a value to:
 
 ```js:title=mutable-array-push
 const myArray = [1]
@@ -68,7 +68,7 @@ myArray.push(2)
 console.log(myArray) // [1, 2]
 ```
 
-The _immutable_ counterpart would be _concat_, which can also add values to an array, but it will return a new Array instead of directly manipulating the Array you operate on:
+The _immutable_ counterpart would be `concat`, which can also add values to an array, but it will return a new Array instead of directly manipulating the Array you operate on:
 
 ```js:title=immutable-array-concat
 const myArray = [1]
@@ -80,13 +80,13 @@ console.log(newArray) // [1, 2]
 
 As the name indicates, _useMutation_ also has some sort of side effect. Since we are in the context of [managing server state](react-query-as-a-state-manager) with React Query, mutations describe a function that performs such a side effect _on the server_. Creating a todo in your database would be a mutation. Logging in a user is also a classic mutation, because it performs the side effect of creating a token for the user.
 
-In some aspects, _useMutation_ is very similar to _useQuery_. In others, it is quite different.
+In some aspects, `useMutation` is very similar to `useQuery`. In others, it is quite different.
 
 ## Similarities to useQuery
 
-_useMutation_ will track the state of a mutation, just like _useQuery_ does for queries. It'll give you _loading_, _error_ and _status_ fields to make it easy for you to display what's going on to your users.
+`useMutation` will track the state of a mutation, just like `useQuery` does for queries. It'll give you `loading`, `error` and `status` fields to make it easy for you to display what's going on to your users.
 
-You'll also get the same nice callbacks that _useQuery_ has: _onSuccess_, _onError_ and _ onSettled_. But that's about where the similarities end.
+You'll also get the same nice callbacks that `useQuery` has: `onSuccess`, `onError` and ` onSettled`. But that's about where the similarities end.
 
 ## Differences to useQuery
 
@@ -102,9 +102,10 @@ For mutations, that wouldn't work well. Imagine a new todo would be created ever
 ```jsx:title=imperative-mutate
 function AddComment({ id }) {
   // this doesn't really do anything yet
-  const addComment = useMutation((newComment) =>
-    axios.post(`/posts/${id}/comments`, newComment)
-  )
+  const addComment = useMutation({
+    mutationFn: (newComment) =>
+      axios.post(`/posts/${id}/comments`, newComment),
+  })
 
   return (
     <form
@@ -121,7 +122,7 @@ function AddComment({ id }) {
 }
 ```
 
-Another difference is that mutations don't share state like _useQuery_ does. You can invoke the same _useQuery_ call multiple times in different components and will get the same, cached result returned to you - but this won't work for mutations.
+Another difference is that mutations don't share state like `useQuery` does. You can invoke the same `useQuery` call multiple times in different components and will get the same, cached result returned to you - but this won't work for mutations.
 
 ## Tying mutations to queries
 
@@ -137,15 +138,14 @@ This is conceptually the simplest way to get your screen up-to-date. Remember, w
 const useAddComment = (id) => {
   const queryClient = useQueryClient()
 
-  return useMutation(
-    (newComment) => axios.post(`/posts/${id}/comments`, newComment),
-    {
-      onSuccess: () => {
-        // ✅ refetch the comments list for our blog post
-        queryClient.invalidateQueries(['posts', id, 'comments'])
-      },
-    }
-  )
+  return useMutation({
+    mutationFn: (newComment) =>
+      axios.post(`/posts/${id}/comments`, newComment),
+    onSuccess: () => {
+      // ✅ refetch the comments list for our blog post
+      queryClient.invalidateQueries(['posts', id, 'comments'])
+    },
+  })
 }
 ```
 
@@ -158,32 +158,31 @@ As an example, let's assume we have the option to sort our comments, and at the 
 ['posts', 5, 'comments', { sortBy: ['author', 'desc'] }
 ```
 
-Since we're only displaying one of them on the screen, _invalidateQueries_ will refetch that one and mark the other one as stale.
+Since we're only displaying one of them on the screen, `invalidateQueries` will refetch that one and mark the other one as stale.
 
 ### Direct updates
 
-Sometimes, you don't want to refetch data, especially if the mutation already returns everything you need to know. If you have a mutation that updates the title of your blog post, and the backend returns the complete blog post as a response, you can update the query cache directly via _setQueryData_:
+Sometimes, you don't want to refetch data, especially if the mutation already returns everything you need to know. If you have a mutation that updates the title of your blog post, and the backend returns the complete blog post as a response, you can update the query cache directly via `setQueryData`:
 
 ```jsx:title=update-from-mutation-response
 const useUpdateTitle = (id) => {
   const queryClient = useQueryClient()
 
-  return useMutation(
-    (newTitle) => axios
-      .patch(`/posts/${id}`, { title: newTitle })
-      .then(response => response.data),
-    {
-      // 💡 response of the mutation is passed to onSuccess
-      onSuccess: (newPost) => {
-        // ✅ update detail view directly
-        queryClient.setQueryData(['posts', id], newPost)
-      },
-    }
-  )
+  return useMutation({
+    mutationFn: (newTitle) =>
+      axios
+        .patch(`/posts/${id}`, { title: newTitle })
+        .then((response) => response.data),
+    // 💡 response of the mutation is passed to onSuccess
+    onSuccess: (newPost) => {
+      // ✅ update detail view directly
+      queryClient.setQueryData(['posts', id], newPost)
+    },
+  })
 }
 ```
 
-Putting data into the cache directly via _setQueryData_ will act as if this data was returned from the backend, which means that all components using that query will re-render accordingly.
+Putting data into the cache directly via `setQueryData` will act as if this data was returned from the backend, which means that all components using that query will re-render accordingly.
 
 I'm showing some more examples of direct updates and the combination of both approaches in [#8: Effective React Query Keys](effective-react-query-keys#structure).
 
@@ -219,30 +218,32 @@ Finally, let's dive into some things that are good to know when dealing with mut
 
 ### awaited Promises
 
-Promises returned from the mutation callbacks are awaited by React Query, and as it so happens, _invalidateQueries_ returns a Promise. If you want your mutation to stay in _loading_ state while your related queries update, you have to return the result of _invalidateQueries_ from the callback:
+Promises returned from the mutation callbacks are awaited by React Query, and as it so happens, `invalidateQueries` returns a Promise. If you want your mutation to stay in `loading` state while your related queries update, you have to return the result of `invalidateQueries` from the callback:
 
 ```js:title=awaited-promises
 {
   // 🎉 will wait for query invalidation to finish
   onSuccess: () => {
-    return queryClient.invalidateQueries(['posts', id, 'comments'])
+    return queryClient.invalidateQueries({
+      queryKey: ['posts', id, 'comments'],
+    })
   }
 }
 {
   // 🚀 fire and forget - will not wait
   onSuccess: () => {
-    queryClient.invalidateQueries(['posts', id, 'comments'])
+    queryClient.invalidateQueries({ queryKey: ['posts', id, 'comments'] })
   }
 }
 ```
 
 ### Mutate or MutateAsync
 
-_useMutation_ gives you two functions - _mutate_ and _mutateAsync_. What's the difference, and when should you use which one?
+`useMutation` gives you two functions - `mutate` and `mutateAsync`. What's the difference, and when should you use which one?
 
-_mutate_ doesn't return anything, while _mutateAsync_ returns a Promise containing the result of the mutation. So you might be tempted to use _mutateAsync_ when you need access to the mutation response, but I would still argue that you should almost always use _mutate_.
+`mutate` doesn't return anything, while `mutateAsync` returns a Promise containing the result of the mutation. So you might be tempted to use `mutateAsync` when you need access to the mutation response, but I would still argue that you should almost always use `mutate`.
 
-You can still get access to the _data_ or the _error_ via the callbacks, and you don't have to worry about error handling: Since _mutateAsync_ gives you control over the Promise, you also have to catch errors manually, or you might get an [unhandled promise rejection](https://stackoverflow.com/questions/40500490/what-is-an-unhandled-promise-rejection).
+You can still get access to the `data` or the `error` via the callbacks, and you don't have to worry about error handling: Since `mutateAsync` gives you control over the Promise, you also have to catch errors manually, or you might get an [unhandled promise rejection](https://stackoverflow.com/questions/40500490/what-is-an-unhandled-promise-rejection).
 
 ```js:title=accessing-mutation-data
 const onSubmit = () => {
@@ -269,21 +270,25 @@ const onSubmit = async () => {
 }
 ```
 
-Handling errors is not necessary with _mutate_, because React Query catches (and discards) the error for you internally. It is literally implemented with: *mutateAsync().catch(noop)*😎
+Handling errors is not necessary with `mutate`, because React Query catches (and discards) the error for you internally. It is literally implemented with: *mutateAsync().catch(noop)*😎
 
-The only situations where I've found _mutateAsync_ to be superior is when you really need the Promise for the sake of having a Promise. This can be necessary if you want to fire off multiple mutations concurrently and want to wait for them all to be finished, or if you have dependent mutations where you'd get into callback hell with the callbacks.
+The only situations where I've found `mutateAsync` to be superior is when you really need the Promise for the sake of having a Promise. This can be necessary if you want to fire off multiple mutations concurrently and want to wait for them all to be finished, or if you have dependent mutations where you'd get into callback hell with the callbacks.
 
 ### Mutations only take one argument for variables
 
-Since the last argument to _mutate_ is the options object, _useMutation_ can currently only take _one_ argument for variables. This is certainly a limitation, but it can be easily worked around by using an object:
+Since the last argument to `mutate` is the options object, `useMutation` can currently only take _one_ argument for variables. This is certainly a limitation, but it can be easily worked around by using an object:
 
 ```jsx:title=multiple-variables
 // 🚨 this is invalid syntax and will NOT work
-const mutation = useMutation((title, body) => updateTodo(title, body))
+const mutation = useMutation({
+  mutationFn: (title, body) => updateTodo(title, body),
+})
 mutation.mutate('hello', 'world')
 
 // ✅ use an object for multiple variables
-const mutation = useMutation(({ title, body }) => updateTodo(title, body))
+const mutation = useMutation({
+  mutationFn: ({ title, body }) => updateTodo(title, body),
+})
 mutation.mutate({ title: 'hello', body: 'world' })
 ```
 
@@ -291,18 +296,19 @@ To read more on why that is currently necessary, have a look at [this discussion
 
 ### Some callbacks might not fire
 
-You can have callbacks on _useMutation_ as well as on _mutate_ itself. It is important to know that the callbacks on _useMutation_ fire before the callbacks on _mutate_. Further, the callbacks on _mutate_ might not fire _at all_ if the component unmounts before the mutation has finished.
+You can have callbacks on `useMutation` as well as on `mutate` itself. It is important to know that the callbacks on `useMutation` fire before the callbacks on `mutate`. Further, the callbacks on `mutate` might not fire _at all_ if the component unmounts before the mutation has finished.
 
 That's why I think it's a good practice to separate concerns in your callbacks:
 
-- Do things that are absolutely necessary and logic related (like query invalidation) in the _useMutation_ callbacks.
-- Do UI related things like redirects or showing toast notifications in _mutate_ callbacks. If the user navigated away from the current screen before the mutation finished, those will purposefully not fire.
+- Do things that are absolutely necessary and logic related (like query invalidation) in the `useMutation` callbacks.
+- Do UI related things like redirects or showing toast notifications in `mutate` callbacks. If the user navigated away from the current screen before the mutation finished, those will purposefully not fire.
 
-This separation is especially neat if _useMutation_ comes from a custom hook, as this will keep query related logic in the custom hook while UI related actions are still in the UI. This also makes the custom hook more reusable, because how you interact with the UI might vary on a case by case basis - but the invalidation logic will likely always be the same:
+This separation is especially neat if `useMutation` comes from a custom hook, as this will keep query related logic in the custom hook while UI related actions are still in the UI. This also makes the custom hook more reusable, because how you interact with the UI might vary on a case by case basis - but the invalidation logic will likely always be the same:
 
 ```js:title=separate-concerns
 const useUpdateTodo = () =>
-  useMutation(updateTodo, {
+  useMutation({
+    mutationFn: updateTodo,
     // ✅ always invalidate the todo list
     onSuccess: () => {
       queryClient.invalidateQueries(['todos', 'list'])
