@@ -276,7 +276,7 @@ function PersonDetail({ id }) {
     return (
       <form
         onSubmit={handleSubmit((values) =>
-          // ✅ rest client state back to undefined
+          // ✅ reset client state back to undefined
           mutate(values, { onSuccess: () => reset() })
         )}
       >
