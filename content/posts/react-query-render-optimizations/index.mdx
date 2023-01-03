@@ -83,7 +83,7 @@ I haven't been entirely honest in the [last example](react-query-data-transforma
 
 ```tsx:title=count-component
 export const useTodosQuery = (select) =>
-  useQuery(['todos'], fetchTodos, { select })
+  useQuery({ queryKey: ['todos'], queryFn: fetchTodos, select })
 export const useTodosCount = () => useTodosQuery((data) => data.length)
 
 function TodosCount() {
@@ -100,15 +100,20 @@ Every time you make a background refetch, this component will re-render twice wi
 { status: 'success', data: 2, isFetching: false }
 ```
 
-That is because React Query exposes a lot of meta information for each query, and _isFetching_ is one of them. This flag will always be true when a request is in-flight. This is quite useful if you want to display a background loading indicator. But it's also kinda unnecessary if you don't do that.
+That is because React Query exposes a lot of meta information for each query, and `isFetching` is one of them. This flag will always be true when a request is in-flight. This is quite useful if you want to display a background loading indicator. But it's also kinda unnecessary if you don't do that.
 
 ### notifyOnChangeProps
 
-For this use-case, React Query has the _notifyOnChangeProps_ option. It can be set on a per-observer level to tell React Query: Please only inform this observer about changes if one of these props change. By setting this option to `['data']`, we will find the optimized version we seek:
+For this use-case, React Query has the `notifyOnChangeProps` option. It can be set on a per-observer level to tell React Query: Please only inform this observer about changes if one of these props change. By setting this option to `['data']`, we will find the optimized version we seek:
 
 ```ts:title=optimized-with-notifyOnChangeProps
 export const useTodosQuery = (select, notifyOnChangeProps) =>
-  useQuery(['todos'], fetchTodos, { select, notifyOnChangeProps })
+  useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodos,
+    select,
+    notifyOnChangeProps,
+  })
 export const useTodosCount = () =>
   useTodosQuery((data) => data.length, ['data'])
 ```
@@ -117,7 +122,7 @@ You can see this in action in the [optimistic-updates-typescript](https://github
 
 ### Staying in sync
 
-While the above code works well, it can get out of sync quite easily. What if we want to react to the _error_, too? Or we start to use the _isLoading_ flag? We have to keep the _notifyOnChangeProps_ list in sync with whichever fields we are actually using in our components. If we forget to do that, and we only observe the _data_ property, but get an _error_ that we also display, our component will not re-render and is thus outdated. This is especially troublesome if we hard-code this in our custom hook, because the hook does not know what the component will actually use:
+While the above code works well, it can get out of sync quite easily. What if we want to react to the `error`, too? Or we start to use the `isLoading` flag? We have to keep the `notifyOnChangeProps` list in sync with whichever fields we are actually using in our components. If we forget to do that, and we only observe the `data` property, but get an `error` that we also display, our component will not re-render and is thus outdated. This is especially troublesome if we hard-code this in our custom hook, because the hook does not know what the component will actually use:
 
 ```tsx:title=outdated-component
 export const useTodosCount = () =>
@@ -140,7 +145,7 @@ As I have hinted in the disclaimer in the beginning, I think this is way worse t
 
 ### Tracked Queries
 
-I'm quite proud of this feature, given that it was my first major contribution to the library. If you set _notifyOnChangeProps_ to `'tracked'`, React Query will keep track of the fields you are using during render, and will use this to compute the list. This will optimize exactly the same way as specifying the list manually, except that you don't have to think about it. You can also turn this on globally for all your queries:
+I'm quite proud of this feature, given that it was my first major contribution to the library. If you set `notifyOnChangeProps` to `'tracked'`, React Query will keep track of the fields you are using during render, and will use this to compute the list. This will optimize exactly the same way as specifying the list manually, except that you don't have to think about it. You can also turn this on globally for all your queries:
 
 ```tsx:title=tracked-queries
 const queryClient = new QueryClient({
@@ -198,11 +203,11 @@ if (someCondition()) {
 }
 ```
 
-**Update**: Starting with v4, tracked queries are turned on per default in React Query, and you can opt out of the feature with _notifyOnChangeProps: 'all'_.
+**Update**: Starting with v4, tracked queries are turned on per default in React Query, and you can opt out of the feature with `notifyOnChangeProps: 'all'`.
 
 ## Structural sharing
 
-A different, but no less important render optimization that React Query has turned on out of the box is _structural sharing_. This feature makes sure that we keep referential identity of our _data_ on every level. As an example, suppose you have the following data structure:
+A different, but no less important render optimization that React Query has turned on out of the box is _structural sharing_. This feature makes sure that we keep referential identity of our `data` on every level. As an example, suppose you have the following data structure:
 
 ```json
 [
@@ -231,7 +236,7 @@ This comes in very handy when using selectors for partial subscriptions:
 const { data } = useTodo(2)
 ```
 
-As I've hinted before, for selectors, structural sharing will be done twice: Once on the result returned from the _queryFn_ to determine if anything changed at all, and then once more on the _result_ of the selector function. In some instances, especially when having very large datasets, structural sharing _can_ be a bottleneck. It also only works on json-serializable data. If you don't need this optimization, you can turn it off by setting _structuralSharing: false_ on any query.
+As I've hinted before, for selectors, structural sharing will be done twice: Once on the result returned from the `queryFn` to determine if anything changed at all, and then once more on the _result_ of the selector function. In some instances, especially when having very large datasets, structural sharing _can_ be a bottleneck. It also only works on json-serializable data. If you don't need this optimization, you can turn it off by setting `structuralSharing: false` on any query.
 
 Have a look at the [replaceEqualDeep tests](https://github.com/tannerlinsley/react-query/blob/80cecef22c3e088d6cd9f8fbc5cd9e2c0aab962f/src/core/tests/utils.test.tsx#L97-L304) if you want to learn more about what happens under the hood.
 

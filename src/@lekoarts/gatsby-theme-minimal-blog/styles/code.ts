@@ -20,6 +20,7 @@ export default {
     bg: `codebg`,
     color: `text`,
     padding: '0.2rem 0.3rem',
-    borderRadius: `2px`,
+    borderRadius: `6px`,
+    fontSize: `90%`,
   },
 }

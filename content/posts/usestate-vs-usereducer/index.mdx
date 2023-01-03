@@ -36,7 +36,7 @@ import Translations from 'components/Translations'
     {
       language: '한국어',
       url: 'https://www.philly.im/blog/use-state-vs-use-reducer',
-    }
+    },
   ]}
 </Translations>
 
@@ -285,7 +285,7 @@ const reducer = (amount) => (state, action) => {
 }
 
 const useCounterState = () => {
-  const { data } = useQuery(['amount'], fetchAmount)
+  const { data } = useQuery({ queryKey: ['amount'], queryFn: fetchAmount })
   return React.useReducer(reducer(data ?? 1), 0)
 }
 

@@ -88,7 +88,7 @@ This is my favourite approach, if you can afford it. If the backend returns data
 
 ### 1. In the queryFn
 
-The _queryFn_ is the function that you pass to _useQuery_. It expects you to return a Promise, and the resulting data winds up in the query cache. But it doesn't mean that you have to absolutely return data in the structure that the backend delivers here. You can transform it before doing so:
+The `queryFn` is the function that you pass to `useQuery`. It expects you to return a Promise, and the resulting data winds up in the query cache. But it doesn't mean that you have to absolutely return data in the structure that the backend delivers here. You can transform it before doing so:
 
 ```ts:title=queryFn-transformation
 const fetchTodos = async (): Promise<Todos> => {
@@ -98,7 +98,8 @@ const fetchTodos = async (): Promise<Todos> => {
   return data.map((todo) => todo.name.toUpperCase())
 }
 
-export const useTodosQuery = () => useQuery(['todos'], fetchTodos)
+export const useTodosQuery = () =>
+  useQuery({ queryKey: ['todos'], queryFn: fetchTodos })
 ```
 
 On the frontend, you can then work with this data "as if it came like this from the backend". No where in your code will you actually work with todo names that are _not_ upper-cased. You will also _not_ have access to the original structure. If you look at the react-query-devtools, you will see the transformed structure. If you look at the network trace, you'll see the original structure. This might be confusing, so keep that in mind.
@@ -121,7 +122,7 @@ const fetchTodos = async (): Promise<Todos> => {
 }
 
 export const useTodosQuery = () => {
-  const queryInfo = useQuery(['todos'], fetchTodos)
+  const queryInfo = useQuery({ queryKey: ['todos'], queryFn: fetchTodos })
 
   return {
     ...queryInfo,
@@ -130,11 +131,11 @@ export const useTodosQuery = () => {
 }
 ```
 
-As it stands, this will not only run every time your fetch function runs, but actually on every render (even those that do not involve data fetching). This is likely not a problem at all, but if it is, you can optimize with _useMemo_. Be careful to define your dependencies _as narrow as possible_. `data` inside the queryInfo will be referentially stable unless something really changed (in which case you want to recompute your transformation), but the `queryInfo` itself will _not_. If you add _queryInfo_ as your dependency, the transformation will again run on every render:
+As it stands, this will not only run every time your fetch function runs, but actually on every render (even those that do not involve data fetching). This is likely not a problem at all, but if it is, you can optimize with `useMemo`. Be careful to define your dependencies _as narrow as possible_. `data` inside the queryInfo will be referentially stable unless something really changed (in which case you want to recompute your transformation), but the `queryInfo` itself will _not_. If you add `queryInfo` as your dependency, the transformation will again run on every render:
 
 ```ts:title=useMemo-dependencies
 export const useTodosQuery = () => {
-  const queryInfo = useQuery(['todos'], fetchTodos)
+  const queryInfo = useQuery({ queryKey: ['todos'], queryFn: fetchTodos })
 
   return {
     ...queryInfo,
@@ -166,25 +167,31 @@ v3 introduced built-in selectors, which can also be used to transform data:
 
 ```ts:title=select-transformation
 export const useTodosQuery = () =>
-  useQuery(['todos'], fetchTodos, {
+  useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodos,
     select: (data) => data.map((todo) => todo.name.toUpperCase()),
   })
 ```
 
-selectors will only be called if _data_ exists, so you don't have to care about _undefined_ here. Selectors like the one above will also run on every render, because the functional identity changes (it's an inline function). If your transformation is expensive, you can memoize it either with useCallback, or by extracting it to a stable function reference:
+selectors will only be called if `data` exists, so you don't have to care about `undefined` here. Selectors like the one above will also run on every render, because the functional identity changes (it's an inline function). If your transformation is expensive, you can memoize it either with useCallback, or by extracting it to a stable function reference:
 
 ```ts:title=select-memoizations
 const transformTodoNames = (data: Todos) =>
   data.map((todo) => todo.name.toUpperCase())
 
 export const useTodosQuery = () =>
-  useQuery(['todos'], fetchTodos, {
+  useQuery({
+    queyKey: ['todos'],
+    queryFn: fetchTodos,
     // ✅ uses a stable function reference
     select: transformTodoNames,
   })
 
 export const useTodosQuery = () =>
-  useQuery(['todos'], fetchTodos, {
+  useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodos,
     // ✅ memoizes with useCallback
     select: React.useCallback(
       (data: Todos) => data.map((todo) => todo.name.toUpperCase()),
@@ -197,16 +204,16 @@ Further, the select option can also be used to subscribe to only parts of the da
 
 ```js:title=select-partial-subscriptions
 export const useTodosQuery = (select) =>
-  useQuery(['todos'], fetchTodos, { select })
+  useQuery({ queryKey: ['todos'], queryFn: fetchTodos, select })
 
 export const useTodosCount = () => useTodosQuery((data) => data.length)
 export const useTodo = (id) =>
   useTodosQuery((data) => data.find((todo) => todo.id === id))
 ```
 
-Here, we've created a [useSelector](https://react-redux.js.org/api/hooks#useselector) like API by passing a custom selector to our _useTodosQuery_. The custom hooks still works like before, as _select_ will be _undefined_ if you don't pass it, so the whole state will be returned.
+Here, we've created a [useSelector](https://react-redux.js.org/api/hooks#useselector) like API by passing a custom selector to our `useTodosQuery`. The custom hooks still works like before, as `select` will be `undefined` if you don't pass it, so the whole state will be returned.
 
-But if you pass a selector, you are now only subscribed to the result of the selector function. This is quite powerful, because it means that even if we update the name of a todo, our component that only subscribes to the count via _useTodosCount_ will _not_ rerender. The count hasn't changed, so react-query can choose to _not_ inform this observer about the update 🥳 (Please note that this is a bit simplified here and technically not entirely true - I will talk in more detail about render optimizations in Part 3).
+But if you pass a selector, you are now only subscribed to the result of the selector function. This is quite powerful, because it means that even if we update the name of a todo, our component that only subscribes to the count via `useTodosCount` will _not_ rerender. The count hasn't changed, so react-query can choose to _not_ inform this observer about the update 🥳 (Please note that this is a bit simplified here and technically not entirely true - I will talk in more detail about render optimizations in Part 3).
 
 🟢 &nbsp; best optimizations<br/>
 🟢 &nbsp; allows for partial subscriptions<br/>

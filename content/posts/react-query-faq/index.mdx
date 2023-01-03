@@ -72,7 +72,10 @@ The short answer is still: you cannot. But there's a very good reason for that. 
 Mostly, code that wants to refetch with parameters looks something like this:
 
 ```jsx:title=refetch-with-parameters
-const { data, refetch } = useQuery(['item'], () => fetchItem({ id: 1 }))
+const { data, refetch } = useQuery({
+  queryKey: ['item'],
+  queryFn: () => fetchItem({ id: 1 }),
+})
 
 <button onClick={() => {
   // 🚨 this is not how it works
@@ -82,14 +85,17 @@ const { data, refetch } = useQuery(['item'], () => fetchItem({ id: 1 }))
 
 Parameters or Variables are dependencies to your query. In the above code, we define a QueryKey `['item']`, so whatever we fetch will be stored under that key. If we were to refetch with a _different_ id, it would still write to the same place in the cache, because the key stays the same. So id 2 would then overwrite data for id 1. If you were to switch back to id 1, that data would be gone.
 
-Caching different responses under different query keys is one of React Query's greatest strengths. The hypothetical "refetch-with-parameters" api would take that feature away. This is why _refetch_ is only meant to replay the request with the same variables. So in essence, you don't really want a _refetch_: You want a _new fetch_ for a different id!
+Caching different responses under different query keys is one of React Query's greatest strengths. The hypothetical "refetch-with-parameters" api would take that feature away. This is why `refetch` is only meant to replay the request with the same variables. So in essence, you don't really want a `refetch`: You want a _new fetch_ for a different id!
 
 To use React Query effectively, you have to embrace the declarative approach: The query key defines all dependencies that the query function needs to fetch data. If you stick to that, all you have to do to get refetches is to update the dependency. A more realistic example would look like this:
 
 ```jsx:title=dynamic-query-key
 const [id, setId] = useState(1)
 
-const { data } = useQuery(['item', id], () => fetchItem({ id }))
+const { data } = useQuery({
+  queryKey: ['item', id],
+  queryFn: () => fetchItem({ id }),
+})
 
 <button onClick={() => {
   // ✅ set id without explicitly refetching
@@ -97,16 +103,19 @@ const { data } = useQuery(['item', id], () => fetchItem({ id }))
 }})>Show Item 2</button>
 ```
 
-_setId_ will re-render the component, React Query will pick up the new key and start fetching for that key. It will also cache it separately from id 1.
+`setId` will re-render the component, React Query will pick up the new key and start fetching for that key. It will also cache it separately from id 1.
 
 The declarative approach also makes sure that no matter where or how you update the id, your query data will always be "in sync" with it. So your thinking goes from: "If I click that button, I want to refetch" towards: "I always want to see data for the current id".
 
-You also don't have to store that id in _useState_ - it can be done in any way to store client side state ([zustand](https://zustand.surge.sh/), [redux](https://redux-toolkit.js.org/), ...). In the above example, the URL would be a good place to store the id, too:
+You also don't have to store that id in `useState` - it can be done in any way to store client side state ([zustand](https://zustand.surge.sh/), [redux](https://redux-toolkit.js.org/), ...). In the above example, the URL would be a good place to store the id, too:
 
 ```jsx:title=url-state
 const { id } = useParams()
 
-const { data } = useQuery(['item', id], () => fetchItem({ id }))
+const { data } = useQuery({
+  queryKey: ['item', id],
+  queryFn: () => fetchItem({ id }),
+})
 
 // ✅ change url, make useParams pick it up
 <Link to="/2">Show Item 2</Link>
@@ -121,15 +130,15 @@ You might notice that switching query keys will put your query into hard loading
 There are a bunch of ways to ease the transition, like setting a [placeholderData](placeholder-and-initial-data-in-react-query) for that key or [prefetching](https://react-query.tanstack.com/guides/prefetching) data for the new key ahead of time. A nice approach to tackle this problem is to instruct the query to keep previous data:
 
 ```js:title=keep-previous-data {4,5}
-const { data, isPreviousData } = useQuery(
-  ['item', id],
-  () => fetchItem({ id }),
+const { data, isPreviousData } = useQuery({
+  queryKey: ['item', id],
+  queryFn: () => fetchItem({ id }),
   // ⬇️ like this️
-  { keepPreviousData: true }
-)
+  keepPreviousData: true
+})
 ```
 
-With this flag on, React Query will still show data for id 1 while data for id 2 is being fetched. Additionally, the _isPreviousData_ flag on the query result will be set to true, so that you can act accordingly in the UI. Maybe you want to show a background loading spinner in addition to the data, or you'd like to add opacity to the shown data, indicating that it's stale. That is totally up to you - React Query just gives you the means to do that. 🙌
+With this flag on, React Query will still show data for id 1 while data for id 2 is being fetched. Additionally, the `isPreviousData` flag on the query result will be set to true, so that you can act accordingly in the UI. Maybe you want to show a background loading spinner in addition to the data, or you'd like to add opacity to the shown data, indicating that it's stale. That is totally up to you - React Query just gives you the means to do that. 🙌
 
 ## Why are updates not shown?
 
@@ -137,14 +146,14 @@ When interacting with the Query Cache directly, be that because you want to perf
 
 ### 1: Query Keys are not matching
 
-Query Keys are hashed deterministically, so you don't have to keep referential stability or object key order in mind. However, when you call _queryClient.setQueryData_, the key must still match the existing key fully. As an example, those two keys do not match:
+Query Keys are hashed deterministically, so you don't have to keep referential stability or object key order in mind. However, when you call `queryClient.setQueryData`, the key must still match the existing key fully. As an example, those two keys do not match:
 
 ```json:title=non-matching-keys
 ['item', '1']
 ['item', 1]
 ```
 
-The second value of the key array is a _string_ in the first example and a _number_ in the second. This can happen if you usually work with numbers, but get a string if you read from the URL with _useParams_.
+The second value of the key array is a _string_ in the first example and a _number_ in the second. This can happen if you usually work with numbers, but get a string if you read from the URL with `useParams`.
 
 The React Query Devtools are your best friend in this case, as you can clearly see which keys exist and which keys are currently fetching. Keep an eye on those pesky details though!
 
@@ -152,7 +161,7 @@ I recommend using [TypeScript](https://www.typescriptlang.org/) and [Query Key F
 
 ### 2: The QueryClient is not stable
 
-In most examples, we create the queryClient _outside_ of the _App_ component, which makes it referentially stable:
+In most examples, we create the queryClient _outside_ the `App` component, which makes it referentially stable:
 
 ```jsx:title=standard-example
 // ✅ created outside of the App
@@ -167,7 +176,7 @@ export default function App() {
 }
 ```
 
-The _QueryClient_ holds the _QueryCache_, so if you create a new client, you also get a new cache, which will be empty. If you move the client creation into the _App_ component, and your component re-renders for some other reason (e.g. a route change), your cache will be thrown away:
+The `QueryClient` holds the `QueryCache`, so if you create a new client, you also get a new cache, which will be empty. If you move the client creation into the `App` component, and your component re-renders for some other reason (e.g. a route change), your cache will be thrown away:
 
 ```jsx:title=unstable-query-client {2,3}
 export default function App() {
@@ -182,7 +191,7 @@ export default function App() {
 }
 ```
 
-If you have to create your client inside the _App_, make sure that it is referentially stable by using an instance ref or React state:
+If you have to create your client inside the `App`, make sure that it is referentially stable by using an instance ref or React state:
 
 ```jsx:title=stable-query-client {2,3}
 export default function App() {
@@ -204,7 +213,7 @@ I do have a separate blog post on that topic: [useState for one-time initializat
 
 ... if I can just as well import the client?
 
-The _QueryClientProvider_ puts the created _queryClient_ into React Context to distribute it throughout your app. You can best read it with _useQueryClient_. This does not create any extra subscriptions and will not cause any additional re-renders (if the client is stable - see above) - it just avoids having to pass the client down as a prop.
+The `QueryClientProvider` puts the created `queryClient` into React Context to distribute it throughout your app. You can best read it with `useQueryClient`. This does not create any extra subscriptions and will not cause any additional re-renders (if the client is stable - see above) - it just avoids having to pass the client down as a prop.
 
 Alternatively, you could export the client and just import it wherever you need to:
 
@@ -225,21 +234,21 @@ Here are a couple of reasons why using the hook is preferred:
 
 ### 1: useQuery uses the hook too
 
-When you call _useQuery_, we call _useQueryClient_ under the hood. This will look up the nearest client in React Context. Not a big deal, but if you ever get into the situation where the client you import is different from the one in context you'll have a hard to trace bug that could be avoided.
+When you call `useQuery`, we call `useQueryClient` under the hood. This will look up the nearest client in React Context. Not a big deal, but if you ever get into the situation where the client you import is different from the one in context you'll have a hard to trace bug that could be avoided.
 
 ### 2: It decouples your app from the client
 
-The client you define in your _App_ is your production client. It might have some default settings that work well in production. However, in testing, it might make sense to use different default values. One example is [turning off retries](testing-react-query#turn-off-retries) during testing, because testing erroneous queries might time out the test otherwise.
+The client you define in your `App` is your production client. It might have some default settings that work well in production. However, in testing, it might make sense to use different default values. One example is [turning off retries](testing-react-query#turn-off-retries) during testing, because testing erroneous queries might time out the test otherwise.
 
-A big advantage of React Context when used as a dependency injection mechanism is that it decouples your app from its dependencies. _useQueryClient_ just expects any client to be in the tree above - not a specific client. You'll lose that advantage if you import the production client directly.
+A big advantage of React Context when used as a dependency injection mechanism is that it decouples your app from its dependencies. `useQueryClient` just expects any client to be in the tree above - not a specific client. You'll lose that advantage if you import the production client directly.
 
 ### 3: You sometimes can't export
 
-It is sometimes necessary to create the _queryClient_ inside the App component (as shown above). One example is when using server side rendering, because you want to avoid having multiple users share the same client.
+It is sometimes necessary to create the `queryClient` inside the App component (as shown above). One example is when using server side rendering, because you want to avoid having multiple users share the same client.
 
 The same is true when you work with microfrontends - Apps should be isolated. If you create the client outside the App, then use the same App twice on the same page, they'll share a client.
 
-Lastly, if you want to use other hooks in the default values of the _queryClient_, you also need to create it inside the App. Consider a global error handler that wants to show a toast for every failing mutation:
+Lastly, if you want to use other hooks in the default values of the `queryClient`, you also need to create it inside the App. Consider a global error handler that wants to show a toast for every failing mutation:
 
 ```jsx:title=use-other-hooks {2,3,8,9}
 export default function App() {
@@ -263,7 +272,7 @@ export default function App() {
 }
 ```
 
-So if you create your _queryClient_ like that, there is no way that you can just export it and import it in your App.
+So if you create your `queryClient` like that, there is no way that you can just export it and import it in your App.
 
 My best guess on why you would want to export the client is if you're working with a legacy class component that needs to do some query invalidation - and you can't use hooks there. If that is the case, and you can't refactor to a functional component easily, consider creating a render props version:
 
@@ -275,7 +284,7 @@ const UseQueryClient = ({ children }) => children(useQueryClient())
 <UseQueryClient>
   {(queryClient) => (
     <button
-      onClick={() => queryClient.invalidateQueries(['items'])}
+      onClick={() => queryClient.invalidateQueries({ queryKey: ['items'] })}
     >
       invalidate items
     </button>
@@ -299,9 +308,9 @@ const UseQuery = ({ children, ...props }) => children(useQuery(props))
 
 ## Why do I not get errors ?
 
-If your network request fails, you'd ideally want your query to go to the _error_ state. If that doesn't happen, and you still see a successful query instead, that means that your _queryFn_ did not return a failed Promise.
+If your network request fails, you'd ideally want your query to go to the `error` state. If that doesn't happen, and you still see a successful query instead, that means that your `queryFn` did not return a failed Promise.
 
-Remember: React Query doesn't know (or care) about status codes or network requests at all. It needs a resolved or rejected Promise that the _queryFn_ needs to provide.
+Remember: React Query doesn't know (or care) about status codes or network requests at all. It needs a resolved or rejected Promise that the `queryFn` needs to provide.
 
 If React Query sees a rejected Promise, it can potentially start retries, pause queries if you are offline and eventually put the query into the error state, so it's quite an important thing to get right.
 
@@ -312,68 +321,80 @@ Luckily, many data fetching libraries like [axios](https://axios-http.com/) or [
 This is of course [documented here](https://tanstack.com/query/v4/docs/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default), but it's still a stumbling block if you've missed this.
 
 ```js:title=wrong-fetch-api-example
-useQuery(['todos', todoId], async () => {
-  const response = await fetch('/todos/' + todoId)
-  // 🚨 4xx or 5xx are not treated as errors
-  return response.json()
+useQuery({
+  queryKey: ['todos', todoId],
+  queryFn: async () => {
+    const response = await fetch('/todos/' + todoId)
+    // 🚨 4xx or 5xx are not treated as errors
+    return response.json()
+  },
 })
 ```
 
 To overcome this, you need to check if the response was _ok_ and transform it into a rejected Promise if it wasn't:
 
-```js:title=correct-fetch-api-example {3-6}
-useQuery(['todos', todoId], async () => {
-  const response = await fetch('/todos/' + todoId)
-  // ✅ transforms 4xx and 5xx into failed Promises
-  if (!response.ok) {
-    throw new Error('Network response was not ok')
-  }
-  return response.json()
+```js:title=correct-fetch-api-example {5-8}
+useQuery({
+  queryKey: ['todos', todoId],
+  queryFn: async () => {
+    const response = await fetch('/todos/' + todoId)
+    // ✅ transforms 4xx and 5xx into failed Promises
+    if (!response.ok) {
+      throw new Error('Network response was not ok')
+    }
+    return response.json()
+  },
 })
 ```
 
 ### Logging
 
-The second reason I've seen a lot is that errors are caught inside the _queryFn_ for logging purposes. If you do that without re-throwing the error, you will again return a successful Promise implicitly:
+The second reason I've seen a lot is that errors are caught inside the `queryFn` for logging purposes. If you do that without re-throwing the error, you will again return a successful Promise implicitly:
 
 ```ts:title=wrong-logging-example
-useQuery(['todos', todoId], async () => {
-  try {
-    const { data } = await axios.get('/todos/' + todoId)
-    return data
-  } catch (error) {
-    console.error(error)
-    // 🚨 here, an "empty" Promise<void> is returned
-  }
+useQuery({
+  queryKey: ['todos', todoId],
+  queryFn: async () => {
+    try {
+      const { data } = await axios.get('/todos/' + todoId)
+      return data
+    } catch (error) {
+      console.error(error)
+      // 🚨 here, an "empty" Promise<void> is returned
+    }
+  },
 })
 ```
 
 If you want to do this, remember to re-throw the error:
 
-```ts:title=correct-logging-example {7-8}
-useQuery(['todos', todoId], async () => {
-  try {
-    const { data } = await axios.get('/todos/' + todoId)
-    return data
-  } catch (error) {
-    console.error(error)
-    // ✅ here, a failed Promise is returned
-    throw error
-  }
+```ts:title=correct-logging-example {9-10}
+useQuery({
+  queryKey: ['todos', todoId],
+  queryFn: async () => {
+    try {
+      const { data } = await axios.get('/todos/' + todoId)
+      return data
+    } catch (error) {
+      console.error(error)
+      // ✅ here, a failed Promise is returned
+      throw error
+    }
+  },
 })
 ```
 
-An alternative and not so verbose way to handle errors is to use the _onError_ callback of _useQuery_:
+An alternative and not so verbose way to handle errors is to use the `onError` callback of `useQuery`:
 
 ```ts:title=using-on-error
-useQuery(
-  ['todos', todoId],
-  async () => {
+useQuery({
+  queryKey: ['todos', todoId],
+  queryFn: async () => {
     const { data } = await axios.get('/todos/' + todoId)
     return data
   },
-  { onError: (error) => console.error(error) }
-)
+  onError: (error) => console.error(error)
+})
 ```
 
 I definitely prefer the callbacks, and you can read more about differnt ways to handle errors in [#11: React Query Error Handling](react-query-error-handling).

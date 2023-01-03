@@ -62,7 +62,7 @@ However, not thinking about how we are going to handle our errors might negative
 
 React Query needs a rejected Promise in order to handle errors correctly. Luckily, this is exactly what you'll get when you work with libraries like [axios](https://axios-http.com/).
 
-If you are working with [the fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) or other libraries that _do not_ give you a rejected Promise on erroneous status codes like 4xx or 5xx, you'll have to do the transformation yourself in the _queryFn_. This is covered in [the official docs](https://react-query.tanstack.com/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default).
+If you are working with [the fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) or other libraries that _do not_ give you a rejected Promise on erroneous status codes like 4xx or 5xx, you'll have to do the transformation yourself in the `queryFn`. This is covered in [the official docs](https://react-query.tanstack.com/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default).
 
 ## The standard example
 
@@ -70,7 +70,7 @@ Let's see how most examples around displaying errors look like:
 
 ```tsx:title=the-standard-example
 function TodoList() {
-  const todos = useQuery(['todos'], fetchTodos)
+  const todos = useQuery({ queryKey: ['todos'], queryFn: fetchTodos })
 
   if (todos.isLoading) {
     return 'Loading...'
@@ -92,7 +92,7 @@ function TodoList() {
 }
 ```
 
-Here, we're handling error situations by checking for the _isError_ boolean flag (which is derived from the _status_ enum) given to us by React Query.
+Here, we're handling error situations by checking for the `isError` boolean flag (which is derived from the `status` enum) given to us by React Query.
 
 This is certainly okay for some scenarios, but has a couple of drawbacks, too:
 
@@ -110,12 +110,16 @@ This is nice because we can wrap our components in Error Boundaries at any granu
 
 One thing that Error Boundaries _cannot_ do is catch asynchronous errors, because those do not occur during rendering. So to make Error Boundaries work in React Query, the library internally catches the error for you and re-throws it in the next render cycle so that the Error Boundary can pick it up.
 
-I think this is a pretty genius yet simple approach to error handling, and all you need to do to make that work is pass the _useErrorBoundary_ flag to your query (or provide it via a default config):
+I think this is a pretty genius yet simple approach to error handling, and all you need to do to make that work is pass the `useErrorBoundary` flag to your query (or provide it via a default config):
 
 ```tsx:title=useErrorBoundary
 function TodoList() {
   // ✅ will propagate all fetching errors to the nearest Error Boundary
-  const todos = useQuery(['todos'], fetchTodos, { useErrorBoundary: true })
+  const todos = useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodos,
+    useErrorBoundary: true,
+  })
 
   if (todos.data) {
     return (
@@ -131,10 +135,12 @@ function TodoList() {
 }
 ```
 
-Starting with [v3.23.0](https://github.com/tannerlinsley/react-query/releases/tag/v3.23.0), you can even customize which errors should go towards an Error Boundary, and which ones you'd rather handle locally by providing a function to _useErrorBoundary_:
+Starting with [v3.23.0](https://github.com/tannerlinsley/react-query/releases/tag/v3.23.0), you can even customize which errors should go towards an Error Boundary, and which ones you'd rather handle locally by providing a function to `useErrorBoundary`:
 
 ```js:title=granular-error-boundaries
-useQuery(['todos'], fetchTodos, {
+useQuery({
+  queryKey: ['todos'],
+  queryFn: fetchTodos,
   // 🚀 only server errors will go to the Error Boundary
   useErrorBoundary: (error) => error.response?.status >= 500,
 })
@@ -160,22 +166,24 @@ So how can we do this when getting an error from React Query?
 
 ```js:title=the-onError-callback
 const useTodos = () =>
-  useQuery(['todos'], fetchTodos, {
+  useQuery({
+    queryKey: ['todos'],
+    queyFn: fetchTodos,
     // ⚠️ looks good, but is maybe _not_ what you want
     onError: (error) =>
       toast.error(`Something went wrong: ${error.message}`),
   })
 ```
 
-At first glance, it looks like the _onError_ callback is exactly what we need to perform a side effect if a fetch fails, and it will also work - for as long as we only use the custom hook once!
+At first glance, it looks like the `onError` callback is exactly what we need to perform a side effect if a fetch fails, and it will also work - for as long as we only use the custom hook once!
 
-You see, the _onError_ callback on _useQuery_ is called for every _Observer_, which means if you call _useTodos_ twice in your application, you will get two error toasts, even though only one network request fails.
+You see, the `onError` callback on `useQuery` is called for every `Observer`, which means if you call `useTodos` twice in your application, you will get two error toasts, even though only one network request fails.
 
-Conceptually, you can imagine that the onError callback functions similar to a _useEffect_. So if we expand the above example to that syntax, it will become more apparent that this will run for every consumer:
+Conceptually, you can imagine that the onError callback functions similar to a `useEffect`. So if we expand the above example to that syntax, it will become more apparent that this will run for every consumer:
 
 ```js:title=useEffect-error-toast
 const useTodos = () => {
-  const todos = useQuery(['todos'], fetchTodos)
+  const todos = useQuery({ queryKey: ['todos'], queryFn: fetchTodos })
 
   // 🚨 effects are executed for every component
   // that uses this custom hook individually
@@ -193,7 +201,7 @@ Of course, if you don't add the callback to your custom hook, but to the invocat
 
 ### The global callbacks
 
-The global callbacks need to be provided when you create the _QueryCache_, which happens implicitly when you create a _new QueryClient_, but you can also customize that:
+The global callbacks need to be provided when you create the `QueryCache`, which happens implicitly when you create a `new QueryClient`, but you can also customize that:
 
 ```js:title=query-cache-callbacks
 const queryClient = new QueryClient({
@@ -210,8 +218,8 @@ This will now only show an error toast once for each query, which exactly what w
 
 The three main ways to handle errors in React Query are:
 
-- the _error_ property returned from useQuery
-- the _onError_ callback (on the query itself or the global QueryCache / MutationCache)
+- the `error` property returned from useQuery
+- the `onError` callback (on the query itself or the global QueryCache / MutationCache)
 - using Error Boundaries
 
 You can mix and match them however you want, and what I personally like to do is show error toasts for background refetches (to keep the stale UI intact) and handle everything else locally or with Error Boundaries:
