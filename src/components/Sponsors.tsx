@@ -278,6 +278,41 @@ const Sponsors = () => (
           <Text>🎗 Supporter ($10 a month)</Text>
         </div>
       </Card>
+      <Card>
+        <Link
+          href="https://www.bearstudio.fr/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>BearStudio</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/21054556?s=300"
+            height="300"
+            alt="BearStudio"
+          />
+        </Link>
+        <div>
+          <Text>🪙 Custom</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="http://www.kierb.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Kier Borromeo</h2>
+          <StaticImage
+            placeholder="blurred"
+            src="../../static/images/kierb.jpg"
+            height={300}
+            alt="Kier Borromeo"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter ($10 a month)</Text>
+        </div>
+      </Card>
     </Grid>
   </Box>
 )
