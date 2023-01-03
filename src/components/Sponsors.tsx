@@ -297,7 +297,7 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="http://www.kierb.com/"
+          href="https://www.kierb.com/"
           target="_blank"
           rel="noopener noreferrer"
         >
