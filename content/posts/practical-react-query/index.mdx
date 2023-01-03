@@ -88,7 +88,7 @@ it also comes with a _cache_ for that server data.
 This means that you can just use the same `useQuery` hook in multiple components,
 and it will only fetch data once and then subsequently return it from the cache.
 
-This sounds _very_ familiar with what we, and probably many other teams as well, have mainly been using _redux_ for:
+This sounds _very_ familiar with what we, and probably many other teams as well, have mainly been using `redux` for:
 Fetch data from the server and make it available everywhere.
 
 So it seems that we have always been treating this _server state_ like any other _client state_.
@@ -137,7 +137,7 @@ but also got involved in the React Query community, answering questions on Disco
 I believe the React Query [Defaults](https://react-query.tanstack.com/guides/important-defaults)
 are very well chosen, but they can catch you off guard from time to time, especially at the beginning.
 
-First of all: React Query does _not_ invoke the _queryFn_ on every re-render, even with the default _staleTime_ of zero.
+First of all: React Query does _not_ invoke the `queryFn` on every re-render, even with the default `staleTime` of zero.
 Your app can re-render for various reasons at any time, so fetching every time would be insane!
 
 > Always code for re-renders, and a lot of them. I like to call it render resiliency.
@@ -145,7 +145,7 @@ Your app can re-render for various reasons at any time, so fetching every time w
 <p style="padding-left: 3rem; margin-top: -1rem">— Tanner Linsley</p>
 
 If you see a refetch that you are not expecting, it is likely because you just focused the window
-and React Query is doing a _refetchOnWindowFocus_, which is a great feature for production:
+and React Query is doing a `refetchOnWindowFocus`, which is a great feature for production:
 If the user goes to a different browser tab, and then comes back to your app,
 a background refetch will be triggered automatically,
 and data on the screen will be updated if something has changed on the server in the meantime.
@@ -155,7 +155,7 @@ and your component will not re-render if the data is the same as you currently h
 During development, this will probably be triggered more frequently,
 especially because focusing between the Browser DevTools and your app will also cause a fetch, so be aware of that.
 
-Secondly, there seems to be a bit of confusion between _cacheTime_ and _staleTime_, so let me try to clear that up:
+Secondly, there seems to be a bit of confusion between `cacheTime` and `staleTime`, so let me try to clear that up:
 
 - StaleTime: The duration until a query transitions from fresh to stale.
   As long as the query is fresh, data will always be read from the cache only - no network request will happen!
@@ -165,8 +165,8 @@ Secondly, there seems to be a bit of confusion between _cacheTime_ and _staleTim
   Queries transition to the inactive state as soon as there are no observers registered,
   so when all components which use that query have unmounted.
 
-Most of the time, if you want to change one of these settings, it's the _staleTime_ that needs adjusting.
-I have rarely ever needed to tamper with the _cacheTime_.
+Most of the time, if you want to change one of these settings, it's the `staleTime` that needs adjusting.
+I have rarely ever needed to tamper with the `cacheTime`.
 There is a good [explanation by example](https://react-query.tanstack.com/guides/caching#a-detailed-caching-example)
 in the docs as well.
 
@@ -186,7 +186,7 @@ which I assume you are familiar with.
 Why are these two similar?
 
 Because React Query will trigger a refetch whenever the query key changes.
-So when we pass a variable parameter to our _queryFn_, we almost always want to fetch data when that value changes.
+So when we pass a variable parameter to our `queryFn`, we almost always want to fetch data when that value changes.
 Instead of orchestrating complex effects to manually trigger a refetch, we can utilize the query key:
 
 ```ts:title=feature/todos/queries.ts
@@ -203,7 +203,7 @@ const fetchTodos = async (state: State): Promise<Todos> => {
 }
 
 export const useTodosQuery = (state: State) =>
-  useQuery(['todos', state], () => fetchTodos(state))
+  useQuery({ queryKey: ['todos', state], queryFn: () => fetchTodos(state) })
 ```
 
 Here, imagine that our UI displays a list of todos along with a filter option.
@@ -212,19 +212,19 @@ and as soon as the user changes their selection, we would update that local stat
 and React Query will automatically trigger the refetch for us, because the query key changes.
 We are thus keeping the user's filter selection _in sync_ with the query function,
 which is very similar to what a dependency array represents for useEffect.
-I don't think I have ever passed a variable to the _queryFn_ that was _not_ part of the _queryKey_, too.
+I don't think I have ever passed a variable to the `queryFn` that was _not_ part of the `queryKey`, too.
 
 #### A new cache entry
 
 Because the query key is used as a key for the cache, you will get a new cache entry when you switch from
 'all' to 'done', and that will result in a hard loading state (probably showing a loading spinner)
 when you switch for the first time.
-This is certainly not ideal, so you can either use the _keepPreviousData_ option for these cases,
+This is certainly not ideal, so you can either use the `keepPreviousData` option for these cases,
 or, if possible, pre-fill the newly created cache entry with
 [initialData](https://react-query.tanstack.com/guides/initial-query-data#initial-data-from-cache).
 The above example is perfect for that, because we can do some client side pre-filtering on our todos:
 
-```ts:title=pre-filtering {15-20}
+```ts:title=pre-filtering {17-23}
 type State = 'all' | 'open' | 'done'
 type Todo = {
   id: number
@@ -238,7 +238,9 @@ const fetchTodos = async (state: State): Promise<Todos> => {
 }
 
 export const useTodosQuery = (state: State) =>
-  useQuery(['todos', state], () => fetchTodos(state), {
+  useQuery({
+    queryKey: ['todos', state],
+    queryFn: () => fetchTodos(state),
     initialData: () => {
       const allTodos = queryClient.getQueryData<Todos>(['todos', 'all'])
       const filteredData =
@@ -253,7 +255,7 @@ Now, every time the user switches between states, if we don't have data yet,
 we try to pre-fill it with data from the 'all todos' cache.
 We can instantly show the 'done' todos that we have to the user,
 and they will still see the updated list once the background fetch finishes.
-Please note that prior to v3, you would also need to set the _initialStale_ property to actually trigger a background fetch.
+Please note that prior to v3, you would also need to set the `initialStale` property to actually trigger a background fetch.
 
 I think this is a great ux improvement for just a few lines of code.
 
@@ -261,18 +263,18 @@ I think this is a great ux improvement for just a few lines of code.
 
 This goes hand in hand with [putting-props-to-use-state](./putting-props-to-use-state),
 an article I have written last month:
-If you get data from _useQuery_, try not to put that data into local state.
+If you get data from `useQuery`, try not to put that data into local state.
 The main reason is that you implicitly opt out of all background updates that React Query does for you,
 because the state "copy" will not update with it.
 
 This is fine if you want to e.g. fetch some default values for a Form,
 and render your Form once you have data.
 Background updates are very unlikely to yield something new, and even if, your Form has already been initialized.
-So if you do that on purpose, make sure to _not_ fire off unnecessary background refetches by setting _staleTime_:
+So if you do that on purpose, make sure to _not_ fire off unnecessary background refetches by setting `staleTime`:
 
 ```jsx:title=initial-form-data
 const App = () => {
-  const { data } = useQuery('key', queryFn, { staleTime: Infinity })
+  const { data } = useQuery({ queryKey: ['key'], queryFn, staleTime: Infinity })
 
   return data ? <MyForm initialData={data} /> : null
 }
@@ -300,14 +302,14 @@ This makes sure that we always see the latest data, because there is no local "c
 
 ### The enabled option is very powerful
 
-The _useQuery_ hook has many options that you can pass in to customize its behaviour,
-and the _enabled_ option is a very powerful one that _enables_ you to do many cool things (pun intended).
+The `useQuery` hook has many options that you can pass in to customize its behaviour,
+and the `enabled` option is a very powerful one that _enables_ you to do many cool things (pun intended).
 Here is a short list of things that we were able to accomplish thanks to this option:
 
 - [Dependent Queries](https://react-query.tanstack.com/guides/dependent-queries)<br />
   Fetch data in one query and have a second query only run once we have successfully obtained data from the first query.
 - Turn queries on and off<br />
-  We have one query that polls data regularly thanks to _refetchInterval_, but we can temporarily pause it if a Modal is open to avoid
+  We have one query that polls data regularly thanks to `refetchInterval`, but we can temporarily pause it if a Modal is open to avoid
   updates in the back of the screen.
 - Wait for user input<br />
   Have some filter criteria in the query key, but disable it for as long as the user has not applied their filters.
@@ -316,7 +318,7 @@ Here is a short list of things that we were able to accomplish thanks to this op
 
 ### Don't use the queryCache as a local state manager
 
-If you tamper with the queryCache (_queryClient.setQueryData_), it should only be for optimistic updates
+If you tamper with the queryCache (`queryClient.setQueryData`), it should only be for optimistic updates
 or for writing data that you receive from the backend after a mutation.
 Remember that every background refetch might override that data, so
 [use](https://reactjs.org/docs/hooks-state.html)
@@ -325,9 +327,9 @@ Remember that every background refetch might override that data, so
 
 ### Create custom hooks
 
-Even if it's only for wrapping one _useQuery_ call, creating a custom hook usually pays off because:
+Even if it's only for wrapping one `useQuery` call, creating a custom hook usually pays off because:
 
-- You can keep the actual data fetching out of the ui, but co-located with your _useQuery_ call.
+- You can keep the actual data fetching out of the ui, but co-located with your `useQuery` call.
 - You can keep all usages of one query key (and potentially type definitions) in one file.
 - If you need to tweak some settings or add some data transformation, you can do that in one place.
 
