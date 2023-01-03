@@ -182,7 +182,7 @@ const transformTodoNames = (data: Todos) =>
 
 export const useTodosQuery = () =>
   useQuery({
-    queyKey: ['todos'],
+    queryKey: ['todos'],
     queryFn: fetchTodos,
     // ✅ uses a stable function reference
     select: transformTodoNames,

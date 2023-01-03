@@ -168,7 +168,7 @@ So how can we do this when getting an error from React Query?
 const useTodos = () =>
   useQuery({
     queryKey: ['todos'],
-    queyFn: fetchTodos,
+    queryFn: fetchTodos,
     // ⚠️ looks good, but is maybe _not_ what you want
     onError: (error) =>
       toast.error(`Something went wrong: ${error.message}`),
