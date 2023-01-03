@@ -82,7 +82,9 @@ function PersonDetail({ id }) {
     queryFn: () => fetchPerson(id),
   })
   const { register, handleSubmit } = useForm()
-  const { mutate } = useMutation((values) => updatePerson(values))
+  const { mutate } = useMutation({
+    mutationFn: (values) => updatePerson(values),
+  })
 
   if (data) {
     return (
@@ -121,13 +123,15 @@ const { register, handleSubmit } = useForm({ defaultValues: data })
 
 We'd have the same problem when copying into `useState`, or when using uncontrolled forms (which react-hook-form does under the hood by the way). The best solution to this would be to split up the form into its own component:
 
-```js:title=separate-form {9}
+```js:title=separate-form {11}
 function PersonDetail({ id }) {
   const { data } = useQuery({
     queryKey: ['person', id],
     queryFn: () => fetchPerson(id),
   })
-  const { mutate } = useMutation((values) => updatePerson(values))
+  const { mutate } = useMutation({
+    mutationFn: (values) => updatePerson(values),
+  })
 
   if (data) {
     return <PersonForm person={data} onSubmit={mutate} />
@@ -181,14 +185,16 @@ So what would we need to do to still reflect background updates while we are edi
 
 One approach is to rigorously separate the states. We'll keep the Server State in React Query, and only track the changes the user has made with our Client State. The source of truth that we display then to our users is _derived state_ from those two: If the user has changed a field, we show the Client State. If not, we fall back to the Server State:
 
-```js:title=separate-states {18-20,30}
+```js:title=separate-states {20-22,32}
 function PersonDetail({ id }) {
   const { data } = useQuery({
     queryKey: ['person', id],
     queryFn: () => fetchPerson(id),
   })
   const { control, handleSubmit } = useForm()
-  const { mutate } = useMutation((values) => updatePerson(values))
+  const { mutate } = useMutation({
+    mutationFn: (values) => updatePerson(values),
+  })
 
   if (data) {
     return (

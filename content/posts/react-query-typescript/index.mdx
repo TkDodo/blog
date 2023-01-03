@@ -73,7 +73,7 @@ The TypeScript section in the [official docs](https://react-query.tanstack.com/t
 
 ```ts:title=explicit-generics
 function useGroups() {
-  return useQuery<Group[], Error>({ queryKey: 'groups', queryFn: fetchGroups })
+  return useQuery<Group[], Error>({ queryKey: ['groups'], queryFn: fetchGroups })
 }
 ```
 
@@ -204,7 +204,7 @@ function useGroups() {
 // ✅ data will be `number | undefined` here
 function useGroupCount() {
   return useQuery({
-    queryKey: 'groups',
+    queryKey: ['groups'],
     queryFn: fetchGroups,
     select: (groups) => groups.length,
   })

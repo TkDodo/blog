@@ -151,7 +151,7 @@ const fetchProjects = ({ pageParam = 0 }) =>
   fetch('/api/projects?cursor=' + pageParam)
 
 useInfiniteQuery({
-  queryKey: 'projects',
+  queryKey: ['projects'],
   queryFn: fetchProjects,
   getNextPageParam: (lastPage) => lastPage.nextCursor,
 })

@@ -157,7 +157,7 @@ Yes, Query Keys can be a string, too, but to keep things unified, I like to alwa
 
 ```ts:title=always-use-array-keys
 // 🚨 will be transformed to ['todos'] anyhow
-useQuery({ queryKey: 'todos' })
+useQuery({ queryKey: ['todos'] })
 // ✅
 useQuery({ queryKey: ['todos'] })
 ```
