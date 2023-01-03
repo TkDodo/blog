@@ -68,16 +68,19 @@ Let's quickly have a look at what these three points mean before showing you how
 
 Internally, the Query Cache is just a JavaScript object, where the keys are serialized Query Keys and the values are your Query Data plus meta information. The keys are hashed in a [deterministic way](https://react-query.tanstack.com/guides/query-keys#query-keys-are-hashed-deterministically), so you can use objects as well (on the top level, keys have to be strings or arrays though).
 
-The most important part is that keys need to be _unique_ for your queries. If React Query finds an entry for a key in the cache, it will use it. Please also be aware that you cannot use the same key for _useQuery_ _and_ _useInfiniteQuery_. There is, after all, only _one_ Query Cache, and you would share the data between these two. That is not good because infinite queries have a fundamentally different structure than "normal" queries.
+The most important part is that keys need to be _unique_ for your queries. If React Query finds an entry for a key in the cache, it will use it. Please also be aware that you cannot use the same key for `useQuery` _and_ `useInfiniteQuery`. There is, after all, only _one_ Query Cache, and you would share the data between these two. That is not good because infinite queries have a fundamentally different structure than "normal" queries.
 
 ```ts:title=dont-mix-keys
-useQuery(['todos'], fetchTodos)
+useQuery({ queryKey: ['todos'], queryFn: fetchTodos })
 
 // 🚨 this won't work
-useInfiniteQuery(['todos'], fetchInfiniteTodos)
+useInfiniteQuery({ queryKey: ['todos'], queryFn: fetchInfiniteTodos })
 
 // ✅ choose something else instead
-useInfiniteQuery(['infiniteTodos'], fetchInfiniteTodos)
+useInfiniteQuery({
+  queryKey: ['infiniteTodos'],
+  queryFn: fetchInfiniteTodos,
+})
 ```
 
 ## Automatic Refetching
@@ -90,7 +93,10 @@ I have a query, it fetches some data. Now I click this button and I want to refe
 
 ```jsx:title=imperative-refetch
 function Component() {
-  const { data, refetch } = useQuery(['todos'], fetchTodos)
+  const { data, refetch } = useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodos,
+  })
 
   // ❓ how do I pass parameters to refetch ❓
   return <Filters onApply={() => refetch(???)} />
@@ -99,21 +105,24 @@ function Component() {
 
 The answer is: **You don't.**
 
-That's not what _refetch_ is for - it's for refetching _with the same parameters_.
+That's not what `refetch` is for - it's for refetching _with the same parameters_.
 
 If you have some _state_ that changes your data, all you need to do is to put it in the Query Key, because React Query will trigger a refetch automatically whenever the key changes. So when you want to apply your filters, just change your _client state_:
 
-```jsx:title=query-key-drives-the-query {2-3, 5}
+```jsx:title=query-key-drives-the-query
 function Component() {
   const [filters, setFilters] = React.useState()
-  const { data } = useQuery(['todos', filters], () => fetchTodos(filters))
+  const { data } = useQuery({
+    queryKey: ['todos', filters],
+    queryFn: () => fetchTodos(filters),
+  })
 
   // ✅ set local state and let it "drive" the query
   return <Filters onApply={setFilters} />
 }
 ```
 
-The re-render triggered by the _setFilters_ update will pass a different Query Key to React Query, which will make it refetch. I have a more in-depth example in [#1: Practical React Query - Treat the query key like a dependency array](practical-react-query#treat-the-query-key-like-a-dependency-array).
+The re-render triggered by the `setFilters` update will pass a different Query Key to React Query, which will make it refetch. I have a more in-depth example in [#1: Practical React Query - Treat the query key like a dependency array](practical-react-query#treat-the-query-key-like-a-dependency-array).
 
 ## Manual Interaction
 
@@ -148,9 +157,9 @@ Yes, Query Keys can be a string, too, but to keep things unified, I like to alwa
 
 ```ts:title=always-use-array-keys
 // 🚨 will be transformed to ['todos'] anyhow
-useQuery('todos')
+useQuery({ queryKey: 'todos' })
 // ✅
-useQuery(['todos'])
+useQuery({ queryKey: ['todos'] })
 ```
 
 **Update**: With React Query v4, all keys need to be Arrays.
@@ -171,7 +180,8 @@ With that structure, I can invalidate everything todo related with `['todos']`, 
 
 ```js:title=updates-from-mutation-responses
 function useUpdateTitle() {
-  return useMutation(updateTitle, {
+  return useMutation({
+    mutationFn: updateTitle,
     onSuccess: (newTodo) => {
       // ✅ update the todo detail
       queryClient.setQueryData(['todos', 'detail', newTodo.id], newTodo)
@@ -187,9 +197,10 @@ function useUpdateTitle() {
 
 This might not work if the structure of lists and details differ a lot, so alternatively, you can also of course just invalidate all the lists instead:
 
-```js:title=invalidate-all-lists {6-7}
+```js:title=invalidate-all-lists {7-8}
 function useUpdateTitle() {
-  return useMutation(updateTitle, {
+  return useMutation({
+    mutationFn: updateTitle,
     onSuccess: (newTodo) => {
       queryClient.setQueryData(['todos', 'detail', newTodo.id], newTodo)
 
@@ -200,15 +211,16 @@ function useUpdateTitle() {
 }
 ```
 
-If you know which list you are currently on, e.g. by reading the filters from the url, and can therefore construct the exact Query Key, you can also combine this two methods and call _setQueryData_ on your list and invalidate all the others:
+If you know which list you are currently on, e.g. by reading the filters from the url, and can therefore construct the exact Query Key, you can also combine this two methods and call `setQueryData` on your list and invalidate all the others:
 
-```js:title=combine {10-19}
+```js:title=combine {11-20}
 function useUpdateTitle() {
   // imagine a custom hook that returns the current filters,
   // stored in the url
   const { filters } = useFilterParams()
 
-  return useMutation(updateTitle, {
+  return useMutation({
+    mutationFn: updateTitle,
     onSuccess: (newTodo) => {
       queryClient.setQueryData(['todos', 'detail', newTodo.id], newTodo)
 
@@ -227,7 +239,7 @@ function useUpdateTitle() {
 }
 ```
 
-**Update**: In v4, _refetchActive_ has been replaced with _refetchType_. In the above example, that would be `refetchType: 'none'`, because we don't want to refetch anything.
+**Update**: In v4, `refetchActive` has been replaced with `refetchType`. In the above example, that would be `refetchType: 'none'`, because we don't want to refetch anything.
 
 ### Use Query Key factories
 
@@ -249,13 +261,16 @@ This gives me a lot of flexibility, as each level builds on top of another, but 
 
 ```ts:title=examples
 // 🕺 remove everything related to the todos feature
-queryClient.removeQueries(todoKeys.all)
+queryClient.removeQueries({ queryKey: todoKeys.all })
 
 // 🚀 invalidate all the lists
-queryClient.invalidateQueries(todoKeys.lists())
+queryClient.invalidateQueries({ queryKey: todoKeys.lists() })
 
 // 🙌 prefetch a single todo
-queryClient.prefetchQueries(todoKeys.detail(id), () => fetchTodo(id))
+queryClient.prefetchQueries({
+  queryKey: todoKeys.detail(id),
+  queryFn: () => fetchTodo(id),
+})
 ```
 
 ---
