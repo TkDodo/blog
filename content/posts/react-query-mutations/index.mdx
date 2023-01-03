@@ -143,7 +143,7 @@ const useAddComment = (id) => {
       axios.post(`/posts/${id}/comments`, newComment),
     onSuccess: () => {
       // ✅ refetch the comments list for our blog post
-      queryClient.invalidateQueries(['posts', id, 'comments'])
+      queryClient.invalidateQueries({ queryKey: ['posts', id, 'comments'] })
     },
   })
 }
@@ -311,7 +311,7 @@ const useUpdateTodo = () =>
     mutationFn: updateTodo,
     // ✅ always invalidate the todo list
     onSuccess: () => {
-      queryClient.invalidateQueries(['todos', 'list'])
+      queryClient.invalidateQueries({ queryKey: ['todos', 'list'] })
     },
   })
 

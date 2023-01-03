@@ -205,7 +205,7 @@ function useUpdateTitle() {
       queryClient.setQueryData(['todos', 'detail', newTodo.id], newTodo)
 
       // ✅ just invalidate all the lists
-      queryClient.invalidateQueries(['todos', 'list'])
+      queryClient.invalidateQueries({ queryKey: ['todos', 'list'] })
     },
   })
 }

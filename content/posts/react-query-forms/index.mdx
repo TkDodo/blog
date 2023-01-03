@@ -263,7 +263,7 @@ const { mutate, isLoading } = useMutation({
 
 If you do not redirect to a different page right after the form submission, it might be a good idea to reset the form _after_ the invalidation has completed. As described in [Mastering Mutations](mastering-mutations-in-react-query#some-callbacks-might-not-fire), you'd likely want to do that in the `onSuccess` callback of `mutate`. This also works best if you keep state seperated, as you only need to reset to `undefined` in order for the server state to be picked up again:
 
-```js:title=reset-form {8-13,18-21}
+```js:title=reset-form {9-14,19-22}
 function PersonDetail({ id }) {
   const queryClient = useQueryClient()
   const { data } = useQuery({
@@ -275,7 +275,8 @@ function PersonDetail({ id }) {
     mutationFn: updatePerson,
     // ✅ return Promise from invalidation
     // so that it will be awaited
-    onSuccess: () => queryClient.invalidateQueries(['person', id]),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['person', id] }),
   })
 
   if (data) {
