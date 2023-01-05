@@ -267,7 +267,7 @@ export const action = async ({ request, params }) => {
 }
 ```
 
-Actions invalidate loaders, but because we've se tup our loaders to always return data from the cache, we won't see any updates unless we somehow invalidate the cache. It's just one line of code really:
+Actions invalidate loaders, but because we've set up our loaders to always return data from the cache, we won't see any updates unless we somehow invalidate the cache. It's just one line of code really:
 
 ```jsx:title=src/routes/edit.jsx {7}
 export const action =
