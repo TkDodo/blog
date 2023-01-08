@@ -87,8 +87,8 @@ const query = useQuery<Todo>({
   queryFn: fetchTodo,
 })
 
-response.data
-//       ^?(property) data: Todo | undefined
+query.data
+//    ^?(property) data: Todo | undefined
 ```
 
 The main problem here is that `useQuery` has four generics. By providing only one of them manually, the other three fall back to their default values. You can read about why that's bad in [#6: React Query and TypeScript](react-query-and-type-script#the-four-generics).
