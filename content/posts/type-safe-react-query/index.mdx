@@ -108,7 +108,7 @@ The better way is to type the `fetchTodo` function itself:
 type Todo = { id: number; name: string; done: boolean }
 
 // ✅ typing the return value of fetchTodo
-const fetchTodo: Promise<Todo> = async (id: number) => {
+const fetchTodo = async (id: number): Promise<Todo> => {
   const response = await axios.get(`/todos/${id}`)
   return response.data
 }
