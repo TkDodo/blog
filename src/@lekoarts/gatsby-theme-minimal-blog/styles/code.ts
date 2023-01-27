@@ -5,6 +5,9 @@ export default {
   pre: {
     fontFamily: 'ml, monospace',
   },
+  '.react-live-wrapper > *': {
+    fontFamily: 'ml, monospace !important',
+  },
   code: {
     fontFamily: 'ml, monospace',
   },
