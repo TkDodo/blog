@@ -1,4 +1,5 @@
 import baseCode from '@lekoarts/gatsby-theme-minimal-blog/src/styles/code'
+import { tint } from '@theme-ui/color'
 
 export default {
   pre: {
@@ -22,6 +23,15 @@ export default {
     background: `#629CBC !important`,
   },
   ...baseCode,
+  '.code-title': {
+    backgroundColor: tint(`primary`, 0.7),
+    color: `black`,
+    fontSize: 0,
+    px: 3,
+    py: 2,
+    fontFamily: 'ml, monospace',
+    mx: [0, 0, 0, -3],
+  },
   'p > code, li > code': {
     bg: `codebg`,
     color: `text`,
