@@ -44,7 +44,7 @@ const theme = {
   },
   colors: {
     ...baseTheme.colors,
-    codebg: 'var(--theme-ui-colors-gray-2)',
+    backgroundSecondary: 'var(--theme-ui-colors-gray-2)',
     primary: '#a10f15',
     modes: {
       ...baseTheme.colors.modes,
@@ -55,7 +55,7 @@ const theme = {
       dark: {
         ...baseTheme.colors.modes.dark,
         primary: '#f0666b',
-        codebg: 'var(--theme-ui-colors-gray-8)',
+        backgroundSecondary: 'var(--theme-ui-colors-gray-8)',
       },
     },
   },

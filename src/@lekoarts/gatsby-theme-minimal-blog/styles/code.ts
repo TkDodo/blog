@@ -36,7 +36,7 @@ export default {
     mx: [0, 0, 0, -3],
   },
   'p > code, li > code': {
-    bg: `codebg`,
+    bg: `backgroundSecondary`,
     color: `text`,
     padding: '0.2rem 0.3rem',
     borderRadius: `6px`,
