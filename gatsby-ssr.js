@@ -33,6 +33,13 @@ export const onRenderBody = ({ setPreBodyComponents }) => {
 
 const fontUrl = `${withPrefix('fonts/Inter.woff2')}`
 const font = `@font-face{font-family:'Inter';font-style:normal;font-weight:100;font-display:block;src:url(${fontUrl}) format('woff2');}@font-face{font-family:'Inter';font-style:normal;font-weight:200;font-display:block;src:url(${fontUrl}) format('woff2');}@font-face{font-family:'Inter';font-style:normal;font-weight:300;font-display:block;src:url(${fontUrl}) format('woff2');}@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:block;src:url(${fontUrl}) format('woff2');}@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:block;src:url(${fontUrl}) format('woff2');}@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:block;src:url(${fontUrl}) format('woff2');}@font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:block;src:url(${fontUrl}) format('woff2');}@font-face{font-family:'Inter';font-style:normal;font-weight:800;font-display:block;src:url(${fontUrl}) format('woff2');}@font-face{font-family:'Inter';font-style:normal;font-weight:900;font-display:block;src:url(${fontUrl}) format('woff2');}`
+const codeFontItalicUrl = `${withPrefix(
+  'fonts/MonoLisaVariableItalic.woff2'
+)}`
+const codeFontNormalUrl = `${withPrefix(
+  'fonts/MonoLisaVariableNormal.woff2'
+)}`
+const fontMl = `@font-face{font-family:'ml';font-style:normal;src:url(${codeFontNormalUrl}) format('woff2');}@font-face{font-family:'ml';font-style:italic;src:url(${codeFontItalicUrl}) format('woff2');}`
 
 export const onPreRenderHTML = ({
   getHeadComponents,
@@ -51,6 +58,28 @@ export const onPreRenderHTML = ({
       key: 'font-face.inter',
       dangerouslySetInnerHTML: {
         __html: font,
+      },
+    }),
+    React.createElement('link', {
+      key: 'font-ml',
+      rel: 'preload',
+      href: codeFontNormalUrl,
+      as: 'font',
+      type: 'font/woff2',
+      crossOrigin: 'anonymous',
+    }),
+    React.createElement('link', {
+      key: 'font-ml-italic',
+      rel: 'preload',
+      href: codeFontItalicUrl,
+      as: 'font',
+      type: 'font/woff2',
+      crossOrigin: 'anonymous',
+    }),
+    React.createElement('style', {
+      key: 'font-face.ml',
+      dangerouslySetInnerHTML: {
+        __html: fontMl,
       },
     }),
     ...getHeadComponents(),

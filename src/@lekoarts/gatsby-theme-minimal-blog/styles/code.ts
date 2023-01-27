@@ -1,6 +1,12 @@
 import baseCode from '@lekoarts/gatsby-theme-minimal-blog/src/styles/code'
 
 export default {
+  pre: {
+    fontFamily: 'ml, monospace',
+  },
+  code: {
+    fontFamily: 'ml, monospace',
+  },
   'pre[class~="language-java"]:before': {
     content: `"scala"`,
     background: `#dc322f !important`,
