@@ -1,6 +1,8 @@
 import * as React from 'react'
 import Giscus from '@giscus/react'
-import { useColorMode, Box } from 'theme-ui'
+import { StaticImage } from 'gatsby-plugin-image'
+import { useColorMode } from 'theme-ui'
+import { Link, Flex } from '@theme-ui/components'
 
 const id = 'inject-comments'
 
@@ -30,4 +32,23 @@ const Comments = () => {
   ) : null
 }
 
-export default Comments
+const WithBytes = () => {
+  return (
+    <Flex sx={{ flexDirection: 'column', gap: 3 }}>
+      <Link
+        href="https://bytes.dev/?r=dom"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <StaticImage
+          placeholder="blurred"
+          src="../../static/images/bytes.jpg"
+          alt="Bytes - the JavaScript Newsletter that doesn't suck"
+        />
+      </Link>
+      <Comments />
+    </Flex>
+  )
+}
+
+export default WithBytes
