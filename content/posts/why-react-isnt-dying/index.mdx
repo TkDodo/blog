@@ -1,0 +1,79 @@
+---
+title: Why React isn't dying
+description:
+date: 2023-01-28
+banner: ./dying.jpeg
+tags:
+  - ReactJs
+  - State of React
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+
+<img src="./dying.jpeg" alt="The Zustand bear logo" />
+
+<Attribution
+  name="Silvestri Matteo"
+  url="https://unsplash.com/@silvestrimatteo"
+/>
+
+<Translations>{[]}</Translations>
+
+Last Thursday, I took part in the [State of React Ecosystem](https://www.youtube.com/watch?v=_nGuk2Gs2oc) Panel Discussion, where we mainly talked about one question: "Is React dying" ? I couldn't finish my train of thought due to a StreamYard outage, so I thought I'd follow this up with a blogpost. So, why would React be dying?
+
+## Twitter bubble
+
+There's a bit of fuzz, mainly on Twitter, about React dying and other libraries being better than React, and that you're doing something wrong or missing out if you're choosing React right now.
+
+The truth is, my bubble is full of tech influencers who strive to live on the very edge of things, where you constantly have to lookout for the next big thing. Things are pronounced dead regularly, and I think it's no different this time.
+
+To understand why React is here to stay, we have to look back a bit:
+
+## A bit of history - Looking back
+
+React has been around for almost 10 years now, and it has pioneered so many things that we now take for granted. This includes the two biggest reasons why I think react has "won" in the first place: **Component Driven Development** and **JSX** - two things that most new tech now embraces as well.
+
+Also, React gave us a predictable way to render our UI. Before that, everything we used was a mess (compared to today's standards). We had the choice to either update the DOM manually in an imperative spaghetti mess (jQuery 👀) or wrestle with two-way data binding and a weird templating syntax (👋 angular).
+
+So React allowed us to abstract our UI into components and couple functionality (JS) with markup (HTML) in a declarative, reusable way. This was revolutionary at the time. When it came out, lots of people jumped ship rather fast, because React was _so much better_ than the given alternatives.
+
+## New horizons
+
+The new kids on the block try to take the good parts of React and use that to invent something that doesn't have its drawbacks. Things usually cited are performance, virtual dom overhead and a generally hard way to interact with the dom directly, e.g. for animations or a11y (refs 😭).
+
+However, being up against the top dog React will be very hard, for two reasons:
+
+### Growth loop
+
+Every day, there are so many people just starting out with web development. They look around for what is the best tech to learn right now to get a job. Something that pays the bills and is not terrible to work with. And everything points towards React. Companies have lots of existing React Applications, and are still choosing React for new stuff. It's an easy and safe choice.
+
+On the other hand, companies choose React because that's where all the developers are. You want to build something that can be maintained years from now - better not choose the next hype train that goes straight to nowhere or pick the next CoffeeScript. You want something battle tested that has stood the test of time - and no one got fired for choosing React.
+
+This loop goes on and on
+
+### Ecosystem
+
+It can take years to build a good ecosystem and community. Libraries and Frameworks that come out right now won't have everything figured out. It needs early adopters to figure things out, find and teach patterns and invent community solutions to problems and grow adoption.
+
+React is years ahead here.
+
+### The TanStack
+
+This is where the TanStack comes in. I really hope that the fact that the TanStack has all libraries built in a framework-agnostic way will help adoption of non-React libraries over time. Think about it: If you need to fetch some data, render a table and maybe virtualize it - you can do all of that with the TanStack. And if you know how to do this in React, you also already know how to do it in Solid, Svelte or Vue. Knowing the concepts is transferable knowledge. And it takes away a bunch of things you'd have to re-learn when moving to a different, newer tech, while retaining the same great developer experience.
+
+## Closing thoughts
+
+It's true that there are already solutions out there that are "better than React" in some aspects. More modern, more performant, different paradigms, "really reactive", ...
+
+But to break the growth loop, to get a lot of developers to move over, to build a large community and ecosystem, I think it will need something that's _a lot_ better than React to replace it. Just like React was so much better than the alternative when it came out.
+
+And we aren't there yet. React is still "good enough" for most things that are built right now. That doesn't mean it isn't worth trying. We need innovation. It might happen in React, or it might happen outside of it. Only time will tell.
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />
