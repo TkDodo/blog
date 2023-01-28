@@ -1,6 +1,9 @@
 import * as React from 'react'
 import { Flex, Badge, Link } from '@theme-ui/components'
 
+import MonoLisa from './MonoLisa'
+import HighlightBox from './HighlightBox'
+
 type Props = {
   children: ReadonlyArray<{ language: string; url: string }>
 }
@@ -43,4 +46,13 @@ const Translations = ({ children }: Props) => (
   </Flex>
 )
 
-export default Translations
+const TranslationsWrapper = ({ children }: Props) => {
+  return (
+    <HighlightBox>
+      <Translations>{children}</Translations>
+      <MonoLisa />
+    </HighlightBox>
+  )
+}
+
+export default TranslationsWrapper

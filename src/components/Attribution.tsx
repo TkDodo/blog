@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Divider, Link } from '@theme-ui/components'
+import { Link } from '@theme-ui/components'
 
 import SmallCentered from './SmallCentered'
 
@@ -17,7 +17,6 @@ const Attribution = ({ name, url, prefix = 'Photo by' }: Props) => (
         {name}
       </Link>
     </SmallCentered>
-    <Divider />
   </>
 )
 
