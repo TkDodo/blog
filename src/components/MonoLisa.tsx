@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Box, Link, Divider } from 'theme-ui'
+import { Box, Link } from 'theme-ui'
 
 const MonoLisa = () => {
   return (
@@ -8,7 +8,7 @@ const MonoLisa = () => {
 
       <Box>
         Check out{' '}
-        <Link target="blank" href="https://www.monolisa.dev/">
+        <Link target="_blank" href="https://www.monolisa.dev/">
           monolisa.dev
         </Link>
       </Box>
