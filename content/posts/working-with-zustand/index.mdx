@@ -61,7 +61,8 @@ This is my number one tip for working with... everything in React, really. I've 
 const useBearStore = create((set) => ({
   bears: 0,
   fish: 0,
-  increasePopulation: (by) => set((state) => ({ bears: state.bears + by })),
+  increasePopulation: (by) =>
+    set((state) => ({ bears: state.bears + by })),
   eatFish: () => set((state) => ({ fish: state.fish - 1 })),
   removeAllBears: () => set({ bears: 0 }),
 }))
@@ -142,7 +143,8 @@ export const useBears = () => useBearStore((state) => state.bears)
 export const useFish = () => useBearStore((state) => state.fish)
 
 // 🎉 one selector for all our actions
-export const useBearActions = () => useBearStore((state) => state.actions)
+export const useBearActions = () =>
+  useBearStore((state) => state.actions)
 ```
 
 Note that it's totally fine to now destruct actions and only "use" one of them:

@@ -246,23 +246,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://github.com/PabloRosales"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Pablo Rosales</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/2329117?s=300"
-            height="300"
-            alt="PabloRosales"
-          />
-        </Link>
-        <div>
-          <Text>🎗 Supporter ($10 a month)</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://github.com/fedorish"
           target="_blank"
           rel="noopener noreferrer"
