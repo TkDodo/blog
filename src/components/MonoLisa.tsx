@@ -8,7 +8,10 @@ const MonoLisa = () => {
 
       <Box>
         Check out{' '}
-        <Link target="_blank" href="https://www.monolisa.dev/">
+        <Link
+          target="_blank"
+          href="https://a.paddle.com/v2/click/105822/165267?link=2447"
+        >
           monolisa.dev
         </Link>
       </Box>
