@@ -32,9 +32,16 @@ const Comments = () => {
   ) : null
 }
 
-const WithBytes = () => {
+const WithAds = () => {
   return (
     <Flex sx={{ flexDirection: 'column', gap: 3 }}>
+      <div
+        data-ea-publisher="tkdodoeu"
+        className="flat adaptive"
+        data-ea-type="image"
+        data-ea-style="stickybox"
+        id="blog-ad"
+      />
       <Link
         href="https://bytes.dev/?r=dom"
         target="_blank"
@@ -51,4 +58,4 @@ const WithBytes = () => {
   )
 }
 
-export default WithBytes
+export default WithAds
