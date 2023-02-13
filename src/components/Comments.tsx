@@ -4,6 +4,9 @@ import { StaticImage } from 'gatsby-plugin-image'
 import { useColorMode } from 'theme-ui'
 import { Link, Flex } from '@theme-ui/components'
 
+import HighlightBox from './HighlightBox'
+import MonoLisa from './MonoLisa'
+
 const id = 'inject-comments'
 
 const Comments = () => {
@@ -35,13 +38,9 @@ const Comments = () => {
 const WithAds = () => {
   return (
     <Flex sx={{ flexDirection: 'column', gap: 3 }}>
-      <div
-        data-ea-publisher="tkdodoeu"
-        className="flat adaptive"
-        data-ea-type="image"
-        data-ea-style="stickybox"
-        id="blog-ad"
-      />
+      <HighlightBox>
+        <MonoLisa />
+      </HighlightBox>
       <Link
         href="https://bytes.dev/?r=dom"
         target="_blank"
