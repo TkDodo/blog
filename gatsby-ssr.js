@@ -85,7 +85,7 @@ export const onPreRenderHTML = ({
     React.createElement('script', {
       key: 'ethical-ads',
       async: true,
-      src: 'https://media.ethicalads.io/media/client/ethicalads.min.js',
+      src: '/js/e.js',
     }),
     ...getHeadComponents(),
   ]
