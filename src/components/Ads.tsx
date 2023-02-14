@@ -18,8 +18,8 @@ const injectScript = (src: string, id: string, onload: () => void) => {
 }
 
 const Ads = () => {
-  React.useLayoutEffect(() => {
-    injectScript(
+  React.useEffect(() => {
+    return injectScript(
       'https://media.ethicalads.io/media/client/ethicalads.min.js',
       'ethical-ads',
       () => {
