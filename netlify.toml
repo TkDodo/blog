@@ -17,8 +17,3 @@
   from = "/api/event"
   to = "https://plausible.io/api/event"
   status = 202
-
-[[redirects]]
-  from = "/js/e.js"
-  to = "https://media.ethicalads.io/media/client/ethicalads.min.js"
-  status = 200
