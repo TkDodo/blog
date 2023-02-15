@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Flex, Badge, Link } from '@theme-ui/components'
 
-import MonoLisa from './MonoLisa'
+import Ads from './Ads'
 import HighlightBox from './HighlightBox'
 
 type Props = {
@@ -48,10 +48,12 @@ const Translations = ({ children }: Props) => (
 
 const TranslationsWrapper = ({ children }: Props) => {
   return (
-    <HighlightBox>
-      <Translations>{children}</Translations>
-      <MonoLisa />
-    </HighlightBox>
+    <Flex sx={{ flexDirection: 'column', gap: 1 }}>
+      <Ads />
+      <HighlightBox>
+        <Translations>{children}</Translations>
+      </HighlightBox>
+    </Flex>
   )
 }
 
