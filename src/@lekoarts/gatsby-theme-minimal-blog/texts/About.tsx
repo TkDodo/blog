@@ -22,19 +22,20 @@ const About = () => (
       </p>
       <p style={{ marginBottom: 0 }}>
         <Text>
-          I'm a Web Developer with a passion for ReactJs. I ❤️ static types,
-          especially TypeScript.
+          I'm a Web Developer with a passion for ReactJs. I ❤️ static
+          types, especially TypeScript.
         </Text>
       </p>
       <p style={{ marginBottom: 0 }}>
         <Text>
-          I currently co-maintain the popular async state management library{' '}
+          I currently co-maintain the popular async state management
+          library{' '}
           <Link
-            href="https://github.com/tannerlinsley/react-query"
+            href="https://github.com/TanStack/query"
             target="_blank"
             rel="noreferrer noopener"
           >
-            react-query
+            TanStack/query
           </Link>
           , as well as{' '}
           <Link
@@ -55,8 +56,8 @@ const About = () => (
       </p>
       <p style={{ marginBottom: 0 }}>
         <Text>
-          If you enjoy my blog posts or want to support my open source work,
-          you can{' '}
+          If you enjoy my blog posts or want to support my open source
+          work, you can{' '}
           <Link
             href="https://github.com/sponsors/TkDodo"
             target="_blank"
