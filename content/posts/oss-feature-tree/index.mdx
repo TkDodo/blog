@@ -41,7 +41,7 @@ This is different for a "holistic" library like React Query. Most code lives on 
 
 Also, bundle size is not the only reason why a slim API surface matters more for holistic libraries. For `remeda`, it doesn't matter if the library exports 25 or 125 functions. You'll have to look at the docs to see what it supports anyway. Every function is conceptually its own thing that needs to be learned. They are also mostly straight-forward - you can quickly grok by their name and parameters what they're doing.
 
-React Query on the other hand has effectively two "things" you want to do: queries (`useQuery`) and mutation (`useMutation`). You'll likely be doing them both, so you are consuming almost the whole lib every time. That means the API will get more complex over time if we add more features. Looking at `useQuery`, it accept 28 options and returns an object with 24 fields. That's huge, and it might discourage newcomers because of perceived complexity.
+React Query on the other hand has effectively two "things" you want to do: queries (`useQuery`) and mutation (`useMutation`). You'll likely be doing them both, so you are consuming almost the whole lib every time. That means the API will get more complex over time if we add more features. Looking at `useQuery`, it accepts 28 options and returns an object with 24 fields. That's huge, and it might discourage newcomers because of perceived complexity.
 
 ---
 
@@ -51,11 +51,11 @@ So with every new API or feature that we introduce, we have to carefully conside
 
 Is this a feature that many people request, or is it something that only one person wants? Naturally, the more people think a feature is a good idea, the more we'll think about adding it. That still doesn't mean that it's always a good idea.
 
-One feature where I gave in to many requests is the [refetchPage](https://tanstack.com/query/v4/docs/react/guides/infinite-queries#refetchpage) option, which, in hindsight, was a mistake. It's not a good API, and it introduces more problems than it solves. That's why it's so important that features we add are in-ine with our vision:
+One feature where I gave in to many requests is the [refetchPage](https://tanstack.com/query/v4/docs/react/guides/infinite-queries#refetchpage) option, which, in hindsight, was a mistake. It's not a good API, and it introduces more problems than it solves. That's why it's so important that the features we add are in-line with our vision:
 
 ### Is the feature in-line with the vision?
 
-Basically, the question here is: Does it make sense for us to have that feature, or would this encourage anti-patterns? As an example, I've seen many request for a callback that is triggered whenever data is read from the cache - something like `onDataChanged`. You could use `onSuccess` for that, but `onSuccess` is tied to a fetch happening, and if you have `staleTime` set, this might not be the case:
+Basically, the question here is: Does it make sense for us to have that feature, or would this encourage anti-patterns? As an example, I've seen many requests for a callback that is triggered whenever data is read from the cache - something like `onDataChanged`. You could use `onSuccess` for that, but `onSuccess` is tied to a fetch happening, and if you have `staleTime` set, this might not be the case:
 
 ```ts:title=onSuccess-with-staleTime {6-9}
 const useTodo = (id: number) => {
