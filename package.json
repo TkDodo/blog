@@ -21,7 +21,6 @@
     "@giscus/react": "^2.0.2",
     "@lekoarts/gatsby-theme-minimal-blog": "^4.1.4",
     "@loadable/component": "^5.15.2",
-    "@weknow/gatsby-remark-twitter": "^0.2.3",
     "gatsby": "^4.7.1",
     "gatsby-plugin-image": "^2.21.0",
     "gatsby-plugin-feed": "^4.7.0",

@@ -45,6 +45,7 @@ const theme = {
   colors: {
     ...baseTheme.colors,
     backgroundSecondary: 'var(--theme-ui-colors-gray-2)',
+    twitterBlue: '#1d9bf0',
     primary: '#a10f15',
     modes: {
       ...baseTheme.colors.modes,
