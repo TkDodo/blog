@@ -11,6 +11,7 @@ tags:
 import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
+import Tweet, { AvatarLeeerob } from 'components/Tweet'
 
 <img src="./dying.jpeg" alt="The Zustand bear logo" />
 
@@ -78,7 +79,25 @@ And we aren't there yet. React is still "good enough" for most things that are b
 
 Actually, both might happen. It's not a given that you have one tech ruling them all. A monopoly is also not something to strive for. Competition helps everyone, especially users. We can already see how the rise of fine-grained reactivity influences existing libs like [Preact](https://preactjs.com/guide/v10/signals/).
 
-https://twitter.com/leeerob/status/1465702417513680897
+<Tweet
+  name="Lee Robinson"
+  handle="leeerob"
+  tweetId="1465702417513680897"
+  avatar={<AvatarLeeerob />}
+  date={new Date('2021-11-30')}
+>
+  <p>When there's competition in DevTools, developers win:</p>
+  <p>
+    ◆ Svelte is pushing React
+    <br />◆ Remix is pushing Next.js
+    <br />◆ Prisma is pushing ORMs
+    <br />◆ Deno is pushing Node.js
+    <br />◆ Supabase is pushing Firebase
+    <br />◆ esbuild / SWC are pushing JS tooling
+    <br />◆ Bun is pushing SWC
+  </p>
+  <p>What else?</p>
+</Tweet>
 
 It's exciting times for sure - but don't feel that you have to stay on top of the bleeding edge, that you have to learn everything the moment it comes out or that React isn't good enough.
 

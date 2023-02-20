@@ -13,6 +13,11 @@ tags:
 import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
+import Tweet, {
+  AvatarDiegohaz,
+  TweetImage,
+  UseEvent,
+} from 'components/Tweet'
 
 <img src="./silhouette-of-people-during-concert.jpeg" />
 
@@ -194,7 +199,28 @@ export const useDebouncedState = (callback, delay) => {
 
 This looks pretty clean to me, and if you want to have a user-land implementation of _useEvent_ right now, have a look at this implementation by [Diego Haz](https://twitter.com/diegohaz):
 
-https://twitter.com/diegohaz/status/1522868292301606912
+<Tweet
+  name="Haz"
+  handle="diegohaz"
+  tweetId="1522868292301606912"
+  avatar={<AvatarDiegohaz />}
+  date={new Date('2022-05-07')}
+>
+  <p>
+    Do you want to use the proposed `useEvent` hook now with TypeScript?
+  </p>
+  <p>
+    Here you go:{' '}
+    <Text color="var(--theme-ui-colors-twitterBlue)">
+      gist.github.com/diegohaz/69509...
+    </Text>
+  </p>
+  <p>
+    <TweetImage>
+      <UseEvent />
+    </TweetImage>
+  </p>
+</Tweet>
 
 You can use it until React ships their own hook, but be aware that you have to include the returned function in the dependency array because unlike the native implementation, the linter cannot know that the function is stable. I personally can't wait until this ships because it will simplify a lot of my code. 🙌
 

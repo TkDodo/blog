@@ -12,10 +12,14 @@ import Comments from 'components/Comments'
 import Highlight from 'components/Highlight'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
+import Tweet, { AvatarTkDodo } from 'components/Tweet'
 
 <img alt="Road to Refactoring" src="./road.jpeg" />
 
-<Attribution name="Jesse Bowser" url="https://unsplash.com/@jessebowser" />
+<Attribution
+  name="Jesse Bowser"
+  url="https://unsplash.com/@jessebowser"
+/>
 
 - <b>#1: Don't mix refactorings with hotfixes</b>
 - [#2: Always provide customer value](always-provide-customer-value)
@@ -61,7 +65,30 @@ And make sure that all other quality gates that we have set up still pass. We su
 
 This is the flow I usually take when getting a bug report:
 
-https://twitter.com/TkDodo/status/1462821229841338381
+<Tweet
+  name="Dominik 🇺🇦"
+  handle="TkDodo"
+  tweetId="1462821229841338381"
+  avatar={<AvatarTkDodo />}
+  date={new Date('2021-11-22')}
+>
+  <p>
+    This is the best flow:
+    <br />
+    🐞 find a bug
+    <br />
+    🕵️‍♂️ investigate it
+    <br />⇆ reproduce it
+    <br />
+    🧪 write a failing test for it
+    <br />
+    💻 fix it
+    <br />
+    🟢 see the green test
+    <br />
+    🚀 ship it
+  </p>
+</Tweet>
 
 Writing a failing test case _before_ you start fixing the issue is something I can really recommend, as it will ensure that:
 

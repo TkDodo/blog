@@ -10,6 +10,7 @@ tags:
 
 import Comments from 'components/Comments'
 import Translations from 'components/Translations'
+import Tweet, { AvatarSophiebits } from 'components/Tweet'
 
 <img src="./use-state-pitfalls.png" />
 
@@ -162,9 +163,30 @@ So I'd like to postulate the following:
 
 <p style="padding-left: 3rem; margin-top: -1rem">— TkDodo</p>
 
-This is loosely based on what @sophiebits posted recently on twitter:
+This is loosely based on what [@sophiebits](https://twitter.com/sophiebits) posted recently on twitter:
 
-https://twitter.com/sophiebits/status/1293710971274289152
+<Tweet
+  name="ms. sophie bites"
+  handle="AvatarSophiebits"
+  tweetId="1293710971274289152"
+  avatar={<AvatarSophiebits />}
+  date={new Date('2020-08-13')}
+>
+  <p>
+  WTB a lint rule that detects
+  </p>
+  <p>
+  <div dangerouslySetInnerHTML={{ __html: "const [processedData, setProcessedData] = useState();" }} />
+  <div dangerouslySetInnerHTML={{ __html: "useEffect(() => {" }} />
+  <div dangerouslySetInnerHTML={{ __html: "&nbsp;&nbsp;let processed = /* do something with data */;" }} />
+  <div dangerouslySetInnerHTML={{ __html: "&nbsp;&nbsp;setProcessedData(processed);" }} />
+  <div dangerouslySetInnerHTML={{ __html: "}, [data]);" }} />
+  </p>
+  <p>
+and tells you to use useMemo instead.
+  </p>
+
+</Tweet>
 
 This is solid advice, and I'd go even further and suggest that unless we have proven that the calculation is expensive,
 I wouldn't even bother to memoize it. Don't prematurely optimize, always measure first.
