@@ -37,6 +37,101 @@ export const AvatarTkDodo = () => (
   />
 )
 
+export const AvatarTannerlinsley = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/tannerlinsley.jpeg"
+    alt="Avatar for tannerlinsley"
+    placeholder="blurred"
+  />
+)
+
+export const AvatarSophiebits = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/sophiebits.jpeg"
+    alt="Avatar for sophiebits"
+    placeholder="blurred"
+  />
+)
+
+export const AvatarDiegohaz = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/diegohaz.jpeg"
+    alt="Avatar for diegohaz"
+    placeholder="blurred"
+  />
+)
+
+export const AvatarRyanflorence = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/ryanflorence.jpeg"
+    alt="Avatar for ryanflorence"
+    placeholder="blurred"
+  />
+)
+
+export const AvatarDanvdk = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/danvdk.jpeg"
+    alt="Avatar for danvdk"
+    placeholder="blurred"
+  />
+)
+
+export const AvatarAcemarke = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/acemarke.jpeg"
+    alt="Avatar for acemarke"
+    placeholder="blurred"
+  />
+)
+
+export const AvatarLeeerob = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/leeerob.jpeg"
+    alt="Avatar for leeerob"
+    placeholder="blurred"
+  />
+)
+
+export const TweetImage = ({
+  children,
+}: {
+  children: React.ReactNode
+}) => (
+  <Box
+    sx={{
+      '> *': {
+        borderRadius: '0.75rem',
+      },
+    }}
+  >
+    {children}
+  </Box>
+)
+
+export const TannerAndMe = () => (
+  <StaticImage
+    placeholder="blurred"
+    src="../../static/images/FVegS4nXwAQHskN.jpeg"
+    alt="Tanner and me"
+  />
+)
+
+export const UseEvent = () => (
+  <StaticImage
+    placeholder="blurred"
+    src="../../static/images/FSJNvbJWUAIVEGB.jpeg"
+    alt="Screenshot of code where a useEvent function is defined and used. Text version available on the link in the tweet."
+  />
+)
+
 function Tweet({
   tweetId,
   handle,

@@ -11,6 +11,12 @@ tags:
 import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
+import Tweet, {
+  AvatarTkDodo,
+  AvatarTannerlinsley,
+  TannerAndMe,
+  TweetImage,
+} from 'components/Tweet'
 
 <img alt="2022" src="./2022.jpeg" />
 
@@ -26,7 +32,26 @@ I went to my first ever in-person tech conference this year, [React Summit](http
 
 My personal highlight of the conference has to be that I got to meet [Tanner Linsley](https://twitter.com/tannerlinsley) in person for the first time. Having worked with him virtually for over one year, it was great to finally meet him.
 
-https://twitter.com/TkDodo/status/1537874053989552130
+<Tweet
+  name="Dominik 🇺🇦"
+  handle="TkDodo"
+  tweetId="1537874053989552130"
+  avatar={<AvatarTkDodo />}
+  date={new Date('2022-06-17')}
+>
+  <p>
+    And finally, I met up with the one and only{' '}
+    <Text color="var(--theme-ui-colors-twitterBlue)">
+      @tannerlinsley
+    </Text>{' '}
+    🎉
+  </p>
+  <p>
+    <TweetImage>
+      <TannerAndMe />
+    </TweetImage>
+  </p>
+</Tweet>
 
 Also, his talk [5 Years of Building React Table](https://www.youtube.com/watch?v=O4IWJcafX8c) was one of the most energetic and entertaining talks I have ever seen. Make sure to watch it if you haven't had the chance yet.
 
@@ -71,13 +96,47 @@ I dug up the original Discord conversation:
   src="./tanstack-query.png"
 />
 
-We wanted to get it ready before ReactSummit so that Tanner could announce v4 on stage, but it just wasn't enough time. We announced it anyways, and said that it would be ready within 30 days.
+We wanted to get it ready before ReactSummit so that Tanner could announce v4 on stage, but it just wasn't enough time. We announced it anyway, and said that it would be ready within 30 days.
 
 ### The release
 
 We managed to stick to that timeline, and v4.0.0 was released on [July 18th](https://github.com/TanStack/query/releases/tag/v4.0.0). 🚀
 
-https://twitter.com/tannerlinsley/status/1549785943837515776
+<Tweet
+  name="Tanner Linsley"
+  handle="tannerlinsley"
+  tweetId="1549785943837515776"
+  avatar={<AvatarTannerlinsley />}
+  date={new Date('2022-07-20')}
+>
+  <p>🎉🥳 Announcing TanStack Query v4!</p>
+  <p>
+    🪪 Name Change!
+    <br />
+    🌎 Framework Agnostic!
+    <br />✅ <Text color="var(--theme-ui-colors-twitterBlue)">
+      @reactjs
+    </Text> 🚧 <Text color="var(--theme-ui-colors-twitterBlue)">
+      @vuejs
+    </Text> 🔜 <Text color="var(--theme-ui-colors-twitterBlue)">
+      @solid_js
+    </Text> <Text color="var(--theme-ui-colors-twitterBlue)">
+      @sveltejs
+    </Text>
+    <br />
+    🔀 Concurrent React Support
+    <br />
+    🏕 Offline + Network Mode
+    <br />
+    💾 Stable Persisters
+    <br />
+    ⚡️ Tracked Queries Default / Perf+
+    <br />
+    📚 New Docs!
+    <br />
+    🙏 <Text color="var(--theme-ui-colors-twitterBlue)">@TkDodo</Text>
+  </p>
+</Tweet>
 
 But to be honest, the release wasn't very stable. To be quite frank, everything below 4.3.0 is nigh unusable. The monorepo and bundling changes that went with it introduced many things I didn't anticipate. Devtools were included in prod builds for some bundlers, and all the ESM changes were basically lost during the move. Version 4.0.0 didn't even have types published. 🙈
 

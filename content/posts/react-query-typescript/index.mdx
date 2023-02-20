@@ -12,6 +12,7 @@ tags:
 import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
+import Tweet, { AvatarDanvdk } from 'components/Tweet'
 
 <img src="./react-query-typescript.jpeg" />
 
@@ -261,7 +262,22 @@ if (groupsQuery.isSuccess) {
 
 This has nothing to do with React Query, it is just how TypeScript works. [@danvdk](https://twitter.com/danvdk) has a good explanation for this behaviour
 
-https://twitter.com/danvdk/status/1363614288103964672
+<Tweet
+  name="Dan Vanderkam"
+  handle="danvdk"
+  tweetId="1363614288103964672"
+  avatar={<AvatarDanvdk />}
+  date={new Date('2021-02-21')}
+>
+  <p>
+    The comment from{' '}
+    <Text color="var(--theme-ui-colors-twitterBlue)">@TkDodo</Text> is
+    exactly right, TypeScript does refinement on the types of individual
+    symbols. Once you split them apart, it can't keep track of the
+    relationship any more. Doing this in general would be
+    computationally hard. It can also be hard for people.
+  </p>
+</Tweet>
 
 **Update**: TypeScript 4.6 has added [control flow analysis for destructured discriminated unions](https://devblogs.microsoft.com/typescript/announcing-typescript-4-6/#cfa-destructured-discriminated-unions), which makes the above example work. So this is no longer an issue. 🙌
 
