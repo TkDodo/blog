@@ -71,6 +71,23 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
+          href="https://wagmi.sh/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>wagmi</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/109633172?s=300"
+            height="300"
+            alt="wagmi"
+          />
+        </Link>
+        <div>
+          <Text>🥉 Bronze ($50 a month)</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
           href="https://www.workflowgen.com/"
           target="_blank"
           rel="noopener noreferrer"
@@ -122,23 +139,6 @@ const Sponsors = () => (
         </Link>
         <div>
           <Text>🥳 Sponsor ($20 a month)</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
-          href="https://twitter.com/OhansEmmanuel"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Ohans Emmanuel</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/10930234?s=300"
-            height="300"
-            alt="Ohans Emmanuel"
-          />
-        </Link>
-        <div>
-          <Text>🎗 Supporter ($10 a month)</Text>
         </div>
       </Card>
       <Card>
@@ -246,23 +246,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://github.com/fedorish"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Patrik</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/22777727?s=300"
-            height="300"
-            alt="Patrik"
-          />
-        </Link>
-        <div>
-          <Text>🎗 Supporter ($10 a month)</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://www.bearstudio.fr/"
           target="_blank"
           rel="noopener noreferrer"
@@ -294,6 +277,40 @@ const Sponsors = () => (
         </Link>
         <div>
           <Text>🎗 Supporter ($10 a month)</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://twitter.com/ianvanschooten"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Ian VanSchooten</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/4616705?s=300"
+            height="300"
+            alt="Ian VanSchooten"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter ($10 a month)</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://gensdeconfiance.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>GensDeConfiance</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/17024329?s=300"
+            height="300"
+            alt="GensDeConfiance"
+          />
+        </Link>
+        <div>
+          <Text>🪙 Custom</Text>
         </div>
       </Card>
     </Grid>
