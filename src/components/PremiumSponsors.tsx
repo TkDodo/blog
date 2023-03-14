@@ -76,6 +76,28 @@ const PremiumSponsors = () => (
       </Link>
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img
+        src="https://avatars.githubusercontent.com/u/109633172?s=64"
+        alt="wagmi"
+        style={{
+          marginRight: '0.875rem',
+          width: '4rem',
+          height: '4rem',
+          borderRadius: '50%',
+        }}
+      />
+      <Link
+        href="https://wagmi.sh/"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          fontSize: '1.5rem',
+        }}
+      >
+        🥉 wagmi
+      </Link>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
       <StaticImage
         placeholder="blurred"
         src="../../static/images/workflowgen.png"
