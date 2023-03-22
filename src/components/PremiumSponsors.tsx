@@ -187,6 +187,29 @@ const PremiumSponsors = () => (
         🥳 Jonas Daniels
       </Link>
     </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <StaticImage
+        placeholder="blurred"
+        src="../../static/images/monolisa.jpeg"
+        alt="MonoLisa"
+        width={64}
+        height={64}
+        style={{
+          marginRight: '0.875rem',
+          borderRadius: '50%',
+        }}
+      />
+      <Link
+        href="https://www.monolisa.dev/"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          fontSize: '1.5rem',
+        }}
+      >
+        🥳 MonoLisa
+      </Link>
+    </div>
   </Grid>
 )
 

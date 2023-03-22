@@ -160,6 +160,24 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
+          href="https://www.monolisa.dev/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>MonoLisa</h2>
+          <StaticImage
+            placeholder="blurred"
+            src="../../static/images/monolisa.jpeg"
+            height={300}
+            alt="MonoLisa"
+          />
+        </Link>
+        <div>
+          <Text>🥳 Sponsor ($20 a month)</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
           href="https://jolvera.dev/"
           target="_blank"
           rel="noopener noreferrer"
