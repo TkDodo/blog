@@ -143,6 +143,23 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
+          href="https://github.com/jnsdls"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Jonas Daniels</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/8204858?s=300"
+            height="300"
+            alt="Jonas Daniels"
+          />
+        </Link>
+        <div>
+          <Text>🥳 Sponsor ($20 a month)</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
           href="https://jolvera.dev/"
           target="_blank"
           rel="noopener noreferrer"
@@ -169,23 +186,6 @@ const Sponsors = () => (
             src="https://avatars.githubusercontent.com/u/1541093?s=300"
             height="300"
             alt="Vianney Carel"
-          />
-        </Link>
-        <div>
-          <Text>🎗 Supporter ($10 a month)</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
-          href="https://invertase.io/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Invertase</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/13588260?s=300"
-            height="300"
-            alt="Invertase"
           />
         </Link>
         <div>

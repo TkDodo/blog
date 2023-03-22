@@ -165,6 +165,28 @@ const PremiumSponsors = () => (
         🥳 tRPC
       </Link>
     </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img
+        src="https://avatars.githubusercontent.com/u/8204858?s=64"
+        alt="Jonas Daniels"
+        style={{
+          marginRight: '0.875rem',
+          width: '4rem',
+          height: '4rem',
+          borderRadius: '50%',
+        }}
+      />
+      <Link
+        href="https://github.com/jnsdls"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          fontSize: '1.5rem',
+        }}
+      >
+        🥳 Jonas Daniels
+      </Link>
+    </div>
   </Grid>
 )
 
