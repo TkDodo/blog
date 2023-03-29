@@ -113,7 +113,7 @@ especially given that you'd also have to adapt the backend, which isn't quite so
 Yet I still envied the simplicity of how data fetching can look like on the frontend,
 including the handling of loading and error states. If only there were something similar in React for REST APIs...
 
-Enter [React Query](https://react-query.tanstack.com/).
+Enter [React Query](https://tanstack.com/query/latest/).
 
 Made by the open sourcerer [Tanner Linsley](https://github.com/tannerlinsley) in late 2019,
 React Query takes the good parts of Apollo and brings them to REST.
@@ -126,7 +126,7 @@ On top of that, it is also very flexible and lets you customize various settings
 This article is not going to be an introduction to React Query though.
 
 I think the docs are great at explaining Guides & Concepts,
-there are [Videos](https://react-query.tanstack.com/videos) from various Talks that you can watch,
+there are [Videos](https://tanstack.com/query/latest/docs/react/videos) from various Talks that you can watch,
 and Tanner has a React Query [Essentials Course](https://learn.tanstack.com/) you can take if you want to get familiar with the library.
 
 I want to focus more on some practical tips that go beyond the docs, which might be useful when you are already working with the library.
@@ -135,7 +135,7 @@ but also got involved in the React Query community, answering questions on Disco
 
 ### The Defaults explained
 
-I believe the React Query [Defaults](https://react-query.tanstack.com/guides/important-defaults)
+I believe the React Query [Defaults](https://tanstack.com/query/latest/docs/react/guides/important-defaults)
 are very well chosen, but they can catch you off guard from time to time, especially at the beginning.
 
 First of all: React Query does _not_ invoke the `queryFn` on every re-render, even with the default `staleTime` of zero.
@@ -161,14 +161,14 @@ Secondly, there seems to be a bit of confusion between `cacheTime` and `staleTim
 - StaleTime: The duration until a query transitions from fresh to stale.
   As long as the query is fresh, data will always be read from the cache only - no network request will happen!
   If the query is stale (which per default is: instantly), you will still get data from the cache,
-  but a background refetch can happen [under certain conditions](https://react-query.tanstack.com/guides/caching).
+  but a background refetch can happen [under certain conditions](https://tanstack.com/query/latest/docs/react/guides/caching).
 - CacheTime: The duration until inactive queries will be removed from the cache. This defaults to 5 minutes.
   Queries transition to the inactive state as soon as there are no observers registered,
   so when all components which use that query have unmounted.
 
 Most of the time, if you want to change one of these settings, it's the `staleTime` that needs adjusting.
 I have rarely ever needed to tamper with the `cacheTime`.
-There is a good [explanation by example](https://react-query.tanstack.com/guides/caching#a-detailed-caching-example)
+There is a good [explanation by example](https://tanstack.com/query/latest/docs/react/guides/caching#basic-example)
 in the docs as well.
 
 ### Use the React Query DevTools
@@ -222,7 +222,7 @@ Because the query key is used as a key for the cache, you will get a new cache e
 when you switch for the first time.
 This is certainly not ideal, so you can either use the `keepPreviousData` option for these cases,
 or, if possible, pre-fill the newly created cache entry with
-[initialData](https://react-query.tanstack.com/guides/initial-query-data#initial-data-from-cache).
+[initialData](https://tanstack.com/query/latest/docs/react/guides/initial-query-data#initial-data-from-cache).
 The above example is perfect for that, because we can do some client side pre-filtering on our todos:
 
 ```ts:title=pre-filtering {17-23}
@@ -307,7 +307,7 @@ The `useQuery` hook has many options that you can pass in to customize its behav
 and the `enabled` option is a very powerful one that _enables_ you to do many cool things (pun intended).
 Here is a short list of things that we were able to accomplish thanks to this option:
 
-- [Dependent Queries](https://react-query.tanstack.com/guides/dependent-queries)<br />
+- [Dependent Queries](https://tanstack.com/query/latest/docs/react/guides/dependent-queries)<br />
   Fetch data in one query and have a second query only run once we have successfully obtained data from the first query.
 - Turn queries on and off<br />
   We have one query that polls data regularly thanks to `refetchInterval`, but we can temporarily pause it if a Modal is open to avoid
