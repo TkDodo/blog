@@ -71,6 +71,24 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
+          href="https://www.sales-funnel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Meow Sales Funnel</h2>
+          <StaticImage
+            placeholder="blurred"
+            src="../../static/images/meow.svg"
+            height={300}
+            alt="Meow Sales Funnel"
+          />
+        </Link>
+        <div>
+          <Text>🐱 Custom</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
           href="https://www.cliffordfajardo.com/"
           target="_blank"
           rel="noopener noreferrer"
@@ -174,24 +192,6 @@ const Sponsors = () => (
         </Link>
         <div>
           <Text>🥳 Sponsor ($20 a month)</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
-          href="https://www.sales-funnel.app/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Meow Sales Funnel</h2>
-          <StaticImage
-            placeholder="blurred"
-            src="../../static/images/meow.svg"
-            height={300}
-            alt="Meow Sales Funnel"
-          />
-        </Link>
-        <div>
-          <Text>🪙 Custom</Text>
         </div>
       </Card>
       <Card>
