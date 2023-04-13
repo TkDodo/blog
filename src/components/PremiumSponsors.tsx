@@ -55,28 +55,6 @@ const PremiumSponsors = () => (
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <img
-        src="https://avatars.githubusercontent.com/u/6743796?s=64"
-        alt="Clifford Fajardo"
-        style={{
-          marginRight: '0.875rem',
-          width: '4rem',
-          height: '4rem',
-          borderRadius: '50%',
-        }}
-      />
-      <Link
-        href="https://www.cliffordfajardo.com/"
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          fontSize: '1.5rem',
-        }}
-      >
-        🥉 Clifford Fajardo
-      </Link>
-    </div>
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <img
         src="https://avatars.githubusercontent.com/u/109633172?s=64"
         alt="wagmi"
         style={{
@@ -95,6 +73,28 @@ const PremiumSponsors = () => (
         }}
       >
         🥉 wagmi
+      </Link>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img
+        src="https://avatars.githubusercontent.com/u/6743796?s=64"
+        alt="Clifford Fajardo"
+        style={{
+          marginRight: '0.875rem',
+          width: '4rem',
+          height: '4rem',
+          borderRadius: '50%',
+        }}
+      />
+      <Link
+        href="https://www.cliffordfajardo.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          fontSize: '1.5rem',
+        }}
+      >
+        🥳 Clifford Fajardo
       </Link>
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -208,6 +208,29 @@ const PremiumSponsors = () => (
         }}
       >
         🥳 MonoLisa
+      </Link>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <StaticImage
+        placeholder="blurred"
+        src="../../static/images/meow.svg"
+        alt="Meow Sales Funnel"
+        width={64}
+        height={64}
+        style={{
+          marginRight: '0.875rem',
+          borderRadius: '50%',
+        }}
+      />
+      <Link
+        href="https://www.sales-funnel.app/"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          fontSize: '1.5rem',
+        }}
+      >
+        🪙 Meow Sales Funnel
       </Link>
     </div>
   </Grid>

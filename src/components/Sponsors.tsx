@@ -54,23 +54,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://www.cliffordfajardo.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Clifford Fajardo</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/6743796?s=300"
-            height="300"
-            alt="Clifford Fajardo"
-          />
-        </Link>
-        <div>
-          <Text>🥉 Bronze ($50 a month)</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://wagmi.sh/"
           target="_blank"
           rel="noopener noreferrer"
@@ -84,6 +67,23 @@ const Sponsors = () => (
         </Link>
         <div>
           <Text>🥉 Bronze ($50 a month)</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://www.cliffordfajardo.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Clifford Fajardo</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/6743796?s=300"
+            height="300"
+            alt="Clifford Fajardo"
+          />
+        </Link>
+        <div>
+          <Text>🥳 Sponsor ($20 a month)</Text>
         </div>
       </Card>
       <Card>
@@ -174,6 +174,24 @@ const Sponsors = () => (
         </Link>
         <div>
           <Text>🥳 Sponsor ($20 a month)</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://www.sales-funnel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Meow Sales Funnel</h2>
+          <StaticImage
+            placeholder="blurred"
+            src="../../static/images/meow.svg"
+            height={300}
+            alt="Meow Sales Funnel"
+          />
+        </Link>
+        <div>
+          <Text>🪙 Custom</Text>
         </div>
       </Card>
       <Card>
