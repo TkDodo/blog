@@ -126,10 +126,10 @@ export function useTodos() {
   })
 
   React.useEffect(() => {
-    if (error) {
-      toast.error(error.message)
+    if (query.error) {
+      toast.error(query.error.message)
     }
-  }, [error])
+  }, [query.error])
 
   return query
 }
