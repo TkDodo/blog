@@ -1,0 +1,342 @@
+---
+title: Breaking React Query's API on purpose
+description: Why good API design matters, even if it means breaking existing APIs in the face of resistance.
+date: 2023-04-16
+banner: ./breaking-glass.jpeg
+tags:
+  - ReactJs
+  - React Query
+  - JavaScript
+  - TypeScript
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import Tweet, {
+  AvatarWillMcGugan,
+  AvatarTkDodo,
+  AvatarT3dotgg,
+  AvatarMichaelC,
+} from 'components/Tweet'
+
+<img src="./breaking-glass.jpeg" alt="glass breaking" />
+
+<Attribution
+  name="Denny Müller"
+  url="https://unsplash.com/@redaquamedia"
+/>
+
+<Translations>{[]}</Translations>
+
+Designing APIs for library interfaces is a pretty hard thing to do. You want your APIs to be flexible and cater to all needs. At the same time, you'd want them to be minimal and intuitive to avoid a steep learning curve. Those things are two sides of the same coin, and you'd likely want to balance somewhere in the middle. Good defaults matter a lot, too.
+
+What's also hard is "getting it right" on the first try, because you cannot easily undo those decisions. Bugs can be fixed. APIs can be widened and features can be added if needed. Changing an existing API, or taking one away is a totally different beast. It needs a major version bump.
+
+## Major changes
+
+No one likes breaking changes, and it's hard to get people excited about major version bumps. Unless there is a fundamental architectural change involved that enables us to ship new features in them (like the [networkMode](https://tanstack.com/query/v4/docs/react/guides/network-mode) in React Query v4), major versions aren't about new features.
+
+React shipped hooks in [v16.8](https://legacy.reactjs.org/blog/2019/02/06/react-v16.8.0.html). React Router shipped loaders in [v6.4](https://reactrouter.com/en/6.4.0). Those were all **minor** versions.
+
+So if major versions aren't about new features, what are they about? [Will McGugan](https://twitter.com/willmcgugan) said it best:
+
+<Tweet
+  name="Will McGugan"
+  handle="willmcgugan"
+  tweetId="1423678688802058244"
+  avatar={<AvatarWillMcGugan />}
+  date={new Date('2021-08-06')}
+>
+  <p>
+    Absolutely. The thing about semver major version numbers are that
+    they don't mean new stuff, they're a permanent reminder of how many
+    times you got the API wrong. Semver doesn't mean MAJOR.MINOR.PATCH,
+    it means FAILS.FEATURES.BUGS
+  </p>
+</Tweet>
+
+Ouch, that hurts, but it's on point. More often than not, I've used major version bumps to revert design-decision that we've taken in the past, because they've turned out to be suboptimal. When designing an API, you can't always think everything through. Edge cases will pop up that you haven't even though about. Things might not work as expected, and you realize that changing the API is the best way forward.
+
+## React Query v5
+
+So React Query is nearing its 5th API fail, and we've taken a quite controversial decision, which I announced yesterday: We're going to remove the callbacks on `useQuery`:
+
+<Tweet
+  name="Dominik 🇺🇦"
+  handle="TkDodo"
+  tweetId="1647341498227097600"
+  avatar={<AvatarTkDodo />}
+  date={new Date('2023-04-15')}
+>
+  <p>
+    📢 We will very likely be removing the onSuccess / onError /
+    onSettled callbacks from `useQuery` in v5. I tried very hard to come
+    up with a good use-case, but imo there is none.
+  </p>
+  <p>
+    I'll write an RFC soon, but if you have a legit use-case, let me
+    know now!
+  </p>
+</Tweet>
+
+This almost got me my first twitter 💩-storm, which was to be somewhat expected. Why would you take something away from me? Let me write code the way I want to, this is a terrible idea!
+
+Before you jump on the bandwagon, please note that we're talking only about the callbacks of `useQuery`, NOT about the `useMutation` callbacks. Once I explained this and the drawbacks about those callbacks, most people tend to agree with that decision.
+
+<Tweet
+  name="Michael Carniato"
+  handle="michaelc_1991"
+  tweetId="1647540073100091393"
+  avatar={<AvatarMichaelC />}
+  date={new Date('2023-04-16')}
+>
+  <p>
+    I had an initial knee jerk reaction of thinking this was a bad move.
+    But after reading a lot of the reasons as to why keeping them is a
+    bad move. I'm on board with this now. It makes sense
+  </p>
+</Tweet>
+
+So why would we remove an existing API, seemingly without alternatives? Simply put: Because it's a bad API that likely doesn't do what you'd expect. The most important thing about APIs is that they are consistent, and the callbacks are not.
+
+### A bad API
+
+Let's quickly recap which API we're actually talking about. `useQuery` has three callback functions: `onSuccess`, `onError` and `onSettled`, which will be called when the Query ran either successfully or had an error (or in both cases). You can (apparently) use them to execute side effects, like showing error notifications:
+
+```js:title=onError-callback {5-7}
+export function useTodos() {
+  return useQuery({
+    queryKey: ['todos', 'list'],
+    queryFn: fetchTodos,
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
+}
+```
+
+Users like this API because it's **intuitive**. Without those callbacks, you would seemingly need the dreaded `useEffect` hook to perform such a side effect:
+
+```js:title=error-effect {7-11}
+export function useTodos() {
+  const query = useQuery({
+    queryKey: ['todos', 'list'],
+    queryFn: fetchTodos,
+  })
+
+  React.useEffect(() => {
+    if (error) {
+      toast.error(error.message)
+    }
+  }, [error])
+
+  return query
+}
+```
+
+Many users see it as a huge selling point of React Query that they don't need to write `useEffect` anymore. In this example, the effect clearly shows the drawback of this approach: If we call `useTodos()` two times in our App, we will get two error notifications!
+
+This is pretty obvious if you look at the `useEffect` implementation - both components will call the custom hook, both components will register an effect, which will then run inside that component. It's not so obvious with the `onError` callback. You might expect those calls to be deduplicated - but that is not happening. The callbacks run purposefully for each component, because the callbacks could close over local state values. It would be quite inconsistent to call it for one component, but not for another. We also can't decide for which component it should run.
+
+But no, we are not leaving you to write `useEffect` for this scenario. As I just pointed out, the effect is equally flawed. There _is_ a callback that is only invoked once per Query, and I've written about that solution before in - [#11: React Query Error Handling](react-query-error-handling#the-global-callbacks).
+
+The best way to address this problem is to use the global cache-level callbacks when setting up your `QueryClient`:
+
+```js:title=query-cache-callbacks {3-5}
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (error) =>
+      toast.error(`Something went wrong: ${error.message}`),
+  }),
+})
+```
+
+This callback will only be invoked once per Query. It also exists outside the component that called `useQuery`, so we don't have a closure problem.
+
+### Defining on-demand messages
+
+I also understand that you might want to show different messages per Query that are not part of the `error` itself. While you could do that by rejecting the Promise from the `queryFn` with a custom Error, a simple solution would be to use the `meta` field on your Query.
+
+`meta` is an arbitrary object that you can fill with whatever information you want, which will be available everywhere where you get access to your Query, such as, in the global callbacks:
+
+```js:title=meta {4-6,15-17}
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (error, query) => {
+      if (query.meta.errorMessage) {
+        toast.error(query.meta.errorMessage)
+      }
+    },
+  }),
+})
+
+export function useTodos() {
+  return useQuery({
+    queryKey: ['todos', 'list'],
+    queryFn: fetchTodos,
+    meta: {
+      errorMessage: 'Failed to fetch todos',
+    },
+  })
+}
+```
+
+With this, you'll get a toast notification whenever a Query has `meta.errorMessage` defined. This is pretty similar to setting up `onError` on the `useQuery` instances that should show a notification, except that it's a fail-safe way to handle this situation.
+
+### State syncing
+
+Having the callbacks getting potentially invoked multiple times is not the only drawback of this API. From my experience, many people use the callbacks to perform state syncing:
+
+```js:title=state-syncing {6-9}
+export function useTodos() {
+  const [todoCount, setTodoCount] = React.useState(0)
+  const { data: todos } = useQuery({
+    queryKey: ['todos', 'list'],
+    queryFn: fetchTodos,
+    //😭 please don't
+    onSuccess: (data) => {
+      setTodoCount(data.length)
+    },
+  })
+
+  return { todos, todoCount }
+}
+```
+
+Now please, don't do that! Ever. I know the API basically invites you to do that, which is another reason why we are removing it, but let me quickly show you how this specific scenario will easily break.
+
+#### An additional render cycle
+
+`setTodoCount` introduces another render cycle. This will not only make your App render more often than necessary (which might or might not matter), but it also means that the intermediate render cycle will contain false values.
+
+As an example, suppose `fetchTodos` returns a list of length 5. With the above code, there will be three render cycles:
+
+- 1. `todos` will be `undefined` and length will be 0. That's the initial state while the Query is fetching. This is correct.
+- 2. `todos` will be an Array of length 5 and `todoCount` will be 0. That's the in-between render cycle where `useQuery` has already run (and so has `onSuccess`), but `setTodoCount` was scheduled. This is wrong because values are not in-sync.
+- 3. `todos` will be an Array of length 5 and `todoCount` will be 5. That is the final state and is correct again.
+
+You can verify this in [this sandbox](https://codesandbox.io/p/sandbox/sad-lichterman-cwcc44) by looking at the log output. I'm no so much concerned about the additional render cycle, but the fact that it renders with data that is out-of-sync can be terrifying. If we are running additional logic based on this, it can be pretty buggy.
+
+Now of course, the simple fix is to _derive state_. I have an old article on that topic as well, - [Don't over useState](dont-over-use-state). For this example, it merely means:
+
+```js:title=derive-state {7}
+export function useTodos() {
+  const { data: todos } = useQuery({
+    queryKey: ['todos', 'list'],
+    queryFn: fetchTodos,
+  })
+
+  const todoCount = todos?.length ?? 0
+
+  return { todos, todoCount }
+}
+```
+
+There is no way how this can get ever out of sync. Have a look at the [fixed sandbox](https://codesandbox.io/p/sandbox/brave-fog-eev3b9?file=%2Fsrc%2FApp.tsx). If you want to get fancy or your calculation is more expensive than that, have a look at [the select option](react-query-data-transformations#3-using-the-select-option).
+
+#### The callbacks might not run
+
+Now some people have mentioned that they are gradually adopting React Query, and that they have to sync state to e.g. redux, so that you have data available where you are not yet using React Query. I totally get that, and I had to do this myself lately:
+
+```js:title=sync-to-redux {7-9}
+export function useTodos() {
+  const { dispatch } = useDispatch()
+
+  return useQuery({
+    queryKey: ['todos', 'list'],
+    queryFn: fetchTodos,
+    onSuccess: (data) => {
+      dispatch(setTodos(data))
+    },
+  })
+}
+```
+
+Using the `onSuccess` callback here can get into real troubles if we use [React Query as an Async State Manager](react-query-as-a-state-manager) and read data from the cache only by having `staleTime` defined. Let's add a `filters` argument and `staleTime`:
+
+```js:title=staleTime {1,5-7}
+export function useTodos(filters) {
+  const { dispatch } = useDispatch()
+
+  return useQuery({
+    queryKey: ['todos', 'list', { filters }],
+    queryFn: () => fetchTodos(filters),
+    staleTime: 2 * 60 * 1000,
+    onSuccess: (data) => {
+      dispatch(setTodos(data))
+    },
+  })
+}
+```
+
+Here's what might happen:
+
+1. We filter our todos for `done: true`, React Query puts that data in the cache, `onSuccess` writes it to redux.
+2. We filter for `done: false`, same procedure.
+3. We filter for `done: true` again, and our App breaks.
+
+Why? Because `onSuccess` is not called again, so no `dispatch` happens. The parts of our App that use data from `useTodos` will see the correctly filtered values, but the parts that read from redux will not.
+
+When `staleTime` is defined, React Query will not always invoke the `queryFn` to get the latest data. We have defined the cached data to be fresh for 2 minutes. In that time, all reads will come from the cache only. That is a good thing because it avoids excessive re-fetches.
+
+But it also means that `onSuccess` will not be called, because the callbacks are tied to a fetch happening. So we'll get out of sync. It will work in some cases, but not in others. Those bugs are very hard to trace, unless you know the exact reason.
+
+### onDataChanged
+
+Just add an `onDataChanged` callback then that will fire whenever `data` changes.💡
+I initially thought this to be a good idea, but then again, how would we implement that callback? The currently existing ones can be invoked after the `queryFn` runs, because we are already in a side effect scope. But if we render and read from the cache only, we can't just invoke a callback _during rendering_. We would have to spawn our own `useEffect`. And that is something you can do in userland, too, if there is really a case where state-syncing is unavoidable. At least this will work predictably, no matter why data changed:
+
+```js:title=on-data-changed {10-14}
+export function useTodos(filters) {
+  const { dispatch } = useDispatch()
+
+  const query = useQuery({
+    queryKey: ['todos', 'list', { filters }],
+    queryFn: () => fetchTodos(filters),
+    staleTime: 2 * 60 * 1000,
+  })
+
+  React.useEffect(() => {
+    if (query.data) {
+      dispatch(setTodos(query.data))
+    }
+  }, [query.data])
+
+  return query
+}
+```
+
+Sure, it's not the most beautiful code ever written, but state-syncing is not something that should be encouraged. I want to feel **dirty** writing that code, because I don't want to (and likely shouldn't) write that code.
+
+## In Summary
+
+The only good use-case that came out of the twitter discussion was scrolling a feed to the bottom when a new chat message arrived. That _is_ a good example, similar to animating an item if a fetch failed, because you'd want that to be different on a per-component level. Still, those cases are the minority by far, and if that's what you want to do, you can achieve the same thing with `useEffect`. `data` and `error` returned from `useQuery` are referentially stable, so you can set up an effect pretty easily without having to worry about it running too often.
+
+APIs need to be simple, intuitive and consistent. The callbacks on `useQuery` look like they fit these criteria, but they are bug-producers in disguise. It's pretty bad because they will likely do what you want when you first implement them, but they have a toll when you refactor or extend your App as it grows. They also invite antipatterns because you can introduce error-prone state-syncing without feeling bad while doing so.
+
+Almost all examples I've seen can and will break in some cases, and I've seen these cases be reported on a regular basis in issues, discussions, and discord or stackoverflow questions. Those bugs are painfully hard to track. Don't believe me? I'll leave it to [Theo](https://twitter.com/t3dotgg) then:
+
+<Tweet
+  name="Theo - t3.gg"
+  handle="t3dotgg"
+  tweetId="1647345483676024833"
+  avatar={<AvatarT3dotgg />}
+  date={new Date('2023-04-15')}
+>
+  <p>
+    UPDATE: 27 instances of `onSuccess`, 4 are in queries, 3 are almost
+    certainly sources of bugs
+  </p>
+  <p>Deprecate away 🙏</p>
+</Tweet>
+
+That's why it's better to _not_ have this API in the first place, and that's why we're removing it.
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />
+```

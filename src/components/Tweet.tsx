@@ -37,6 +37,24 @@ export const AvatarTkDodo = () => (
   />
 )
 
+export const AvatarT3dotgg = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/t3dotgg.jpeg"
+    alt="Avatar for t3dotgg"
+    placeholder="blurred"
+  />
+)
+
+export const AvatarMichaelC = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/michaelc_1991.jpeg"
+    alt="Avatar for michaelc_1991"
+    placeholder="blurred"
+  />
+)
+
 export const AvatarTannerlinsley = () => (
   <StaticImage
     style={{ borderRadius: '50%' }}
@@ -69,6 +87,15 @@ export const AvatarRyanflorence = () => (
     style={{ borderRadius: '50%' }}
     src="../../static/images/ryanflorence.jpeg"
     alt="Avatar for ryanflorence"
+    placeholder="blurred"
+  />
+)
+
+export const AvatarWillMcGugan = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/willmcgugan.jpeg"
+    alt="Avatar for willmcgugan"
     placeholder="blurred"
   />
 )
