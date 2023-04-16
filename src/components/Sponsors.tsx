@@ -349,6 +349,40 @@ const Sponsors = () => (
           <Text>🪙 Custom</Text>
         </div>
       </Card>
+      <Card>
+        <Link
+          href="https://github.com/zilahir"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Richard Zilahi</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/6687149?s=300"
+            height="300"
+            alt="Richard Zilahi"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter ($10 a month)</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://github.com/mnlfischer"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Manuel Fischer</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/3883653?s=300"
+            height="300"
+            alt="Manuel Fischer"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter ($10 a month)</Text>
+        </div>
+      </Card>
     </Grid>
   </Box>
 )
