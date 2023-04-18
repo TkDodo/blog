@@ -212,9 +212,9 @@ Now please, don't do that! Ever. I know the API basically invites you to do that
 
 As an example, suppose `fetchTodos` returns a list of length 5. With the above code, there will be three render cycles:
 
-- 1. `todos` will be `undefined` and length will be 0. That's the initial state while the Query is fetching. This is correct.
-- 2. `todos` will be an Array of length 5 and `todoCount` will be 0. That's the in-between render cycle where `useQuery` has already run (and so has `onSuccess`), but `setTodoCount` was scheduled. This is wrong because values are not in-sync.
-- 3. `todos` will be an Array of length 5 and `todoCount` will be 5. That is the final state and is correct again.
+1. `todos` will be `undefined` and length will be 0. That's the initial state while the Query is fetching. This is correct.
+2. `todos` will be an Array of length 5 and `todoCount` will be 0. That's the in-between render cycle where `useQuery` has already run (and so has `onSuccess`), but `setTodoCount` was scheduled. This is wrong because values are not in-sync.
+3. `todos` will be an Array of length 5 and `todoCount` will be 5. That is the final state and is correct again.
 
 You can verify this in [this sandbox](https://codesandbox.io/p/sandbox/sad-lichterman-cwcc44) by looking at the log output. I'm not so much concerned about the additional render cycle, but the fact that it renders with data that is out-of-sync can be terrifying. If we are running additional logic based on this, it can be pretty buggy.
 
