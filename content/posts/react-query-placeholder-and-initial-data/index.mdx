@@ -16,7 +16,10 @@ import Translations from 'components/Translations'
 
 <img src="./placeholder-and-initial-data.jpeg" />
 
-<Attribution name="Marco Bianchetti" url="https://unsplash.com/@marcobian" />
+<Attribution
+  name="Marco Bianchetti"
+  url="https://unsplash.com/@marcobian"
+/>
 
 - [#1: Practical React Query](practical-react-query)
 - [#2: React Query Data Transformations](react-query-data-transformations)
@@ -38,6 +41,7 @@ import Translations from 'components/Translations'
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 - [#18: Inside React Query](inside-react-query)
 - [#19: Type-safe React Query](type-safe-react-query)
+- [#20: You Might Not Need React Query](you-might-not-need-react-query)
 
 <Translations>
   {[
@@ -151,18 +155,18 @@ Suppose you provide `initialData` or `placeholderData`, and a background refetch
 <p>
   <details>
     <summary>InitialData</summary>
-    Since <i>initialData</i> is persisted in the cache, the refetch error is treated
-    like any other background error. Our query will be in <i>error</i> state,
-    but your <i>data</i> will still be there.
+    Since <i>initialData</i> is persisted in the cache, the refetch error
+    is treated like any other background error. Our query will be in <i>
+      error
+    </i> state, but your <i>data</i> will still be there.
   </details>
 </p>
 <p>
   <details>
     <summary>PlaceholderData</summary>
-    Since <i>placeholderData</i> is "fake-it-till-you-make-it" data, and we didn't
-    make it, we won't see that data anymore. Our query will be in <i>
-      error
-    </i> state, and our <i>data</i> will be <i>undefined</i>.
+    Since <i>placeholderData</i> is "fake-it-till-you-make-it" data, and
+    we didn't make it, we won't see that data anymore. Our query will be
+    in <i>error</i> state, and our <i>data</i> will be <i>undefined</i>.
   </details>
 </p>
 
