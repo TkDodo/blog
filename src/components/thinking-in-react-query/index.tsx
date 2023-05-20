@@ -550,7 +550,7 @@ export const Presentation = () => {
 
   const page = new URLSearchParams(location.search).get('page')
   const activePage = page
-    ? Math.min(Math.max(Number(page), 1), slides.length - 1)
+    ? Math.min(Math.max(Number(page), 1), slides.length)
     : 1
 
   console.log('activePage', activePage)
@@ -566,7 +566,7 @@ export const Presentation = () => {
       id: `slide-${index + 1}`,
       renderItem: <Slide index={index}>{slide}</Slide>,
     })),
-    initialActiveItem: activePage,
+    initialActiveItem: activePage - 1,
   })
 
   useListenToCustomEvent((event) => {
