@@ -17,7 +17,10 @@ import Translations from 'components/Translations'
 
 <img src="./state-management.jpeg" />
 
-<Attribution name="OpticalNomad" url="https://unsplash.com/@opticalnomad" />
+<Attribution
+  name="OpticalNomad"
+  url="https://unsplash.com/@opticalnomad"
+/>
 
 - [#1: Practical React Query](practical-react-query)
 - [#2: React Query Data Transformations](react-query-data-transformations)
@@ -39,6 +42,7 @@ import Translations from 'components/Translations'
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 - [#18: Inside React Query](inside-react-query)
 - [#19: Type-safe React Query](type-safe-react-query)
+- [#20: You Might Not Need React Query](you-might-not-need-react-query)
 
 <Translations>
   {[
@@ -220,9 +224,9 @@ So how can we have our cake and eat it, too?
 Maybe you've already guessed the direction in which I want to go: The solution would be to set `staleTime` to a value you are comfortable with for your specific use-case. The key thing to know is:
 
 <Highlight>
-  As long as data is fresh, it will always come from the cache only. You will
-  not see a network request for fresh data, no matter how often you want to
-  retrieve it.
+  As long as data is fresh, it will always come from the cache only. You
+  will not see a network request for fresh data, no matter how often you
+  want to retrieve it.
 </Highlight>
 
 There is also no "correct" value for `staleTime`. In many situations, the defaults work really well. Personally, I like to set it to a minimum of 20 seconds to deduplicate requests in that time frame, but it's totally up to you.

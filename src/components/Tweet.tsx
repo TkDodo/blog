@@ -127,6 +127,15 @@ export const AvatarLeeerob = () => (
   />
 )
 
+export const AvatarSwyx = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/swyx.jpeg"
+    alt="Avatar for swyx"
+    placeholder="blurred"
+  />
+)
+
 export const TweetImage = ({
   children,
 }: {
@@ -148,6 +157,14 @@ export const TannerAndMe = () => (
     placeholder="blurred"
     src="../../static/images/FVegS4nXwAQHskN.jpeg"
     alt="Tanner and me"
+  />
+)
+
+export const CynicsVsBuilders = () => (
+  <StaticImage
+    placeholder="blurred"
+    src="../../static/images/EXx9RHYVAAUgegZ.jpeg"
+    alt="Cynics vs Builders"
   />
 )
 
