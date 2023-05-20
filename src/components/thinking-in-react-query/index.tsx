@@ -8,8 +8,8 @@ import { Slide } from './slide'
 
 const slides: ReadonlyArray<React.ReactNode> = [
   <p>
-    Hello everyone 👋, thanks for being here today, where I want to talk
-    about...
+    Hello everyone 👋, thanks for being here with me today, where I want
+    to talk about...
   </p>,
   <>
     <p>...tying your shoes correctly.</p>
@@ -106,8 +106,8 @@ const slides: ReadonlyArray<React.ReactNode> = [
   <>
     <p>
       All we are doing is - return a resolved Promise. Of course, React
-      Query goes very well _with_ data fetching libraries like axios,
-      fetch, graphql-request because they all produce Promises.
+      Query goes very well <i>with</i> data fetching libraries like
+      axios, fetch or graphql-request because they all produce Promises.
     </p>
     <p>
       Once we understand that React Query doesn't fetch data, it
@@ -115,12 +115,19 @@ const slides: ReadonlyArray<React.ReactNode> = [
       data fetching just disappear. Questions like:
     </p>
   </>,
-  <p>
-    All questions around data fetching usually have the same answer:
-  </p>,
   <>
     <p>
-      React Query doesn't care! Just somehow return a Promise please.
+      All questions around data fetching usually have the same answer:
+    </p>
+    <ul>
+      <li>How can I define a baseURL with React Query ?</li>
+      <li>How can I access response headers with React Query?</li>
+      <li>How can I make graphQL requests with React Query?</li>
+    </ul>
+  </>,
+  <>
+    <p>
+      React Query doesn't care! Just somehow return a Promise, please.
     </p>
     <p>Right, once we've got that, it's only fair to ask:</p>
   </>,
