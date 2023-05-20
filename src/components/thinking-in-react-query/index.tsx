@@ -578,6 +578,18 @@ export const Presentation = () => {
     }
   })
 
+  React.useEffect(() => {
+    const listener = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft') {
+        slideToPrevItem()
+      } else if (event.key === 'ArrowRight') {
+        slideToNextItem()
+      }
+    }
+    document.addEventListener('keydown', listener)
+    return () => document.removeEventListener('keydown', listener)
+  }, [slideToPrevItem, slideToNextItem])
+
   const ref = React.useRef()
   const [colorMode] = useColorMode()
   const fill =
@@ -620,7 +632,6 @@ export const Presentation = () => {
           overflow: 'hidden',
         }}
       >
-        <Box sx={{ flexGrow: 1 }}>{carouselFragment}</Box>
         <Box
           as="button"
           sx={{
@@ -692,6 +703,7 @@ export const Presentation = () => {
             }}
           ></span>
         </Box>
+        <Box sx={{ flexGrow: 1 }}>{carouselFragment}</Box>
       </Flex>
     </Box>
   )
