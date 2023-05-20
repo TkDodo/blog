@@ -17,7 +17,10 @@ import Highlight from 'components/Highlight'
 
 <img src="./type-safe.jpeg" alt="safety helmet" />
 
-<Attribution name="Ümit Yıldırım" url="https://unsplash.com/@umityildirim" />
+<Attribution
+  name="Ümit Yıldırım"
+  url="https://unsplash.com/@umityildirim"
+/>
 
 - [#1: Practical React Query](practical-react-query)
 - [#2: React Query Data Transformations](react-query-data-transformations)
@@ -39,6 +42,7 @@ import Highlight from 'components/Highlight'
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 - [#18: Inside React Query](inside-react-query)
 - <b>#19: Type-safe React Query</b>
+- [#20: You Might Not Need React Query](you-might-not-need-react-query)
 
 <Translations>
   {[
@@ -71,7 +75,9 @@ Generics are essential in TypeScript. As soon as you want to implement something
 
 However, as a user of a library, you ideally shouldn't need to care about their Generics. They are an implementation detail. So whenever you provide a generic "manually" to a function via the angle brackets, it's kinda bad for one of two reasons:
 
-<Highlight>It's either unnecessary, or you're lying to yourself.</Highlight>
+<Highlight>
+  It's either unnecessary, or you're lying to yourself.
+</Highlight>
 
 ## About angle brackets
 

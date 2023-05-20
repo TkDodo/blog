@@ -46,6 +46,7 @@ import Translations from 'components/Translations'
 - [#17: Seeding the Query Cache](seeding-the-query-cache)
 - [#18: Inside React Query](inside-react-query)
 - [#19: Type-safe React Query](type-safe-react-query)
+- [#20: You Might Not Need React Query](you-might-not-need-react-query)
 
 <Translations>
   {[
@@ -67,8 +68,8 @@ That's why I've decided to write this addendum to my [Effective React Query Keys
 <SpacingBox />
 
 <Highlight>
-  Don't use inline functions - leverage the Query Function Context given to
-  you, and use a Query Key factory that produces object keys
+  Don't use inline functions - leverage the Query Function Context given
+  to you, and use a Query Key factory that produces object keys
 </Highlight>
 
 Inline functions are by far the easiest way to pass parameters to your `queryFn`, because they let you closure over other variables available in your custom hook. Let's look at the evergreen todo example:
