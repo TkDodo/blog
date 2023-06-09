@@ -566,7 +566,6 @@ export const Presentation = () => {
     carouselFragment,
     slideToPrevItem,
     slideToNextItem,
-    enterFullscreen,
     useListenToCustomEvent,
   } = useSpringCarousel({
     items: slides.map((slide, index) => ({
@@ -579,9 +578,9 @@ export const Presentation = () => {
   useListenToCustomEvent((event) => {
     // Triggered when the slide animation is completed
     if (event.eventName === 'onSlideChange') {
-      // void navigate(`?page=${event.currentItem.index}`, {
-      //   replace: true,
-      // })
+      void navigate(`?page=${event.currentItem.index}`, {
+        replace: true,
+      })
     }
   })
 
@@ -606,31 +605,6 @@ export const Presentation = () => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Box
-        as="button"
-        aria-label="enter fullscreen"
-        sx={{
-          '&:hover': {
-            opacity: 1,
-          },
-          display: 'flex',
-          alignSelf: 'flex-end',
-          zIndex: 1,
-          background: 'none',
-          border: 0,
-          textAlign: 'center',
-          transition: 'opacity .15s ease',
-          opacity: 0.5,
-          cursor: 'pointer',
-          backgroundImage: `url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='${fill}' viewBox='0 0 24 24'%3E%3Cpath d='M24 22h-24v-20h24v20zm-1-19h-22v18h22v-18zm-4 7h-1v-3.241l-11.241 11.241h3.241v1h-5v-5h1v3.241l11.241-11.241h-3.241v-1h5v5z'/%3E%3C/svg%3E")`,
-          backgroundPosition: '50%',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: '100% 100%',
-          height: '2rem',
-          width: '2rem',
-        }}
-        onClick={() => enterFullscreen(ref.current)}
-      />
       <Flex
         ref={ref}
         sx={{
@@ -648,8 +622,8 @@ export const Presentation = () => {
             position: 'absolute',
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center',
-            top: 0,
+            alignItems: ['flex-start', 'center'],
+            top: ['33%', 0],
             bottom: 0,
             zIndex: 1,
             background: 'none',
@@ -683,8 +657,8 @@ export const Presentation = () => {
             position: 'absolute',
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center',
-            top: 0,
+            alignItems: ['flex-start', 'center'],
+            top: ['33%', 0],
             bottom: 0,
             right: 0,
             zIndex: 1,
