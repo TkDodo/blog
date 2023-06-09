@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Flex, Box, Link } from '@theme-ui/components'
+import { useLocation } from '@reach/router'
 import { useColorMode } from 'theme-ui'
 import { useSpringCarousel } from 'react-spring-carousel'
 
@@ -552,14 +553,12 @@ const slides: ReadonlyArray<React.ReactNode> = [
 ]
 
 export const Presentation = () => {
-  const location = window.location
+  const location = useLocation()
 
   const page = new URLSearchParams(location.search).get('page')
   const activePage = page
     ? Math.min(Math.max(Number(page), 1), slides.length)
     : 1
-
-  console.log('activePage', activePage)
 
   const {
     carouselFragment,
