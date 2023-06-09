@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Flex, Box, Link } from '@theme-ui/components'
 import { useColorMode } from 'theme-ui'
-import { useLocation, navigate } from '@reach/router'
 import { useSpringCarousel } from 'react-spring-carousel'
 
 import { Slide } from './slide'
@@ -553,7 +552,7 @@ const slides: ReadonlyArray<React.ReactNode> = [
 ]
 
 export const Presentation = () => {
-  const location = useLocation()
+  const location = window.location
 
   const page = new URLSearchParams(location.search).get('page')
   const activePage = page
@@ -578,9 +577,14 @@ export const Presentation = () => {
   useListenToCustomEvent((event) => {
     // Triggered when the slide animation is completed
     if (event.eventName === 'onSlideChange') {
-      void navigate(`?page=${event.currentItem.index}`, {
-        replace: true,
-      })
+      const searchParams = new URLSearchParams(window.location.search)
+      searchParams.set('page', String(event.currentItem.index + 1))
+      const newUrl =
+        window.location.origin +
+        window.location.pathname +
+        '?' +
+        searchParams.toString()
+      window.history.replaceState({ path: newUrl }, '', newUrl)
     }
   })
 
