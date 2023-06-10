@@ -525,7 +525,7 @@ const slides: ReadonlyArray<React.ReactNode> = [
         target="_blank"
         rel="noreferrer noopener"
       >
-        a youtube video a youtube video
+        a youtube video
       </Link>{' '}
       if you wanna go watch that.
     </p>
@@ -578,12 +578,11 @@ export const Presentation = () => {
     if (event.eventName === 'onSlideChange') {
       const searchParams = new URLSearchParams(window.location.search)
       searchParams.set('page', String(event.currentItem.index + 1))
-      const newUrl =
-        window.location.origin +
-        window.location.pathname +
-        '?' +
-        searchParams.toString()
-      window.history.replaceState({ path: newUrl }, '', newUrl)
+      window.history.replaceState(
+        null,
+        '',
+        '?' + searchParams.toString()
+      )
     }
   })
 
