@@ -525,7 +525,7 @@ const slides: ReadonlyArray<React.ReactNode> = [
         target="_blank"
         rel="noreferrer noopener"
       >
-        a youtube video a youtube video
+        a youtube video
       </Link>{' '}
       if you wanna go watch that.
     </p>
