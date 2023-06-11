@@ -576,13 +576,13 @@ export const Presentation = () => {
   useListenToCustomEvent((event) => {
     // Triggered when the slide animation is completed
     if (event.eventName === 'onSlideChange') {
-      const searchParams = new URLSearchParams(window.location.search)
-      searchParams.set('page', String(event.currentItem.index + 1))
-      window.history.replaceState(
-        null,
-        '',
-        '?' + searchParams.toString()
-      )
+      // const searchParams = new URLSearchParams(window.location.search)
+      // searchParams.set('page', String(event.currentItem.index + 1))
+      // window.history.replaceState(
+      //   null,
+      //   '',
+      //   '?' + searchParams.toString()
+      // )
     }
   })
 
