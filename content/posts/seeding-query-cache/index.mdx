@@ -97,7 +97,7 @@ In both variants, React Query will kick off data fetching in parallel. So where 
 
 _**Note**: Please keep in mind that at the time of this writing, suspense for data fetching is still experimental! In the following examples, I will not be using the proposal from the RFC, but rather the suspense implementation that is already available in React Query (which is also experimental)._
 
-As described in the above linked RFC, suspense a way to unwrap promises with React. A defining trait of promises is that they can be in three different states: pending, fulfilled or rejected.
+As described in the above linked RFC, suspense is a way to unwrap promises with React. A defining trait of promises is that they can be in three different states: `pending`, `fulfilled` or `rejected`.
 
 When rendering components, we are mostly interested in the success scenario. Handling loading and error states in each and every component can be tedious, and suspense is aimed at solving this problem.
 
