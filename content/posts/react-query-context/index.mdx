@@ -14,6 +14,7 @@ import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
+import Tweet, { AvatarTkDodo } from 'components/Tweet'
 
 <img src="./context.jpeg" />
 
@@ -25,6 +26,208 @@ import { RqToc } from 'components/rq-toc'
 <RqToc id="react-query-and-react-context" />
 
 <Translations>{[]}</Translations>
+
+One of the best traits of React Query is that you can use a query wherever you want in your component tree: Your `<ProductTable>` component can fetch its own data, co-located, right where you need it to be:
+
+```tsx:title=ProductTable
+function ProductTable() {
+  const productQuery = useProductQuery()
+
+  if (productQuery.data) {
+    return <table>...</table>
+  }
+
+  if (productQuery.isError) {
+    return <ErrorMessage error={productQuery.error} />
+  }
+
+  return <SkeletonLoader />
+}
+```
+
+To me, this is great because it makes the `ProductTable` decoupled and independent: It's responsible for reading its own dependencies: Product Data. If it's in the cache already, great, we'll just read it. If not, we'll go fetch it. And we can see similar patterns emerge with React Server Components. They, too, allow us to fetch data right inside our components. No more arbitrary splits between _stateful_ and _stateless_, or _smart_ and _dumb_ components.
+
+So being able to fetch data right in a component, where you need it, is immensely useful. We can literally take the `ProductTable` component and move it anywhere in our App, and it will just work. The component is very _resilient to change_, which is the main reason why I'm advocating for accessing your query directly wherever you need to (via a custom hook), both in [#10: React Query as a State Manager](react-query-as-a-state-manager) and [#21: Thinking in React Query](thinking-in-react-query).
+
+It's not a silver bullet though - it comes with tradeoffs. This shouldn't be surprising, because at the end of the day, everything is a tradeoff. But are we trading in here, exactly ?
+
+## Being self-contained
+
+For a component to be autonomous, it means it has to handle cases where query data is not available (yet), in particular: loading an error states. This is not a big deal for our `<ProductTable>` component, because very often, when it first loads, it will actually display that `<SkeletonLoader />`.
+
+But there are lots of other situations where we just want to read some information from some parts of our query, where we _know_ that the query has been already used further up the tree. For example, we might have a `userQuery` that contains information about the logged-in user:
+
+```ts:title=useCurrentUserQuery
+export const useUserQuery = (id: number) => {
+  return useQuery({
+    queryKey: ['user', id],
+    queryFn: () => fetchUserById(id),
+  })
+}
+export const useCurrentUserQuery = () => {
+  const id = useCurrentUserId()
+
+  return useUser(id)
+}
+```
+
+We will probably use this query quite early in our component tree, to check which user rights the logged-in user has, and it might further determine if we can actually see the page or not. It is _essential_ information that we want everywhere on our page.
+
+Now further down the tree, we might have a component that wants to display the `userName`, which we can get from the `useCurrentUserQuery` hook:
+
+```tsx:title=UserNameDisplay
+function UserNameDisplay() {
+  const { data } = useCurrentUserQuery()
+  return <div>User: {data.userName}</div>
+}
+```
+
+Of course, TypeScript won't let us, because `data` is potentially undefined. But we know better - it can't be undefined, because in our situation, the `UserNameDisplay` won't be rendered without the query being already initiated further up the tree.
+
+That's a bit of a dilemma. Do we want to just shut up TS here and do `data!.userName`, because we know it will be defined ? Do we play it safe and do `data?.userName` (which is possible here, but might not be so easy to pull off in other situations)? Do we just add a guard: `if (!data) return null` ? Or do we add proper loading and error handling ot all 25 places where we call `useCurrentUserQuery` ?
+
+To be honest - I think all of those ways are kind of suboptimal. I don't want to liter my codebase with checks that can "never happen" (to the best of my current knowledge). But I also don't want to ignore TypeScript, because (as usual), TS is right.
+
+### An implicit dependency
+
+Our problem comes from the fact that we have an _implicit dependency_: A dependency that only exists in our head, in our knowledge of the application structure, but it's not visible in the code itself.
+
+Even though we know that we can safely call `useCurrentUserQuery` without having to check for data not being defined, no static analysis can verify this. Our co-workers might not know it. I myself might not know this anymore 3 months from now.
+
+The most dangerous part is that it might be true now, but it might no longer be true in the future. We can decide to render another instance of `UserNameDisplay` somewhere in our App, where we might not have user data in the cache, or where we might have user data in the cache _conditionally_, e.g. if we have visited a different page before.
+
+This is quite the opposite of the `<ProductTable>` component: Instead of being resilient to change, it becomes error-prone to refactorings. We wouldn't expect the `UserNameDisplay` component to break just because we move some seemingly unrelated components around...
+
+### Make it explicit
+
+The solution is, of course, to make the dependency _explicit_. And there is no better way to do this than with `React Context`:
+
+## React Context
+
+There's quite the myth about React Context, so let's get this straight: No, React Context is not a state manager. It can become a seemingly good solution for state management when combined with `useState` or `useReducer`, but tbh, I've never really liked this approach, as I've been burned by situations like these too much:
+
+<Tweet
+  name="Dominik"
+  handle="TkDodo"
+  tweetId="1495072479118864398"
+  avatar={<AvatarTkDodo />}
+  date={new Date('2022-02-19')}
+>
+  <p>
+    🕵️ We've fixed a huge performance problem this week by moving
+    useState + context over to zustand. It was the same amount of code.
+    The lib is &lt; 1kb.
+  </p>
+  <p>
+    ⚛️ Don't use context for state management. Use it for dependency
+    injection only. The right tool for the job!
+  </p>
+  <p>
+    <Text color="var(--theme-ui-colors-twitterBlue)">
+      zustand.surge.sh
+    </Text>
+  </p>
+</Tweet>
+
+So you'll likely be better off just using a dedicated tool. [Mark Erikson](https://twitter.com/acemarke), maintainer of Redux and writer of very long blog posts, has a good article on that topic: [Blogged Answers: Why React Context is Not a "State Management" Tool (and Why It Doesn't Replace Redux)](https://blog.isquaredsoftware.com/2021/01/context-redux-differences/).
+
+My tweet mentions it already: React Context is a _dependency injection_ tool. It allows you to define which "things" your component needs to work, and any parent is responsible for providing that information.
+
+This is conceptually the same as prop-drilling, which is the process of passing props down via multiple layers. Context allows you to do the same: Take some values and pass them as props to children, except that you can leave out a couple of layers:
+
+<img
+  alt="Component tree show props passing over two components vs. context passing where the grand-child can read it directly"
+  src="./props-vs-context.png"
+/>
+
+With context, you just skip the middle man. In our `useCurrentUserQuery` example, it can help us make that dependency explicit: Instead of reading the `useCurrentUserQuery` directly in all components where we want to skip the data-availability check, we read it from React Context. And that context will be filled by the parent that actually does the first check:
+
+```tsx:title=CurrentUserContext
+const CurrentUserContext = React.CreateContext<User | null>(null)
+
+export const useCurrentUserContext = () => {
+  return React.useContext(CurrentUserContext)
+}
+
+export const CurrentUserContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode
+}) => {
+  const currentUserQuery = useCurrentUserQuery()
+
+  if (currentUserQuery.isLoading) {
+    return <SkeletonLoader />
+  }
+
+  if (currentUserQuery.isError) {
+    return <ErrorMessage error={currentUserQuery.error} />
+  }
+
+  return (
+    <CurrentUserContext.Provider value={currentUserQuery.data}>
+      {children}
+    </CurrentUserContext.Provider>
+  )
+}
+```
+
+Here, we take the `currentUserQuery` and put the resulting data into React Context, if it exists (by eliminating loading and error states upfront). We can then read from that context safely in our children, e.g. the `UserNameDisplay` component:
+
+```tsx:title=UserNameDisplay-with-React-Context
+function UserNameDisplay() {
+  const data = useCurrentUserContext()
+  return <div>User: {data.username}</div>
+}
+```
+
+With that, we have made our implicit dependency (we know data has been fetched earlier in the tree) explicit. Whenever someone looks at `UserNameDisplay`, they will know that they need to have data provided from the `CurrentUserContextProvider`. That is something you can keep in mind when refactoring. If you change where the Provider is rendered, you will also know that this will affect all children using that context. That's something you can't know when a component is just using a query - because queries are usually global in your whole app, and data might or might not exist.
+
+### Pleasing TypeScript
+
+TypeScript still won't like it much, because React Context is designed to also work _without_ a Provider, where it will give you the default value of the Context, and that's `null` in our case. Since we never want `useCurrentUserContext` to work in a situation where we are outside a Provider, we can add an invariant to our custom hook:
+
+```tsx:title=context-with-invariant
+export const useCurrentUserContext = () => {
+  const currentUser = React.useContext(CurrentUserContext)
+  if (!currentUser) {
+    throw new Error('CurrentUserContext: No value provided')
+  }
+
+  return currentUser
+}
+```
+
+This method ensures that we will fail fast and with a good error message if we ever accidentally access `useCurrentUserContext` in the wrong place. And with that, TypeScript will infer the value `User` for our custom hook, so we can safely use it and access properties on it.
+
+### State Syncing
+
+You might be thinking: Isn't this "state syncing" - copying one value from React Query and putting into another method of state distribution?
+
+The answer is: No, it is not! The single source of truth is still the query. There is no way to change the context value apart from the Provider, which will always reflect the latest data the query has. Nothing gets copied here, and nothing can get out of sync. Passing `data` from React Query as a prop to a child component is also not "state syncing", and since context is similar to prop drilling, it's also not "state syncing".
+
+### Request Waterfalls
+
+Nothing is without drawbacks, and neither is this technique. Specifically, it might create network waterfalls, because your component tree will stop rendering (it "suspends") at the Provider, so child components won't be rendered and can't fire off network requests, even if they are unrelated.
+
+I'd mostly consider this approach for data that is _mandatory_ for my sub-tree: User information is a good example because we might not know what to render anyway without that data.
+
+### Suspense
+
+Talking about Suspense: Yes, you can achieve a similar architecture with React Suspense, and yes, it has the same drawback: potential request waterfalls, which I've already written about in [#17: Seeding the Query Cache](seeding-the-query-cache).
+
+One problem is that in the current major version (v4), using `suspense: true` on your query won't type narrow `data`, because there are still ways to disable the query and have it not run.
+
+However, in v5, there will be an explicit `useSuspenseQuery` hook, where data is guaranteed to be defined once the component renders. With that, we can do:
+
+```tsx:title=UserNameDisplay-with-suspense
+function UserNameDisplay() {
+  const { data } = useSuspenseQuery(...)
+  return <div>User: {data.username}</div>
+}
+```
+
+and TypeScript will be happy about it. 🎉
 
 ---
 
