@@ -67,12 +67,16 @@ const mapping = [
   { id: 'type-safe-react-query', title: '#19: Type-safe React Query' },
   {
     id: 'you-might-not-need-react-query',
-    title: '#20: You Might Not Need React Query',
+    title: '#20: You Might Not Need React Query'
   },
   {
     id: 'thinking-in-react-query',
-    title: '#21: Thinking in React Query',
+    title: '#21: Thinking in React Query'
   },
+  {
+    id: 'react-query-and-react-context',
+    title: '#22: React Query and React Context'
+  }
 ]
 
 export const RqToc = ({ id }: Props) => {
