@@ -60,7 +60,7 @@ It's not a silver bullet though - it comes with tradeoffs. This shouldn't be sur
 
 ## Being self-contained
 
-For a component to be autonomous, it means it has to handle cases where query data is not available (yet), in particular: loading an error states. This is not a big deal for our `<ProductTable>` component, because very often, when it first loads, it will actually display that `<SkeletonLoader />`.
+For a component to be autonomous, it means it has to handle cases where query data is not available (yet), in particular: loading and error states. This is not a big deal for our `<ProductTable>` component, because very often, when it first loads, it will actually display that `<SkeletonLoader />`.
 
 But there are lots of other situations where we just want to read some information from some parts of our query, where we _know_ that the query has been already used further up the tree. For example, we might have a `userQuery` that contains information about the logged-in user:
 
