@@ -68,7 +68,7 @@ Whenever this question comes up and someone prefers the array notation, I show t
 
 ## It's shorter
 
-That's it. That's the advantage.Fewer characters to write. As if keeping code short was ever a good indicator for maintainability. `let` has fewer characters than`const` - does that mean we use`let` everywhere? Okay, I'm aware of _that_ debate as well, but let's not go there too. 😂
+That's it. That's the advantage.Fewer characters to write. As if keeping code short was ever a good indicator for maintainability. `let` has fewer characters than `const` - does that mean we use `let` everywhere? Okay, I'm aware of _that_ debate as well, but let's not go there too. 😂
 
 But seriously - `i` is shorter than `index`, `d` is shorter than `dashboard` and so on. Something being short does not make it better. We know that we read code way more often than we write it, so we shouldn't focus on making it easy to write - it should be easy to read, which brings me right to the first advantage of the generic notation:
 
@@ -92,7 +92,7 @@ const options: {
 }[]
 ```
 
-To me, this reads like`options` is an object, and only at the very end, I can see that it's actually an array. It gets worse if the object has lots of properties, because that will make the content longer and will give the popover a scrollbar - making it nigh impossible to see the `[]` at the end. Granted, this might be a tooling problem, but one that wouldn't exist if we'd show this as what it is: An array of objects. It's not even that much longer when it's spread over multiple lines:
+To me, this reads like `options` is an object, and only at the very end, I can see that it's actually an array. It gets worse if the object has lots of properties, because that will make the content longer and will give the popover a scrollbar - making it nigh impossible to see the `[]` at the end. Granted, this might be a tooling problem, but one that wouldn't exist if we'd show this as what it is: An array of objects. It's not even that much longer when it's spread over multiple lines:
 
 ```ts:title=array-of-options
 const options: Array<{
@@ -114,7 +114,7 @@ function add(items: ReadonlyArray<string>, newItem: string)
 function add(items: readonly string[], newItem: string)
 ```
 
-This is not such a big deal, but`readonly` being a reserved word that only works on arrays and tuples is weird to begin with when we have a [built - in utility type](https://www.typescriptlang.org/docs/handbook/utility-types.html#readonlytype) that does the same thing. And splitting up `readonly` and `[]` really hurts the flow when reading.
+This is not such a big deal, but `readonly` being a reserved word that only works on arrays and tuples is weird to begin with when we have a [built - in utility type](https://www.typescriptlang.org/docs/handbook/utility-types.html#readonlytype) that does the same thing. And splitting up `readonly` and `[]` really hurts the flow when reading.
 
 ---
 
@@ -162,7 +162,7 @@ Still not convinced that the generic syntax is better? I got one last argument:
 
 ## keyof
 
-Let's look at a fairly common example where we have a function that takes an object, and we also want to pass an Array of possible keys of this object to the same function. We would need this if we'd want to implement a function like `pick` or`omit`:
+Let's look at a fairly common example where we have a function that takes an object, and we also want to pass an Array of possible keys of this object to the same function. We would need this if we'd want to implement a function like `pick` or `omit`:
 
 ```ts:title=pick
 const myObject = {
