@@ -41,6 +41,9 @@ const theme = {
       color: 'background',
       bg: 'primary',
     },
+    primary: {
+      color: 'background'
+    },
   },
   colors: {
     ...baseTheme.colors,
