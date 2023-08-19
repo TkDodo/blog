@@ -55,6 +55,15 @@ export const AvatarMichaelC = () => (
   />
 )
 
+export const AvatarMattpocockuk = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src='../../static/images/mattpocockuk.jpeg'
+    alt='Avatar for mattpocockuk'
+    placeholder='blurred'
+  />
+)
+
 export const AvatarTannerlinsley = () => (
   <StaticImage
     style={{ borderRadius: '50%' }}
