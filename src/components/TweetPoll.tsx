@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Box, Flex, Text } from '@theme-ui/components'
-import { useColorMode } from 'theme-ui'
 
 type Props = {
   votes: string
@@ -13,10 +12,6 @@ type Props = {
 }
 
 export const TweetPoll = ({ options, votes }: Props) => {
-  const [colorMode] = useColorMode()
-  const bgColor =
-    colorMode === 'dark' ? 'rgb(51, 54, 57)' : 'rgb(207, 217, 222)'
-
   return (
     <Box
       as='span'
@@ -45,11 +40,9 @@ export const TweetPoll = ({ options, votes }: Props) => {
               width: percentage,
               borderRadius: '4px',
               minHeight: '32px',
-            }}
-            style={{
               backgroundColor: winner
-                ? 'rgba(29, 155, 240, 0.58)'
-                : bgColor,
+                ? 'var(--theme-ui-colors-twitterPollBgWinner)'
+                : 'var(--theme-ui-colors-twitterPollBg)'
             }}
           />
           <Box
