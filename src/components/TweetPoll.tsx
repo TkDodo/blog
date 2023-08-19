@@ -45,6 +45,8 @@ export const TweetPoll = ({ options, votes }: Props) => {
               width: percentage,
               borderRadius: '4px',
               minHeight: '32px',
+            }}
+            style={{
               backgroundColor: winner
                 ? 'rgba(29, 155, 240, 0.58)'
                 : bgColor,
@@ -61,7 +63,7 @@ export const TweetPoll = ({ options, votes }: Props) => {
           >
             <Text>{winner ? <b>{name}</b> : name}</Text>
           </Box>
-          <Text>{percentage}</Text>{' '}
+          <Text>{percentage}</Text>
         </Flex>
       ))}
       <Box
