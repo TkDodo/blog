@@ -49,6 +49,8 @@ const theme = {
     ...baseTheme.colors,
     backgroundSecondary: 'var(--theme-ui-colors-gray-2)',
     twitterBlue: '#1d9bf0',
+    twitterPollBg: 'rgb(207, 217, 222)',
+    twitterPollBgWinner: 'rgba(29, 155, 240, 0.58)',
     primary: '#a10f15',
     modes: {
       ...baseTheme.colors.modes,
@@ -59,6 +61,7 @@ const theme = {
       dark: {
         ...baseTheme.colors.modes.dark,
         primary: '#f0666b',
+        twitterPollBg: 'rgb(51, 54, 57)',
         backgroundSecondary: 'var(--theme-ui-colors-gray-8)',
       },
     },
