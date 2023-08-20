@@ -33,7 +33,7 @@ With modular libraries, I'm not too concerned about adding more features, mainly
 
 [Bundlephobia](https://bundlephobia.com/package/remeda@1.6.1) says `remeda` is 5.3kb minzipped, but that's not the whole picture. The lib is fully treeshakable, so this only applies if you were to use every single function of `remeda`, which is unlikely.
 
-As an example, if you're only using `omitBy` from `remeda`, it will only cost you [2.08kb](https://bundlejs.com/?bundle&q=remeda&treeshake=%5B%7B+omitBy+%7D%5D). The relatively high starting cost comes from all functions having data-first and data-last signatures. If you add another function, like `mapToObj`, it'll add another [0.01kb](https://bundlejs.com/?bundle&q=remeda&treeshake=%5B%7B+omitBy%2CmapToObj+%7D%5D). So cost wise, it doesn't really matter if we add another function to the lib, as it will not affect consumers until they actually use it.
+As an example, if you're only using `omitBy` from `remeda`, it will only cost you [355 bytes](https://bundlejs.com/?bundle&q=remeda&treeshake=%5B%7B+omitBy+%7D%5D) minzipped. If you add another function, like `mapToObj`, it'll add another [102 bytes](https://bundlejs.com/?bundle&q=remeda&treeshake=%5B%7B+omitBy%2CmapToObj+%7D%5D). So cost wise, it doesn't really matter if we add another function to the lib, as it will not affect consumers until they actually use it.
 
 ## Holistic libraries
 
