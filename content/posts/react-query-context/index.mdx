@@ -56,7 +56,7 @@ To me, this is great because it makes the `ProductTable` decoupled and independe
 
 So being able to fetch data right in a component, where you need it, is immensely useful. We can literally take the `ProductTable` component and move it anywhere in our App, and it will just work. The component is very _resilient to change_, which is the main reason why I'm advocating for accessing your query directly wherever you need to (via a custom hook), both in [#10: React Query as a State Manager](react-query-as-a-state-manager) and [#21: Thinking in React Query](thinking-in-react-query).
 
-It's not a silver bullet though - it comes with tradeoffs. This shouldn't be surprising, because at the end of the day, everything is a tradeoff. But are we trading in here, exactly ?
+It's not a silver bullet though - it comes with tradeoffs. This shouldn't be surprising, because at the end of the day, everything is a tradeoff. But are we trading in here, exactly?
 
 ## Being self-contained
 
@@ -91,9 +91,9 @@ function UserNameDisplay() {
 
 Of course, TypeScript won't let us, because `data` is potentially undefined. But we know better - it can't be undefined, because in our situation, the `UserNameDisplay` won't be rendered without the query being already initiated further up the tree.
 
-That's a bit of a dilemma. Do we want to just shut up TS here and do `data!.userName`, because we know it will be defined ? Do we play it safe and do `data?.userName` (which is possible here, but might not be so easy to pull off in other situations)? Do we just add a guard: `if (!data) return null` ? Or do we add proper loading and error handling to all 25 places where we call `useCurrentUserQuery` ?
+That's a bit of a dilemma. Do we want to just shut up TS here and do `data!.userName`, because we know it will be defined? Do we play it safe and do `data?.userName` (which is possible here, but might not be so easy to pull off in other situations)? Do we just add a guard: `if (!data) return null`? Or do we add proper loading and error handling to all 25 places where we call `useCurrentUserQuery`?
 
-To be honest - I think all of those ways are kind of suboptimal. I don't want to liter my codebase with checks that can "never happen" (to the best of my current knowledge). But I also don't want to ignore TypeScript, because (as usual), TS is right.
+To be honest - I think all of those ways are kind of suboptimal. I don't want to litter my codebase with checks that can "never happen" (to the best of my current knowledge). But I also don't want to ignore TypeScript, because (as usual), TS is right.
 
 ### An implicit dependency
 
@@ -107,7 +107,7 @@ This is quite the opposite of the `<ProductTable>` component: Instead of being r
 
 ### Make it explicit
 
-The solution is, of course, to make the dependency _explicit_. And there is no better way to do this than with `React Context`:
+The solution is, of course, to make the dependency _explicit_. And there is no better way to do this than with React Context:
 
 ## React Context
 
@@ -150,7 +150,7 @@ This is conceptually the same as prop-drilling, which is the process of passing 
 With context, you just skip the middle man. In our `useCurrentUserQuery` example, it can help us make that dependency explicit: Instead of reading the `useCurrentUserQuery` directly in all components where we want to skip the data-availability check, we read it from React Context. And that context will be filled by the parent that actually does the first check:
 
 ```tsx:title=CurrentUserContext
-const CurrentUserContext = React.CreateContext<User | null>(null)
+const CurrentUserContext = React.createContext<User | null>(null)
 
 export const useCurrentUserContext = () => {
   return React.useContext(CurrentUserContext)
