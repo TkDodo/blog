@@ -89,23 +89,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://www.cliffordfajardo.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Clifford Fajardo</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/6743796?s=300"
-            height="300"
-            alt="Clifford Fajardo"
-          />
-        </Link>
-        <div>
-          <Text>🥳 Sponsor ($20 a month)</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://www.workflowgen.com/"
           target="_blank"
           rel="noopener noreferrer"
@@ -135,24 +118,6 @@ const Sponsors = () => (
             src="https://avatars.githubusercontent.com/u/41463883?s=300"
             height="300"
             alt="daily.dev"
-          />
-        </Link>
-        <div>
-          <Text>🥳 Sponsor ($20 a month)</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
-          href="https://trpc.io/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>tRPC</h2>
-          <StaticImage
-            placeholder="blurred"
-            src="../../static/images/trpc.png"
-            height={300}
-            alt="tRPC"
           />
         </Link>
         <div>
