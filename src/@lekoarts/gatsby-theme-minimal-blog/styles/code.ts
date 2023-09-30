@@ -38,7 +38,7 @@ export default {
   'p > code, li > code': {
     bg: `backgroundSecondary`,
     color: `text`,
-    padding: '0.2rem 0.3rem',
+    padding: ['0.18rem 0.3rem', '0.18rem 0.3rem', '0.2rem 0.3rem'],
     borderRadius: `6px`,
     fontSize: `90%`,
   },

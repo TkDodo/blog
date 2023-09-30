@@ -51,19 +51,19 @@ const theme = {
     twitterBlue: '#1d9bf0',
     twitterPollBg: 'rgb(207, 217, 222)',
     twitterPollBgWinner: 'rgba(29, 155, 240, 0.58)',
-    primary: '#a10f15',
+    primary: '#387D6C',
     modes: {
       ...baseTheme.colors.modes,
       light: {
-        ...baseTheme.colors.modes.light,
+        ...baseTheme.colors.modes.light
         // background: '#F5F5F5',
       },
       dark: {
         ...baseTheme.colors.modes.dark,
-        primary: '#f0666b',
+        primary: '#76c2af',
         twitterPollBg: 'rgb(51, 54, 57)',
-        backgroundSecondary: 'var(--theme-ui-colors-gray-8)',
-      },
+        backgroundSecondary: 'var(--theme-ui-colors-gray-8)'
+      }
     },
   },
   styles: {

@@ -58,9 +58,9 @@ export const AvatarMichaelC = () => (
 export const AvatarMattpocockuk = () => (
   <StaticImage
     style={{ borderRadius: '50%' }}
-    src='../../static/images/mattpocockuk.jpeg'
-    alt='Avatar for mattpocockuk'
-    placeholder='blurred'
+    src="../../static/images/mattpocockuk.jpeg"
+    alt="Avatar for mattpocockuk"
+    placeholder="blurred"
   />
 )
 
@@ -141,6 +141,15 @@ export const AvatarSwyx = () => (
     style={{ borderRadius: '50%' }}
     src="../../static/images/swyx.jpeg"
     alt="Avatar for swyx"
+    placeholder="blurred"
+  />
+)
+
+export const AvatarHousecor = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/housecor.png"
+    alt="Avatar for housecor"
     placeholder="blurred"
   />
 )
