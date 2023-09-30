@@ -31,7 +31,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>💍 Platinum ($500 a month)</Text>
+          <Text>💍 Platinum</Text>
         </div>
       </Card>
       <Card>
@@ -49,7 +49,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>🥉 Bronze ($50 a month)</Text>
+          <Text>🥉 Bronze</Text>
         </div>
       </Card>
       <Card>
@@ -66,7 +66,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>🥉 Bronze ($50 a month)</Text>
+          <Text>🥉 Bronze</Text>
         </div>
       </Card>
       <Card>
@@ -103,7 +103,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>🥳 Sponsor ($20 a month)</Text>
+          <Text>🥳 Sponsor</Text>
         </div>
       </Card>
       <Card>
@@ -121,7 +121,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>🥳 Sponsor ($20 a month)</Text>
+          <Text>🥳 Sponsor</Text>
         </div>
       </Card>
       <Card>
@@ -138,7 +138,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>🥳 Sponsor ($20 a month)</Text>
+          <Text>🥳 Sponsor</Text>
         </div>
       </Card>
       <Card>
@@ -156,7 +156,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>🥳 Sponsor ($20 a month)</Text>
+          <Text>🥳 Sponsor</Text>
         </div>
       </Card>
       <Card>
@@ -173,7 +173,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>🎗 Supporter ($10 a month)</Text>
+          <Text>🎗 Supporter</Text>
         </div>
       </Card>
       <Card>
@@ -190,7 +190,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>🎗 Supporter ($10 a month)</Text>
+          <Text>🎗 Supporter</Text>
         </div>
       </Card>
       <Card>
@@ -207,7 +207,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>🎗 Supporter ($10 a month)</Text>
+          <Text>🎗 Supporter</Text>
         </div>
       </Card>
       <Card>
@@ -225,7 +225,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>🎗 Supporter ($10 a month)</Text>
+          <Text>🎗 Supporter</Text>
         </div>
       </Card>
       <Card>
@@ -242,7 +242,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>🎗 Supporter ($10 a month)</Text>
+          <Text>🎗 Supporter</Text>
         </div>
       </Card>
       <Card>
@@ -277,7 +277,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>🎗 Supporter ($10 a month)</Text>
+          <Text>🎗 Supporter</Text>
         </div>
       </Card>
       <Card>
@@ -294,7 +294,7 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>🎗 Supporter ($10 a month)</Text>
+          <Text>🎗 Supporter</Text>
         </div>
       </Card>
       <Card>
@@ -328,7 +328,24 @@ const Sponsors = () => (
           />
         </Link>
         <div>
-          <Text>🎗 Supporter ($10 a month)</Text>
+          <Text>🎗 Supporter</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://github.com/diegoalbalat"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>diegoalbalat</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/33328637?s=300"
+            height="300"
+            alt="diegoalbalat"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter</Text>
         </div>
       </Card>
     </Grid>
