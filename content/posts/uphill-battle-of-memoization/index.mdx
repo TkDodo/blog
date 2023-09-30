@@ -38,7 +38,7 @@ So, here's my take on it:
 
 <Highlight>Memo is too easy to break</Highlight>
 
-To recap: When react renders a component tree, it will do so top-down, for all children. Once a render has started, there isn't really a way for us to stop it. Mostly, that's a good thing, because renders make sure that we see a correct reflection of our state on the screen. Also, renders are usually fast.
+To recap: When react renders a component tree, it will do so top-down, for all children. Once a render has started, there is no way for us to stop it. Mostly, that's a good thing, because renders make sure that we see a correct reflection of our state on the screen. Also, renders are usually fast.
 
 Then of course there are those edge cases where they aren't. We all have some components that don't render as fast as we wish they would, for some reason we can't easily change. Luckily, React can still "abort" renders, and it will do that if it sees "the same thing". That's what makes techniques like lifting content up work in the first place:
 
@@ -187,7 +187,7 @@ We can surely wrap the children we're passing the the memoized component into `u
 
 ## The alternative
 
-So using `React.memo` is a bit of a minefield, and choosing one of the proposed alternatives seems way better to me. But sometimes, we seemingly can't avoid memoizing a component. Let's take a look at the example I've seen on twitter that sparked the ide for this blogpost:
+So using `React.memo` is a bit of a minefield, and choosing one of the proposed alternatives seems way better to me. But sometimes, we seemingly can't avoid memoizing a component. Let's take a look at the example I've seen on twitter that sparked the idea for this blogpost:
 
 <Tweet
   name="Cory House"
@@ -233,13 +233,13 @@ function App() {
 
 ### Don't start rendering
 
-Remember when I said that once a render started, we have no way of stopping it? That's still tue, but what if we'd stop the render from starting in the first place ... 🤔
+Remember when I said that once a render started, we have no way of stopping it? That's still true, but what if we'd stop the render from starting in the first place ... 🤔
 
 If `state` wouldn't live at the top of the `App`, we wouldn't need to re-render the whole tree whenever it changes. But where could it live instead? We've already established that we can't move it down - so let's put it to the side - <Emph>outside of React</Emph>.
 
 This is precisely what most state management solutions do. They store the state outside of React and surgically trigger re-renders of the parts of the component tree that need to know about changes. If you've used [React Query](https://tanstack.com/query/latest/docs/react/overview) before - that's exactly what's happening there as well. Without that technique, you'd see way more re-renders than you'd like to.
 
-So yes, my proposed alternative solution is to bring in an effective state manager. I'm gonna use [zustand](https://zustand.surge.sh) because it's the one I'm most familiar with.
+So yes, my proposed alternative solution is to bring in an effective state manager. I'm gonna use [zustand](https://zustand.surge.sh) because it's the one I'm most familiar with:
 
 ```js:title=zustand
 const useTableStore = create((set) => ({
