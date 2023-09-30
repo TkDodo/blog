@@ -1,0 +1,276 @@
+---
+title: The Uphill Battle of Memoization
+description: Exploring why React.memo shouldn't be your first choice for performance optimizations
+date: 2023-09-30
+banner: ./uphill.png
+tags:
+  - React
+  - JavaScript
+  - Memo
+  - Performance
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import Emph from 'components/Emph'
+import Highlight from 'components/Highlight'
+import Tweet, { AvatarHousecor } from 'components/Tweet'
+
+<img src="./uphill.png" alt="a steep way to the top of a mountain" />
+
+<Attribution
+  name="Michiel Annaert"
+  url="https://unsplash.com/@michielannaert"
+/>
+
+<Translations>{[]}</Translations>
+
+---
+
+There's lots of good content out there already about what you should do before you reach for [React.memo](https://react.dev/reference/react/memo). Dan's post [before you memo](https://overreacted.io/before-you-memo/) and Kent's [simple trick to optimize React re-renders](https://kentcdodds.com/blog/optimize-react-re-renders) are both great reads.
+
+The idea is to let component composition solve the problem for you, either by moving state down or lifting content up. This is brilliant because component composition is React's natural mental modal. As Dan points out, this will also work well with Server Components, which are now a reality.
+
+What's missing from most of the articles I've read is the <Emph>why</Emph>. Yes, composition is great, but what's the problem with using `React.memo`? Why isn't it just as good as a first choice?
+
+So, here's my take on it:
+
+<Highlight>Memo is too easy to break</Highlight>
+
+To recap: When react renders a component tree, it will do so top-down, for all children. Once a render has started, there isn't really a way for us to stop it. Mostly, that's a good thing, because renders make sure that we see a correct reflection of our state on the screen. Also, renders are usually fast.
+
+Then of course there are those edge cases where they aren't. We all have some components that don't render as fast as we wish they would, for some reason we can't easily change. Luckily, React can still "abort" renders, and it will do that if it sees "the same thing". That's what makes techniques like lifting content up work in the first place:
+
+```jsx:title=lift-content-up {4-5,18}
+function App() {
+  return (
+    <ColorPicker>
+      <p>Hello, world!</p>
+      <ExpensiveTree />
+    </ColorPicker>
+  )
+}
+
+function ColorPicker({ children }) {
+  const [color, setColor] = React.useState('red')
+  return (
+    <div style={{ color }}>
+      <input
+        value={color}
+        onChange={(event) => setColor(event.target.value)}
+      />
+      {children}
+    </div>
+  )
+}
+```
+
+<br />
+<br />
+<Attribution
+  prefix="Source:"
+  name="overreacted"
+  url="https://overreacted.io/before-you-memo/#solution-2-lift-content-up"
+/>
+
+If `children` are always the exact same references, React can short-circuit the render. Even if `color` changes, the `ExpensiveTree` will not re-render with it.
+
+The alternative solution would be to keep rendering everything from within the same component, but slap a `React.memo` around the `ExpensiveTree` component:
+
+```jsx:title=react-memo {10,19}
+function App() {
+  const [color, setColor] = useState('red')
+  return (
+    <div style={{ color }}>
+      <input
+        value={color}
+        onChange={(event) => setColor(event.target.value)}
+      />
+      <p>Hello, world!</p>
+      <ExpensiveTree />
+    </div>
+  )
+}
+
+function ExpensiveComponent() {
+  return <div>I'm expensive!</div>
+}
+
+const ExpensiveTree = React.memo(ExpensiveComponent)
+```
+
+If we wrap a component with `React.memo`, React will skip rendering that component (and its children) if its props are unchanged. This will certainly achieve the same result as changing the component composition, but it's a lot easier to break in the future.
+
+When a component is memoized, React will compare each prop with [Object.is](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is). If they haven't changed, re-rending can be skipped. This works fine in our current example, because our component actually has no props. It will also work with primitive values as props, but it's not so great with functions, objects and arrays.
+
+Let's make an innocent looking change to our `ExpensiveComponent` - adding a `style` prop:
+
+```jsx:title=style
+function ExpensiveComponent({ style }) {
+  return <div style={style}>I'm expensive!</div>
+}
+
+const ExpensiveTree = React.memo(ExpensiveComponent)
+```
+
+This is usually how components evolve over time - props get added. The thing is - consumers of the `ExpensiveTree` component don't necessarily know that it is memoized. After all, this is just a performance optimization and an implementation detail.
+
+If we now add an inline style prop when rendering our `ExpensiveTree` component:
+
+```jsx:title=inline-style {2}
+<ExpensiveTree style={{ backgroundColor: 'blue' }} />
+```
+
+we've inadvertently ruined the memoization, because the `style` prop will be a new object on every render. For React, it looks like props have changed, so it cannot skip rendering.
+
+Okay, sure, we can fix this by wrapping the `style` prop in `React.useMemo`:
+
+```jsx:title=useMemo {2-5,9}
+function App() {
+  const memoizedStyle = React.useMemo(
+    () => ({ backgroundColor: 'blue' }),
+    []
+  )
+
+  return <ExpensiveTree style={memoizedStyle} />
+}
+```
+
+This is possible in our simple case, but imagine how our code would look if we have more props that need memoization. It will make our code harder to reason about, and there's no guarantee that consumers will actually do that memoization.
+
+It further becomes a lot harder when `style` itself comes in as a prop to the component rendering the `ExpensiveTree`:
+
+```jsx:title=style-prop {2}
+function App({ style }) {
+  const memoizedStyle = React.useMemo(() => style, [style])
+
+  return <ExpensiveTree style={memoizedStyle} />
+}
+```
+
+This memoization doesn't really achieve anything. We don't know if `style` will be passed as an inline object to `App`, so memoizing it here is pointless. We'd need to create a stable reference at the call-side of `App`.
+
+## {children}
+
+What's worse - this isn't the only way how our perf improvement can break. Another gotcha is that memoized components won't work as you might expect if they accept `children`:
+
+```jsx {4,9,13}
+function App() {
+  return (
+    <ExpensiveTree>
+      <p>Hello, world!</p>
+    </ExpensiveTree>
+  )
+}
+
+function ExpensiveComponent({ children }) {
+  return (
+    <div>
+      I'm expensive!
+      {children}
+    </div>
+  )
+}
+
+const ExpensiveTree = React.memo(ExpensiveComponent)
+```
+
+Oof, I have to admit - I didn't know for a long time that this will break memoization. Why would it? I'm always passing the same, stable `<p>` tag as children, right? Well, not really. JSX is just syntactic sugar for `React.createElement`, which will create a new object on every render. So, even though the `<p>` tag looks like it's the same to us, it won't be the same reference.
+
+We can surely wrap the children we're passing the the memoized component into `useMemo` too, but I hope you're realizing by now that we're fighting an uphill battle that's hardly winnable. The next person might just come and pass an empty object or array as fallback value to a prop on our memoized component, and we're back to square one:
+
+```jsx:title=fallback-value
+//💥 why can't we have nice things 😭
+<ExpensiveTree someProp={someStableArray ?? []} />
+```
+
+## The alternative
+
+So using `React.memo` is a bit of a minefield, and choosing one of the proposed alternatives seems way better to me. But sometimes, we seemingly can't avoid memoizing a component. Let's take a look at the example I've seen on twitter that sparked the ide for this blogpost:
+
+<Tweet
+  name="Cory House"
+  handle="housecor"
+  tweetId="1707358107532210193"
+  avatar={<AvatarHousecor />}
+  date={new Date('2023-09-28')}
+>
+  <p>I rarely need to do React performance optimizations.</p>
+  <p>
+    But we have a page with 5 big tables and a summary bar. When one
+    table changes, everything renders. It's slow.
+  </p>
+  <p>Solution:</p>
+  <p>
+    1. I wrapped each table in memo.
+    <br />
+    2. I wrapped the functions passed down in useCallback.
+  </p>
+  <p>MUCH faster.</p>
+</Tweet>
+
+Here, I'd expect the component tree to look something like this (I'm using two tables instead of five for brevity):
+
+```jsx:title=tables
+function App() {
+  const [state, setState] = React.useState({
+    table1Data: [],
+    table2Data: [],
+  })
+
+  return (
+    <div>
+      <Table1 data={state.table1Data} />
+      <Table2 data={state.table2Data} />
+      <SummaryBar />
+    </div>
+  )
+}
+```
+
+`state` holds the data of both tables, and the `SummaryBar` needs access to all of it. We can't move state down into the tables, and we also can't compose the components in a different way. It seems that memoization is our only option.
+
+### Don't start rendering
+
+Remember when I said that once a render started, we have no way of stopping it? That's still tue, but what if we'd stop the render from starting in the first place ... 🤔
+
+If `state` wouldn't live at the top of the `App`, we wouldn't need to re-render the whole tree whenever it changes. But where could it live instead? We've already established that we can't move it down - so let's put it to the side - <Emph>outside of React</Emph>.
+
+This is precisely what most state management solutions do. They store the state outside of React and surgically trigger re-renders of the parts of the component tree that need to know about changes. If you've used [React Query](https://tanstack.com/query/latest/docs/react/overview) before - that's exactly what's happening there as well. Without that technique, you'd see way more re-renders than you'd like to.
+
+So yes, my proposed alternative solution is to bring in an effective state manager. I'm gonna use [zustand](https://zustand.surge.sh) because it's the one I'm most familiar with.
+
+```js:title=zustand
+const useTableStore = create((set) => ({
+  table1Data: [],
+  table2Data: [],
+  actions: {...}
+}))
+
+export const useTable1Data = () =>
+  useTableStore((state) => state.table1Data)
+export const useTable2Data = () =>
+  useTableStore((state) => state.table2Data)
+export const useSummaryData = () =>
+  useTableStore((state) =>
+    calculateSummary(state.table1Data, state.table2Data)
+  )
+```
+
+Now every component can subscribe internally to the state it is interested in, avoiding any top-down renders. If `table2Data` updates, `Table1` won't re-render. This is as effective as memoizing the tables, but won't suffer from the pitfalls where adding new props can negatively impact performance.
+
+## A way out
+
+Granted, all solutions we have here are not great. Memoizing in general makes our code harder to read, and it's easy to get wrong, which makes it the worst option for me. Using external state managers is a bit better - you might have that dependency in your App anyway. Adapting the way you compose components is still the best option, but it's not always possible.
+
+What would really be a way out is if we'd change the rules of the game. [Records and Tuples](https://github.com/tc39/proposal-record-tuple), an ECMAScript proposal that's in stage 2 for quite some time, would help us with arrays and objects, but not for functions. [Sebastien Lorber](https://twitter.com/sebastienlorber) has a [great read](https://sebastienlorber.com/records-and-tuples-for-react) on that.
+
+The React team has also hinted that they are working on a compiler called [React Forget](https://www.youtube.com/watch?v=lGEMwh32soc), which will supposedly memoize everything for us automatically. With that in place, we could get the perf optimizations of `React.memo` without the error surface.
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />
