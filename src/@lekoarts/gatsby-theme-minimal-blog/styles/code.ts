@@ -27,13 +27,15 @@ export default {
   },
   ...baseCode,
   '.code-title': {
-    backgroundColor: tint(`primary`, 0.7),
-    color: `black`,
-    fontSize: 0,
-    px: 3,
-    py: 2,
+    // @ts-expect-error this is an object
+    ...baseCode['.code-title'],
+    fontSize: [0, 1],
     fontFamily: 'ml, monospace',
-    mx: [0, 0, 0, -3],
+  },
+  '.prism-code': {
+    // @ts-expect-error this is an object
+    ...baseCode['.prism-code'],
+    fontSize: [0, 1, 2],
   },
   'p > code, li > code': {
     bg: `backgroundSecondary`,
