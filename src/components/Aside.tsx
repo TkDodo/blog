@@ -38,7 +38,7 @@ const Aside = ({ children, title, icon }: Props) => {
         color: 'var(--theme-ui-colors-text)',
         marginTop: ['16px', '16px', '20px'],
         marginBottom: ['16px', '16px', '20px'],
-        borderRadius: '0.5rem',
+        borderRadius: '12px',
         paddingX: ['16px', '16px', '20px'],
         paddingY: title ? ['16px', '16px', '20px'] : 0,
         borderLeft: '6px solid var(--theme-ui-colors-primary)',

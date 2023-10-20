@@ -14,7 +14,7 @@ import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
-import Emph from 'components/Emph'
+import Aside from 'components/Aside'
 
 <img src="./optimizations.jpeg" />
 
@@ -23,7 +23,7 @@ import Emph from 'components/Emph'
   url="https://unsplash.com/@szmigieldesign"
 />
 
-**Last Update: 23.04.2022**
+**Last Update: 20.10.2023**
 
 <RqToc id="react-query-render-optimizations" />
 
@@ -67,8 +67,13 @@ I haven't been entirely honest in the [last example](react-query-data-transforma
 
 ```tsx:title=count-component
 export const useTodosQuery = (select) =>
-  useQuery({ queryKey: ['todos'], queryFn: fetchTodos, select })
-export const useTodosCount = () => useTodosQuery((data) => data.length)
+  useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodos,
+    select,
+  })
+export const useTodosCount = () =>
+  useTodosQuery((data) => data.length)
 
 function TodosCount() {
   const todosCount = useTodosCount()
@@ -90,7 +95,7 @@ That is because React Query exposes a lot of meta information for each query, an
 
 For this use-case, React Query has the `notifyOnChangeProps` option. It can be set on a per-observer level to tell React Query: Please only inform this observer about changes if one of these props change. By setting this option to `['data']`, we will find the optimized version we seek:
 
-```ts:title=optimized-with-notifyOnChangeProps
+```ts:title=optimized-with-notifyOnChangeProps {1,6,9}
 export const useTodosQuery = (select, notifyOnChangeProps) =>
   useQuery({
     queryKey: ['todos'],
@@ -113,7 +118,8 @@ export const useTodosCount = () =>
   useTodosQuery((data) => data.length, ['data'])
 
 function TodosCount() {
-  // 🚨 we are using error, but we are not getting notified if error changes!
+  // 🚨 we are using error,
+  // but we are not getting notified if error changes!
   const { error, data } = useTodosCount()
 
   return (
@@ -187,9 +193,12 @@ if (someCondition()) {
 }
 ```
 
-&#x200B;<Emph>Update</Emph>: Starting with v4, tracked queries are turned on per
-default in React Query, and you can opt out of the feature with
-`notifyOnChangeProps: 'all'`.
+<Aside title="update" icon="bell">
+
+Starting with v4, tracked queries are turned on per default in React
+Query, and you can opt out of the feature with `notifyOnChangeProps: 'all'`.
+
+</Aside>
 
 ## Structural sharing
 
