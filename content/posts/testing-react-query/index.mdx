@@ -14,6 +14,7 @@ import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
+import Emph from 'components/Emph'
 
 <img src="./testing.jpeg" />
 
@@ -244,7 +245,7 @@ test("my first test", async () => {
 }
 ```
 
-**Update**:
+<Emph>Update</Emph>:
 
 [@testing-library/react v13.1.0](https://github.com/testing-library/react-testing-library/releases/tag/v13.1.0) also has a new [renderHook](https://testing-library.com/docs/react-testing-library/api/#renderhook) that you can use. However, it doesn't return its own `waitFor` util, so you'll have to use the one you can [import from @testing-library/react](https://testing-library.com/docs/dom-testing-library/api-async/#waitfor) instead. The API is a bit different, as it doesn't allow to return a `boolean`, but expects a `Promise` instead. That means we must adapt our code slightly:
 
@@ -278,7 +279,7 @@ setLogger({
 })
 ```
 
-**Update**
+<Emph>Update</Emph>
 
 `setLogger` was removed in v4. Instead, you can pass your custom logger as prop to the `QueryClient` you create:
 

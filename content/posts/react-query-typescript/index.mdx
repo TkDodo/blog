@@ -14,6 +14,7 @@ import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 import Tweet, { AvatarDanvdk } from 'components/Tweet'
 import { RqToc } from 'components/rq-toc'
+import Emph from 'components/Emph'
 
 <img src="./react-query-typescript.jpeg" />
 
@@ -61,7 +62,8 @@ function useGroups() {
 }
 ```
 
-**Update**: The docs have been updated and _do not_ primarily encourage this pattern anymore.
+<Emph>Update</Emph>: The docs have been updated and _do not_ primarily
+encourage this pattern anymore.
 
 Over time, React Query has added more Generics to the `useQuery` hook (there are now four of them), mainly because more functionality was added. The above code works, and it will make sure that the `data` property of our custom hook is correctly typed to `Group[] | undefined` as well as that our `error` will be of type `Error | undefined`. But it will not work like that for more advanced use-cases, especially when the other two Generics are needed.
 
@@ -265,7 +267,10 @@ This has nothing to do with React Query, it is just how TypeScript works. [@danv
   </p>
 </Tweet>
 
-**Update**: TypeScript 4.6 has added [control flow analysis for destructured discriminated unions](https://devblogs.microsoft.com/typescript/announcing-typescript-4-6/#cfa-destructured-discriminated-unions), which makes the above example work. So this is no longer an issue. 🙌
+<Emph>Update</Emph>: TypeScript 4.6 has added [control flow analysis for
+destructured discriminated
+unions](https://devblogs.microsoft.com/typescript/announcing-typescript-4-6/#cfa-destructured-discriminated-unions),
+which makes the above example work. So this is no longer an issue. 🙌
 
 ## Type safety with the enabled option
 
@@ -314,7 +319,11 @@ Getting optimistic updates right in TypeScript is not an easy feat, so we've dec
 
 The important part is: You have to explicitly type the `variables` argument passed to `onMutate` in order to get the best type inference. I don't fully comprehend why that is, but it again seems to have something to do with inference of Generics. Have a look [at this comment](https://github.com/tannerlinsley/react-query/pull/1366#discussion_r538459890) for more information.
 
-**Update**: TypeScript 4.7 has added [Improved Function Inference in Objects and Methods](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7-beta/#improved-function-inference-in-objects-and-methods), which fixes the issue. Optimistic updates should now infer types for context correctly without extra work. 🥳
+<Emph>Update</Emph>: TypeScript 4.7 has added [Improved Function
+Inference in Objects and
+Methods](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7-beta/#improved-function-inference-in-objects-and-methods),
+which fixes the issue. Optimistic updates should now infer types for
+context correctly without extra work. 🥳
 
 ## useInfiniteQuery
 

@@ -11,6 +11,7 @@ tags:
 import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
+import Emph from 'components/Emph'
 
 <img src="./exhaustive-matching.jpg" />
 
@@ -276,7 +277,11 @@ This happens because now, we fall through our switch statement, and because we h
 
 > Nothing was returned from render. This usually means a return statement is missing. Or, to render nothing, return null.
 
-**Update**: Since [React 18.0](https://reactjs.org/blog/2022/03/29/react-v18.html), React [can render undefined](https://github.com/facebook/react/pull/21869). It behaves the same as rendering `null` now, so this fallthrough is not such a big problem anymore.
+<Emph>Update</Emph>: Since [React
+18.0](https://reactjs.org/blog/2022/03/29/react-v18.html), React [can
+render undefined](https://github.com/facebook/react/pull/21869). It
+behaves the same as rendering `null` now, so this fallthrough is not
+such a big problem anymore.
 
 See it live:
 

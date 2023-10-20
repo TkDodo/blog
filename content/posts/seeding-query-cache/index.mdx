@@ -15,6 +15,7 @@ import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
+import Emph from 'components/Emph'
 
 <img src="./seeding.jpeg" />
 
@@ -179,7 +180,8 @@ As we can see, the query will still suspend until both are done fetching, but be
 
 **Note**: `useQueries` doesn't support `suspense` right now, but it might do in the future. If we add support, the goal is to trigger all fetches in parallel to avoid those waterfalls.
 
-**Update**: `useQueries` now supports `suspense` since [v4.15.0](https://github.com/TanStack/query/releases/tag/v4.15.0). 🎉
+<Emph>Update</Emph>: `useQueries` now supports `suspense` since
+[v4.15.0](https://github.com/TanStack/query/releases/tag/v4.15.0). 🎉
 
 ### The use RFC
 
