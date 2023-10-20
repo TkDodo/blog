@@ -55,7 +55,7 @@ One advantage of React Query is the easy access to status fields of the query. Y
 - `loading`: Your query has no data and is currently `loading` for the first time
 - `idle`: Your query has never run because it's not `enabled`
 
-<Emph>Update</Emph>: In v4 of React Query, the idle state has been
+&#x200B;<Emph>Update</Emph>: In v4 of React Query, the idle state has been
 removed. The `loading` state just means "you have no data yet".
 
 Note that the `isFetching` flag is _not_ part of the internal state machine - it is an additional flag that will be true whenever a request is in-flight. You can be fetching and success, you can be fetching and error - but you cannot be loading and success at the same time. The state machine makes sure of that.

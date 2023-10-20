@@ -136,7 +136,7 @@ async function fetchTodos() {
 
 Because we are in an async function, a _new_ promise will be returned at the end of it, even if we already return a promise ourselves! [Here](https://www.carlrippon.com/cancelling-requests-with-react-query/) is a great article if you want to see how query cancellation can work even with async functions.
 
-<Emph>Update</Emph>
+&#x200B;<Emph>Update</Emph>
 
 Since [v3.30.0](https://react-query.tanstack.com/guides/query-cancellation), React Query will directly provide you the AbortSignal. There is no need to add a _cancel_ method to the promise, and this way of cancelling queries has been entirely removed in v4.
 
