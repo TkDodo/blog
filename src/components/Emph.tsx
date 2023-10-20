@@ -6,8 +6,7 @@ type Props = {
   children: React.ReactNode
 }
 
-const Highlight = ({ children }: Props) => {
-  const [colorMode] = useColorMode()
+const Emph = ({ children }: Props) => {
   return (
     <Text
       sx={{
@@ -21,4 +20,4 @@ const Highlight = ({ children }: Props) => {
   )
 }
 
-export default Highlight
+export default Emph
