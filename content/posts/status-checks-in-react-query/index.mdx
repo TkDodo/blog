@@ -14,7 +14,7 @@ import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
-import Emph from 'components/Emph'
+import Aside from 'components/Aside'
 
 <img src="./status-checks.jpeg" />
 
@@ -23,7 +23,7 @@ import Emph from 'components/Emph'
   url="https://unsplash.com/@kyndallramirez"
 />
 
-**Last Update: 23.04.2022**
+**Last Update: 20.10.2023**
 
 <RqToc id="status-checks-in-react-query" />
 
@@ -48,28 +48,30 @@ import Emph from 'components/Emph'
   ]}
 </Translations>
 
-One advantage of React Query is the easy access to status fields of the query. You instantly know if your query is loading or if it's erroneous. For this, the library exposes a bunch of boolean flags, which are mostly derived from the internal state machine. Looking at [the types](https://github.com/tannerlinsley/react-query/blob/f2137dc4e4553256c4ebc1891b548fe35efe9231/src/core/types.ts#L250), your query can be in one of the following states:
+One advantage of React Query is the easy access to status fields of the query. You instantly know if your query is loading or if it's erroneous. For this, the library exposes a bunch of boolean flags, which are mostly derived from the internal state machine. Looking at [the types](https://github.com/TanStack/query/blob/87358d73582b369f06cc81d0dfa135323df7d43d/packages/query-core/src/types.ts#L441), your query can be in one of the following states:
 
 - `success`: Your query was successful, and you have `data` for it
 - `error`: Your query did not work, and an `error` is set
-- `loading`: Your query has no data and is currently `loading` for the first time
-- `idle`: Your query has never run because it's not `enabled`
-
-&#x200B;<Emph>Update</Emph>: In v4 of React Query, the idle state has been
-removed. The `loading` state just means "you have no data yet".
+- `pending`: Your query has no data
 
 Note that the `isFetching` flag is _not_ part of the internal state machine - it is an additional flag that will be true whenever a request is in-flight. You can be fetching and success, you can be fetching and error - but you cannot be loading and success at the same time. The state machine makes sure of that.
 
-**Update**: In v4, the `isFetching` flag is derived from a secondary `fetchStatus` - just like the new `isPaused` flag. You can read more about this in [#13: Offline React Query](offline-react-query).
+<Aside title="update" icon="bell">
+
+Before v5, `pending` was named `loading`, and before v4, there was a fourth state called `idle`.
+
+Also, the `isFetching` flag is derived from a secondary `fetchStatus` - just like the `isPaused` flag. You can read more about this in [#13: Offline React Query](offline-react-query).
+
+</Aside>
 
 ## The standard example
 
-The `idle` state is mostly left out, because it's an edge case for disabled queries. So most examples look something like this:
+Most examples look something like this:
 
 ```jsx:title=standard-example
 const todos = useTodos()
 
-if (todos.isLoading) {
+if (todos.isPending) {
   return 'Loading...'
 }
 if (todos.error) {
@@ -79,7 +81,7 @@ if (todos.error) {
 return <div>{todos.data.map(renderTodo)}</div>
 ```
 
-Here, we check for loading and error first, and then display our data. This is probably fine for some use-cases, but not for others. Many data fetching solutions, especially hand-crafted ones, have no refetch mechanism, or only refetch on explicit user interactions.
+Here, we check for pending and error first, and then display our data. This is probably fine for some use-cases, but not for others. Many data fetching solutions, especially hand-crafted ones, have no refetch mechanism, or only refetch on explicit user interactions.
 
 But React Query does.
 
