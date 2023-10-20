@@ -13,7 +13,6 @@ import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
 import Emph from 'components/Emph'
 import Aside from 'components/Aside'
-import { Link } from '@theme-ui/components'
 
 <img src="./react-query.png" />
 
@@ -143,7 +142,7 @@ and your component will not re-render if the data is the same as you currently h
 During development, this will probably be triggered more frequently,
 especially because focusing between the Browser DevTools and your app will also cause a fetch, so be aware of that.
 
-<Aside title="Update">
+<Aside title="Update" icon="bell">
 
 Since React Query v5, `refechOnWindowFocus` no
 longer listens to the `focus` event - the `visibilitychange` event
