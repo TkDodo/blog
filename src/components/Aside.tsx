@@ -49,6 +49,11 @@ const Aside = ({ children, title, icon }: Props) => {
           backgroundColor:
             'var(--theme-ui-colors-backgroundTertiary) !important',
         },
+        pre: {
+          code: {
+            backgroundColor: 'inherit !important',
+          },
+        },
       }}
     >
       {title || icon ? (
