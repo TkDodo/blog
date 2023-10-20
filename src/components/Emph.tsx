@@ -11,7 +11,7 @@ const Emph = ({ children }: Props) => {
     <Text
       sx={{
         letterSpacing: '0.05em',
-        color: tint('primary', 0.2),
+        color: 'primary',
         fontWeight: 'bold',
       }}
     >

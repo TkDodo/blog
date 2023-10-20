@@ -42,12 +42,13 @@ const theme = {
       bg: 'primary',
     },
     primary: {
-      color: 'background'
+      color: 'background',
     },
   },
   colors: {
     ...baseTheme.colors,
     backgroundSecondary: 'var(--theme-ui-colors-gray-2)',
+    backgroundTertiary: 'var(--theme-ui-colors-gray-3)',
     twitterBlue: '#1d9bf0',
     twitterPollBg: 'rgb(207, 217, 222)',
     twitterPollBgWinner: 'rgba(29, 155, 240, 0.58)',
@@ -55,15 +56,16 @@ const theme = {
     modes: {
       ...baseTheme.colors.modes,
       light: {
-        ...baseTheme.colors.modes.light
+        ...baseTheme.colors.modes.light,
         // background: '#F5F5F5',
       },
       dark: {
         ...baseTheme.colors.modes.dark,
         primary: '#76c2af',
         twitterPollBg: 'rgb(51, 54, 57)',
-        backgroundSecondary: 'var(--theme-ui-colors-gray-8)'
-      }
+        backgroundSecondary: 'var(--theme-ui-colors-gray-8)',
+        backgroundTertiary: 'var(--theme-ui-colors-gray-7)',
+      },
     },
   },
   styles: {
