@@ -15,6 +15,7 @@ import Translations from 'components/Translations'
 import Tweet, { AvatarDanvdk } from 'components/Tweet'
 import { RqToc } from 'components/rq-toc'
 import Emph from 'components/Emph'
+import Aside from 'components/Aside'
 
 <img src="./react-query-typescript.jpeg" />
 
@@ -23,7 +24,7 @@ import Emph from 'components/Emph'
   url="https://unsplash.com/@hue12_photography"
 />
 
-**Last Update: 03.01.2023**
+**Last Update: 20.10.2023**
 
 <RqToc id="react-query-and-type-script" />
 
@@ -58,12 +59,19 @@ The TypeScript section in the [official docs](https://react-query.tanstack.com/t
 
 ```ts:title=explicit-generics
 function useGroups() {
-  return useQuery<Group[], Error>({ queryKey: ['groups'], queryFn: fetchGroups })
+  return useQuery<Group[], Error>({
+    queryKey: ['groups'],
+    queryFn: fetchGroups,
+  })
 }
 ```
 
-&#x200B;<Emph>Update</Emph>: The docs have been updated and _do not_ primarily
+<Aside title="Update" icon="bell">
+
+The docs have been updated and <Emph>do not</Emph> primarily
 encourage this pattern anymore.
+
+</Aside>
 
 Over time, React Query has added more Generics to the `useQuery` hook (there are now four of them), mainly because more functionality was added. The above code works, and it will make sure that the `data` property of our custom hook is correctly typed to `Group[] | undefined` as well as that our `error` will be of type `Error | undefined`. But it will not work like that for more advanced use-cases, especially when the other two Generics are needed.
 
@@ -170,7 +178,8 @@ function useGroups() {
   // 🚨 data will be `any` here
   return useQuery({
     queryKey: ['groups'],
-    queryFn: () => axios.get('groups').then((response) => response.data),
+    queryFn: () =>
+      axios.get('groups').then((response) => response.data),
   })
 }
 ```
@@ -232,6 +241,24 @@ if (groups.error instanceof Error) {
 
 Since we need to make some kind of check anyways to see if we have an error, the instanceof check doesn't look like a bad idea at all, and it will also make sure that our error actually has a property message at runtime. This is also in line with what TypeScript has planned for the 4.4 release, where they'll introduce a new compiler flag `useUnknownInCatchVariables`, where catch variables will be `unknown` instead of `any` (see [here](https://github.com/microsoft/TypeScript/issues/41016)).
 
+<Aside title="Update" icon="bell">
+
+Since v4, the type for `Error` defaults to `Error` instead of `unknown`. Even though in JavaScript, you can throw anything (which makes `unknown` the most correct type), almost always, Errors (or subclasses of Error) are thrown. This change makes it easier to work with the error field in TypeScript for most cases.
+
+Additionally, React Query allows to register global errors via module augmentation:
+
+```ts:title=global-error-registration
+declare module '@tanstack/react-query' {
+  interface Register {
+    defaultError: AxiosError
+  }
+}
+```
+
+With that, you could get back the v4 behaviour by setting `defaultError: unknown`.
+
+</Aside>
+
 ## Type Narrowing
 
 I rarely use destructuring when working with React Query. First of all, names like `data` and `error` are quite universal (purposefully so), so you'll likely rename them anyway. Keeping the whole object will keep the context of what data it is or where the error is coming from. It will further help TypeScript to narrow types when using the status field or one of the status booleans, which it cannot do if you use destructuring:
@@ -260,17 +287,21 @@ This has nothing to do with React Query, it is just how TypeScript works. [@danv
   <p>
     The comment from{' '}
     <Text color="var(--theme-ui-colors-twitterBlue)">@TkDodo</Text> is
-    exactly right, TypeScript does refinement on the types of individual
-    symbols. Once you split them apart, it can't keep track of the
-    relationship any more. Doing this in general would be
+    exactly right, TypeScript does refinement on the types of
+    individual symbols. Once you split them apart, it can't keep track
+    of the relationship any more. Doing this in general would be
     computationally hard. It can also be hard for people.
   </p>
 </Tweet>
 
-&#x200B;<Emph>Update</Emph>: TypeScript 4.6 has added [control flow analysis for
+<Aside title="Update" icon="bell">
+
+TypeScript 4.6 has added [control flow analysis for
 destructured discriminated
 unions](https://devblogs.microsoft.com/typescript/announcing-typescript-4-6/#cfa-destructured-discriminated-unions),
 which makes the above example work. So this is no longer an issue. 🙌
+
+</Aside>
 
 ## Type safety with the enabled option
 
@@ -319,11 +350,17 @@ Getting optimistic updates right in TypeScript is not an easy feat, so we've dec
 
 The important part is: You have to explicitly type the `variables` argument passed to `onMutate` in order to get the best type inference. I don't fully comprehend why that is, but it again seems to have something to do with inference of Generics. Have a look [at this comment](https://github.com/tannerlinsley/react-query/pull/1366#discussion_r538459890) for more information.
 
-&#x200B;<Emph>Update</Emph>: TypeScript 4.7 has added [Improved Function
+<Aside title="Update" icon="bell">
+
+TypeScript 4.7 has added [Improved Function
 Inference in Objects and
 Methods](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7-beta/#improved-function-inference-in-objects-and-methods),
 which fixes the issue. Optimistic updates should now infer types for
 context correctly without extra work. 🥳
+
+Also, React Query v5 has a [new way to make optimistic updates](https://tanstack.com/query/v5/docs/react/guides/optimistic-updates#via-the-ui) that can greatly simplify how you write them.
+
+</Aside>
 
 ## useInfiniteQuery
 
@@ -334,13 +371,33 @@ type GroupResponse = { next?: number; groups: Group[] }
 const queryInfo = useInfiniteQuery({
   queryKey: ['groups'],
   // ⚠️ explicitly type pageParam to override `any`
-  queryFn: ({ pageParam = 0 }: { pageParam: GroupResponse['next'] }) =>
-    fetchGroups(groups, pageParam),
+  queryFn: ({
+    pageParam = 0,
+  }: {
+    pageParam: GroupResponse['next']
+  }) => fetchGroups(groups, pageParam),
   getNextPageParam: (lastGroup) => lastGroup.next,
 })
 ```
 
 If `fetchGroups` returns a `GroupResponse`, `lastGroup` will have its type nicely inferred, and we can use the same type to annotate `pageParam`.
+
+<Aside title="Update" icon="bell">
+
+This is fixed in v5, because you now have to provide an explicit `initialPageParam`, which is typed correctly:
+
+```ts:title=initialPageParam {3-4,7}
+const queryInfo = useInfiniteQuery({
+  queryKey: ['groups'],
+  // ✅ typed correctly as number
+  queryFn: ({ pageParam }) =>
+    fetchGroups(groups, pageParam),
+  getNextPageParam: (lastGroup) => lastGroup.next,
+  initialPageParam: 0,
+})
+```
+
+</Aside>
 
 ## Typing the default query function
 
@@ -361,14 +418,17 @@ const queryClient = new QueryClient({
 
 This just works, however, `url` is inferred to type `unknown`, because the whole `queryKey` is an `unknown Array`. At the time of the creation of the queryClient, there is absolutely no guarantee how the queryKeys will be constructed when calling `useQuery`, so there is only so much React Query can do. That is just the nature of this highly dynamic feature. It's not a bad thing though because it means you now have to work defensively and narrow the type with runtime checks to work with it, for example:
 
-```ts:title=narrow-with-typeof {6-12}
+```ts:title=narrow-with-typeof {5-12}
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       queryFn: async ({ queryKey: [url] }) => {
-        // ✅ narrow the type of url to string so that we can work with it
+        // ✅ narrow the type of url to string
+        // so that we can work with it
         if (typeof url === 'string') {
-          const { data } = await axios.get(`${baseUrl}/${url.toLowerCase()}`)
+          const { data } = await axios.get(
+            `${baseUrl}/${url.toLowerCase()}`
+          )
           return data
         }
         throw new Error('Invalid QueryKey')
