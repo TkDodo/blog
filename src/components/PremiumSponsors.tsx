@@ -23,8 +23,8 @@ const PremiumSponsors = () => (
         href="https://tanstack.com/"
         target="_blank"
         rel="noopener noreferrer"
-        style={{
-          fontSize: '1.5rem',
+        sx={{
+          fontSize: [2, 2, 3],
         }}
       >
         💍 Tanner Linsley
@@ -46,8 +46,8 @@ const PremiumSponsors = () => (
         href="https://reactbricks.com/"
         target="_blank"
         rel="noopener noreferrer"
-        style={{
-          fontSize: '1.5rem',
+        sx={{
+          fontSize: [2, 2, 3],
         }}
       >
         🥉 React Bricks
@@ -68,8 +68,8 @@ const PremiumSponsors = () => (
         href="https://wagmi.sh/"
         target="_blank"
         rel="noopener noreferrer"
-        style={{
-          fontSize: '1.5rem',
+        sx={{
+          fontSize: [2, 2, 3],
         }}
       >
         🥉 wagmi
@@ -91,8 +91,8 @@ const PremiumSponsors = () => (
         href="https://www.sales-funnel.app/"
         target="_blank"
         rel="noopener noreferrer"
-        style={{
-          fontSize: '1.5rem',
+        sx={{
+          fontSize: [2, 2, 3],
         }}
       >
         🐱 Meow Sales Funnel
@@ -114,8 +114,8 @@ const PremiumSponsors = () => (
         href="https://www.workflowgen.com/"
         target="_blank"
         rel="noopener noreferrer"
-        style={{
-          fontSize: '1.5rem',
+        sx={{
+          fontSize: [2, 2, 3],
         }}
       >
         🥳 WorkflowGen
@@ -136,8 +136,8 @@ const PremiumSponsors = () => (
         href="https://daily.dev/"
         target="_blank"
         rel="noopener noreferrer"
-        style={{
-          fontSize: '1.5rem',
+        sx={{
+          fontSize: [2, 2, 3],
         }}
       >
         🥳 daily.dev
@@ -158,8 +158,8 @@ const PremiumSponsors = () => (
         href="https://github.com/jnsdls"
         target="_blank"
         rel="noopener noreferrer"
-        style={{
-          fontSize: '1.5rem',
+        sx={{
+          fontSize: [2, 2, 3],
         }}
       >
         🥳 Jonas Daniels
@@ -181,8 +181,8 @@ const PremiumSponsors = () => (
         href="https://www.monolisa.dev/"
         target="_blank"
         rel="noopener noreferrer"
-        style={{
-          fontSize: '1.5rem',
+        sx={{
+          fontSize: [2, 2, 3],
         }}
       >
         🥳 MonoLisa

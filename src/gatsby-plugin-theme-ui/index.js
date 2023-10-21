@@ -2,6 +2,18 @@ import baseTheme from '@lekoarts/gatsby-theme-minimal-blog/src/gatsby-plugin-the
 
 const theme = {
   ...baseTheme,
+  fontSizes: [
+    '0.875rem',
+    '1rem',
+    '1.125rem',
+    '1.25rem',
+    '1.5rem',
+    '1.875rem',
+    '2.25rem',
+    '3rem',
+    '4rem',
+    '4.5rem',
+  ],
   fonts: {
     ...baseTheme.fonts,
     body: 'Inter, -apple-system, BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"',
