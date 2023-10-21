@@ -15,6 +15,7 @@ import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
+import Aside from 'components/Aside'
 
 <img src="./faq.jpeg" />
 
@@ -23,7 +24,7 @@ import { RqToc } from 'components/rq-toc'
   url="https://pixabay.com/users/readyelements-8569947"
 />
 
-**Last Update: 17.07.2022**
+**Last Update: 20.10.2023**
 
 <RqToc id="react-query-fa-qs" />
 
@@ -106,18 +107,26 @@ The best part about this approach is that you don't have to manage state, that y
 
 You might notice that switching query keys will put your query into hard loading state again. That is expected, because we change keys and there is no data for that key yet.
 
-There are a bunch of ways to ease the transition, like setting a [placeholderData](placeholder-and-initial-data-in-react-query) for that key or [prefetching](https://react-query.tanstack.com/guides/prefetching) data for the new key ahead of time. A nice approach to tackle this problem is to instruct the query to keep previous data:
+There are a bunch of ways to ease the transition, like setting a [placeholderData](placeholder-and-initial-data-in-react-query) for that key or [prefetching](https://tanstack.com/query/latest/docs/react/guides/prefetching) data for the new key ahead of time. A nice approach to tackle this problem is to instruct the query to keep previous data:
 
-```js:title=keep-previous-data {4,5}
-const { data, isPreviousData } = useQuery({
+```js:title=keep-previous-data {1,6,7}
+import { keepPreviousData } from '@tanstack/react-query'
+
+const { data, isPlaceholderData } = useQuery({
   queryKey: ['item', id],
   queryFn: () => fetchItem({ id }),
   // ⬇️ like this️
-  keepPreviousData: true
+  placeholderData: keepPreviousData
 })
 ```
 
-With this flag on, React Query will still show data for id 1 while data for id 2 is being fetched. Additionally, the `isPreviousData` flag on the query result will be set to true, so that you can act accordingly in the UI. Maybe you want to show a background loading spinner in addition to the data, or you'd like to add opacity to the shown data, indicating that it's stale. That is totally up to you - React Query just gives you the means to do that. 🙌
+With this setting, React Query will still show data for id 1 while data for id 2 is being fetched. Additionally, the `isPlaceholderData` flag on the query result will be set to true, so that you can act accordingly in the UI. Maybe you want to show a background loading spinner in addition to the data, or you'd like to add opacity to the shown data, indicating that it's stale. That is totally up to you - React Query just gives you the means to do that. 🙌
+
+<Aside title="Update" icon="bell">
+
+Before v5, you had to pass a separate `keepPreviousData: true` flag to `useQuery`, but that is now combined with `placeholderData`. Read [the RFC](https://github.com/TanStack/query/discussions/4426) if you want to know more.
+
+</Aside>
 
 ## Why are updates not shown?
 
@@ -142,7 +151,7 @@ I recommend using [TypeScript](https://www.typescriptlang.org/) and [Query Key F
 
 In most examples, we create the queryClient _outside_ the `App` component, which makes it referentially stable:
 
-```jsx:title=standard-example
+```jsx:title=standard-example {1-2}
 // ✅ created outside of the App
 const queryClient = new QueryClient()
 
@@ -263,7 +272,9 @@ const UseQueryClient = ({ children }) => children(useQueryClient())
 <UseQueryClient>
   {(queryClient) => (
     <button
-      onClick={() => queryClient.invalidateQueries({ queryKey: ['items'] })}
+      onClick={() => queryClient.invalidateQueries({
+        queryKey: ['items']
+      })}
     >
       invalidate items
     </button>
@@ -279,7 +290,7 @@ const UseQuery = ({ children, ...props }) => children(useQuery(props))
 
 ```jsx:title=usage
 <UseQuery queryKey={["items"]} queryFn={fetchItems}>
-  {({ data, isLoading, isError }) => (
+  {({ data, isPending, isError }) => (
     // 🙌 return jsx here
   )}
 </UseQuery>
@@ -299,7 +310,7 @@ Luckily, many data fetching libraries like [axios](https://axios-http.com/) or [
 
 This is of course [documented here](https://tanstack.com/query/v4/docs/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default), but it's still a stumbling block if you've missed this.
 
-```js:title=wrong-fetch-api-example
+```js:title=wrong-fetch-api-example {5-6}
 useQuery({
   queryKey: ['todos', todoId],
   queryFn: async () => {
@@ -330,7 +341,7 @@ useQuery({
 
 The second reason I've seen a lot is that errors are caught inside the `queryFn` for logging purposes. If you do that without re-throwing the error, you will again return a successful Promise implicitly:
 
-```ts:title=wrong-logging-example
+```ts:title=wrong-logging-example {7-10}
 useQuery({
   queryKey: ['todos', todoId],
   queryFn: async () => {
@@ -363,20 +374,7 @@ useQuery({
 })
 ```
 
-An alternative and not so verbose way to handle errors is to use the `onError` callback of `useQuery`:
-
-```ts:title=using-on-error
-useQuery({
-  queryKey: ['todos', todoId],
-  queryFn: async () => {
-    const { data } = await axios.get('/todos/' + todoId)
-    return data
-  },
-  onError: (error) => console.error(error)
-})
-```
-
-I definitely prefer the callbacks, and you can read more about differnt ways to handle errors in [#11: React Query Error Handling](react-query-error-handling).
+An alternative and not so verbose way to handle errors is to use the `onError` callback of the QueryCache. You can read more about different ways to handle errors in [#11: React Query Error Handling](react-query-error-handling).
 
 ---
 
