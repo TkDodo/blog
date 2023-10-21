@@ -15,7 +15,7 @@ import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
-import Emph from 'components/Emph'
+import Aside from 'components/Aside'
 
 <img src="./seeding.jpeg" />
 
@@ -24,7 +24,7 @@ import Emph from 'components/Emph'
   url="https://unsplash.com/@markusspiske"
 />
 
-**Last Update: 11.12.2022**
+**Last Update: 20.10.2023**
 
 <RqToc id="seeding-the-query-cache" />
 
@@ -75,30 +75,27 @@ In both variants, React Query will kick off data fetching in parallel. So where 
 
 ### Suspense
 
-_**Note**: Please keep in mind that at the time of this writing, suspense for data fetching is still experimental! In the following examples, I will not be using the proposal from the RFC, but rather the suspense implementation that is already available in React Query (which is also experimental)._
-
 As described in the above linked RFC, suspense is a way to unwrap promises with React. A defining trait of promises is that they can be in three different states: `pending`, `fulfilled` or `rejected`.
 
 When rendering components, we are mostly interested in the success scenario. Handling loading and error states in each and every component can be tedious, and suspense is aimed at solving this problem.
 
 When a promise is _pending_, React will unmount the component tree and render a fallback defined by a `Suspense` boundary component. In case of errors, the error is bubbled up to the nearest `ErrorBoundary`.
 
-This will decouple our components from handling those states, and we can focus on the happy path. It almost acts like synchronous code that just _reads_ a value from a cache:
+This will decouple our components from handling those states, and we can focus on the happy path. It almost acts like synchronous code that just _reads_ a value from a cache. React Query offers a dedicated `useSuspenseQuery` hook for that since v5:
 
-```jsx:title=useQuery-with-suspense {6-7}
+```jsx:title=useQuery-with-suspense {2-3}
 function Issues() {
   // 👓 read data from cache
-  const { data } = useQuery({
+  const { data } = useSuspenseQuery({
     queryKey: ['issues'],
     queryFn: fetchIssues,
-    // ⬇️ this enables experimental suspense mode
-    suspense: true,
   })
 
   // 🎉 no need to handle loading or error states
 
   return (
     <div>
+      { /* TypeScript knows data can't be undefined */ }
       {data.map((issue) => (
         <div>{issue.title}</div>
       ))}
@@ -117,12 +114,6 @@ function App() {
   )
 }
 ```
-
-#### A note on TypeScript
-
-Sadly, when using TypeScript, data will still be potentially `undefined` in the above example, as `suspense` is just a flag on `useQuery` that can be turned on and off at will. It can also be combined with the `enabled` option, which will make the query not fire and thus make the component _not_ suspend at all.
-
-We might change this in the future with a dedicated `useSuspenseQuery` hook.
 
 ### Suspense waterfalls
 
@@ -145,7 +136,7 @@ So this is nice and all, but it can backfire when you use multiple queries in th
 
 This will have pretty impactful implications on your application's performance, because you'll see that fallback for waaay longer than necessary.
 
-The best way to circumvent this problem is to make sure that there is already data in the cache when the component tries to read it.
+The best way to circumvent this problem is to stick to one query per component, or to make sure that there is already data in the cache when the component tries to read it.
 
 ## Prefetching
 
@@ -163,7 +154,7 @@ const issuesQuery = { queryKey: ['issues'], queryFn: fetchIssues }
 queryClient.prefetchQuery(issuesQuery)
 
 function Issues() {
-  const issues = useQuery(issuesQuery)
+  const issues = useSuspenseQuery(issuesQuery)
 }
 ```
 
@@ -180,8 +171,11 @@ As we can see, the query will still suspend until both are done fetching, but be
 
 **Note**: `useQueries` doesn't support `suspense` right now, but it might do in the future. If we add support, the goal is to trigger all fetches in parallel to avoid those waterfalls.
 
-&#x200B;<Emph>Update</Emph>: `useQueries` now supports `suspense` since
-[v4.15.0](https://github.com/TanStack/query/releases/tag/v4.15.0). 🎉
+<Aside title="Update" icon="bell">
+
+There's a dedicated `useSuspenseQueries` hook in v5 that triggers all fetches in parallel. 🎉
+
+</Aside>
 
 ### The use RFC
 
@@ -244,7 +238,7 @@ const useTodo = (id: number) => {
 
 Alternatively, you can create detail caches whenever you fetch the list query. This has the advantage that staleness is automatically measured from when the list was fetched, because, well, that's when we create the detail entry.
 
-However, there is no good callback to hook into when a query is fetched. `onSuccess` on `useQuery` would technically work, but it would be executed for every instance of `useQuery`. If we have multiple observers, this would lead to the same data being written to the cache multiple times. The global `onSuccess` callback on the cache itself might also work, but it would be executed for every query, so we'd have to narrow it down to the right query key.
+However, there is no good callback to hook into when a query is fetched. The global `onSuccess` callback on the cache itself might work, but it would be executed for every query, so we'd have to narrow it down to the right query key.
 
 The best way I've found to execute the push approach is to do it directly in the `queryFn`, after data has been fetched:
 
@@ -265,7 +259,7 @@ const useTodos = () => {
 }
 ```
 
-This would create a detail entry for each item in the list immediately. Since there is no one interested in those queries at the moment, those would be seen as _inactive_, which means they might be garbage collected after `cacheTime` has elapsed (default: 15 minutes).
+This would create a detail entry for each item in the list immediately. Since there is no one interested in those queries at the moment, those would be seen as _inactive_, which means they might be garbage collected after `gcTime` has elapsed (default: 15 minutes).
 
 So if you use the push approach, the detail entries you've created here might no longer be available once the user actually navigates to the detail view. Also, if your list is long, you might be creating way too many entries that will never be needed.
 
