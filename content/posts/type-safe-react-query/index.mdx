@@ -15,6 +15,7 @@ import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 import Highlight from 'components/Highlight'
 import { RqToc } from 'components/rq-toc'
+import Aside from 'components/Aside'
 
 <img src="./type-safe.jpeg" alt="safety helmet" />
 
@@ -22,6 +23,8 @@ import { RqToc } from 'components/rq-toc'
   name="Ümit Yıldırım"
   url="https://unsplash.com/@umityildirim"
 />
+
+**Last Update: 20.10.2023**
 
 <RqToc id="type-safe-react-query" />
 
@@ -228,6 +231,12 @@ const todo = queryClient.getQueryData<Todo>(['todos', 1])
 Since React Query cannot know what you put into the `QueryCache` (as there is no up-front defined overall schema), this is the best we can do. Of course, you can also parse the result of `getQueryData` with a schema, but this isn't really necessary if you've validated the cached data before. Also, direct interactions with the `QueryCache` should be done sparingly.
 
 Tools on top of React Query, like [react-query-kit](https://tanstack.com/query/v4/docs/react/community/liaoliao666-react-query-kit), do a great job at alleviating the pain, but they can only go so far and basically hide the lie a bit more for you.
+
+<Aside title="Update" icon="bell">
+
+v5 offers a new way to define query options, which can also make `getQueryData` type-safe. Have a look [at the docs](https://tanstack.com/query/v5/docs/react/typescript#typing-query-options) for more information.
+
+</Aside>
 
 ## End-to-end type-safety
 
