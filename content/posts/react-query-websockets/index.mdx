@@ -133,7 +133,7 @@ For these partial updates, you can use [queryClient.setQueryData](https://react-
 
 This will be a bit more cumbersome if you have multiple query keys for the same data, e.g. if you have multiple filter criteria as part of the query key, or if you want to update list _and_ detail view with the same message. [queryClient.setQueriesData](https://react-query.tanstack.com/reference/QueryClient#queryclientsetqueriesdata) is a relatively new addition to the library that will allow you to tackle this use-case as well:
 
-```jsx:title=partial-updates {10-14}
+```jsx:title=partial-updates {10-17}
 const useReactQuerySubscription = () => {
   const queryClient = useQueryClient()
   React.useEffect(() => {
@@ -145,8 +145,12 @@ const useReactQuerySubscription = () => {
       const data = JSON.parse(event.data)
       queryClient.setQueriesData(data.entity, (oldData) => {
         const update = (entity) =>
-          entity.id === data.id ? { ...entity, ...data.payload } : entity
-        return Array.isArray(oldData) ? oldData.map(update) : update(oldData)
+          entity.id === data.id
+            ? { ...entity, ...data.payload }
+            : entity
+        return Array.isArray(oldData)
+          ? oldData.map(update)
+          : update(oldData)
       })
     }
 
