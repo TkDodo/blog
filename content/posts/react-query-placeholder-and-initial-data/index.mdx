@@ -35,9 +35,9 @@ import { RqToc } from 'components/rq-toc'
 
 Today's article is all about improving the user experience when working with React Query. Most of the time, we (and our users) dislike pesky loading spinners. They are a necessity sometimes, but we still want to avoid them if possible.
 
-React Query already gives us the tools to get rid of them in many situations. We get stale data from the cache while background updates are happening, we can [prefetch data](https://react-query.tanstack.com/guides/prefetching) if we know that we need it later, and we can even [keep previous data](https://react-query.tanstack.com/guides/paginated-queries#better-paginated-queries-with-keeppreviousdata) when our query keys change to avoid those hard loading states.
+React Query already gives us the tools to get rid of them in many situations. We get stale data from the cache while background updates are happening, we can [prefetch data](https://tanstack.com/query/latest/docs/react/guides/prefetching) if we know that we need it later, and we can even [keep previous data](https://tanstack.com/query/latest/docs/react/guides/paginated-queries#better-paginated-queries-with-placeholderdata) when our query keys change to avoid those hard loading states.
 
-Another way is to _synchronously_ pre-fill the cache with data that we think will potentially be right for our use-case, and for that, React Query offers two different yet similar approaches: [Placeholder Data](https://react-query.tanstack.com/guides/placeholder-query-data) and [Initial Data](https://react-query.tanstack.com/guides/initial-query-data).
+Another way is to _synchronously_ pre-fill the cache with data that we think will potentially be right for our use-case, and for that, React Query offers two different yet similar approaches: [Placeholder Data](https://tanstack.com/query/latest/docs/react/guides/placeholder-query-data) and [Initial Data](https://tanstack.com/query/latest/docs/react/guides/initial-query-data).
 
 Let's start with what they both have in common before exploring their differences and the situations where one might be better suited than the other.
 
@@ -69,7 +69,7 @@ Lastly, neither has an effect if you already have data in your cache. So what di
 
 For each Query Key, there is only one cache entry. This is kinda obvious because part of what makes React Query great is the possibility to share the same data "globally" in our application.
 
-Some options we provide to `useQuery` will affect that cache entry, prominent examples are `staleTime` and `cacheTime`. Since there is only _one_ cache entry, those options specify when that entry is considered stale, or when it can be garbage collected.
+Some options we provide to `useQuery` will affect that cache entry, prominent examples are `staleTime` and `gcTime`. Since there is only _one_ cache entry, those options specify when that entry is considered stale, or when it can be garbage collected.
 
 ### On observer level
 
@@ -122,8 +122,8 @@ const useTodo = (id) => {
         .getQueryData(['todo', 'list'])
         ?.find((todo) => todo.id === id),
     initialDataUpdatedAt: () =>
-      // ✅ will refetch in the background if our list query data is older
-      // than the provided staleTime (30 seconds)
+      // ✅ will refetch in the background if our list query data
+      // is older than the provided staleTime (30 seconds)
       queryClient.getQueryState(['todo', 'list'])?.dataUpdatedAt,
   })
 }
@@ -147,7 +147,9 @@ Suppose you provide `initialData` or `placeholderData`, and a background refetch
     <summary>PlaceholderData</summary>
     Since <i>placeholderData</i> is "fake-it-till-you-make-it" data, and
     we didn't make it, we won't see that data anymore. Our query will be
-    in <i>error</i> state, and our <i>data</i> will be <i>undefined</i>.
+    in <i>error</i> state, and our <i>data</i> will be <i>
+      undefined
+    </i>.
   </details>
 </p>
 

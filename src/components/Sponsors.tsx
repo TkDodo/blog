@@ -161,23 +161,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://jolvera.dev/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Juan Olvera</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/1130549?s=300"
-            height="300"
-            alt="Juan Olvera"
-          />
-        </Link>
-        <div>
-          <Text>🎗 Supporter</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://vianneycarel.me/"
           target="_blank"
           rel="noopener noreferrer"

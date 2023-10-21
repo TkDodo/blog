@@ -205,9 +205,9 @@ So how can we have our cake and eat it, too?
 Maybe you've already guessed the direction in which I want to go: The solution would be to set `staleTime` to a value you are comfortable with for your specific use-case. The key thing to know is:
 
 <Highlight>
-  As long as data is fresh, it will always come from the cache only. You
-  will not see a network request for fresh data, no matter how often you
-  want to retrieve it.
+  As long as data is fresh, it will always come from the cache only.
+  You will not see a network request for fresh data, no matter how
+  often you want to retrieve it.
 </Highlight>
 
 There is also no "correct" value for `staleTime`. In many situations, the defaults work really well. Personally, I like to set it to a minimum of 20 seconds to deduplicate requests in that time frame, but it's totally up to you.
@@ -226,8 +226,12 @@ const queryClient = new QueryClient({
   },
 })
 
-// 🚀 everything todo-related will have a 1 minute staleTime
-queryClient.setQueryDefaults(todoKeys.all, { staleTime: 1000 * 60 })
+// 🚀 everything todo-related will have
+// a 1 minute staleTime
+queryClient.setQueryDefaults(
+  todoKeys.all,
+  { staleTime: 1000 * 60 }
+)
 ```
 
 ## A note on separation of concerns

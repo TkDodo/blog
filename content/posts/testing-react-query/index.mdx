@@ -14,6 +14,7 @@ import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
+import Aside from 'components/Aside'
 
 <img src="./testing.jpeg" />
 
@@ -22,7 +23,7 @@ import { RqToc } from 'components/rq-toc'
   url="https://unsplash.com/@girlwithredhat"
 />
 
-**Last Update: 23.04.2022**
+**Last Update: 21.10.2023**
 
 <RqToc id="testing-react-query" />
 
@@ -94,13 +95,15 @@ const createWrapper = () => {
   // ✅ creates a new QueryClient for each test
   const queryClient = new QueryClient()
   return ({ children }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      {children}
+    </QueryClientProvider>
   )
 }
 
-test("my first test", async () => {
+test('my first test', async () => {
   const { result } = renderHook(() => useCustomHook(), {
-    wrapper: createWrapper()
+    wrapper: createWrapper(),
   })
 })
 ```
@@ -125,7 +128,9 @@ const createWrapper = () => {
   })
 
   return ({ children }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      {children}
+    </QueryClientProvider>
   )
 }
 
@@ -207,7 +212,9 @@ const ReactQueryConfigProvider = ({ children, defaultOptions }) => {
   )
 
   return (
-    <QueryClientProvider client={newClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={newClient}>
+      {children}
+    </QueryClientProvider>
   )
 }
 ```
@@ -218,7 +225,7 @@ You can see this in action in this [codesandbox example](https://codesandbox.io/
 
 Since React Query is async by nature, when running the hook, you won't immediately get a result. It usually will be in loading state and without data to check. The [async utilities](https://react-hooks-testing-library.com/reference/api#async-utilities) from react-hooks-testing-library offer a lot of ways to solve this problem. For the simplest case, we can just wait until the query has transitioned to success state:
 
-```tsx:title=waitFor {19-22}
+```tsx:title=waitFor {21-24}
 const createWrapper = () => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -228,7 +235,9 @@ const createWrapper = () => {
     },
   })
   return ({ children }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      {children}
+    </QueryClientProvider>
   )
 }
 
@@ -244,11 +253,11 @@ test("my first test", async () => {
 }
 ```
 
-**Update**:
+<Aside title="Update" icon="bell">
 
 [@testing-library/react v13.1.0](https://github.com/testing-library/react-testing-library/releases/tag/v13.1.0) also has a new [renderHook](https://testing-library.com/docs/react-testing-library/api/#renderhook) that you can use. However, it doesn't return its own `waitFor` util, so you'll have to use the one you can [import from @testing-library/react](https://testing-library.com/docs/dom-testing-library/api-async/#waitfor) instead. The API is a bit different, as it doesn't allow to return a `boolean`, but expects a `Promise` instead. That means we must adapt our code slightly:
 
-```tsx:title=new-render-hook
+```tsx:title=new-render-hook {8-11}
 import { waitFor, renderHook } from '@testing-library/react'
 
 test("my first test", async () => {
@@ -263,37 +272,9 @@ test("my first test", async () => {
 }
 ```
 
-## Silence the error console
+&#x200B;
 
-Per default, React Query prints errors to the console. I think this is quite disturbing during testing, because you'll see 🔴 in the console even though all tests are 🟢. React Query allows overwriting that default behaviour by [setting a logger](https://react-query.tanstack.com/reference/setLogger), so that's what I'm usually doing:
-
-```ts:title=silence-errors
-import { setLogger } from 'react-query'
-
-setLogger({
-  log: console.log,
-  warn: console.warn,
-  // ✅ no more errors on the console
-  error: () => {},
-})
-```
-
-**Update**
-
-`setLogger` was removed in v4. Instead, you can pass your custom logger as prop to the `QueryClient` you create:
-
-```js:title=logger-prop
-const queryClient = new QueryClient({
-  logger: {
-    log: console.log,
-    warn: console.warn,
-    // ✅ no more errors on the console
-    error: () => {},
-  }
-})
-```
-
-Also, errors are not logged in production mode anymore to avoid confusion.
+</Aside>
 
 ## Putting it all together
 

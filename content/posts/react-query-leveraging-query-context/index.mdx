@@ -17,6 +17,7 @@ import SmallCentered from 'components/SmallCentered'
 import SpacingBox from 'components/SpacingBox'
 import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
+import Aside from 'components/Aside'
 
 <img src="./context.jpeg" />
 
@@ -49,8 +50,8 @@ That's why I've decided to write this addendum to my [Effective React Query Keys
 <SpacingBox />
 
 <Highlight>
-  Don't use inline functions - leverage the Query Function Context given
-  to you, and use a Query Key factory that produces object keys
+  Don't use inline functions - leverage the Query Function Context
+  given to you, and use a Query Key factory that produces object keys
 </Highlight>
 
 Inline functions are by far the easiest way to pass parameters to your `queryFn`, because they let you closure over other variables available in your custom hook. Let's look at the evergreen todo example:
@@ -99,7 +100,7 @@ const fetchTodos = async (
 
 This will certainly yield an error in our custom hook, where we call `fetchTodos`, so let's fix that:
 
-```ts:title=useTodos-with-sorting {2,8}
+```ts:title=useTodos-with-sorting {6-7}
 export const useTodos = () => {
   const { state, sorting } = useTodoParams()
 
@@ -118,7 +119,14 @@ So will React Query now come with its own eslint-rule? 👀
 Well, that would be one option. There is also the [babel-plugin-react-query-key-gen
 ](https://github.com/dominictwlee/babel-plugin-react-query-key-gen) that solves this problem by generating query keys for you, including all your dependencies. React Query however comes with a different, built-in way of handling dependencies: The `QueryFunctionContext`.
 
-**Update**: The aforementioned lint rule now exists. Have a look [at the docs here](https://tanstack.com/query/v4/docs/react/eslint/eslint-plugin-query). 🚀
+<Aside title="Update" icon="bell">
+
+The aforementioned lint rule now exists. Have a
+look [at the docs
+here](https://tanstack.com/query/v4/docs/react/eslint/eslint-plugin-query).
+🚀
+
+</Aside>
 
 ## QueryFunctionContext
 
@@ -126,13 +134,14 @@ The `QueryFunctionContext` is an object that is passed as argument to the `query
 
 ```js:title=useInfiniteQuery
 // this is the QueryFunctionContext ⬇️
-const fetchProjects = ({ pageParam = 0 }) =>
+const fetchProjects = ({ pageParam }) =>
   fetch('/api/projects?cursor=' + pageParam)
 
 useInfiniteQuery({
   queryKey: ['projects'],
   queryFn: fetchProjects,
   getNextPageParam: (lastPage) => lastPage.nextCursor,
+  initialPageParam: 0,
 })
 ```
 
@@ -212,7 +221,10 @@ export const useTodos = () => {
   const { state, sorting } = useTodoParams()
 
   // ✅ build the key via the factory
-  return useQuery({ queryKey: todoKeys.list(state, sorting), queryFn: fetchTodos })
+  return useQuery({
+    queryKey: todoKeys.list(state, sorting),
+    queryFn: fetchTodos
+  })
 }
 ```
 
@@ -256,7 +268,10 @@ const fetchTodos = async ({
 export const useTodos = () => {
   const { state, sorting } = useTodoParams()
 
-  return useQuery({ queryKey: todoKeys.list(state, sorting), queryFn: fetchTodos })
+  return useQuery({
+    queryKey: todoKeys.list(state, sorting),
+    queryFn: fetchTodos
+  })
 }
 ```
 
@@ -264,13 +279,19 @@ Object query keys even make your fuzzy matching capabilities more powerful, beca
 
 ```js:title=fuzzy-matching-with-object-keys
 // 🕺 remove everything related to the todos feature
-queryClient.removeQueries({ queryKey: [{ scope: 'todos' }] })
+queryClient.removeQueries({
+  queryKey: [{ scope: 'todos' }]
+})
 
 // 🚀 reset all todo lists
-queryClient.resetQueries({ queryKey: [{ scope: 'todos', entity: 'list' }] })
+queryClient.resetQueries({
+  queryKey: [{ scope: 'todos', entity: 'list' }]
+})
 
 // 🙌 invalidate all lists across all scopes
-queryClient.invalidateQueries({ queryKey: [{ entity: 'list' }] })
+queryClient.invalidateQueries({
+  queryKey: [{ entity: 'list' }]
+})
 ```
 
 This can come in quite handy if you have multiple overlapping scopes that have a hierarchy, but where you still want to match everything belonging to the sub-scope.

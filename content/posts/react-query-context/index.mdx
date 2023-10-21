@@ -122,8 +122,8 @@ There's quite the myth about React Context, so let's get this straight: No, Reac
 >
   <p>
     🕵️ We've fixed a huge performance problem this week by moving
-    useState + context over to zustand. It was the same amount of code.
-    The lib is &lt; 1kb.
+    useState + context over to zustand. It was the same amount of
+    code. The lib is &lt; 1kb.
   </p>
   <p>
     ⚛️ Don't use context for state management. Use it for dependency
@@ -225,7 +225,7 @@ Talking about Suspense: Yes, you can achieve a similar architecture with React S
 
 One problem is that in the current major version (v4), using `suspense: true` on your query won't type narrow `data`, because there are still ways to disable the query and have it not run.
 
-However, in v5, there will be an explicit `useSuspenseQuery` hook, where data is guaranteed to be defined once the component renders. With that, we can do:
+However, since v5, there is an explicit `useSuspenseQuery` hook, where data is guaranteed to be defined once the component renders. With that, we can do:
 
 ```tsx:title=UserNameDisplay-with-suspense
 function UserNameDisplay() {

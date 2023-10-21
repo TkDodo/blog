@@ -14,6 +14,7 @@ import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
+import Aside from 'components/Aside'
 
 <img src="./forms.jpeg" />
 
@@ -33,7 +34,11 @@ import { RqToc } from 'components/rq-toc'
   ]}
 </Translations>
 
-> **Disclaimer**: Please note that I will be using [react-hook-form](https://react-hook-form.com/) throughout this article, merely because I think it's a great library. That doesn't mean that the shown patterns will only work with react-hook-form - the concepts are applicable to any form library, and also if you are not using a form library at all.
+<Aside title="Disclaimer" icon="shield-alert" color="var(--theme-ui-colors-warning)">
+
+Please note that I will be using [react-hook-form](https://react-hook-form.com/) throughout this article, merely because I think it's a great library. That doesn't mean that the shown patterns will only work with react-hook-form - the concepts are applicable to any form library, and also if you are not using a form library at all.
+
+</Aside>
 
 ---
 
@@ -73,11 +78,17 @@ function PersonDetail({ id }) {
       <form onSubmit={handleSubmit(mutate)}>
         <div>
           <label htmlFor="firstName">First Name</label>
-          <input {...register('firstName')} defaultValue={data.firstName} />
+          <input
+            {...register('firstName')}
+            defaultValue={data.firstName}
+          />
         </div>
         <div>
           <label htmlFor="lastName">Last Name</label>
-          <input {...register('lastName')} defaultValue={data.lastName} />
+          <input
+            {...register('lastName')}
+            defaultValue={data.lastName}
+          />
         </div>
         <input type="submit" />
       </form>
@@ -167,7 +178,7 @@ So what would we need to do to still reflect background updates while we are edi
 
 One approach is to rigorously separate the states. We'll keep the Server State in React Query, and only track the changes the user has made with our Client State. The source of truth that we display then to our users is _derived state_ from those two: If the user has changed a field, we show the Client State. If not, we fall back to the Server State:
 
-```js:title=separate-states {20-22,32}
+```js:title=separate-states {20-25,35-38}
 function PersonDetail({ id }) {
   const { data } = useQuery({
     queryKey: ['person', id],
@@ -189,7 +200,10 @@ function PersonDetail({ id }) {
             render={({ field }) => (
               // ✅ derive state from field value (client state)
               // and data (server state)
-              <input {...field} value={field.value ?? data.firstName} />
+              <input
+                {...field}
+                value={field.value ?? data.firstName}
+              />
             )}
           />
         </div>
@@ -199,7 +213,10 @@ function PersonDetail({ id }) {
             name="lastName"
             control={control}
             render={({ field }) => (
-              <input {...field} value={field.value ?? data.lastName} />
+              <input
+                {...field}
+                value={field.value ?? data.lastName}
+              />
             )}
           />
         </div>
@@ -217,6 +234,12 @@ With that approach, we can keep background updates on, because it will still be 
 ### You need controlled fields
 
 As far as I'm aware, there is no good way to achieve this with uncontrolled fields, which is why I've resorted to using controlled fields in the above example. Please let me know if I'm missing something.
+
+<Aside title="Update">
+
+React Hook Form has [a new values API](https://www.react-hook-form.com/api/useform/#values), which reacts to changes and updates the form values. We can use this instead of `defaultValues` to derive our state from server state.
+
+</Aside>
 
 ### Deriving state might be difficult
 
@@ -275,7 +298,10 @@ function PersonDetail({ id }) {
             name="firstName"
             control={control}
             render={({ field }) => (
-              <input {...field} value={field.value ?? data.firstName} />
+              <input
+                {...field}
+                value={field.value ?? data.firstName}
+              />
             )}
           />
         </div>

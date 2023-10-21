@@ -16,10 +16,13 @@ import SpacingBox from 'components/SpacingBox'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
+import Aside from 'components/Aside'
 
 <img src="./mutations.jpeg" />
 
 <Attribution name="Braňo" url="https://unsplash.com/@3dparadise" />
+
+**Last Update: 21.10.2023**
 
 <RqToc id="mastering-mutations-in-react-query" />
 
@@ -91,7 +94,9 @@ function AddComment({ id }) {
       onSubmit={(event) => {
         event.preventDefault()
         // ✅ mutation is invoked when the form is submitted
-        addComment.mutate(new FormData(event.currentTarget).get('comment'))
+        addComment.mutate(
+          new FormData(event.currentTarget).get('comment')
+        )
       }}
     >
       <textarea name="comment" />
@@ -103,6 +108,12 @@ function AddComment({ id }) {
 
 Another difference is that mutations don't share state like `useQuery` does. You can invoke the same `useQuery` call multiple times in different components and will get the same, cached result returned to you - but this won't work for mutations.
 
+<Aside title="Update" icon="bell">
+
+Starting with v5, you can us the [useMutationState](https://tanstack.com/query/v5/docs/react/reference/useMutationState) hook to share mutation state across components.
+
+</Aside>
+
 ## Tying mutations to queries
 
 Mutations are, per design, not directly coupled to queries. A mutation that likes a blog post has no ties towards the query that fetches that blog post. For that to work, you would need some sort of underlying schema, which React Query doesn't have.
@@ -113,7 +124,7 @@ To have a mutation reflect the changes it made on our queries, React Query prima
 
 This is conceptually the simplest way to get your screen up-to-date. Remember, with server state, you're only ever displaying a snapshot of data from a given point in time. React Query tries to keep that up-to-date of course, but if you're deliberately changing server state with a mutation, this is a great point in time to tell React Query that some data you have cached is now "invalid". React Query will then go and refetch that data if it's currently in use, and your screen will update automatically for you once the fetch is completed. The only thing you have to tell the library is _which_ queries you want to invalidate:
 
-```jsx:title=invalidation-from-mutation
+```jsx:title=invalidation-from-mutation {9-11}
 const useAddComment = (id) => {
   const queryClient = useQueryClient()
 
@@ -122,7 +133,9 @@ const useAddComment = (id) => {
       axios.post(`/posts/${id}/comments`, newComment),
     onSuccess: () => {
       // ✅ refetch the comments list for our blog post
-      queryClient.invalidateQueries({ queryKey: ['posts', id, 'comments'] })
+      queryClient.invalidateQueries({
+        queryKey: ['posts', id, 'comments']
+      })
     },
   })
 }
@@ -211,7 +224,9 @@ Promises returned from the mutation callbacks are awaited by React Query, and as
 {
   // 🚀 fire and forget - will not wait
   onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['posts', id, 'comments'] })
+    queryClient.invalidateQueries({
+      queryKey: ['posts', id, 'comments']
+    })
   }
 }
 ```
@@ -290,7 +305,9 @@ const useUpdateTodo = () =>
     mutationFn: updateTodo,
     // ✅ always invalidate the todo list
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos', 'list'] })
+      queryClient.invalidateQueries({
+        queryKey: ['todos', 'list']
+      })
     },
   })
 

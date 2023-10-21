@@ -17,6 +17,7 @@ import Translations from 'components/Translations'
 import Highlight from 'components/Highlight'
 import Tweet, { AvatarRyanflorence } from 'components/Tweet'
 import { RqToc } from 'components/rq-toc'
+import Emph from 'components/Emph'
 
 <img src="./rq-rr.jpeg" />
 
@@ -222,7 +223,13 @@ Setting the `staleTime` to two minutes tells `fetchQuery` to resolve data immedi
 
 Setting `staleTime` to `Infinity` is almost equivalent to the `getQueryData` approach, except that manual query invalidation takes precedence over `staleTime`. So I like the `getQueryData` approach a bit better, even if it is slightly more code.
 
-**Update**: As of [v4.18.0](https://github.com/TanStack/query/releases/tag/v4.18.0), you can use the built-in [queryClient.ensureQuery](https://tanstack.com/query/v4/docs/reference/QueryClient#queryclientensurequerydata) method to achieve the same thing. It is literally implemented with `getQueryData ?? fetchQuery`, but it's a common enough use-case for the library to have it out of the box.
+&#x200B;<Emph>Update</Emph>: As of
+[v4.18.0](https://github.com/TanStack/query/releases/tag/v4.18.0), you
+can use the built-in
+[queryClient.ensureQuery](https://tanstack.com/query/v4/docs/reference/QueryClient#queryclientensurequerydata)
+method to achieve the same thing. It is literally implemented with
+`getQueryData ?? fetchQuery`, but it's a common enough use-case for the
+library to have it out of the box.
 
 ### A TypeScript tip
 

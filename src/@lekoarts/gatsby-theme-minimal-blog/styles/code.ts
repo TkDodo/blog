@@ -1,5 +1,4 @@
 import baseCode from '@lekoarts/gatsby-theme-minimal-blog/src/styles/code'
-import { tint } from '@theme-ui/color'
 
 export default {
   pre: {
@@ -35,7 +34,7 @@ export default {
   '.prism-code': {
     // @ts-expect-error this is an object
     ...baseCode['.prism-code'],
-    fontSize: [0, 1, 2],
+    fontSize: [0, 1, 1],
   },
   'p > code, li > code': {
     bg: `backgroundSecondary`,

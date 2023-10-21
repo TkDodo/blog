@@ -4,15 +4,15 @@ import { tint } from '@theme-ui/color'
 
 type Props = {
   children: React.ReactNode
+  color?: string
 }
 
-const Highlight = ({ children }: Props) => {
-  const [colorMode] = useColorMode()
+const Emph = ({ children, color = 'primary' }: Props) => {
   return (
     <Text
       sx={{
         letterSpacing: '0.05em',
-        color: tint('primary', 0.2),
+        color,
         fontWeight: 'bold',
       }}
     >
@@ -21,4 +21,4 @@ const Highlight = ({ children }: Props) => {
   )
 }
 
-export default Highlight
+export default Emph

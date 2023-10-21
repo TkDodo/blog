@@ -14,6 +14,7 @@ import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
+import Aside from 'components/Aside'
 
 <img src="./optimizations.jpeg" />
 
@@ -22,7 +23,7 @@ import { RqToc } from 'components/rq-toc'
   url="https://unsplash.com/@szmigieldesign"
 />
 
-**Last Update: 23.04.2022**
+**Last Update: 21.10.2023**
 
 <RqToc id="react-query-render-optimizations" />
 
@@ -51,10 +52,14 @@ import { RqToc } from 'components/rq-toc'
   ]}
 </Translations>
 
-**Disclaimer**: Render optimizations are an advanced concept for any app. React Query already comes with very good optimizations and defaults out of the box, and most of the time, no further optimizations are needed. "Unneeded re-renders" is a topic that many people tend to put a lot of focus on, which is why I've decided to cover it. But I wanted to point out once again, that usually, for most apps, render optimizations probably don't matter as much as you'd think. Re-renders are a good thing. They make sure your app is up-to-date. I'd take an "unnecessary re-render" over a "missing render-that-should-have-been-there" all day every day. For more on this topic, please read:
+<Aside title="Disclaimer" icon="shield-alert" color="var(--theme-ui-colors-warning)">
+
+Render optimizations are an advanced concept for any app. React Query already comes with very good optimizations and defaults out of the box, and most of the time, no further optimizations are needed. "Unneeded re-renders" is a topic that many people tend to put a lot of focus on, which is why I've decided to cover it. But I wanted to point out once again, that usually, for most apps, render optimizations probably don't matter as much as you'd think. Re-renders are a good thing. They make sure your app is up-to-date. I'd take an "unnecessary re-render" over a "missing render-that-should-have-been-there" all day every day. For more on this topic, please read:
 
 - [Fix the slow render before you fix the re-render](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render) by Kent C. Dodds
 - [this article by @ryanflorence about premature optimizations](https://reacttraining.com/blog/react-inline-functions-and-performance)
+
+</Aside>
 
 ---
 
@@ -66,8 +71,13 @@ I haven't been entirely honest in the [last example](react-query-data-transforma
 
 ```tsx:title=count-component
 export const useTodosQuery = (select) =>
-  useQuery({ queryKey: ['todos'], queryFn: fetchTodos, select })
-export const useTodosCount = () => useTodosQuery((data) => data.length)
+  useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodos,
+    select,
+  })
+export const useTodosCount = () =>
+  useTodosQuery((data) => data.length)
 
 function TodosCount() {
   const todosCount = useTodosCount()
@@ -89,7 +99,7 @@ That is because React Query exposes a lot of meta information for each query, an
 
 For this use-case, React Query has the `notifyOnChangeProps` option. It can be set on a per-observer level to tell React Query: Please only inform this observer about changes if one of these props change. By setting this option to `['data']`, we will find the optimized version we seek:
 
-```ts:title=optimized-with-notifyOnChangeProps
+```ts:title=optimized-with-notifyOnChangeProps {1,6,9}
 export const useTodosQuery = (select, notifyOnChangeProps) =>
   useQuery({
     queryKey: ['todos'],
@@ -112,7 +122,8 @@ export const useTodosCount = () =>
   useTodosQuery((data) => data.length, ['data'])
 
 function TodosCount() {
-  // 🚨 we are using error, but we are not getting notified if error changes!
+  // 🚨 we are using error,
+  // but we are not getting notified if error changes!
   const { error, data } = useTodosCount()
 
   return (
@@ -186,7 +197,12 @@ if (someCondition()) {
 }
 ```
 
-**Update**: Starting with v4, tracked queries are turned on per default in React Query, and you can opt out of the feature with `notifyOnChangeProps: 'all'`.
+<Aside title="Update" icon="bell">
+
+Starting with v4, tracked queries are turned on per default in React
+Query, and you can opt out of the feature with `notifyOnChangeProps: 'all'`.
+
+</Aside>
 
 ## Structural sharing
 

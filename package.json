@@ -9,7 +9,7 @@
   "scripts": {
     "build": "gatsby clean && gatsby build --prefix-paths",
     "develop": "gatsby develop",
-    "start": "rm -rf .cache && gatsby develop",
+    "start": "gatsby develop",
     "serve": "gatsby serve --prefix-paths",
     "clean": "gatsby clean",
     "postbuild": "mv public build && mkdir public && mv build public/blog",
@@ -46,7 +46,7 @@
     "cross-env": "^7.0.3"
   },
   "prettier": {
-    "printWidth": 72,
+    "printWidth": 70,
     "tabWidth": 2,
     "singleQuote": true,
     "semi": false

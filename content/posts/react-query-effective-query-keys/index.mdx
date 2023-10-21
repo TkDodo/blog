@@ -14,6 +14,8 @@ import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
+import Emph from 'components/Emph'
+import Highlight from 'components/Highlight'
 
 <img src="./keys.jpeg" />
 
@@ -50,11 +52,17 @@ Internally, the Query Cache is just a JavaScript object, where the keys are seri
 
 The most important part is that keys need to be _unique_ for your queries. If React Query finds an entry for a key in the cache, it will use it. Please also be aware that you cannot use the same key for `useQuery` _and_ `useInfiniteQuery`. There is, after all, only _one_ Query Cache, and you would share the data between these two. That is not good because infinite queries have a fundamentally different structure than "normal" queries.
 
-```ts:title=dont-mix-keys
-useQuery({ queryKey: ['todos'], queryFn: fetchTodos })
+```ts
+useQuery({
+  queryKey: ['todos'],
+  queryFn: fetchTodos,
+})
 
 // 🚨 this won't work
-useInfiniteQuery({ queryKey: ['todos'], queryFn: fetchInfiniteTodos })
+useInfiniteQuery({
+  queryKey: ['todos'],
+  queryFn: fetchInfiniteTodos,
+})
 
 // ✅ choose something else instead
 useInfiniteQuery({
@@ -65,7 +73,7 @@ useInfiniteQuery({
 
 ## Automatic Refetching
 
-> Queries are declarative.
+<Highlight>Queries are declarative.</Highlight>
 
 This is a _very_ important concept that cannot be emphasized enough, and it's also something that might take some time to "click". Most people think about queries, and especially refetching, in an _imperative_ way.
 
@@ -83,7 +91,7 @@ function Component() {
 }
 ```
 
-The answer is: **You don't.**
+The answer is: <Emph>You don't.</Emph>
 
 That's not what `refetch` is for - it's for refetching _with the same parameters_.
 
@@ -97,7 +105,7 @@ function Component() {
     queryFn: () => fetchTodos(filters),
   })
 
-  // ✅ set local state and let it "drive" the query
+  // ✅ set local state and let it drive the query
   return <Filters onApply={setFilters} />
 }
 ```
@@ -142,7 +150,7 @@ useQuery({ queryKey: 'todos' })
 useQuery({ queryKey: ['todos'] })
 ```
 
-**Update**: With React Query v4, all keys need to be Arrays.
+&#x200B;<Emph>Update</Emph>: With React Query v4, all keys need to be Arrays.
 
 ### Structure
 
@@ -164,11 +172,16 @@ function useUpdateTitle() {
     mutationFn: updateTitle,
     onSuccess: (newTodo) => {
       // ✅ update the todo detail
-      queryClient.setQueryData(['todos', 'detail', newTodo.id], newTodo)
+      queryClient.setQueryData(
+        ['todos', 'detail', newTodo.id],
+        newTodo
+      )
 
       // ✅ update all the lists that contain this todo
       queryClient.setQueriesData(['todos', 'list'], (previous) =>
-        previous.map((todo) => (todo.id === newTodo.id ? newtodo : todo))
+        previous.map((todo) =>
+          todo.id === newTodo.id ? newtodo : todo
+        )
       )
     },
   })
@@ -177,15 +190,20 @@ function useUpdateTitle() {
 
 This might not work if the structure of lists and details differ a lot, so alternatively, you can also of course just invalidate all the lists instead:
 
-```js:title=invalidate-all-lists {7-8}
+```js:title=invalidate-all-lists {10-13}
 function useUpdateTitle() {
   return useMutation({
     mutationFn: updateTitle,
     onSuccess: (newTodo) => {
-      queryClient.setQueryData(['todos', 'detail', newTodo.id], newTodo)
+      queryClient.setQueryData(
+        ['todos', 'detail', newTodo.id],
+        newTodo
+      )
 
       // ✅ just invalidate all the lists
-      queryClient.invalidateQueries({ queryKey: ['todos', 'list'] })
+      queryClient.invalidateQueries({
+        queryKey: ['todos', 'list']
+      })
     },
   })
 }
@@ -193,23 +211,31 @@ function useUpdateTitle() {
 
 If you know which list you are currently on, e.g. by reading the filters from the url, and can therefore construct the exact Query Key, you can also combine this two methods and call `setQueryData` on your list and invalidate all the others:
 
-```js:title=combine {11-20}
+```js:title=combine {14-28}
 function useUpdateTitle() {
-  // imagine a custom hook that returns the current filters,
-  // stored in the url
+  // imagine a custom hook that returns
+  // the current filters, stored in the url
   const { filters } = useFilterParams()
 
   return useMutation({
     mutationFn: updateTitle,
     onSuccess: (newTodo) => {
-      queryClient.setQueryData(['todos', 'detail', newTodo.id], newTodo)
-
-      // ✅ update the list we are currently on instantly
-      queryClient.setQueryData(['todos', 'list', { filters }], (previous) =>
-        previous.map((todo) => (todo.id === newTodo.id ? newtodo : todo))
+      queryClient.setQueryData(
+        ['todos', 'detail', newTodo.id],
+        newTodo
       )
 
-      // 🥳 invalidate all the lists, but don't refetch the active one
+      // ✅ update the list we are currently on
+      queryClient.setQueryData(
+        ['todos', 'list', { filters }],
+        (previous) =>
+          previous.map((todo) =>
+            todo.id === newTodo.id ? newtodo : todo
+          )
+      )
+
+      // 🥳 invalidate all the lists,
+      // but don't refetch the active one
       queryClient.invalidateQueries({
         queryKey: ['todos', 'list'],
         refetchActive: false,
@@ -219,7 +245,8 @@ function useUpdateTitle() {
 }
 ```
 
-**Update**: In v4, `refetchActive` has been replaced with `refetchType`. In the above example, that would be `refetchType: 'none'`, because we don't want to refetch anything.
+&#x200B;<Emph>Update</Emph>: In v4, `refetchActive` has been replaced with
+`refetchType`. In the above example, that would be `refetchType: 'none'`, because we don't want to refetch anything.
 
 ### Use Query Key factories
 
@@ -240,11 +267,16 @@ const todoKeys = {
 This gives me a lot of flexibility, as each level builds on top of another, but is still independently accessible:
 
 ```ts:title=examples
-// 🕺 remove everything related to the todos feature
-queryClient.removeQueries({ queryKey: todoKeys.all })
+// 🕺 remove everything related
+// to the todos feature
+queryClient.removeQueries({
+  queryKey: todoKeys.all
+})
 
 // 🚀 invalidate all the lists
-queryClient.invalidateQueries({ queryKey: todoKeys.lists() })
+queryClient.invalidateQueries({
+  queryKey: todoKeys.lists()
+})
 
 // 🙌 prefetch a single todo
 queryClient.prefetchQueries({

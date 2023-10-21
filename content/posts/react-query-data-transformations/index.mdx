@@ -14,10 +14,16 @@ import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
+import Aside from 'components/Aside'
 
 <img src="./transformations.jpeg" />
 
-<Attribution name="Joshua Sukoff" url="https://unsplash.com/@joshuas" />
+<Attribution
+  name="Joshua Sukoff"
+  url="https://unsplash.com/@joshuas"
+/>
+
+**Last Update: 21.10.2023**
 
 <RqToc id="react-query-data-transformations" />
 
@@ -73,7 +79,7 @@ This is my favourite approach, if you can afford it. If the backend returns data
 
 The `queryFn` is the function that you pass to `useQuery`. It expects you to return a Promise, and the resulting data winds up in the query cache. But it doesn't mean that you have to absolutely return data in the structure that the backend delivers here. You can transform it before doing so:
 
-```ts:title=queryFn-transformation
+```ts:title=queryFn-transformation {5}
 const fetchTodos = async (): Promise<Todos> => {
   const response = await axios.get('todos')
   const data: Todos = response.data
@@ -82,7 +88,10 @@ const fetchTodos = async (): Promise<Todos> => {
 }
 
 export const useTodosQuery = () =>
-  useQuery({ queryKey: ['todos'], queryFn: fetchTodos })
+  useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodos,
+  })
 ```
 
 On the frontend, you can then work with this data "as if it came like this from the backend". No where in your code will you actually work with todo names that are _not_ upper-cased. You will also _not_ have access to the original structure. If you look at the react-query-devtools, you will see the transformed structure. If you look at the network trace, you'll see the original structure. This might be confusing, so keep that in mind.
@@ -98,14 +107,17 @@ Also, there is no optimization that react-query can do for you here. Every time 
 
 As advised in [Part 1](practical-react-query), if you create custom hooks, you can easily do transformations there:
 
-```ts:title=render-transformation
+```ts:title=render-transformation {12-15}
 const fetchTodos = async (): Promise<Todos> => {
   const response = await axios.get('todos')
   return response.data
 }
 
 export const useTodosQuery = () => {
-  const queryInfo = useQuery({ queryKey: ['todos'], queryFn: fetchTodos })
+  const queryInfo = useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodos,
+  })
 
   return {
     ...queryInfo,
@@ -118,7 +130,10 @@ As it stands, this will not only run every time your fetch function runs, but ac
 
 ```ts:title=useMemo-dependencies
 export const useTodosQuery = () => {
-  const queryInfo = useQuery({ queryKey: ['todos'], queryFn: fetchTodos })
+  const queryInfo = useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodos
+  })
 
   return {
     ...queryInfo,
@@ -139,16 +154,23 @@ export const useTodosQuery = () => {
 
 Especially if you have additional logic in your custom hook to combine with your data transformation, this is a good option. Be aware that data can be potentially undefined, so use optional chaining when working with it.
 
+<Aside title="Update" icon="bell">
+
+Since React Query has [tracked queries](react-query-render-optimizations#tracked-queries) turned on per default since v4, spreading `...queryInfo` is no longer recommended, because it invokes getters on all properties.
+
+</Aside>
+
 🟢 &nbsp; optimizable via useMemo<br/>
 🟡 &nbsp; exact structure cannot be inspected in the devtools<br/>
 🔴 &nbsp; a bit more convoluted syntax<br/>
 🔴 &nbsp; data can be potentially undefined<br/>
+🔴 &nbsp; not recommended with tracked queries<br/>
 
 ### 3. using the select option
 
 v3 introduced built-in selectors, which can also be used to transform data:
 
-```ts:title=select-transformation
+```ts:title=select-transformation {5}
 export const useTodosQuery = () =>
   useQuery({
     queryKey: ['todos'],
@@ -159,7 +181,7 @@ export const useTodosQuery = () =>
 
 selectors will only be called if `data` exists, so you don't have to care about `undefined` here. Selectors like the one above will also run on every render, because the functional identity changes (it's an inline function). If your transformation is expensive, you can memoize it either with useCallback, or by extracting it to a stable function reference:
 
-```ts:title=select-memoizations
+```ts:title=select-memoizations {8-9,16-20}
 const transformTodoNames = (data: Todos) =>
   data.map((todo) => todo.name.toUpperCase())
 
@@ -187,9 +209,14 @@ Further, the select option can also be used to subscribe to only parts of the da
 
 ```js:title=select-partial-subscriptions
 export const useTodosQuery = (select) =>
-  useQuery({ queryKey: ['todos'], queryFn: fetchTodos, select })
+  useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodos,
+    select,
+  })
 
-export const useTodosCount = () => useTodosQuery((data) => data.length)
+export const useTodosCount = () =>
+  useTodosQuery((data) => data.length)
 export const useTodo = (id) =>
   useTodosQuery((data) => data.find((todo) => todo.id === id))
 ```
@@ -201,7 +228,7 @@ But if you pass a selector, you are now only subscribed to the result of the sel
 🟢 &nbsp; best optimizations<br/>
 🟢 &nbsp; allows for partial subscriptions<br/>
 🟡 &nbsp; structure can be different for every observer<br/>
-🟡 &nbsp; structural sharing is performed twice (I will also talk about this in more detail in Part 3)
+🟡 &nbsp; structural sharing is performed twice (I will also talk about this in more detail in [Part 3](react-query-render-optimizations))
 
 ---
 

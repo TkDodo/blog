@@ -11,10 +11,14 @@ tags:
 import Comments from 'components/Comments'
 import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
+import Emph from 'components/Emph'
+import Aside from 'components/Aside'
 
 <img src="./react-query.png" />
 
 ---
+
+**Last Update: 21.10.2023**
 
 <RqToc id="practical-react-query" />
 
@@ -138,20 +142,36 @@ and your component will not re-render if the data is the same as you currently h
 During development, this will probably be triggered more frequently,
 especially because focusing between the Browser DevTools and your app will also cause a fetch, so be aware of that.
 
-Secondly, there seems to be a bit of confusion between `cacheTime` and `staleTime`, so let me try to clear that up:
+<Aside title="Update" icon="bell">
 
-- StaleTime: The duration until a query transitions from fresh to stale.
+Since React Query v5, `refechOnWindowFocus` no
+longer listens to the `focus` event - the `visibilitychange` event
+is used exclusively. This means you'll get fewer unwanted re-fetches
+in development mode, while still retaining the trigger for most
+production cases. It also fixes a bunch of issues as [shown here](https://github.com/TanStack/query/pull/4805).
+
+</Aside>
+
+Secondly, there seems to be a bit of confusion between `gcTime` and `staleTime`, so let me try to clear that up:
+
+- `staleTime`: The duration until a query transitions from fresh to stale.
   As long as the query is fresh, data will always be read from the cache only - no network request will happen!
   If the query is stale (which per default is: instantly), you will still get data from the cache,
   but a background refetch can happen [under certain conditions](https://tanstack.com/query/latest/docs/react/guides/caching).
-- CacheTime: The duration until inactive queries will be removed from the cache. This defaults to 5 minutes.
+- `gcTime`: The duration until inactive queries will be removed from the cache. This defaults to 5 minutes.
   Queries transition to the inactive state as soon as there are no observers registered,
   so when all components which use that query have unmounted.
 
 Most of the time, if you want to change one of these settings, it's the `staleTime` that needs adjusting.
-I have rarely ever needed to tamper with the `cacheTime`.
+I have rarely ever needed to tamper with the `gcTime`.
 There is a good [explanation by example](https://tanstack.com/query/latest/docs/react/guides/caching#basic-example)
 in the docs as well.
+
+<Aside>
+
+`gcTime` was previously known as `cacheTime`, but it got renamed in v5 to better reflect what it's doing.
+
+</Aside>
 
 ### Use the React Query DevTools
 
@@ -186,7 +206,10 @@ const fetchTodos = async (state: State): Promise<Todos> => {
 }
 
 export const useTodosQuery = (state: State) =>
-  useQuery({ queryKey: ['todos', state], queryFn: () => fetchTodos(state) })
+  useQuery({
+    queryKey: ['todos', state],
+    queryFn: () => fetchTodos(state),
+  })
 ```
 
 Here, imagine that our UI displays a list of todos along with a filter option.
@@ -202,12 +225,11 @@ I don't think I have ever passed a variable to the `queryFn` that was _not_ part
 Because the query key is used as a key for the cache, you will get a new cache entry when you switch from
 'all' to 'done', and that will result in a hard loading state (probably showing a loading spinner)
 when you switch for the first time.
-This is certainly not ideal, so you can either use the `keepPreviousData` option for these cases,
-or, if possible, pre-fill the newly created cache entry with
+This is certainly not ideal, so if possible, we can try to pre-fill the newly created cache entry with
 [initialData](https://tanstack.com/query/latest/docs/react/guides/initial-query-data#initial-data-from-cache).
 The above example is perfect for that, because we can do some client side pre-filtering on our todos:
 
-```ts:title=pre-filtering {17-23}
+```ts:title=pre-filtering {17-26}
 type State = 'all' | 'open' | 'done'
 type Todo = {
   id: number
@@ -225,7 +247,10 @@ export const useTodosQuery = (state: State) =>
     queryKey: ['todos', state],
     queryFn: () => fetchTodos(state),
     initialData: () => {
-      const allTodos = queryClient.getQueryData<Todos>(['todos', 'all'])
+      const allTodos = queryClient.getQueryData<Todos>([
+        'todos',
+        'all',
+      ])
       const filteredData =
         allTodos?.filter((todo) => todo.state === state) ?? []
 
@@ -235,10 +260,9 @@ export const useTodosQuery = (state: State) =>
 ```
 
 Now, every time the user switches between states, if we don't have data yet,
-we try to pre-fill it with data from the 'all todos' cache.
+we try to show data from the 'all todos' cache.
 We can instantly show the 'done' todos that we have to the user,
 and they will still see the updated list once the background fetch finishes.
-Please note that prior to v3, you would also need to set the `initialStale` property to actually trigger a background fetch.
 
 I think this is a great ux improvement for just a few lines of code.
 
@@ -257,12 +281,16 @@ So if you do that on purpose, make sure to _not_ fire off unnecessary background
 
 ```jsx:title=initial-form-data
 const App = () => {
-  const { data } = useQuery({ queryKey: ['key'], queryFn, staleTime: Infinity })
+  const { data } = useQuery({
+    queryKey: ['key'],
+    queryFn,
+    staleTime: Infinity,
+  })
 
   return data ? <MyForm initialData={data} /> : null
 }
 
-const MyForm = ({ initialData} ) => {
+const MyForm = ({ initialData }) => {
   const [data, setData] = React.useState(initialData)
   ...
 }

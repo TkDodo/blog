@@ -15,10 +15,13 @@ import SpacingBox from 'components/SpacingBox'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
+import Aside from 'components/Aside'
 
 <img src="./error-handling.jpeg" />
 
 <Attribution name="Sigmund" url="https://unsplash.com/@sigmund" />
+
+**Last Update: 21.10.2023**
 
 <RqToc id="react-query-error-handling" />
 
@@ -47,11 +50,14 @@ If you are working with [the fetch API](https://developer.mozilla.org/en-US/docs
 
 Let's see how most examples around displaying errors look like:
 
-```tsx:title=the-standard-example
+```tsx:title=the-standard-example {11-15}
 function TodoList() {
-  const todos = useQuery({ queryKey: ['todos'], queryFn: fetchTodos })
+  const todos = useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodos
+  })
 
-  if (todos.isLoading) {
+  if (todos.isPending) {
     return 'Loading...'
   }
 
@@ -89,15 +95,16 @@ This is nice because we can wrap our components in Error Boundaries at any granu
 
 One thing that Error Boundaries _cannot_ do is catch asynchronous errors, because those do not occur during rendering. So to make Error Boundaries work in React Query, the library internally catches the error for you and re-throws it in the next render cycle so that the Error Boundary can pick it up.
 
-I think this is a pretty genius yet simple approach to error handling, and all you need to do to make that work is pass the `useErrorBoundary` flag to your query (or provide it via a default config):
+I think this is a pretty genius yet simple approach to error handling, and all you need to do to make that work is pass the `throwOnError` flag to your query (or provide it via a default config):
 
-```tsx:title=useErrorBoundary
+```tsx:title=throwOnError {7}
 function TodoList() {
-  // ✅ will propagate all fetching errors to the nearest Error Boundary
+  // ✅ will propagate all fetching errors
+  // to the nearest Error Boundary
   const todos = useQuery({
     queryKey: ['todos'],
     queryFn: fetchTodos,
-    useErrorBoundary: true,
+    throwOnError: true,
   })
 
   if (todos.data) {
@@ -114,18 +121,24 @@ function TodoList() {
 }
 ```
 
-Starting with [v3.23.0](https://github.com/tannerlinsley/react-query/releases/tag/v3.23.0), you can even customize which errors should go towards an Error Boundary, and which ones you'd rather handle locally by providing a function to `useErrorBoundary`:
+Starting with [v3.23.0](https://github.com/tannerlinsley/react-query/releases/tag/v3.23.0), you can even customize which errors should go towards an Error Boundary, and which ones you'd rather handle locally by providing a function to `throwOnError`:
 
-```js:title=granular-error-boundaries
+```js:title=granular-error-boundaries {4-5}
 useQuery({
   queryKey: ['todos'],
   queryFn: fetchTodos,
   // 🚀 only server errors will go to the Error Boundary
-  useErrorBoundary: (error) => error.response?.status >= 500,
+  throwOnError: (error) => error.response?.status >= 500,
 })
 ```
 
 This also works for [mutations](https://react-query.tanstack.com/guides/mutations), and is quite helpful for when you're doing form submissions. Errors in the 4xx range can be handled locally (e.g. if some backend validation failed), while all 5xx server errors can be propagated to the Error Boundary.
+
+<Aside title="Update" icon="bell">
+
+Before v5, the `throwOnError` flag was knows as `useErrorBoundary`.
+
+</Aside>
 
 ## Showing error notifications
 
@@ -141,7 +154,11 @@ So how can we do this when getting an error from React Query?
 
 ### The onError callback
 
-<SpacingBox />
+<Aside title="Update" icon="bell">
+
+The `onError` and `onSuccess` callbacks have been removed from `useQuery` in v5. You can read more about the reasoning [here](breaking-react-querys-api-on-purpose).
+
+</Aside>
 
 ```js:title=the-onError-callback
 const useTodos = () =>
@@ -162,7 +179,10 @@ Conceptually, you can imagine that the onError callback functions similar to a `
 
 ```js:title=useEffect-error-toast
 const useTodos = () => {
-  const todos = useQuery({ queryKey: ['todos'], queryFn: fetchTodos })
+  const todos = useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodos
+  })
 
   // 🚨 effects are executed for every component
   // that uses this custom hook individually
