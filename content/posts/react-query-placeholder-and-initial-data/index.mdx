@@ -69,7 +69,7 @@ Lastly, neither has an effect if you already have data in your cache. So what di
 
 For each Query Key, there is only one cache entry. This is kinda obvious because part of what makes React Query great is the possibility to share the same data "globally" in our application.
 
-Some options we provide to `useQuery` will affect that cache entry, prominent examples are `staleTime` and `cacheTime`. Since there is only _one_ cache entry, those options specify when that entry is considered stale, or when it can be garbage collected.
+Some options we provide to `useQuery` will affect that cache entry, prominent examples are `staleTime` and `gcTime`. Since there is only _one_ cache entry, those options specify when that entry is considered stale, or when it can be garbage collected.
 
 ### On observer level
 
