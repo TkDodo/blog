@@ -4,7 +4,7 @@ import { Box, Flex } from 'theme-ui'
 
 type Props = {
   children: React.ReactNode
-  title?: string
+  title: string
   icon?: keyof typeof icons
   color?: string
 }
@@ -57,18 +57,18 @@ const Aside = ({
       as="aside"
       sx={{
         color: 'var(--theme-ui-colors-text)',
-        marginTop: ['16px', '16px', '20px'],
-        marginBottom: ['16px', '16px', '20px'],
-        borderRadius: '12px',
-        paddingX: ['16px', '16px', '20px'],
-        paddingY: title ? ['16px', '16px', '20px'] : 0,
+        marginY: ['1em', '1em'],
+        borderRadius: '0.5rem',
+        padding: ['1em', '1em'],
         borderLeft: `6px solid ${color}`,
-        paddingBottom: '0px !important',
         overflow: 'hidden',
         backgroundColor: 'var(--theme-ui-colors-backgroundSecondary)',
         code: {
           backgroundColor:
             'var(--theme-ui-colors-backgroundTertiary) !important',
+        },
+        'p:last-child': {
+          marginBottom: 0,
         },
         pre: {
           code: {

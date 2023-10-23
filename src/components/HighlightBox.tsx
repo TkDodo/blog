@@ -8,11 +8,10 @@ type Props = {
 const HighlightBox = ({ children }: Props) => {
   return (
     <Flex
-      padding={3}
+      padding={['1em', '1.125em']}
       sx={{
         flexDirection: 'column',
-        gap: 3,
-        borderRadius: 12,
+        borderRadius: '0.5rem',
         backgroundColor: 'var(--theme-ui-colors-backgroundSecondary)',
       }}
     >

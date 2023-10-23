@@ -147,7 +147,7 @@ function add(items: string | number[], newItem: string | number) {
 
 shows the following error:
 
-<Alert css={{ fontFamily: 'ml, monospace' }}>
+<Alert sx={{ fontFamily: 'ml, monospace', fontSize: [0, 1] }}>
   Type 'string' is not assignable to type 'ConcatArray&lt;number&gt;
   &amp; string' (2769)
 </Alert>
@@ -200,7 +200,7 @@ pick(myObject, ['foo', 'bar'])
 
 now yields:
 
-<Alert css={{ fontFamily: 'ml, monospace' }}>
+<Alert sx={{ fontFamily: 'ml, monospace', fontSize: [0, 1] }}>
   Argument of type 'string[]' is not assignable to parameter of type
   'keyof TObject[]'.(2345)
 </Alert>

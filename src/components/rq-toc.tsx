@@ -53,7 +53,10 @@ const mapping = [
     title: '#12: Mastering Mutations in React Query',
   },
   { id: 'offline-react-query', title: '#13: Offline React Query' },
-  { id: 'react-query-and-forms', title: '#14: React Query and Forms' },
+  {
+    id: 'react-query-and-forms',
+    title: '#14: React Query and Forms',
+  },
   { id: 'react-query-fa-qs', title: '#15: React Query FAQs' },
   {
     id: 'react-query-meets-react-router',
@@ -64,19 +67,22 @@ const mapping = [
     title: '#17: Seeding the Query Cache',
   },
   { id: 'inside-react-query', title: '#18: Inside React Query' },
-  { id: 'type-safe-react-query', title: '#19: Type-safe React Query' },
+  {
+    id: 'type-safe-react-query',
+    title: '#19: Type-safe React Query',
+  },
   {
     id: 'you-might-not-need-react-query',
-    title: '#20: You Might Not Need React Query'
+    title: '#20: You Might Not Need React Query',
   },
   {
     id: 'thinking-in-react-query',
-    title: '#21: Thinking in React Query'
+    title: '#21: Thinking in React Query',
   },
   {
     id: 'react-query-and-react-context',
-    title: '#22: React Query and React Context'
-  }
+    title: '#22: React Query and React Context',
+  },
 ]
 
 export const RqToc = ({ id }: Props) => {
@@ -88,7 +94,7 @@ export const RqToc = ({ id }: Props) => {
         'list-style-type': 'none',
         gap: 0.7,
         paddingTop: 2,
-        paddingBottom: 4
+        paddingBottom: 4,
       }}
     >
       {mapping.map((item) => {

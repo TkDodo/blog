@@ -217,15 +217,16 @@ function Tweet({
         display: 'block',
         width: '100%',
         maxWidth: '550px',
-        marginTop: ['16px', '16px', '20px'],
-        marginBottom: ['16px', '16px', '20px'],
+        marginY: ['1em', '1.125em'],
         position: 'relative',
-        borderRadius: '0.75rem',
+        borderRadius: '0.5rem',
         padding: '1.5rem',
         fontSize: [1, 1, 2],
-        border: '1px solid var(--theme-ui-colors-backgroundSecondary)',
+        border:
+          '1px solid var(--theme-ui-colors-backgroundSecondary)',
         '&:hover': {
-          backgroundColor: 'var(--theme-ui-colors-backgroundSecondary)',
+          backgroundColor:
+            'var(--theme-ui-colors-backgroundSecondary)',
         },
       }}
       href={`https://twitter.com/${handle}/status/${tweetId}`}
@@ -266,9 +267,9 @@ function Tweet({
         }}
       >
         -{' '}
-        {Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(
-          date
-        )}
+        {Intl.DateTimeFormat(undefined, {
+          dateStyle: 'medium',
+        }).format(date)}
       </Box>
     </Link>
   )

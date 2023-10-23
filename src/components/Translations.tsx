@@ -14,7 +14,7 @@ const Translations = ({ children }: Props) => (
     sx={{
       alignItems: 'center',
       padding: 0,
-      gap: 3,
+      gap: ['1em', '1.125em'],
       flexWrap: 'wrap',
     }}
   >
@@ -48,7 +48,7 @@ const Translations = ({ children }: Props) => (
 
 const TranslationsWrapper = ({ children }: Props) => {
   return (
-    <Flex sx={{ flexDirection: 'column', gap: 1 }}>
+    <Flex sx={{ flexDirection: 'column', gap: ['1em', '1.125em'] }}>
       <Ads />
       <HighlightBox>
         <Translations>{children}</Translations>
