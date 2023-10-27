@@ -41,20 +41,6 @@ const WithAds = () => {
       <HighlightBox>
         <MonoLisa />
       </HighlightBox>
-      {/* TODO: Conditionally show Query.gg banner for React Query posts
-                and Bytes banner for all others
-      */}
-      <Link
-        href="https://bytes.dev/?r=dom"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <StaticImage
-          placeholder="blurred"
-          src="../../static/images/bytes.jpg"
-          alt="Bytes - the JavaScript Newsletter that doesn't suck"
-        />
-      </Link>
       <Link
         href="https://query.gg/?r=dom"
         target="_blank"
@@ -64,6 +50,17 @@ const WithAds = () => {
           placeholder="blurred"
           src="../../static/images/query-gg.jpg"
           alt="Query.gg - The official React Query course"
+        />
+      </Link>
+      <Link
+        href="https://bytes.dev/?r=dom"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <StaticImage
+          placeholder="blurred"
+          src="../../static/images/bytes.jpg"
+          alt="Bytes - the JavaScript Newsletter that doesn't suck"
         />
       </Link>
       <Comments />
