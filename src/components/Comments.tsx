@@ -1,6 +1,7 @@
 import * as React from 'react'
 import Giscus from '@giscus/react'
 import { StaticImage } from 'gatsby-plugin-image'
+import { useLocation } from '@reach/router'
 import { useColorMode } from 'theme-ui'
 import { Link, Flex } from '@theme-ui/components'
 
@@ -36,33 +37,37 @@ const Comments = () => {
 }
 
 const WithAds = () => {
+  const location = useLocation()
   return (
     <Flex sx={{ flexDirection: 'column', gap: 3 }}>
       <HighlightBox>
         <MonoLisa />
       </HighlightBox>
-      <Link
-        href="https://query.gg/?r=dom"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <StaticImage
-          placeholder="blurred"
-          src="../../static/images/query-gg.jpg"
-          alt="Query.gg - The official React Query course"
-        />
-      </Link>
-      <Link
-        href="https://bytes.dev/?r=dom"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <StaticImage
-          placeholder="blurred"
-          src="../../static/images/bytes.jpg"
-          alt="Bytes - the JavaScript Newsletter that doesn't suck"
-        />
-      </Link>
+      {location.pathname.includes('query') ? (
+        <Link
+          href="https://query.gg/?r=dom"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <StaticImage
+            placeholder="blurred"
+            src="../../static/images/query-gg.jpg"
+            alt="Query.gg - The official React Query course"
+          />
+        </Link>
+      ) : (
+        <Link
+          href="https://bytes.dev/?r=dom"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <StaticImage
+            placeholder="blurred"
+            src="../../static/images/bytes.jpg"
+            alt="Bytes - the JavaScript Newsletter that doesn't suck"
+          />
+        </Link>
+      )}
       <Comments />
     </Flex>
   )
