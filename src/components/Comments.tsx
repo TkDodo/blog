@@ -4,6 +4,7 @@ import { StaticImage } from 'gatsby-plugin-image'
 import { useLocation } from '@reach/router'
 import { useColorMode } from 'theme-ui'
 import { Link, Flex } from '@theme-ui/components'
+import { QueryGG } from './QueryGG'
 
 import HighlightBox from './HighlightBox'
 import MonoLisa from './MonoLisa'
@@ -44,17 +45,7 @@ const WithAds = () => {
         <MonoLisa />
       </HighlightBox>
       {location.pathname.includes('query') ? (
-        <Link
-          href="https://query.gg/?r=dom"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <StaticImage
-            placeholder="blurred"
-            src="../../static/images/query-gg.jpg"
-            alt="Query.gg - The official React Query course"
-          />
-        </Link>
+        <QueryGG />
       ) : (
         <Link
           href="https://bytes.dev/?r=dom"
