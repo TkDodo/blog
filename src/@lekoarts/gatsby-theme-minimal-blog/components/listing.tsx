@@ -8,7 +8,11 @@ import { Link, withPrefix } from 'gatsby'
 import { Image, Card, Grid } from '@theme-ui/components'
 import { jsx } from 'theme-ui'
 
-const Listing = (props: React.ComponentProps<typeof OriginalListing>) => {
+import { Del } from '../../../components/Del'
+
+const Listing = (
+  props: React.ComponentProps<typeof OriginalListing>
+) => {
   return (
     <section sx={{ mb: [5, 6, 7] }} className={props.className}>
       <Grid
@@ -107,7 +111,13 @@ const CardListItem = ({
             },
           })}
         >
-          {post.title}
+          {post.title === 'Why You Want React Query' ? (
+            <>
+              Why You <Del>Want</Del> Need React Query
+            </>
+          ) : (
+            post.title
+          )}
         </Link>
       </p>
       {post.tags && showTags && (

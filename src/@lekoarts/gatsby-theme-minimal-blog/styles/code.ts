@@ -25,16 +25,28 @@ export default {
     background: `#629CBC !important`,
   },
   ...baseCode,
+  '.gatsby-highlight': {
+    // @ts-expect-error this is an object
+    ...baseCode['.gatsby-highlight'],
+    mx: 0,
+    borderBottomLeftRadius: '0.5rem',
+    borderBottomRightRadius: '0.5rem',
+  },
   '.code-title': {
     // @ts-expect-error this is an object
     ...baseCode['.code-title'],
     fontSize: [0, 1],
     fontFamily: 'ml, monospace',
+    borderTopLeftRadius: '0.5rem',
+    borderTopRightRadius: '0.5rem',
+    mx: 0,
   },
   '.prism-code': {
     // @ts-expect-error this is an object
     ...baseCode['.prism-code'],
     fontSize: [0, 1, 1],
+    borderBottomLeftRadius: '0.5rem',
+    borderBottomRightRadius: '0.5rem',
   },
   'p > code, li > code': {
     bg: `backgroundSecondary`,

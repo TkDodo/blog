@@ -44,7 +44,8 @@ const WithAds = () => {
       <HighlightBox>
         <MonoLisa />
       </HighlightBox>
-      {location.pathname.includes('query') ? (
+      {location.pathname.includes('query') &&
+      !location.pathname.includes('why-you-want') ? (
         <QueryGG />
       ) : (
         <Link

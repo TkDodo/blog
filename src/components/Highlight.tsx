@@ -1,3 +1,4 @@
+import Emph from './Emph'
 import * as React from 'react'
 import { Box, useColorMode } from 'theme-ui'
 
@@ -16,13 +17,13 @@ const Highlight = ({ children }: Props) => {
         padding: 2,
         paddingLeft: [2, 2, 5],
         paddingRight: [2, 2, 5],
-        borderRadius: 2,
+        borderRadius: '0.5rem',
         border: '2px solid',
         boxShadow: `0 0 8px rgba(${color}, ${color}, ${color}, 0.125)`,
         borderColor: 'primary',
       }}
     >
-      {children}
+      <Emph>{children}</Emph>
     </Box>
   )
 }
