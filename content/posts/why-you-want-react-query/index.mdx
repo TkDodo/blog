@@ -61,7 +61,7 @@ function Bookmarks({ category }) {
   useEffect(() => {
     fetch(`${endpoint}/${category}`)
       .then(res => res.json())
-      .then(d => setData(d)
+      .then(d => setData(d))
       .catch(e => setError(e))
   }, [category])
 
