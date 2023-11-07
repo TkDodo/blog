@@ -83,6 +83,10 @@ const mapping = [
     id: 'react-query-and-react-context',
     title: '#22: React Query and React Context',
   },
+  {
+    id: 'why-you-want-react-query',
+    title: '#23: Why You Want React Query',
+  },
 ]
 
 export const RqToc = ({ id }: Props) => {
@@ -91,7 +95,7 @@ export const RqToc = ({ id }: Props) => {
       as="ul"
       sx={{
         flexDirection: 'column',
-        'list-style-type': 'none',
+        listStyleType: 'none',
         gap: 0.7,
         paddingTop: 2,
         paddingBottom: 4,

@@ -41,13 +41,15 @@ I love this question from Mark Erikson:
 >
   <p>Question for the React community:</p>
   <p>
-    Has the shift from "how does `this`/binding work?"-type questions to
-    "why is my state stale due to closures?"-type questions made things
-    better, worse, or just "same thing but different" ?
+    Has the shift from "how does `this`/binding work?"-type questions
+    to "why is my state stale due to closures?"-type questions made
+    things better, worse, or just "same thing but different" ?
   </p>
   <p>
     (Inspired by the questions we see in{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">@reactiflux</Text>{' '}
+    <Text color="var(--theme-ui-colors-twitterBlue)">
+      @reactiflux
+    </Text>{' '}
     daily)
   </p>
 </Tweet>
@@ -115,7 +117,8 @@ render(
 
 // just a way to make logging work in this interactive example
 function log(value) {
-  document.getElementById('result').innerHTML = 'log: ' + String(value)
+  document.getElementById('result').innerHTML =
+    'log: ' + String(value)
 }
 ```
 
@@ -128,8 +131,8 @@ But why is that, and is that always true?
 The last sentence of the MDN definition is the most important one, so let's have another look (emphasis mine):
 
 <Highlight>
-  In JavaScript, closures are created every time a function is created,{' '}
-  <b>at function creation time.</b>
+  In JavaScript, closures are created every time a function is
+  created, <i>at function creation time.</i>
 </Highlight>
 
 Let me try to explain this with an analogy that has made closures "click" for me:
@@ -192,7 +195,8 @@ render(
 
 // just a way to make logging work in this interactive example
 function log(value) {
-  document.getElementById('result2').innerHTML = 'log: ' + String(value)
+  document.getElementById('result2').innerHTML =
+    'log: ' + String(value)
 }
 ```
 

@@ -17,9 +17,9 @@ const Svg = ({ children }: { children: React.ReactNode }) => (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
   >
     {children}
   </svg>
@@ -32,6 +32,14 @@ const Bell = () => (
   </Svg>
 )
 
+const Info = () => (
+  <Svg>
+    <circle cx="12" cy="12" r="10" />
+    <path d="M12 16v-4" />
+    <path d="M12 8h.01" />
+  </Svg>
+)
+
 const ShieldAlert = () => (
   <Svg>
     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
@@ -40,18 +48,19 @@ const ShieldAlert = () => (
   </Svg>
 )
 
-const icons: Record<string, React.ComponentType> = {
+const icons = {
   bell: Bell,
+  info: Info,
   'shield-alert': ShieldAlert,
-}
+} as const
 
 const Aside = ({
   children,
   title,
-  icon,
+  icon = 'info',
   color = 'var(--theme-ui-colors-primary)',
 }: Props) => {
-  const Icon = icon ? icons[icon] : null
+  const Icon = icons[icon]
   return (
     <Box
       as="aside"
@@ -77,18 +86,16 @@ const Aside = ({
         },
       }}
     >
-      {title || icon ? (
-        <Flex
-          sx={{
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            color,
-          }}
-        >
-          {title && <Emph color={color}>{title}</Emph>}
-          {icon && <Icon />}
-        </Flex>
-      ) : null}
+      <Flex
+        sx={{
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          color,
+        }}
+      >
+        {title && <Emph color={color}>{title}</Emph>}
+        <Icon />
+      </Flex>
       {children}
     </Box>
   )

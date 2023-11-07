@@ -65,6 +65,7 @@ const theme = {
     twitterPollBg: 'rgb(207, 217, 222)',
     twitterPollBgWinner: 'rgba(29, 155, 240, 0.58)',
     primary: '#387D6C',
+    danger: 'var(--theme-ui-colors-red-6)',
     warning: 'var(--theme-ui-colors-yellow-7)',
     modes: {
       ...baseTheme.colors.modes,
@@ -75,6 +76,7 @@ const theme = {
       dark: {
         ...baseTheme.colors.modes.dark,
         primary: '#76c2af',
+        danger: 'var(--theme-ui-colors-red-7)',
         twitterPollBg: 'rgb(51, 54, 57)',
         backgroundSecondary: 'var(--theme-ui-colors-gray-8)',
         backgroundTertiary: 'var(--theme-ui-colors-gray-7)',

@@ -74,7 +74,7 @@ You'll also get the same nice callbacks that `useQuery` has: `onSuccess`, `onErr
 
 <SpacingBox />
 <Highlight>
-  <i>useQuery</i> is declarative, <i>useMutation</i> is imperative.
+  useQuery is declarative, useMutation is imperative.
 </Highlight>
 
 By that, I mean that queries mostly run automatically. You define the dependencies, but React Query takes care of running the query immediately, and then also performs smart background updates when deemed necessary. That works great for queries because we want to keep what we see on the screen _in sync_ with the actual data on the backend.
