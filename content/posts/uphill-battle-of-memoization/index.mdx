@@ -223,7 +223,9 @@ function App() {
     <div>
       <Table1 data={state.table1Data} />
       <Table2 data={state.table2Data} />
-      <SummaryBar data={calculateSummary(state.table1Data, state.table2Data)} />
+      <SummaryBar
+        data={calculateSummary(state.table1Data, state.table2Data)}
+      />
     </div>
   )
 }
