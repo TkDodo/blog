@@ -17,3 +17,5 @@ to get it fixed. The only thing I can do in this repo is remove the link. If
 you feel that's necessary, feel free to open a pull request to do that.
 
 Thanks for helping to make my content more accessible!
+
+> This process is inspired by [Kent C. Dodds](https://twitter.com/kentcdodds) and how he does [translations](https://github.com/kentcdodds/kentcdodds.com/blob/main/CONTRIBUTING.md#translation-contributions) on his [blog](https://kentcdodds.com/blog).
