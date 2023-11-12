@@ -7,7 +7,11 @@ const MonoLisa = () => {
       <Box>Like the monospace font in the code blocks?</Box>
       <Box>
         Check out{' '}
-        <Link target="_blank" href="https://www.monolisa.dev/">
+        <Link
+          target="_blank"
+          rel="noopener noreferrer"
+          href="www.monolisa.dev/?ref=dominik"
+        >
           monolisa.dev
         </Link>
       </Box>

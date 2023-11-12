@@ -143,7 +143,7 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://www.monolisa.dev/"
+          href="www.monolisa.dev/?ref=dominik"
           target="_blank"
           rel="noopener noreferrer"
         >
