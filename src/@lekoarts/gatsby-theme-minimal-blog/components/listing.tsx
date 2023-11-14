@@ -62,7 +62,7 @@ const CardListItem = ({
       sx={(t) => ({
         maxWidth: '320px',
         borderRadius: '12px',
-        border: `2px solid ${t.colors.background}`,
+        border: '2px solid transparent',
         padding: '8px',
         '&:hover, &:active, &:focus': {
           border: `2px solid ${t.colors.primary}`,
