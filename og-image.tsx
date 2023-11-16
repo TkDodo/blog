@@ -52,7 +52,7 @@ async function convert(slug: string) {
   const resizeProps =
     metadata.width > metadata.height
       ? {
-          width: 500,
+          width: 700,
         }
       : { height: 500 }
 
