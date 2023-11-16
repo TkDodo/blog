@@ -85,7 +85,12 @@ const OgImage = ({ title, img }: Props) => {
               alignItems: 'center',
             }}
           >
-            <img {...img} />
+            <img
+              {...img}
+              style={{
+                borderRadius: '8px',
+              }}
+            />
           </div>
         </div>
       </div>
