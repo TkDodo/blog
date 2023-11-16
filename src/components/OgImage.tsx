@@ -65,7 +65,7 @@ const OgImage = ({ title, img }: Props) => {
                 fontWeight: 400,
                 display: 'flex',
                 alignItems: 'center',
-                color: '#76c2af',
+                // color: '#76c2af',
               }}
             >
               <img
