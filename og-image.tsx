@@ -107,7 +107,11 @@ async function convert(slug: string) {
 
   // Convert SVG to PNG
   sharp(Buffer.from(svg))
-    .png()
+    .png({
+      compressionLevel: 9,
+      adaptiveFiltering: true,
+      force: true,
+    })
     .toFile(outputPath, (err, info) => {
       if (err) {
         console.error(err)
