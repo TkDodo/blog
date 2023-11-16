@@ -11,7 +11,7 @@ const Post = (props: React.ComponentProps<typeof OriginalPost>) => {
         banner: {
           childImageSharp: {
             resize: {
-              src: `/images${props.data.post.slug}.jpg`,
+              src: `/images${props.data.post.slug}.png`,
             },
           },
         },
