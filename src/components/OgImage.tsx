@@ -38,6 +38,7 @@ const OgImage = ({ title, img }: Props) => {
             flexDirection: 'row',
             gap: 16,
             flexGrow: 1,
+            justifyContent: 'space-between',
           }}
         >
           <div
