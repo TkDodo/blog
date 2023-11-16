@@ -12,6 +12,7 @@
     "start": "rm -rf .cache && gatsby develop",
     "serve": "gatsby serve --prefix-paths",
     "clean": "gatsby clean",
+    "ogimages": "bun run ./og-image.tsx",
     "postbuild": "mv public build && mkdir public && mv build public/blog",
     "postinstall": "patch-package"
   },
@@ -21,8 +22,6 @@
     "@giscus/react": "^2.0.2",
     "@lekoarts/gatsby-theme-minimal-blog": "^4.1.4",
     "@loadable/component": "^5.15.2",
-    "@mdx-js/mdx": "^3.0.0",
-    "bun": "^1.0.11",
     "gatsby": "^4.25.7",
     "gatsby-plugin-feed": "^4.7.0",
     "gatsby-plugin-image": "^2.21.0",
