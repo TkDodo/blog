@@ -36,6 +36,23 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
+          href="https://wevm.dev/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>wevm</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/109633172?s=300"
+            height="300"
+            alt="wevm"
+          />
+        </Link>
+        <div>
+          <Text>🥇 Gold</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
           href="https://reactbricks.com/"
           target="_blank"
           rel="noopener noreferrer"
@@ -46,23 +63,6 @@ const Sponsors = () => (
             src="../../static/images/reactbricks.svg"
             height={300}
             alt="React Bricks"
-          />
-        </Link>
-        <div>
-          <Text>🥉 Bronze</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
-          href="https://wagmi.sh/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>wagmi</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/109633172?s=300"
-            height="300"
-            alt="wagmi"
           />
         </Link>
         <div>
