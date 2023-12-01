@@ -49,7 +49,7 @@ const PremiumSponsors = () => (
           fontSize: [2, 2, 3],
         }}
       >
-        🥇 webvm
+        🥇 wevm
       </Link>
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
