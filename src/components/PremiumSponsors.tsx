@@ -31,6 +31,28 @@ const PremiumSponsors = () => (
       </Link>
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img
+        src="https://avatars.githubusercontent.com/u/109633172?s=64"
+        alt="wevm"
+        style={{
+          marginRight: '0.875rem',
+          width: '4rem',
+          height: '4rem',
+          borderRadius: '50%',
+        }}
+      />
+      <Link
+        href="https://wevm.dev/"
+        target="_blank"
+        rel="noopener noreferrer"
+        sx={{
+          fontSize: [2, 2, 3],
+        }}
+      >
+        🥇 wevm
+      </Link>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
       <StaticImage
         placeholder="blurred"
         src="../../static/images/reactbricks.svg"
@@ -51,28 +73,6 @@ const PremiumSponsors = () => (
         }}
       >
         🥉 React Bricks
-      </Link>
-    </div>
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <img
-        src="https://avatars.githubusercontent.com/u/109633172?s=64"
-        alt="wagmi"
-        style={{
-          marginRight: '0.875rem',
-          width: '4rem',
-          height: '4rem',
-          borderRadius: '50%',
-        }}
-      />
-      <Link
-        href="https://wagmi.sh/"
-        target="_blank"
-        rel="noopener noreferrer"
-        sx={{
-          fontSize: [2, 2, 3],
-        }}
-      >
-        🥉 wagmi
       </Link>
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
