@@ -10,7 +10,7 @@ const MonoLisa = () => {
         <Link
           target="_blank"
           rel="noopener noreferrer"
-          href="www.monolisa.dev/?ref=dominik"
+          href="https://www.monolisa.dev/?ref=dominik"
         >
           monolisa.dev
         </Link>

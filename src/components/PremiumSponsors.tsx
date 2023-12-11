@@ -178,7 +178,7 @@ const PremiumSponsors = () => (
         }}
       />
       <Link
-        href="www.monolisa.dev/?ref=dominik"
+        href="https://www.monolisa.dev/?ref=dominik"
         target="_blank"
         rel="noopener noreferrer"
         sx={{
