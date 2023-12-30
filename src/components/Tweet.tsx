@@ -178,6 +178,22 @@ export const TannerAndMe = () => (
   />
 )
 
+export const TanStackQueryV5 = () => (
+  <StaticImage
+    placeholder="blurred"
+    src="../../static/images/TanStackQueryV5.png"
+    alt="TanStackQuery v5"
+  />
+)
+
+export const SelfieInception = () => (
+  <StaticImage
+    placeholder="blurred"
+    src="../../static/images/FxnXEGVX0AEeYAf.jpeg"
+    alt="selfie inception"
+  />
+)
+
 export const CynicsVsBuilders = () => (
   <StaticImage
     placeholder="blurred"
