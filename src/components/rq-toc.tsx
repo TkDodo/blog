@@ -87,6 +87,10 @@ const mapping = [
     id: 'why-you-want-react-query',
     title: '#23: Why You Want React Query',
   },
+  {
+    id: 'the-query-options-api',
+    title: '#24: The Query Options API',
+  },
 ]
 
 export const RqToc = ({ id }: Props) => {

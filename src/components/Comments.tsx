@@ -45,6 +45,7 @@ const WithAds = () => {
         <MonoLisa />
       </HighlightBox>
       {location.pathname.includes('query') &&
+      !location.pathname.includes('the-query-options-api') &&
       !location.pathname.includes('why-you-want') ? (
         <QueryGG />
       ) : (
