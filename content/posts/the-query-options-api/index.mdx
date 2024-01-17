@@ -1,7 +1,7 @@
 ---
 title: The Query Options API
 description: v5 brought a new, powerful API, especially if you're using React Query with TypeScript...
-date: 2024-01-14
+date: 2024-01-17
 banner: ./ponder.jpg
 tags:
   - ReactJs
@@ -69,7 +69,7 @@ So why did we do it?
 
 First of all, having all those overloads is a chore for maintainers, and it's also not clear for users. Why can I call the same function in multiple ways - is one better than the other? So, streamlining the API, thus making it easier for new starters to understand it, was one goal. "Always pass one object" is as simple and extensible as it gets.
 
-But also, it turns out that one object to rule them all is simply a very good abstraction for when you want to share query options between different functions. I discovered this "by accident" when I wrote the [React Query meets React Router](react-query-meets-react-router) article, where want to share query options between prefetching and our useQuery call. Now usually, you could just write custom hooks as your primary way to re-use queries. But that doesn't work when imperative function calls like `prefetching` are involved. So I came up with something, and [Alex](https://twitter.com/ralex1993) noted this as a good pattern:
+But also, it turns out that one object to rule them all is simply a very good abstraction for when you want to share query options between different functions. I discovered this "by accident" when I wrote the [React Query meets React Router](react-query-meets-react-router) article, where want to share query options between prefetching and our `useQuery` call. Now usually, you could just write custom hooks as your primary way to re-use queries. But that doesn't work when imperative function calls like `prefetching` are involved. So I came up with something, and [Alex](https://twitter.com/ralex1993) noted this as a good pattern:
 
 <Tweet
   name="R. Alex Anderson 🚀"
@@ -96,7 +96,7 @@ But also, it turns out that one object to rule them all is simply a very good ab
   </p>
 </Tweet>
 
-Turns out, if you can pass the same object everywhere, it makes a lot of sense to abstract that object away into a query definition. Once you have that, you can pass it everywhere:
+Turns out, if all your functions have the same interface - accepting a single object - it makes a lot of sense to abstract that object away into a query definition. Once you have that, you can pass it everywhere:
 
 ```js:title=todos-query
 const todosQuery = {
@@ -158,7 +158,7 @@ useQuery(todosQuery)
 
 No error. 🙈
 
-TypeScript is quite relaxed in these situations, because at runtime, the "extra" property `stallTime` doesn't hurt. And since `staleTime` is optional, we are now just _not_ passing it. Of course, this is "valid", but it's not what we'd expect, and it can be a costly mistake to find.
+TypeScript is quite relaxed in these situations, because at runtime, the "extra" property `stallTime` doesn't hurt, and you might want to use that object in a context where the property is required. TypeScript can't know that. And since `staleTime` is optional, we are now just _not_ passing it. Of course, this is "valid", but it's not what we'd expect, and it can be a costly mistake to find.
 
 ## queryOptions
 
@@ -170,7 +170,7 @@ export function queryOptions(options) {
 }
 ```
 
-But on type-level, it's a real powerhouse that not only fixes the above typo issue (see the [fixed playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgVwM4FMCKz1QJ4A0cAjjvgPJgzAQB2qcAvnAGZQQhwDkAAjAIb0BAYwDWAeijp+wmAFpSuPFwBQKmHjDo4AFQgATCHAC8iFXAtxg+gFxxayEACNcKxiv3phAG35TWyLSyNLSs6DDCABZ6hqgAFACUdgAK7CDAGAA8AIJQUPx4mTEQAHwlasJ0qPAwBhCo2EomJGR4lNRVcQjmLUoA0uh4dgDaXLWxXAC6BD2K+ABitHYs4VHFqDMW1fze3jqg6HYArAAMZzOMCWpoWK1x4-WN+AlAA) - it can also help us make other parts of the `queryClient` more type-safe:
+But on type level, it's a real powerhouse that not only fixes the above typo issue (see the [fixed playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgVwM4FMCKz1QJ4A0cAjjvgPJgzAQB2qcAvnAGZQQhwDkAAjAIb0BAYwDWAeijp+wmAFpSuPFwBQKmHjDo4AFQgATCHAC8iFXAtxg+gFxxayEACNcKxiv3phAG35TWyLSyNLSs6DDCABZ6hqgAFACUdgAK7CDAGAA8AIJQUPx4mTEQAHwlasJ0qPAwBhCo2EomJGR4lNRVcQjmLUoA0uh4dgDaXLWxXAC6BD2K+ABitHYs4VHFqDMW1fze3jqg6HYArAAMZzOMCWpoWK1x4-WN+AlAA) - it can also help us make other parts of the `queryClient` more type-safe:
 
 ### DataTag
 
@@ -183,7 +183,7 @@ const todos = queryClient.getQueryData<Array<Todo>>(['todos'])
 //    ^? const todos: Todo[] | undefined
 ```
 
-To be clear, this is isn't at all safer than just using type assertions, but at least `undefined` will be added to the union for us. If we refactor what our `fetchTodos` endpoint returns, we won't be notified here of the new type.
+To be clear, this is isn't at all safer than just using type assertions, but at least `undefined` will be added to the union for us. If we refactor what our `fetchTodos` endpoint returns, we won't be notified here of the new type. 😔
 
 But now that we have a function that co-locates `queryKey` and `queryFn`, we can associate the type of the `queryFn` and "tag" our `queryKey` with it. Notice what happens when we pass the `queryKey` that was created via `queryOptions` to `getQueryData`:
 
@@ -202,7 +202,7 @@ const todos = queryClient.getQueryData(todosQuery.queryKey)
 
 🤯
 
-This is pure TypeScript magic, contributed by the one and only [Mateusz Burzyński](https://twitter.com/AndaristRake). If we look at `todosQuery.queryKey`, we can see that it's not only a string Array, but it also contains information about what the `queryFn` returns:
+This is pure TypeScript magic, contributed by the one and only [Mateusz Burzyński](https://twitter.com/AndaristRake). If we look at `todosQuery.queryKey`, we can see that it's not only a string array, but it also contains information about what the `queryFn` returns:
 
 ```ts:title=dataTagSymbol
 (property) queryKey: string[] & {
@@ -230,7 +230,7 @@ Additionally, I'm seeing [Query Key Factories](effective-react-query-keys) in a 
 
 The `queryKey` defines the dependencies to our `queryFn` - everything we use inside it must go into the key. So why define keys in one central place while having the functions far a way from them in our custom hooks?
 
-However, if we <Emph>combine</Emph> the two patterns, we're getting the best of both worlds: Type-safety, co-location and organization. 🚀
+However, if we <Emph>combine</Emph> the two patterns, we're getting the best of all worlds: Type-safety, co-location and great DX. 🚀
 
 <Aside title="Query.gg 🔮">
 
@@ -248,7 +248,7 @@ const todoQueries = {
   lists: () => [...todoQueries.all(), 'list'],
   list: (filters: string) =>
     queryOptions({
-      queryKey: [...todoQueries.allLists(), filters],
+      queryKey: [...todoQueries.lists(), filters],
       queryFn: () => fetchTodos(filters),
     }),
   details: () => [...todoQueries.all(), 'detail'],
