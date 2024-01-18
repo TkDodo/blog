@@ -183,7 +183,7 @@ const todos = queryClient.getQueryData<Array<Todo>>(['todos'])
 //    ^? const todos: Todo[] | undefined
 ```
 
-To be clear, this is isn't at all safer than just using type assertions, but at least `undefined` will be added to the union for us. If we refactor what our `fetchTodos` endpoint returns, we won't be notified here of the new type. 😔
+To be clear, this isn't at all safer than just using type assertions, but at least `undefined` will be added to the union for us. If we refactor what our `fetchTodos` endpoint returns, we won't be notified here of the new type. 😔
 
 But now that we have a function that co-locates `queryKey` and `queryFn`, we can associate the type of the `queryFn` and "tag" our `queryKey` with it. Notice what happens when we pass the `queryKey` that was created via `queryOptions` to `getQueryData`:
 
