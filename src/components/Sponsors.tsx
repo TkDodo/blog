@@ -282,23 +282,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://gensdeconfiance.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>GensDeConfiance</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/17024329?s=300"
-            height="300"
-            alt="GensDeConfiance"
-          />
-        </Link>
-        <div>
-          <Text>🪙 Custom</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://github.com/zilahir"
           target="_blank"
           rel="noopener noreferrer"
@@ -325,6 +308,40 @@ const Sponsors = () => (
             src="https://avatars.githubusercontent.com/u/33328637?s=300"
             height="300"
             alt="diegoalbalat"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://github.com/fl-y"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>fl-y</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/31615341?s=300"
+            height="300"
+            alt="fl-y"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://github.com/mandava"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Bharat Mandava</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/125006?s=300"
+            height="300"
+            alt="mandava"
           />
         </Link>
         <div>
