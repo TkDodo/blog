@@ -107,7 +107,7 @@ At the end, you'll be left with an <Emph>inconsistent</Emph> state: Your local s
 
 The React docs say that we can fix this with a cleanup function and an `ignore` boolean, so let's do that:
 
-```jsx:title=ignore-flag {6,10-12,14-16,18-20}
+```jsx:title=ignore-flag {6,10-12,15-17,19-21}
 function Bookmarks({ category }) {
   const [data, setData] = useState([])
   const [error, setError] = useState()
@@ -141,7 +141,7 @@ What happens now is that the effect cleanup function runs when `category` change
 
 It's not there at all. We have no way to show a pending UI while the requests are happening - not for the first one and not for further requests. So, let's add that?
 
-```jsx:title=loading-state {2,8,20-24}
+```jsx:title=loading-state {2,8,21-25}
 function Bookmarks({ category }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
@@ -246,7 +246,7 @@ If we check data first, we have the same problem if the second request fails. If
 
 To fix this, we have to reset our local state when category changes:
 
-```jsx:title=reset-state {14,19}
+```jsx:title=reset-state {14,20}
 function Bookmarks({ category }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState()
