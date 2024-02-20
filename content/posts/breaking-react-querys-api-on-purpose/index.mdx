@@ -63,7 +63,7 @@ So if major versions aren't about new features, what are they about? [Will McGug
   </p>
 </Tweet>
 
-Ouch, that hurts, but it's on point. More often than not, I've used major version bumps to revert design-decision that we've taken in the past, because they've turned out to be suboptimal. When designing an API, you can't always think everything through. Edge cases will pop up that you haven't even though about. Things might not work as expected, and you realize that changing the API is the best way forward.
+Ouch, that hurts, but it's on point. More often than not, I've used major version bumps to revert design-decision that we've taken in the past, because they've turned out to be suboptimal. When designing an API, you can't always think everything through. Edge cases will pop up that you haven't even thought about. Things might not work as expected, and you realize that changing the API is the best way forward.
 
 ## React Query v5
 
@@ -165,7 +165,7 @@ This callback will only be invoked once per Query. It also exists outside the co
 
 I also understand that you might want to show different messages per Query that are not part of the `error` itself. While you could do that by rejecting the Promise from the `queryFn` with a custom Error, a simple solution would be to use the `meta` field on your Query.
 
-`meta` is an arbitrary object that you can fill with whatever information you want, which will be available everywhere where you get access to your Query, such as, in the global callbacks:
+`meta` is an arbitrary object that you can fill with whatever information you want, which will be available everywhere you get access to your Query, such as, in the global callbacks:
 
 ```js:title=meta {4-6,15-17}
 const queryClient = new QueryClient({
