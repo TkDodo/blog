@@ -37,6 +37,15 @@ export const AvatarTkDodo = () => (
   />
 )
 
+export const AvatarAcdlite = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/acdlite.jpg"
+    alt="Avatar for acdlite"
+    placeholder="blurred"
+  />
+)
+
 export const AvatarRalex1993 = () => (
   <StaticImage
     style={{ borderRadius: '50%' }}
