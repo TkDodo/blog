@@ -71,9 +71,9 @@ According to [the docs](https://react.dev/reference/react-dom/components/common#
 
 Another popular fix is to render twice on the client. Basically, we render on the server with the information we have, which will produce static markup. Then, on the client, we will try to produce the same output as on the server for the first render cycle. This makes sure hydration doesn't error. Then, we'll trigger another render cycle with the "real" client information.
 
-The drawback here of course is a short flash of content, as we can see in this animation:
+The drawback here of course is a short flash of content, as we can see in this animation (focus on the time):
 
-<GifPlayer gif="wings4life.gif" still="wings4life.png" />
+<GifPlayer gif="wings4life.gif" still="wings4life-still.gif" />
 
 Since the timezone is only known on the client, the server render cannot possibly know what's the correct time to display, as it's different for every user, depending on their location.
 
