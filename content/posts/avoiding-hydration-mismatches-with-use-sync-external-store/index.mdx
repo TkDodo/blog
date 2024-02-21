@@ -1,5 +1,5 @@
 ---
-title: useSyncExternalStore to avoid hydration mismatches
+title: Avoiding Hydration Mismatches with useSyncExternalStore
 description: Avoiding hydration mismatches can usually be done in two ways - suppressing the warning or spawning an effect. But is there a third option ... ?
 date: 2024-02-21
 banner: ./mismatch.jpg
@@ -29,7 +29,7 @@ import Tweet, { AvatarAcdlite } from 'components/Tweet'
 
 <Translations>{[]}</Translations>
 
-Hydration mismatches are among the most dreaded errors a React developer can see.
+Hydration mismatches are among the most dreaded errors a React developer could potentially face:
 
 <Alert sx={{ fontFamily: 'ml, monospace', fontSize: [0, 1] }}>
   Uncaught Error: Text content does not match server-rendered HTML.
@@ -39,7 +39,7 @@ How can this even be? We were promised isomorphic rendering - first on the serve
 
 Except that the server isn't the client. It might run in another timezone or with a different locale, thus rendering different information than on the client, e.g. when Dates are involved. It also doesn't have access to APIs that are only available in the Browser, like `window`.
 
-```jsx
+```jsx:title=date-rendering
 function LastUpdated() {
   const date = getLastUpdated()
   return <span>Last updated at: {date.toLocaleDateString()}</span>
@@ -54,7 +54,7 @@ But as we've seen, the mismatch is unavoidable in some cases. So how do we "fix"
 
 This feels a bit like an `eslint-ignore` or a `@ts-expect-error`, and it's probably fine if you know what you're doing. Just stick `suppressHydrationWarning` on the element in question and call it a day:
 
-```jsx {4}
+```jsx:title=suppressHydrationWarning {4}
 function LastUpdated() {
   const date = getLastUpdated()
   return (
@@ -81,7 +81,7 @@ Another variation of this approach is to just render `null` on the server and le
 
 Whatever value you choose for server rendering, code will usually look something like this:
 
-```jsx {2-10}
+```jsx:title=double-render-pass {2-10}
 function LastUpdated() {
   const [isClient, setIsClient] = React.useState(false)
 
@@ -130,7 +130,7 @@ There's just one problem: which "store" should we subscribe to? It might look we
 
 Since the `subscribe` parameter is mandatory, our code would look something like this:
 
-```jsx
+```jsx:title=useSyncExternalStore
 const emptySubscribe = () => () => {}
 
 function LastUpdated() {
@@ -162,9 +162,11 @@ function LastUpdated() {
 
 I wish there would be a more ergonomic way, but I haven't found any. Maybe I should make a package out of this ... 🤔
 
+---
+
 This pattern also makes it quite easy to create a `ClientGate` - a component that will only render on the client, where you can safely access browser only APIs:
 
-```jsx
+```jsx:title=ClientGate
 function ClientGate({ children }) {
   const isServer = React.useSyncExternalStore(
     emptySubscribe,
@@ -191,7 +193,7 @@ Layout shifts are not ideal, and not rendering a component completely just becau
 
 So if we can produce a stable date output on the server, we can limit the content shift to only the date, similar to what the page in the previously shown GIF is doing:
 
-```jsx {7}
+```jsx:title=stable-server-value {7}
 const emptySubscribe = () => () => {}
 
 function LastUpdated() {
