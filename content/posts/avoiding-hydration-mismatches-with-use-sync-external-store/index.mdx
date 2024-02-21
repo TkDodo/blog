@@ -1,0 +1,221 @@
+---
+title: Avoiding Hydration Mismatches with useSyncExternalStore
+description: Avoiding hydration mismatches can usually be done in two ways - suppressing the warning or spawning an effect. But is there a third option ... ?
+date: 2024-02-21
+banner: ./mismatch.jpg
+tags:
+  - ReactJs
+  - JavaScript
+  - SSR
+  - hydration
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import Emph from 'components/Emph'
+import Highlight from 'components/Highlight'
+import { Alert } from '@theme-ui/components'
+import Aside from 'components/Aside'
+import GifPlayer from 'components/GifPlayer'
+import Tweet, { AvatarAcdlite } from 'components/Tweet'
+
+<img
+  src="./mismatch.jpg"
+  alt="A person with two shoes, one is green, one is orange"
+/>
+
+<Attribution name="Chanhee Lee" url="https://unsplash.com/@jjik_da" />
+
+<Translations>{[]}</Translations>
+
+Hydration mismatches are among the most dreaded errors a React developer could potentially face:
+
+<Alert sx={{ fontFamily: 'ml, monospace', fontSize: [0, 1] }}>
+  Uncaught Error: Text content does not match server-rendered HTML.
+</Alert>
+
+How can this even be? We were promised isomorphic rendering - first on the server, then on the client. Write your code once, execute twice.
+
+Except that the server isn't the client. It might run in another timezone or with a different locale, thus rendering different information than on the client, e.g. when Dates are involved. It also doesn't have access to APIs that are only available in the Browser, like `window`.
+
+```jsx:title=date-rendering
+function LastUpdated() {
+  const date = getLastUpdated()
+  return <span>Last updated at: {date.toLocaleDateString()}</span>
+}
+```
+
+If the server has a different locale than the client, the dates might be rendered as "21/02/2024" on one end, but as "2/21/2024" on the other. When a mismatch like that happens, React will scream at us, because it wants the server rendered output to exactly match the one on the client to provide [the best possible user experience](https://react.dev/reference/react-dom/client/hydrateRoot#hydrating-server-rendered-html).
+
+But as we've seen, the mismatch is unavoidable in some cases. So how do we "fix" it?
+
+## suppressHydrationWarning
+
+This feels a bit like an `eslint-ignore` or a `@ts-expect-error`, and it's probably fine if you know what you're doing. Just stick `suppressHydrationWarning` on the element in question and call it a day:
+
+```jsx:title=suppressHydrationWarning {4}
+function LastUpdated() {
+  const date = getLastUpdated()
+  return (
+    <span suppressHydrationWarning>
+      Last updated at: {date.toLocaleDateString()}
+    </span>
+  )
+}
+```
+
+According to [the docs](https://react.dev/reference/react-dom/components/common#common-props), this is an escape hatch and shouldn't be overused. So what else can we do?
+
+## double render pass
+
+Another popular fix is to render twice on the client. Basically, we render on the server with the information we have, which will produce static markup. Then, on the client, we will try to produce the same output as on the server for the first render cycle. This makes sure hydration doesn't error. Then, we'll trigger another render cycle with the "real" client information.
+
+The drawback here of course is a short flash of content, as we can see in this animation (focus on the time):
+
+<GifPlayer gif="wings4life.gif" still="wings4life-still.gif" />
+
+Since the timezone is only known on the client, the server render cannot possibly know what's the correct time to display, as it's different for every user, depending on their location.
+
+Another variation of this approach is to just render `null` on the server and let the correct content "appear" on the client only.
+
+Whatever value you choose for server rendering, code will usually look something like this:
+
+```jsx:title=double-render-pass {2-10}
+function LastUpdated() {
+  const [isClient, setIsClient] = React.useState(false)
+
+  React.useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  if (!isClient) {
+    return null
+  }
+
+  const date = getLastUpdated()
+  return <span>Last updated at: {date.toLocaleDateString()}</span>
+}
+```
+
+Since effects won't run on the server, `null` will be returned first. Then, on the client, the first render cycle will also yield `null`. After the effect has kicked in, our date will be displayed correctly.
+
+This is a bit of boilerplate to write, but we can abstract it away if we want (I'm sure there's a package for it, too 😂), and it's a quite common pattern.
+
+So what's the problem with it?
+
+## Client Side Transitions
+
+The double render is a necessary evil when the component is server rendered - but in a traditionally SSR'd application, not every page is server rendered. Usually, only the page you first land on will need to produce static markup. After that, every navigation is a client side transition, similar to an SPA. They make an async request to get data (think `getServerSideProps` in nextJs), and then render the next page on the client only.
+
+In those cases however, the double render pass workaround with `useEffect` will slow us down unnecessarily. We are on the client already, but our code doesn't know that. It will render `null` regardless, then trigger the effect, then render the content. And we also can't add additional checks if we are on the client, because the first client render after SSR needs to render `null`, too. 😭
+
+What we are looking for is a solution that knows about server rendering, and more importantly, when the <Emph>first client render</Emph> is happening. And surprisingly, the best hook for this seems to be `useSyncExternalStore`.
+
+## useSyncExternalStore
+
+Even though the primary use-case for `useSyncExternalStore` is to subscribe to external stores, it has an interesting second trait: It allows us to distinguish between a `serverSnapshot` and a `clientSnapshot`. Let's see what [the docs](https://react.dev/reference/react/useSyncExternalStore) have to say about `getServerSnapshot`:
+
+<Aside title="getServerSnapshot">
+  A function that returns the initial snapshot of the data in the
+  store. It will be used only during server rendering and during
+  hydration of server-rendered content on the client. The server
+  snapshot must be the same between the client and the server, and is
+  usually serialized and passed from the server to the client.
+</Aside>
+
+This is exactly what we need to avoid hydration errors, and moreover, if we transition to a page with `useSyncExternalStore` on the client, the `clientSnapshot` will immediately be taken.
+
+There's just one problem: which "store" should we subscribe to? It might look weird, but the answer is: We'll just use an empty store subscription that never updates. The `clientSnapshot` will be evaluated during every render anyways, and there is no need to push updates from outside of react into this component.
+
+Since the `subscribe` parameter is mandatory, our code would look something like this:
+
+```jsx:title=useSyncExternalStore
+const emptySubscribe = () => () => {}
+
+function LastUpdated() {
+  const date = React.useSyncExternalStore(
+    emptySubscribe,
+    () => lastUpdated.toLocaleDateString(),
+    () => null
+  )
+
+  return date ? <span>Last updated at: {date}</span> : null
+}
+```
+
+`subscribe` needs to be a stable function, so we have to declare it outside of the React component. I found this pattern a bit hacky, so I had to get confirmation from the React team that this is a good idea before publishing this article.
+
+<Tweet
+  name="Andrew Clark"
+  handle="acdlite"
+  tweetId="1741161736936558721"
+  avatar={<AvatarAcdlite />}
+  date={new Date('2023-12-30')}
+>
+  <p>
+    I’m glad you like this pattern but which part of this feels like a
+    hack to you? Preventing hydration mismatches is exactly what the
+    getServerSnapshot argument is designed for
+  </p>
+</Tweet>
+
+I wish there would be a more ergonomic way, but I haven't found any. Maybe I should make a package out of this ... 🤔
+
+---
+
+This pattern also makes it quite easy to create a `ClientGate` - a component that will only render on the client, where you can safely access browser only APIs:
+
+```jsx:title=ClientGate
+function ClientGate({ children }) {
+  const isServer = React.useSyncExternalStore(
+    emptySubscribe,
+    () => false,
+    () => true
+  )
+
+  return isServer ? null : children()
+}
+
+function App() {
+  return (
+    <main>
+      Hello Server
+      <ClientGate>{() => `Hello Client ${window.title}`}</ClientGate>
+    </main>
+  )
+}
+```
+
+### Minimizing Layout Shifts
+
+Layout shifts are not ideal, and not rendering a component completely just because one detail depends on client information can lead to bigger layout shifts than necessary. What if JS never loads - we wouldn't be able to show any information at all for those parts of the screen.
+
+So if we can produce a stable date output on the server, we can limit the content shift to only the date, similar to what the page in the previously shown GIF is doing:
+
+```jsx:title=stable-server-value {7}
+const emptySubscribe = () => () => {}
+
+function LastUpdated() {
+  const date = React.useSyncExternalStore(
+    emptySubscribe,
+    () => lastUpdated.toLocaleDateString(),
+    () => lastUpdated.toLocaleDateString('en-US')
+  )
+
+  return <span>Last updated at: {date}</span>
+}
+```
+
+Note that it's important to pass a static locale, because the server snapshot will be evaluated <Emph>on the server and on the client</Emph>. If we would let the runtime infer the locale (by not passing anything), we'd run into the whole hydration error scenario too.
+
+## Client hints
+
+In the future, [HTTP Client hints](https://developer.mozilla.org/en-US/docs/Web/HTTP/Client_hints) will hopefully make this whole situation better, because it will give servers a way to know information that is only available on the client before rendering anything. With that, we could SSR correct information without needing to resort to workarounds. Until then, I think this is as good as it gets, and I'd prefer `useSyncExternalStore` to the effect solution any day.
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />
