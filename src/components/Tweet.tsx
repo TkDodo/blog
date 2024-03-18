@@ -37,6 +37,24 @@ export const AvatarTkDodo = () => (
   />
 )
 
+export const AvatarAcdlite = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/acdlite.jpg"
+    alt="Avatar for acdlite"
+    placeholder="blurred"
+  />
+)
+
+export const AvatarRalex1993 = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/ralex1993.jpg"
+    alt="Avatar for ralex1993"
+    placeholder="blurred"
+  />
+)
+
 export const AvatarT3dotgg = () => (
   <StaticImage
     style={{ borderRadius: '50%' }}
@@ -183,6 +201,29 @@ export const TanStackQueryV5 = () => (
     placeholder="blurred"
     src="../../static/images/TanStackQueryV5.png"
     alt="TanStackQuery v5"
+  />
+)
+
+export const ContactDetailQuery = () => (
+  <StaticImage
+    placeholder="blurred"
+    src="../../static/images/Fcnj9l0XEAMnLdV.jpeg"
+    alt="A code block with the following code in it
+
+const contactDetailQuery = (id) => ({
+  queryKey: ['contacts', 'detail', id],
+  queryFn: async () => getContact(id),
+})
+
+...
+
+queryClient.fetchQuery(
+  contactDetailQuery(params.contactId)
+)
+
+...
+
+useQuery(contactDetailQuery(params.contactId))"
   />
 )
 
