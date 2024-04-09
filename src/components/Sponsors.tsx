@@ -299,23 +299,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://github.com/diegoalbalat"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>diegoalbalat</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/33328637?s=300"
-            height="300"
-            alt="diegoalbalat"
-          />
-        </Link>
-        <div>
-          <Text>🎗 Supporter</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://github.com/fl-y"
           target="_blank"
           rel="noopener noreferrer"
@@ -342,6 +325,40 @@ const Sponsors = () => (
             src="https://avatars.githubusercontent.com/u/125006?s=300"
             height="300"
             alt="mandava"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://github.com/adam-beck"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Adam Beck</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/6046654?s=300"
+            height="300"
+            alt="Adam Beck"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://github.com/ixahmedxi"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Ahmed Elsakaan</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/20271968?s=300"
+            height="300"
+            alt="Ahmed Elsakaan"
           />
         </Link>
         <div>
