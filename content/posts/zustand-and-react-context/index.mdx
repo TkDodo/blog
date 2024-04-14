@@ -44,7 +44,7 @@ With zustand, it's totally fine - encouraged even - to [create multiple, small s
 
 Global stores are created outside of the React Component lifecycle, so we can't initialize the store with a value we get as a prop. With a global store, we need to create it first with a known default state, then sync props-to-store with `useEffect`:
 
-```js
+```js:title=sync-with-useEffect {11-14}
 const useBearStore = create((set) => ({
   bears: 0,
   actions: {
@@ -89,13 +89,18 @@ Not all stores are singletons that we can use once in our App or once in a speci
   date={new Date('2022-02-19')}
 >
   <p>
-    🕵️We've fixed a huge performance problem this week by moving useState + context over to zustand. It was the same amount of code. The lib is < 1kb.
+    🕵️We've fixed a huge performance problem this week by moving
+    useState + context over to zustand. It was the same amount of
+    code. The lib is &lt; 1kb.
   </p>
   <p>
-    ⚛️Don't use context for state management. Use it for dependency injection only. The right tool for the job!
+    ⚛️Don't use context for state management. Use it for dependency
+    injection only. The right tool for the job!
   </p>
   <p>
-    <Text color="var(--theme-ui-colors-twitterBlue)">zustand.surge.sh</Text>
+    <Text color="var(--theme-ui-colors-twitterBlue)">
+      zustand.surge.sh
+    </Text>
   </p>
 </Tweet>
 
@@ -117,7 +122,7 @@ In this article, I'll be showing the v5 syntax for combining zustand with React 
 
 </Aside>
 
-```jsx
+```jsx:title=zustand-and-react-context
 import { createStore, useStore } from 'zustand'
 
 const BearStoreContext = React.createContext(null)
@@ -150,7 +155,7 @@ Because we create the store inside our component, we can close over props like `
 
 After that, we need to consume that context whenever we want to select some values from our store. For that, we need to pass the `store` and the `selector` to the `useStore` hook we can get from zustand. This is best abstracted in a custom hook:
 
-```js
+```js:title=useBearStore
 const useBearStore = (selector) => {
   const store = React.useContext(BearStoreContext)
   if (!store) {
@@ -162,7 +167,7 @@ const useBearStore = (selector) => {
 
 Then, we can use the `useBearStore` hook like we are used to, and export custom hooks with atomic selectors:
 
-```js
+```js:title=useBears
 export const useBears = () => useBearStore((state) => state.bears)
 ```
 
