@@ -1,0 +1,184 @@
+---
+title: Zustand and React Context
+description: Zustand stores a global and don't need React Context - but sometimes, it makes sense to combine them regardless.
+date: 2024-04-14
+banner: ./zustand-context.jpg
+tags:
+  - ReactJs
+  - React Context
+  - State Management
+  - Zustand
+---
+
+import Aside from 'components/Aside'
+import Comments from 'components/Comments'
+import Emph from 'components/Emph'
+import Highlight from 'components/Highlight'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import Tweet, { AvatarTkDodo } from 'components/Tweet'
+import { VerticalRuler } from 'components/VerticalRuler'
+
+<img
+  alt="The zustand bear logo sitting under an arch"
+  src="./zustand-context.jpg"
+/>
+
+<Attribution name="Ivan Aleksic" url="https://unsplash.com/@ivalex" />
+
+- [#1: Working with Zustand](working-with-zustand)
+- <b>#2: Zustand and React Context</b>
+
+<Translations>{[]}</Translations>
+
+Zustand is a great lib for global client-state management. It's simple, fast, and has a small bundle size. There is however one thing I don't necessarily like about it:
+
+<Highlight>The stores are global.</Highlight>
+
+Okay? But isn't that the point of <Emph>global</Emph> state management? To make that state available in your app, everywhere?
+
+Sometimes, I think that's true. However, as I've looked at how I've been using zustand over the last couple of years, I've realized that more often than not, I've needed some state to be available globally to <Emph>one component subtree</Emph> rather than the whole application.
+With zustand, it's totally fine - encouraged even - to [create multiple, small stores](working-with-zustand#keep-the-scope-of-your-store-small) on a per-feature basis. So why would I need my Dashboard Filters store to be available globally if I only need it on the Dashboard route? Sure, I can do that when it doesn't hurt, but I've found that having global stores do have a couple of drawbacks:
+
+### Initializing from Props
+
+Global stores are created outside of the React Component lifecycle, so we can't initialize the store with a value we get as a prop. With a global store, we need to create it first with a known default state, then sync props-to-store with `useEffect`:
+
+```js
+const useBearStore = create((set) => ({
+  bears: 0,
+  actions: {
+    increasePopulation: (by) =>
+      set((state) => ({ bears: state.bears + by })),
+    removeAllBears: () => set({ bears: 0 }),
+  },
+}))
+
+const App = ({ initialBears }) => {
+  //😕 write initialBears to our store
+  React.useEffect(() => {
+    useBearStore.set((prev) => ({ ...prev, bears: initialBears }))
+  }, [initialBears])
+
+  return (
+    <main>
+      <RestOfTheApp />
+    </main>
+  )
+}
+```
+
+Apart from not wanting to write `useEffect`, this isn't ideal for two reasons:
+
+1. We first render `<RestOfTheApp />` with `bears: 0` before the effect kicks in, then render it once more with the correct `initialBears`.
+2. We don't really initialize our store with `initialBears` - we sync it. So if he `initialBears` change, we will see the update reflected in our store as well.
+
+### Testing
+
+I find [the testing docs](https://docs.pmnd.rs/zustand/guides/testing) for zustand pretty confusing and complex. It's all about mocking zustand and resetting the store between tests and so on. I think it all stems from the fact that the store is global. If it were scoped to a component subtree, we could render those components and the store would be isolated to it, not needing any of those "workarounds".
+
+### Reusability
+
+Not all stores are singletons that we can use once in our App or once in a specific route. Sometimes, we want zustand stores for reusable components as well. One example from the past I can think of is a complex, multi-selection group component from our design-system. It was using local state passed down with React Context to manage the internal state of the selections. It became sluggish whenever an item was selected as soon as there were fifty or more items. It's what made me write this tweet:
+
+<Tweet
+  name="Dominik 🔮"
+  handle="TkDodo"
+  tweetId="1495072479118864398"
+  avatar={<AvatarTkDodo />}
+  date={new Date('2022-02-19')}
+>
+  <p>
+    🕵️We've fixed a huge performance problem this week by moving useState + context over to zustand. It was the same amount of code. The lib is < 1kb.
+  </p>
+  <p>
+    ⚛️Don't use context for state management. Use it for dependency injection only. The right tool for the job!
+  </p>
+  <p>
+    <Text color="var(--theme-ui-colors-twitterBlue)">zustand.surge.sh</Text>
+  </p>
+</Tweet>
+
+If such a zustand store would be global, we couldn't instantiate the component multiple times without also sharing and overwriting each other's state.
+
+---
+
+Interestingly, there is a single way to fix all of these problems:
+
+## React Context
+
+It's funny and ironic that React Context is the solution here, because using Context as a state management tool is what caused the aforementioned issue in the first place. But that's not what I'm proposing. The idea is to merely share the <Emph>store instance</Emph> via React Context - not the store values themselves.
+
+Conceptually, this is what React Query is doing with the `<QueryClientProvider>`, and what `redux` is doing as well with their single store as well. Because the store instances are static singletons that don't change often, we can put them into React Context easily without causing re-rending issues. Then, we can still create subscribers to the store that will be optimized by zustand. Here's how that can look like:
+
+<Aside title="v5 syntax" icon="info">
+
+In this article, I'll be showing the v5 syntax for combining zustand with React Context. Before that, zustand had an explicit [`createContext`](https://docs.pmnd.rs/zustand/previous-versions/zustand-v3-create-context) function exported from `zustand/context`.
+
+</Aside>
+
+```jsx
+import { createStore, useStore } from 'zustand'
+
+const BearStoreContext = React.createContext(null)
+
+const BearStoreProvider = ({ children, initialBears }) => {
+  const [store] = React.useState(() =>
+    createStore((set) => ({
+      bears: initialBears,
+      actions: {
+        increasePopulation: (by) =>
+          set((state) => ({ bears: state.bears + by })),
+        removeAllBears: () => set({ bears: 0 }),
+      },
+    }))
+  )
+
+  return (
+    <BearStoreContext.Provider value={store}>
+      {children}
+    </BearStoreContext.Provider>
+  )
+}
+```
+
+The main difference here is that we aren't using `create` like before, which would give us a ready-to-use hook. Instead, we are relying on the vanilla zustand function `createStore`, which will, well, just creates a store for us. And we can do that wherever we want to - even inside a component. However, we have to make sure that the creation of the store only happens once. We can do this with refs, but I prefer `useState` for that. I have [a separate blogpost](use-state-for-one-time-initializations) on that topic if you want to know why.
+
+Because we create the store inside our component, we can close over props like `initialBears` and pass them to `createStore` as a true initial value. The `useState` initializer function only runs once, so updates to the prop will no be passed to the store. Then, we take the store instance and pass it to a plain React Context. There is nothing zustand specific here anymore.
+
+---
+
+After that, we need to consume that context whenever we want to select some values from our store. For that, we need to pass the `store` and the `selector` to the `useStore` hook we can get from zustand. This is best abstracted in a custom hook:
+
+```js
+const useBearStore = (selector) => {
+  const store = React.useContext(BearStoreContext)
+  if (!store) {
+    throw new Error('Missing BearStoreProvider')
+  }
+  return useStore(store, selector)
+}
+```
+
+Then, we can use the `useBearStore` hook like we are used to, and export custom hooks with atomic selectors:
+
+```js
+export const useBears = () => useBearStore((state) => state.bears)
+```
+
+<VerticalRuler />
+
+This is a little bit more code to write than just creating a global store, but it solves all three problems:
+
+1. As the example shows, we can now initialize our store with props, because we create it inside the React Component tree.
+2. Testing becomes a piece of cake because we can either render a component that contains a `BearStoreProvider`, or we can render one ourselves just for the test. In both situations, the created store will be fully isolated to the test, so no resetting between tests is necessary.
+3. A component can now render a `BearStoreProvider` to provide its children with an encapsulated zustand store. We can render this component as often as we want on one page - each instance will have its own store, so we've achieved reusability.
+
+So even though the [zustand docs](https://docs.pmnd.rs/zustand/getting-started/introduction#then-bind-your-components,-and-that's-it!) pride themselves about not needing a Context Provider to access a store, I think knowing how to combine store creation with React Context can come in quite handy in situations where encapsulation an reusability is required. I for one have used this abstraction more than truly global zustand stores. 😄
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />

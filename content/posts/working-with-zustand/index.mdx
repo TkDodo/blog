@@ -21,6 +21,9 @@ import Translations from 'components/Translations'
   url="https://github.com/pmndrs/zustand/blob/2b29d736841dc7b3fd7dec8cbfea50fee7295974/bear.jpg"
 />
 
+- <b>#1: Working with Zustand</b>
+- [#2: Zustand and React Context](zustand-and-react-context)
+
 <Translations>
   {[
     {
@@ -34,7 +37,7 @@ import Translations from 'components/Translations'
   ]}
 </Translations>
 
-Global (client) state management wasn't always like it is today. I distinctly remember a time when our best option was Redux with higher order components using [connect](https://react-redux.js.org/api/connect) plus _mapStateToProps_ and _mapDispatchToProps_.
+Global (client) state management wasn't always like it is today. I distinctly remember a time when our best option was Redux with higher order components using [connect](https://react-redux.js.org/api/connect) plus `mapStateToProps` and `mapDispatchToProps`.
 
 Even the context api, initially, wasn't as ergonomic to use (pun intended), as it only supported render props [when it came out](https://reactjs.org/blog/2018/03/29/react-v-16-3.html#official-context-api).
 
@@ -174,7 +177,7 @@ const user = useUsersStore((state) => state.users[currentUser])
 
 ### Combinations with other libraries
 
-I honestly haven't needed to combine multiple Zustand stores very often, because most of the state in apps is either server or url state. I'm far more likely to combine a Zustand store with _useQuery_ or _useParams_, for example, than I am to combine two separate stores.
+I honestly haven't needed to combine multiple Zustand stores very often, because most of the state in apps is either server or url state. I'm far more likely to combine a Zustand store with `useQuery` or `useParams`, for example, than I am to combine two separate stores.
 
 Once again, the same principle applies: if you need to combine another hook with a Zustand store, custom hooks are your best friend:
 
@@ -203,7 +206,7 @@ export const useFilteredTodos = () => {
 }
 ```
 
-Here, the applied filters _drive_ the query, because they are part of the query key. Every time you call _addFilter_, which you can do from anywhere in your UI, you will automatically trigger a new query, which could also be used from anywhere in your UI. I find this to be pretty declarative and minimal, without being too magical.
+Here, the applied filters _drive_ the query, because they are part of the query key. Every time you call `addFilter`, which you can do from anywhere in your UI, you will automatically trigger a new query, which could also be used from anywhere in your UI. I find this to be pretty declarative and minimal, without being too magical.
 
 ---
 
