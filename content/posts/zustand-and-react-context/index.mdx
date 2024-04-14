@@ -44,8 +44,9 @@ With zustand, it's totally fine - encouraged even - to [create multiple, small s
 
 Global stores are created outside of the React Component lifecycle, so we can't initialize the store with a value we get as a prop. With a global store, we need to create it first with a known default state, then sync props-to-store with `useEffect`:
 
-```js:title=sync-with-useEffect {11-14}
+```js:title=sync-with-useEffect {2-3,12-15}
 const useBearStore = create((set) => ({
+  // ⬇️ initialize with default value
   bears: 0,
   actions: {
     increasePopulation: (by) =>
@@ -171,7 +172,7 @@ Then, we can use the `useBearStore` hook like we are used to, and export custom 
 export const useBears = () => useBearStore((state) => state.bears)
 ```
 
-<VerticalRuler />
+<VerticalRuler height="10em" />
 
 This is a little bit more code to write than just creating a global store, but it solves all three problems:
 
