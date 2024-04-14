@@ -52,10 +52,9 @@ const OgImage = ({ title, img }: Props) => {
             <div
               style={{
                 display: 'flex',
-                fontSize: 50,
+                fontSize: 52,
                 width: 400,
                 fontWeight: 600,
-                wordBreak: 'break-word',
               }}
             >
               {title}
