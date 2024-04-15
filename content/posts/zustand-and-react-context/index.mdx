@@ -72,7 +72,7 @@ const App = ({ initialBears }) => {
 Apart from not wanting to write `useEffect`, this isn't ideal for two reasons:
 
 1. We first render `<RestOfTheApp />` with `bears: 0` before the effect kicks in, then render it once more with the correct `initialBears`.
-2. We don't really initialize our store with `initialBears` - we sync it. So if he `initialBears` change, we will see the update reflected in our store as well.
+2. We don't really initialize our store with `initialBears` - we sync it. So if the `initialBears` change, we will see the update reflected in our store as well.
 
 ### Testing
 
@@ -150,7 +150,7 @@ const BearStoreProvider = ({ children, initialBears }) => {
 
 The main difference here is that we aren't using `create` like before, which would give us a ready-to-use hook. Instead, we are relying on the vanilla zustand function `createStore`, which will, well, just creates a store for us. And we can do that wherever we want to - even inside a component. However, we have to make sure that the creation of the store only happens once. We can do this with refs, but I prefer `useState` for that. I have [a separate blogpost](use-state-for-one-time-initializations) on that topic if you want to know why.
 
-Because we create the store inside our component, we can close over props like `initialBears` and pass them to `createStore` as a true initial value. The `useState` initializer function only runs once, so updates to the prop will no be passed to the store. Then, we take the store instance and pass it to a plain React Context. There is nothing zustand specific here anymore.
+Because we create the store inside our component, we can close over props like `initialBears` and pass them to `createStore` as a true initial value. The `useState` initializer function only runs once, so updates to the prop will not be passed to the store. Then, we take the store instance and pass it to a plain React Context. There is nothing zustand specific here anymore.
 
 ---
 
