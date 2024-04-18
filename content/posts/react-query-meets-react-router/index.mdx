@@ -226,7 +226,7 @@ Setting `staleTime` to `Infinity` is almost equivalent to the `getQueryData` app
 &#x200B;<Emph>Update</Emph>: As of
 [v4.18.0](https://github.com/TanStack/query/releases/tag/v4.18.0), you
 can use the built-in
-[queryClient.ensureQuery](https://tanstack.com/query/v4/docs/reference/QueryClient#queryclientensurequerydata)
+[queryClient.ensureQueryData](https://tanstack.com/query/v4/docs/reference/QueryClient#queryclientensurequerydata)
 method to achieve the same thing. It is literally implemented with
 `getQueryData ?? fetchQuery`, but it's a common enough use-case for the
 library to have it out of the box.
