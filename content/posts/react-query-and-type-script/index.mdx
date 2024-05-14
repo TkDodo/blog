@@ -344,6 +344,22 @@ function useGroup(id: number | undefined) {
 }
 ```
 
+<Aside title="Update" icon="bell">
+
+Since v5.25, You can use a [`skipToken`](https://tanstack.com/query/v5/docs/framework/react/guides/disabling-queries#typesafe-disabling-of-queries-using-skiptoken) to disable a query while having good type safety in `queryFn`:
+
+```ts:title=skipToken
+import { useQuery, skipToken } from '@tanstack/query'
+
+function useGroup(id: number | undefined) {
+  return useQuery({
+    queryKey: ['group', id],
+    queryFn: id ? () => fetchGroup(id) : skipToken,
+  })
+}
+```
+</Aside>
+
 ## Optimistic Updates
 
 Getting optimistic updates right in TypeScript is not an easy feat, so we've decided to add it as a comprehensive [example](https://react-query.tanstack.com/examples/optimistic-updates-typescript) to the docs.
