@@ -127,7 +127,7 @@ cache-control: public, max-age=60, s-maxage=60
 
 which means that for the next 60 seconds, if you request that resource again, the response will come from the browser cache. The neat thing about this is that it works while you're offline, too! Service workers, e.g. for [offline first PWAs](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers), work in a similar way by intercepting the network request and delivering cached responses if they are available.
 
-Now those things wouldn't work if React Query would decide to _not_ fire the request because you have no network connection, like the default `online` mode does. To intercept a fetch request, it must happen :) So if you have this additional cache layer, make sure to use `newtorkMode: 'offlineFirst'`.
+Now those things wouldn't work if React Query would decide to _not_ fire the request because you have no network connection, like the default `online` mode does. To intercept a fetch request, it must happen :) So if you have this additional cache layer, make sure to use `networkMode: 'offlineFirst'`.
 
 If the first request goes out, and you hit the cache - great, your query will go to `success` state, and you'll get that data. And if you have a cache miss, you'll likely get a network error, after which React Query will pause the retries, which will put your query into the `paused` state. It's the best of both worlds. 🙌
 
