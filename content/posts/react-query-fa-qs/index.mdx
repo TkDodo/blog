@@ -378,9 +378,9 @@ An alternative and not so verbose way to handle errors is to use the `onError` c
 
 ## Why is the `queryFn` not called?
 
-From time to time, I get bug reports that the `queryFn` isn't called even though it should. When that happens, the most likely reason is the use of `initialData` together with `staleTime`:
+From time to time, I get bug reports that the `queryFn` isn't called even though it should be. When that happens, the most likely reason is the use of `initialData` together with `staleTime`:
 
-```js:title=initialData-and-staleTime
+```js:title=initialData-and-staleTime {4-5}
 const { data } = useQuery({
   queryKey: ['todos'],
   queryFn: fetchTodos,
@@ -395,7 +395,7 @@ Combined with the `staleTime` setting, that `initialData` will now be seen as `f
 
 The key takeaway here is that `initialData` should only be used if you have "real" data synchronously available - data that you'd happily cache for your users. The empty array is probably more of a "fallback" that you'd like to show until real data has been fetched. For that use-case, `placeholderData` is better:
 
-```js:title=placeholderData-and-staleTime
+```js:title=placeholderData-and-staleTime {4}
 const { data } = useQuery({
   queryKey: ['todos'],
   queryFn: fetchTodos,
@@ -408,7 +408,7 @@ Since `placeholderData` is never cached, you'll always get a background refetch.
 
 Another fix (more of a workaround really) is to specify that your `initialData` is `stale` from the beginning. Per default, React Query uses `Date.now()` when it puts `initialData` into the cache. However, we can customize this with `initialDataUpdatedAt`. I found that setting this to `0` (or any time in the past really) works well to trigger a background update, too:
 
-```js:title=initialDataUpdatedAt
+```js:title=initialDataUpdatedAt {5}
 const { data } = useQuery({
   queryKey: ['todos'],
   queryFn: fetchTodos,
