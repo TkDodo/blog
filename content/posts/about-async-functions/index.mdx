@@ -15,11 +15,14 @@ import Emph from 'components/Emph'
 
 <img src="./async.jpeg" />
 
-<Attribution name="WanderLabs" url="https://unsplash.com/@wanderlabs" />
+<Attribution
+  name="WanderLabs"
+  url="https://unsplash.com/@wanderlabs"
+/>
 
 <Translations>{[]}</Translations>
 
-**Last Update: 23.04.2022**
+**Last Update: 2022-04-23**
 
 [Async functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function) are great, especially if you have to call multiple functions in a row that return promises. With async / await, code becomes easier to reason about for humans, because the data flow mimics synchronous code, which is what we are used to reading.
 
@@ -31,7 +34,9 @@ When I first learned about async functions, the following sentence stuck with me
 
 > Async / await is "just" syntactic sugar for promise chaining
 
-<p style="padding-left: 3rem; margin-top: -1rem">— Someone, somewhen</p>
+<p style="padding-left: 3rem; margin-top: -1rem">
+  — Someone, somewhen
+</p>
 
 This is mostly true, and if that's your mental model about async functions, it will get you quite far. To re-iterate, let's take an example and refactor it from promise chaining to an async function:
 
