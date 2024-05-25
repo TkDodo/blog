@@ -139,24 +139,24 @@ Then, you can give your Mutation a `mutationKey: ['issues']` to invalidate every
 I often mark Queries as "static" by giving them `staleTime:Infinity`. If we don't want those Queries to be invalidated, we can look at the `staleTime` setting of a Query and exclude those via the `predicate` filter:
 
 ```ts:title=nonStaticQueries {21}
-const nonStaticQueries = (query: Query) => {
-  const defaultStaleTime =
-    queryClient.getQueryDefaults(query.queryKey).staleTime ?? 0
-  const staleTimes = query.observers
-    .map((observer) => observer.options.staleTime)
-    .filter((staleTime) => staleTime !== undefined)
-
-  const staleTime =
-    query.getObserversCount() > 0
-      ? Math.min(...staleTimes)
-      : defaultStaleTime
-
-  return staleTime !== Number.POSITIVE_INFINITY
-}
-
 const queryClient = new QueryClient({
   mutationCache: new MutationCache({
     onSuccess: (_data, _variables, _context, mutation) => {
+      const nonStaticQueries = (query: Query) => {
+        const defaultStaleTime =
+          queryClient.getQueryDefaults(query.queryKey).staleTime ?? 0
+        const staleTimes = query.observers
+          .map((observer) => observer.options.staleTime)
+          .filter((staleTime) => staleTime !== undefined)
+
+        const staleTime =
+          query.getObserversCount() > 0
+            ? Math.min(...staleTimes)
+            : defaultStaleTime
+
+        return staleTime !== Number.POSITIVE_INFINITY
+      }
+
       queryClient.invalidateQueries({
         queryKey: mutation.options.mutationKey,
         predicate: nonStaticQueries,
