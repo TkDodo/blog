@@ -91,6 +91,10 @@ const mapping = [
     id: 'the-query-options-api',
     title: '#24: The Query Options API',
   },
+  {
+    id: 'automatic-query-invalidation-after-mutations',
+    title: '#25: Automatic Query Invalidation after Mutations',
+  },
 ]
 
 export const RqToc = ({ id }: Props) => {
