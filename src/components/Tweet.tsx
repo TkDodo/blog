@@ -145,6 +145,15 @@ export const AvatarAcemarke = () => (
   />
 )
 
+export const AvatarAlexDotJs = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/alexdotjs.jpeg"
+    alt="Avatar for alexdotjs"
+    placeholder="blurred"
+  />
+)
+
 export const AvatarLeeerob = () => (
   <StaticImage
     style={{ borderRadius: '50%' }}
