@@ -1,6 +1,6 @@
 ---
 title: Automatic Query Invalidation after Mutations
-description: Even though there is nothing built into React Query, it doesn't need a lot of code to implement it in user-land thanks to the global cache callbacks.
+description: Even though there is nothing built into React Query, it doesn't need a lot of code to implement automatic query invalidation in user-land thanks to the global cache callbacks.
 date: 2024-05-25
 banner: ./automatic-invalidation.jpg
 tags:
@@ -43,7 +43,7 @@ There are also many different ways of how you'd want to do invalidation:
 - Do you invalidate in `onSuccess` or `onSettled`? <br/>The former will only be invoked when the Mutation succeeded, while the latter will also run in case of errors.
 - Do you want to `await` invalidations? <br/> [Awaiting an invalidation](mastering-mutations-in-react-query#awaited-promises) will result in the Mutation staying in `pending` state until the refetch has finished. This can be a good thing, for example if you'd want your form to stay disabled until then, but it might also be not what you want in case you want to navigate from a detail screen to an overview page as soon as possible.
 
-Since there isn't a one-size-fits-all solution, React Query provides nothing out of the box. However, it's not at all difficult to implement automatic invalidations the way you want them to behave in React Query thanks to the [global cache callbacks](https://tanstack.com/query/v5/docs/reference/MutationCache#global-callbacks).
+Since there isn't a one-size-fits-all solution, React Query provides nothing out of the box. However, it's not at all difficult to implement automatic invalidation the way you want them to behave in React Query thanks to the [global cache callbacks](https://tanstack.com/query/v5/docs/reference/MutationCache#global-callbacks).
 
 ## The Global Cache Callbacks
 
@@ -51,7 +51,7 @@ Mutations have callbacks - `onSuccess`, `onError` and `onSettled`, which you hav
 
 It's not quite obvious how to create a `MutationCache` with callbacks, because in most examples, the `MutationCache` is implicitly created for us when we create the `QueryClient`. However, we can also create the cache itself manually and provide callbacks to it:
 
-```ts
+```ts:title=create-MutationCache
 import { QueryClient, MutationCache } from '@tanstack/react-query'
 
 const queryClient = new QueryClient({
@@ -67,7 +67,7 @@ The callbacks get the same arguments as the ones on `useMutation`, except that t
 
 So how can the global callback help us with automatic invalidation? Well - we an just call `queryClient.invalidateQueries` inside the global callback:
 
-```ts
+```ts:title=automatic-invalidation {2-6}
 const queryClient = new QueryClient({
   mutationCache: new MutationCache({
     onSuccess: () => {
@@ -77,13 +77,13 @@ const queryClient = new QueryClient({
 })
 ```
 
-With just 4 lines of code, we get a similar behaviour to what frameworks like Remix (sorry, React-Router) are doing as well: Invalidate everything after every submission. Shout out to Alex for showing me this path:
+With just 5 lines of code, we get a similar behaviour to what frameworks like Remix (sorry, React-Router) are doing as well: Invalidate everything after every submission. Shout out to Alex for showing me this path:
 
 <Tweet
   name="Alex / KATT 🐱"
   handle="alexdotjs"
   tweetId="1744467890277921095"
-  avatar={<AvatarRalex1993 />}
+  avatar={<AvatarAlexDotJs />}
   date={new Date('2024-01-08')}
 >
   <p>I just invalidate everything on every mutation</p>
@@ -100,9 +100,9 @@ Maybe, maybe not. It depends. Again, that's why it isn't built in, because there
 
 Invalidation merely refetches all <Emph>active</Emph> Queries that it matches, and marks the rest as `stale`, so that they get refetched when they are used the next time.
 
-This is usually a good trade-off. Consider having an Issue List with filters. Since each filter should be part of the QueryKey, we'll get multiple Queries in the cache. However, I'm only ever viewing one of those queries at the same time. Refetching them all would lead to lots of unnecessary requests, and there's no guarantee that I will ever go back to a list with one of those filters.
+This is usually a good trade-off. Consider having an Issue List with filters. Since each filter should be part of the QueryKey, we'll get multiple Queries in the cache. However, I'm only ever viewing one of those Queries at the same time. Refetching them all would lead to lots of unnecessary requests, and there's no guarantee that I will ever go back to a list with one of those filters.
 
-So invalidation only refetches what I currently see on the screen (active queries) to get an up-to-date view, and everything else will be refetched if we ever need them again.
+So invalidation only refetches what I currently see on the screen (active Queries) to get an up-to-date view, and everything else will be refetched if we ever need them again.
 
 ## Tying invalidation to specific Queries
 
@@ -120,7 +120,7 @@ Of course, you can make your logic more involved to make your revalidation smart
 
 MutationKey and QueryKey have nothing in common, and the one for Mutations is also optional. You can tie them together if you want by using the MutationKey to specify which Queries should be invalidated:
 
-```ts
+```ts:title=mutationKey {5}
 const queryClient = new QueryClient({
   mutationCache: new MutationCache({
     onSuccess: (_data, _variables, _context, mutation) => {
@@ -138,7 +138,7 @@ Then, you can give your Mutation a `mutationKey: ['issues']` to invalidate every
 
 I often mark Queries as "static" by giving them `staleTime:Infinity`. If we don't want those Queries to be invalidated, we can look at the `staleTime` setting of a Query and exclude those via the `predicate` filter:
 
-```ts
+```ts:title=nonStaticQueries {21}
 const nonStaticQueries = (query: Query) => {
   const defaultStaleTime =
     queryClient.getQueryDefaults(query.queryKey).staleTime ?? 0
@@ -172,7 +172,7 @@ Finding out the actual `staleTime` for a Query is not that trivial, because `sta
 
 We can use `meta` to store arbitrary, static information about a Mutation. As an example, we can add an `invalidates` field to give "tags" to our mutation. These tags can then be used to fuzzily match Queries we'd want to invalidate:
 
-```js
+```js:title=the-meta-option {10-12, 21-23}
 import { matchQuery } from '@tanstack/react-query'
 
 const queryClient = new QueryClient({
@@ -223,11 +223,11 @@ You can read more about typing meta [in the docs](https://tanstack.com/query/v5/
 
 ## To Await or not to Await
 
-In all the examples shown above, we are never `awaiting` an invalidation, and that's fine if you want your mutations to finish as fast as possible. One specific situation that I have come across a lot is wanting to invalidate everything, but have the Mutation stay pending until one important refetch is done. For example, if I know that I will redirect to the Label List View after updating one, I might want this specific Query to be up-to-date before I do that.
+In all the examples shown above, we are never `awaiting` an invalidation, and that's fine if you want your mutations to finish as fast as possible. One specific situation that I have come across a lot is wanting to invalidate everything, but have the Mutation stay pending until one important refetch is done. For example, I might want label specific Queries to be awaited after updating a label, but I wouldn't want to wait until everything is done refetching.
 
 We can build this into our `meta` solution by extending how that structure is defined, for example:
 
-```ts
+```ts:title=meta-awaits {3-5}
 useMutation({
   mutationFn: updateLabel,
   meta: {
@@ -239,7 +239,7 @@ useMutation({
 
 Or, we can take advantage of the fact that callbacks on the MutationCache run <Emph>before</Emph> callbacks on `useMutation`. If we have our global callback set-up to invalidate everything, we can still add a local callback that just `awaits` what we want it to:
 
-```ts
+```ts:title=local-onSuccess {11-17}
 const queryClient = new QueryClient({
   mutationCache: new MutationCache({
     onSuccess: () => {
@@ -262,7 +262,7 @@ useMutation({
 
 Here's what's happening:
 
-- First, the global callback runs and invalidates all Queries, but we since we neither `await` or `return` anything, this is a "fire-and-forget" invalidation.
+- First, the global callback runs and invalidates all Queries, but we since we neither `await` nor `return` anything, this is a "fire-and-forget" invalidation.
 - Then, our local callback will run immediately after that, where we will create a Promise for invalidating the `['labels']` only. Since we are returning that Promise, the Mutation will stay pending until `['labels']` are refetched.
 
 <Aside title="cancelRefetch">
@@ -271,13 +271,13 @@ Note that we are passing `cancelRefetch: false` to the manual `invalidateQueries
 
 But here, we want the opposite: Since our global callback has already invalidated everything, including the Query we want to `await`, we just use `invalidateQueries` to "pick up" the already in-flight Promise and return it.
 
-If we wouldn't do that, we'd see another request for our `['labels']` view.
+If we wouldn't do that, we'd see another request for our `['labels']` Query.
 
 </Aside>
 
 ---
 
-I think this shows that it's not a lot of code to add an abstraction that you're comfortable with for automatic invalidations. Just keep in mind that every abstraction has a cost: It's a new API that needs to be learned, understood and applied properly.
+I think this shows that it's not a lot of code to add an abstraction that you're comfortable with for automatic invalidation. Just keep in mind that every abstraction has a cost: It's a new API that needs to be learned, understood and applied properly.
 
 I hope by showing all these possibilities, it's a bit clearer why we have nothing built into React Query. Finding an API that is flexible enough to cover all cases without being bloated is not an easy thing to do. For this, I prefer to give _you_ the tools to build this in user-land.
 
