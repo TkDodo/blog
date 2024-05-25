@@ -172,7 +172,7 @@ Finding out the actual `staleTime` for a Query is not that trivial, because `sta
 
 We can use `meta` to store arbitrary, static information about a Mutation. As an example, we can add an `invalidates` field to give "tags" to our mutation. These tags can then be used to fuzzily match Queries we'd want to invalidate:
 
-```js:title=the-meta-option {10-12, 21-23}
+```js:title=the-meta-option {10-12,21-23}
 import { matchQuery } from '@tanstack/react-query'
 
 const queryClient = new QueryClient({
@@ -227,7 +227,7 @@ In all the examples shown above, we are never `awaiting` an invalidation, and th
 
 We can build this into our `meta` solution by extending how that structure is defined, for example:
 
-```ts:title=meta-awaits {3-5}
+```ts:title=meta-awaits {3-6}
 useMutation({
   mutationFn: updateLabel,
   meta: {
