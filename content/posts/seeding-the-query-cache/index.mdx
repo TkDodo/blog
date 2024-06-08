@@ -142,8 +142,8 @@ The best way to circumvent this problem is to stick to one query per component, 
 
 The earlier you initiate a fetch, the better, because the sooner it starts, the sooner it can finish. 🤓
 
-- If your architecture supports server side rendering - consider [fetching on the server](https://tanstack.com/query/v4/docs/guides/ssr).
-- If you have a router that supports loaders, consider [prefetching there](https://tanstack.com/query/v4/docs/guides/ssr).
+- If your architecture supports server side rendering - consider [fetching on the server](https://tanstack.com/query/v5/docs/framework/react/guides/ssr).
+- If you have a router that supports loaders, consider [prefetching there](https://tanstack.com/query/v5/docs/framework/react/guides/prefetching).
 
 But even if that's not the case, you can still use `prefetchQuery` to initiate a fetch before the component is rendered:
 
