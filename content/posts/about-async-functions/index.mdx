@@ -11,6 +11,7 @@ tags:
 import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
+import Aside from 'components/Aside'
 import Emph from 'components/Emph'
 
 <img src="./async.jpeg" />
@@ -22,7 +23,7 @@ import Emph from 'components/Emph'
 
 <Translations>{[]}</Translations>
 
-**Last Update: 2022-04-23**
+**Last Update: 20234-06-10**
 
 [Async functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function) are great, especially if you have to call multiple functions in a row that return promises. With async / await, code becomes easier to reason about for humans, because the data flow mimics synchronous code, which is what we are used to reading.
 
@@ -141,9 +142,11 @@ async function fetchTodos() {
 
 Because we are in an async function, a _new_ promise will be returned at the end of it, even if we already return a promise ourselves! [Here](https://www.carlrippon.com/cancelling-requests-with-react-query/) is a great article if you want to see how query cancellation can work even with async functions.
 
-&#x200B;<Emph>Update</Emph>
+<Aside title="Update" icon="bell">
 
 Since [v3.30.0](https://react-query.tanstack.com/guides/query-cancellation), React Query will directly provide you the AbortSignal. There is no need to add a _cancel_ method to the promise, and this way of cancelling queries has been entirely removed in v4.
+
+</Aside>
 
 ## Handling errors
 
@@ -183,7 +186,7 @@ I hope this gives you a bit of a deeper understanding of what async / await is d
 
 ```ts:title=weird-combos
 // 🚨 the async keyword doesn't do anything -
-// except creating a new unneccessary promise
+// except creating a new unnecessary promise
 const fetchTodos = async () => axios.get('/todos')
 
 const fetchTodos = async () => {
@@ -192,20 +195,27 @@ const fetchTodos = async () => {
   return await response.data
 }
 
-// 🙈 I don't even 🤷‍♂️
+// 🙈 async/await mixed with .then
 const fetchTodos = async () =>
   await axios.get('/todos').then(response => response.data)
 
 const fetchTodos = async () => {
   try {
-    // 🚨 await is redundant here, too
     return await axios.get('/todos')
   } catch (error) {
-    // 🚨 the catch-and-throw is totally unnecessary
+    // 🚨 the catch-and-re-throw is totally unnecessary
     throw error
   }
 }
 ```
+
+<Aside title="Update" icon="bell">
+
+In the last example, I previously stated that `return await` is redundant. That is usually the case, but inside a try/catch block, it is actually _not_ redundant. If we return the Promise directly from within a try/catch block without awaiting it, the catch block never runs.
+
+Have a look at [this great article](https://jakearchibald.com/2017/await-vs-return-vs-return-await/) for a more detailed explanation of the differences between `await`, `return` and `return await`.
+
+</Aside>
 
 ---
 
