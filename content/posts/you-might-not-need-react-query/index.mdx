@@ -125,7 +125,7 @@ And that's totally fine. I'm not here to tell you to use React Query in every po
 
 ### Integration
 
-There is still a lot of space to integrate React Query into this new world of Server Components. For one, most projects won't start on a green field. There are tons of applications out there that have been build over the years, and while you can incrementally adopt the `app` directory, leveraging Server Components requires some sort of re-architecture.
+There is still a lot of space to integrate React Query into this new world of Server Components. For one, most projects won't start on a green field. There are tons of applications out there that have been built over the years, and while you can incrementally adopt the `app` directory, leveraging Server Components requires some sort of re-architecture.
 
 For this transitioning period, React Query integrates very well with the `app` directory and Server Components. You can move some components to fetch on the server only, or you can use Server Components to prefetch your cache and pass the result to a client component, where you `useQuery`. It doesn't have to be all-or-nothing. The [official docs](https://tanstack.com/query/v4/docs/react/guides/ssr#using-the-app-directory-in-nextjs-13) already have a good guide for this integration, and I will likely follow this up with another blog post on things to look out for.
 
