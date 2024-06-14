@@ -65,7 +65,7 @@ const queryClient = new QueryClient({
 
 The callbacks get the same arguments as the ones on `useMutation`, except that they will also get the Mutation instance as last parameter. And just like the usual callbacks, returned Promises will be awaited.
 
-So how can the global callback help us with automatic invalidation? Well - we an just call `queryClient.invalidateQueries` inside the global callback:
+So how can the global callback help us with automatic invalidation? Well - we can just call `queryClient.invalidateQueries` inside the global callback:
 
 ```ts:title=automatic-invalidation {2-6}
 const queryClient = new QueryClient({
