@@ -121,4 +121,8 @@ async function convert(slug: string) {
     })
 }
 
-run()
+try {
+  run()
+} catch (e) {
+  console.error(e)
+}
