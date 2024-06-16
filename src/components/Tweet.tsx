@@ -37,6 +37,15 @@ export const AvatarTkDodo = () => (
   />
 )
 
+export const AvatarGabbeV_ = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/GabbeV_.jpg"
+    alt="Avatar for GabbeV_"
+    placeholder="blurred"
+  />
+)
+
 export const AvatarAcdlite = () => (
   <StaticImage
     style={{ borderRadius: '50%' }}
@@ -210,6 +219,22 @@ export const TanStackQueryV5 = () => (
     placeholder="blurred"
     src="../../static/images/TanStackQueryV5.png"
     alt="TanStackQuery v5"
+  />
+)
+
+export const V5390 = () => (
+  <StaticImage
+    placeholder="blurred"
+    src="../../static/images/v5390.jpeg"
+    alt="New Release v5.39.0"
+  />
+)
+
+export const SathyaAndMe = () => (
+  <StaticImage
+    placeholder="blurred"
+    src="../../static/images/GP-724-X0AAN_NK.jpeg"
+    alt="Sathya and me"
   />
 )
 
