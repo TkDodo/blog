@@ -113,7 +113,7 @@ Full disclosure upfront: I wasn't the first to discover this. Shout out to [Gabr
 
 It's funny because I saw the tweet, and even commented on it, but didn't think too much of it at the time. As I said, I was quite busy and planned to look into React 19 later.
 
-So after the React 19 upgrade in React Query itself, I continued working on the suspense lesson of the course. We have one example in there were we're showing how to reveal content at the same time, but still have all requests fetch in parallel. As shown in the [react docs](https://react.dev/reference/react/Suspense#revealing-content-together-at-once), we can achieve this by by putting both components as siblings into the same suspense boundary. The example looks roughly like this:
+So after the React 19 upgrade in React Query itself, I continued working on the suspense lesson of the course. We have one example in there where we're showing how to reveal content at the same time, but still have all requests fetch in parallel. As shown in the [react docs](https://react.dev/reference/react/Suspense#revealing-content-together-at-once), we can achieve this by by putting both components as siblings into the same suspense boundary. The example looks roughly like this:
 
 ```jsx:title=suspense-with-two-children
 export default function App() {
