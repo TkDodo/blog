@@ -118,7 +118,7 @@ So after the React 19 upgrade in React Query itself, I continued working on the 
 ```jsx:title=suspense-with-two-children
 export default function App() {
   return (
-    <Suspense fallback={fallback={<p>...</p>}}>
+    <Suspense fallback={<p>...</p>}>
       <RepoData name="tanstack/query" />
       <RepoData name="tanstack/table" />
     </Suspense>
