@@ -31,7 +31,7 @@ const Avatar = ({ children }: { children: React.ReactNode }) => (
 export const AvatarTkDodo = () => (
   <StaticImage
     style={{ borderRadius: '50%' }}
-    src="../../static/images/tkdodo.jpeg"
+    src="../../static/images/1021430.jpeg"
     alt="Avatar for TkDodo"
     placeholder="blurred"
   />
