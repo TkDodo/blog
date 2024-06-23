@@ -71,24 +71,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://www.sales-funnel.app/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Meow Sales Funnel</h2>
-          <StaticImage
-            placeholder="blurred"
-            src="../../static/images/meow.svg"
-            height={300}
-            alt="Meow Sales Funnel"
-          />
-        </Link>
-        <div>
-          <Text>🐱 Custom</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://www.workflowgen.com/"
           target="_blank"
           rel="noopener noreferrer"
@@ -153,6 +135,40 @@ const Sponsors = () => (
             src="../../static/images/monolisa.jpeg"
             height={300}
             alt="MonoLisa"
+          />
+        </Link>
+        <div>
+          <Text>🥳 Sponsor</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://github.com/nikitavoloboev"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Nikita</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/6391776?s=300"
+            alt="Nikita"
+            height="300"
+          />
+        </Link>
+        <div>
+          <Text>🥳 Sponsor</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://github.com/nadavl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Nadav Lebovitch</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/5332234?s=300"
+            alt="Nadav Lebovitch"
+            height="300"
           />
         </Link>
         <div>
@@ -226,23 +242,6 @@ const Sponsors = () => (
         </Link>
         <div>
           <Text>🎗 Supporter</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
-          href="https://www.bearstudio.fr/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>BearStudio</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/21054556?s=300"
-            height="300"
-            alt="BearStudio"
-          />
-        </Link>
-        <div>
-          <Text>🪙 Custom</Text>
         </div>
       </Card>
       <Card>

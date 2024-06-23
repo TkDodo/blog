@@ -78,29 +78,6 @@ const PremiumSponsors = () => (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <StaticImage
         placeholder="blurred"
-        src="../../static/images/meow.svg"
-        alt="Meow Sales Funnel"
-        width={64}
-        height={64}
-        style={{
-          marginRight: '0.875rem',
-          borderRadius: '50%',
-        }}
-      />
-      <Link
-        href="https://www.sales-funnel.app/"
-        target="_blank"
-        rel="noopener noreferrer"
-        sx={{
-          fontSize: [2, 2, 3],
-        }}
-      >
-        🐱 Meow Sales Funnel
-      </Link>
-    </div>
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <StaticImage
-        placeholder="blurred"
         src="../../static/images/workflowgen.png"
         alt="WorkflowGen"
         width={64}
@@ -186,6 +163,50 @@ const PremiumSponsors = () => (
         }}
       >
         🥳 MonoLisa
+      </Link>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img
+        src="https://avatars.githubusercontent.com/u/6391776?s=64"
+        alt="Nikita"
+        style={{
+          marginRight: '0.875rem',
+          width: '4rem',
+          height: '4rem',
+          borderRadius: '50%',
+        }}
+      />
+      <Link
+        href="https://github.com/nikitavoloboev"
+        target="_blank"
+        rel="noopener noreferrer"
+        sx={{
+          fontSize: [2, 2, 3],
+        }}
+      >
+        🥳 Nikita
+      </Link>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img
+        src="https://avatars.githubusercontent.com/u/5332234?s=64"
+        alt="Nadav Lebovitch"
+        style={{
+          marginRight: '0.875rem',
+          width: '4rem',
+          height: '4rem',
+          borderRadius: '50%',
+        }}
+      />
+      <Link
+        href="https://github.com/nadavl"
+        target="_blank"
+        rel="noopener noreferrer"
+        sx={{
+          fontSize: [2, 2, 3],
+        }}
+      >
+        🥳 Nadav Lebovitch
       </Link>
     </div>
   </Grid>
