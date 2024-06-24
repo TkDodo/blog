@@ -1,9 +1,17 @@
 import * as React from 'react'
-import { Link, Box } from 'theme-ui'
+import { Link, Box, Grid } from 'theme-ui'
 
 const About = () => (
   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-    <p style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+    <Grid
+      gap={4}
+      columns={[1, null, 2]}
+      sx={{
+        maxWidth: '50rem',
+        justifyItems: ['flex-start', null, 'stretch'],
+        alignItems: 'center',
+      }}
+    >
       <Box
         sx={{
           width: ['15rem', null, '19rem'],
@@ -48,8 +56,8 @@ const About = () => (
           .
         </p>
       </Box>
-    </p>
-    <p>
+    </Grid>
+    <Box as="p">
       Welcome to my personal blog 📚, where I write about all things
       React, TypeScript and of course the{' '}
       <Link
@@ -69,7 +77,7 @@ const About = () => (
       >
         🎗 sponsor me on Github 🎗
       </Link>
-    </p>
+    </Box>
   </Box>
 )
 
