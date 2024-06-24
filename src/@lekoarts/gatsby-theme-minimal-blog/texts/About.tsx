@@ -1,5 +1,6 @@
+import { StaticImage } from 'gatsby-plugin-image'
 import * as React from 'react'
-import { Link, Box, Image } from 'theme-ui'
+import { Link, Box } from 'theme-ui'
 
 const About = () => (
   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -11,18 +12,22 @@ const About = () => (
         gap: 4,
       }}
     >
-      <Image
-        src="https://avatars.githubusercontent.com/u/1021430?s=400"
-        alt="TkDodo"
-        style={{
-          borderRadius: '50%',
-          height: 'auto',
-        }}
+      <Box
         sx={{
           width: ['15rem', null, '19rem'],
           marginBottom: [null, null, 5],
         }}
-      />
+      >
+        <img
+          src="https://avatars.githubusercontent.com/u/1021430?s=400"
+          alt="TkDodo"
+          style={{
+            borderRadius: '50%',
+            width: '100%',
+            height: 'auto',
+          }}
+        />
+      </Box>
       <Box
         sx={{
           display: 'flex',
@@ -31,7 +36,7 @@ const About = () => (
         }}
       >
         <h1> Hi 👋, I'm Dominik from Vienna 🇦🇹</h1>
-        <Box as="p">
+        <p>
           I'm a Web Developer and open source maintainer who ❤️
           ReactJs and TypeScript. I'm currently maintaining{' '}
           <Link
@@ -50,10 +55,10 @@ const About = () => (
             TanStack/router
           </Link>
           .
-        </Box>
+        </p>
       </Box>
     </Box>
-    <Box as="p">
+    <p>
       Welcome to my personal blog 📚, where I write about all things
       React, TypeScript and of course the{' '}
       <Link
@@ -73,7 +78,7 @@ const About = () => (
       >
         🎗 sponsor me on Github 🎗
       </Link>
-    </Box>
+    </p>
   </Box>
 )
 
