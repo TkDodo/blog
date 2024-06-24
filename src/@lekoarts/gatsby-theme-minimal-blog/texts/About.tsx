@@ -1,21 +1,12 @@
-import { StaticImage } from 'gatsby-plugin-image'
 import * as React from 'react'
 import { Link, Box } from 'theme-ui'
 
 const About = () => (
   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-    <Box
-      as="p"
-      style={{ display: 'flex' }}
-      sx={{
-        alignItems: ['center', null],
-        gap: 4,
-      }}
-    >
+    <p style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
       <Box
         sx={{
           width: ['15rem', null, '19rem'],
-          marginBottom: [null, null, 5],
         }}
       >
         <img
@@ -57,7 +48,7 @@ const About = () => (
           .
         </p>
       </Box>
-    </Box>
+    </p>
     <p>
       Welcome to my personal blog 📚, where I write about all things
       React, TypeScript and of course the{' '}
@@ -81,61 +72,5 @@ const About = () => (
     </p>
   </Box>
 )
-
-/**
- * <div style={{ display: 'flex', flexDirection: 'column' }}>
- *       <p style={{ marginBottom: 0, marginTop: 0 }}>
- *         <Text sx={{ fontWeight: 'bold' }}></Text>
- *       </p>
- *       <p style={{ marginBottom: 0 }}>
- *         <Text>
- *           I'm a Web Developer with a passion for ReactJs. I ❤️ static
- *
- *         </Text>
- *       </p>
- *       <p style={{ marginBottom: 0 }}>
- *         <Text>
- *           I currently co-maintain the popular async state management
- *           library{' '}
-            <Link
-              href="https://github.com/TanStack/query"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              TanStack/query
-            </Link>
- *           , as well as{' '}
- *           <Link
- *             href="https://github.com/remeda/remeda"
- *             target="_blank"
- *             rel="noreferrer noopener"
- *           >
- *             remeda
- *           </Link>
- *           , a utility library tailored to TypeScript users.
- *         </Text>
- *       </p>
- *       <p style={{ marginBottom: 0 }}>
- *         <Text>
- *           Welcome to my personal blog 📚, where I write about all
- *           things React, TypeScript and of course react-query.
- *         </Text>
- *       </p>
- *       <p style={{ marginBottom: 0 }}>
- *         <Text>
- *           If you enjoy my blog posts or want to support my open source
- *           work, you can{' '}
- *           <Link
- *             href="https://github.com/sponsors/TkDodo"
- *             target="_blank"
- *             rel="noopener noreferrer"
- *             sx={{ whiteSpace: 'nowrap' }}
- *           >
- *             🎗 sponsor me on Github 🎗
- *           </Link>
- *         </Text>
- *       </p>
- *     </div>
- */
 
 export default About
