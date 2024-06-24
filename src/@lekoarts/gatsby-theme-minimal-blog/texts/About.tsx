@@ -18,13 +18,14 @@ const About = () => (
           marginBottom: [null, null, 5],
         }}
       >
-        <StaticImage
+        <img
+          src="https://avatars.githubusercontent.com/u/1021430?s=400"
           alt="TkDodo"
           style={{
             borderRadius: '50%',
+            width: '100%',
+            height: 'auto',
           }}
-          aspectRatio="constrained"
-          src="../../../../static/images/profile.jpg"
         />
       </Box>
       <Box
