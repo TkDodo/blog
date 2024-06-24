@@ -6,8 +6,8 @@ const About = () => (
   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
     <Box
       as="p"
+      style={{ display: 'flex' }}
       sx={{
-        display: 'flex',
         alignItems: ['center', null],
         gap: 4,
       }}
