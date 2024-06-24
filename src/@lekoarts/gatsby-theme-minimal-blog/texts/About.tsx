@@ -7,13 +7,14 @@ const About = () => (
     <Box
       as="p"
       sx={{
-        display: ['block', 'block', 'flex'],
+        display: 'flex',
+        alignItems: ['center', null],
         gap: 4,
       }}
     >
       <Box
         sx={{
-          width: ['10rem', null, '19rem'],
+          width: ['15rem', null, '19rem'],
           marginBottom: [null, null, 5],
         }}
       >
