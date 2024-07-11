@@ -5,7 +5,7 @@ import { Link } from '@theme-ui/components'
 
 export const QueryGG = () => (
   <Link
-    href="https://query.gg/?r=dom"
+    href="https://query.gg/?s=dom"
     target="_blank"
     rel="noopener noreferrer"
   >
