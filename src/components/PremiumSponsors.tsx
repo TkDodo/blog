@@ -53,6 +53,28 @@ const PremiumSponsors = () => (
       </Link>
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img
+        src="https://avatars.githubusercontent.com/u/92900079?s=64"
+        alt="Mark Benliyan"
+        style={{
+          marginRight: '0.875rem',
+          width: '4rem',
+          height: '4rem',
+          borderRadius: '50%',
+        }}
+      />
+      <Link
+        href="https://github.com/markbenliyan"
+        target="_blank"
+        rel="noopener noreferrer"
+        sx={{
+          fontSize: [2, 2, 3],
+        }}
+      >
+        🥇 Mark Benliyan
+      </Link>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
       <StaticImage
         placeholder="blurred"
         src="../../static/images/reactbricks.svg"
@@ -100,28 +122,6 @@ const PremiumSponsors = () => (
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <img
-        src="https://avatars.githubusercontent.com/u/41463883?s=64"
-        alt="daily.dev"
-        style={{
-          marginRight: '0.875rem',
-          width: '4rem',
-          height: '4rem',
-          borderRadius: '50%',
-        }}
-      />
-      <Link
-        href="https://daily.dev/"
-        target="_blank"
-        rel="noopener noreferrer"
-        sx={{
-          fontSize: [2, 2, 3],
-        }}
-      >
-        🥳 daily.dev
-      </Link>
-    </div>
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <img
         src="https://avatars.githubusercontent.com/u/8204858?s=64"
         alt="Jonas Daniels"
         style={{
@@ -163,28 +163,6 @@ const PremiumSponsors = () => (
         }}
       >
         🥳 MonoLisa
-      </Link>
-    </div>
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <img
-        src="https://avatars.githubusercontent.com/u/6391776?s=64"
-        alt="Nikita"
-        style={{
-          marginRight: '0.875rem',
-          width: '4rem',
-          height: '4rem',
-          borderRadius: '50%',
-        }}
-      />
-      <Link
-        href="https://github.com/nikitavoloboev"
-        target="_blank"
-        rel="noopener noreferrer"
-        sx={{
-          fontSize: [2, 2, 3],
-        }}
-      >
-        🥳 Nikita
       </Link>
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
