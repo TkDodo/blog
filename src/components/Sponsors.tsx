@@ -53,6 +53,23 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
+          href="https://github.com/markbenliyan"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Mark Benliyan</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/92900079?s=300"
+            height="300"
+            alt="Mark Benliyan"
+          />
+        </Link>
+        <div>
+          <Text>🥇 Gold</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
           href="https://reactbricks.com/"
           target="_blank"
           rel="noopener noreferrer"
@@ -90,24 +107,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://daily.dev/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>daily.dev</h2>
-
-          <img
-            src="https://avatars.githubusercontent.com/u/41463883?s=300"
-            height="300"
-            alt="daily.dev"
-          />
-        </Link>
-        <div>
-          <Text>🥳 Sponsor</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://github.com/jnsdls"
           target="_blank"
           rel="noopener noreferrer"
@@ -135,23 +134,6 @@ const Sponsors = () => (
             src="../../static/images/monolisa.jpeg"
             height={300}
             alt="MonoLisa"
-          />
-        </Link>
-        <div>
-          <Text>🥳 Sponsor</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
-          href="https://github.com/nikitavoloboev"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Nikita</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/6391776?s=300"
-            alt="Nikita"
-            height="300"
           />
         </Link>
         <div>
@@ -238,24 +220,6 @@ const Sponsors = () => (
             src="https://mmmikem.github.io/assets/photo.173b7bbb.webp"
             height="300"
             alt="Mike Murray"
-          />
-        </Link>
-        <div>
-          <Text>🎗 Supporter</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
-          href="https://www.kierb.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Kier Borromeo</h2>
-          <StaticImage
-            placeholder="blurred"
-            src="../../static/images/kierb.jpg"
-            height={300}
-            alt="Kier Borromeo"
           />
         </Link>
         <div>
@@ -358,6 +322,23 @@ const Sponsors = () => (
             src="https://avatars.githubusercontent.com/u/20271968?s=300"
             height="300"
             alt="Ahmed Elsakaan"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://github.com/hobbescodes"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>hobbescodes</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/87732294?s=300"
+            height="300"
+            alt="hobbescodes"
           />
         </Link>
         <div>
