@@ -107,6 +107,24 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
+          href="https://daily.dev/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>daily.dev</h2>
+
+          <img
+            src="https://avatars.githubusercontent.com/u/41463883?s=300"
+            height="300"
+            alt="daily.dev"
+          />
+        </Link>
+        <div>
+          <Text>🥳 Sponsor</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
           href="https://github.com/jnsdls"
           target="_blank"
           rel="noopener noreferrer"
