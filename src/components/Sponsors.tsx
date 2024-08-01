@@ -171,42 +171,39 @@ const Sponsors = () => (
             alt="Vianney Carel"
           />
         </Link>
-        <Card>
-          <Link
-            href="https://github.com/markbenliyan"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>Mark Benliyan</h2>
-            <img
-              src="https://avatars.githubusercontent.com/u/92900079?s=300"
-              height="300"
-              alt="Mark Benliyan"
-            />
-          </Link>
-          <div>
-            <Text>🥳 Sponsor</Text>
-          </div>
-        </Card>
-        <Card>
-          <Link
-            href="https://awesomealgo.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>Awesome Algorand</h2>
-            <img
-              src="https://avatars.githubusercontent.com/u/144172458?s=300"
-              height="300"
-              alt="Awesome Algorand"
-            />
-          </Link>
-          <div>
-            <Text>🥳 Sponsor</Text>
-          </div>
-        </Card>
+      </Card>
+      <Card>
+        <Link
+          href="https://github.com/markbenliyan"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Mark Benliyan</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/92900079?s=300"
+            height="300"
+            alt="Mark Benliyan"
+          />
+        </Link>
         <div>
-          <Text>🎗 Supporter</Text>
+          <Text>🥳 Sponsor</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://awesomealgo.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Awesome Algorand</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/144172458?s=300"
+            height="300"
+            alt="Awesome Algorand"
+          />
+        </Link>
+        <div>
+          <Text>🥳 Sponsor</Text>
         </div>
       </Card>
       <Card>
