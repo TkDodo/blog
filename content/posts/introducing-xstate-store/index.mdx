@@ -1,0 +1,148 @@
+---
+title: Introducing XState Store
+description: There's a new state manager in the game, and it ticks all my boxes ...
+date: 2024-08-01
+banner: ./store.jpg
+tags:
+  - JavaScript
+  - TypeScript
+  - State Management
+  - XState
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import Emph from 'components/Emph'
+
+<img
+  src="./store.jpg"
+  alt="Open vintage sign broad through the glass of store window"
+/>
+
+<Attribution
+  name="Artem Beliaikin"
+  url="https://unsplash.com/@belart84"
+/>
+
+<Translations>{[]}</Translations>
+
+I'm super happy with the tech stack I'm currently using, especially around state management. Obviously, server state is managed by [React Query](practical-react-query). For forms, I use [React Hook Form](react-query-and-forms).
+
+What remains can very often be put into the url, which is really a joy with [TanStack Router](https://tanstack.com/router). If that's not a good fit, I use [Zustand](https://zustand-demo.pmnd.rs/) - my favourite client state manager to date.
+
+This has been my recommended stack for quite some time (okay, the router is quite new, but the concept isn't), and I'm not known for easily switching state managers. Every once in a while, something new comes out, but in order for me to switch, it has to be quite a lot better than what I currently work with.
+
+But today might be that time.
+
+## xstate/store
+
+When I first read about [xstate/store](https://stately.ai/docs/xstate-store), I was immediately intrigued by a couple of things. For one, it was made by [David Khourshid](https://x.com/DavidKPiano), and whatever he builds usually overlaps conceptually with my thinking. And second, it felt like he totally nailed the API on `xstate/store`. On the first glance, it looked like `zustand` and `redux-toolkit` had a child, combining the best of both libs.
+
+Let's take a look at an example, and for easy comparison, I'll be using a similar example as the one from my [working with zustand](working-with-zustand) article:
+
+```ts:title=example
+import { createStore } from '@xstate/store'
+import { useSelector } from '@xstate/store/react'
+
+const store = createStore(
+  // context
+  {
+    bears: 0,
+    fish: 0,
+  },
+  // transitions
+  {
+    increasePopulation: (context, event: { by: number }) => ({
+      bears: context.bears + event.by,
+    }),
+    eatFish: (context) => ({
+      fish: context.fish - 1,
+    }),
+    removeAllBears: () => ({
+      bears: 0,
+    }),
+  }
+)
+
+export const useBears = () =>
+  useSelector(store, (state) => state.context.bears)
+export const useFish = () =>
+  useSelector(store, (state) => state.context.bears)
+```
+
+`createStore` is the main function we need to use from `xstate/store`, which is split into two parts: <Emph>context</Emph> and <Emph>transitions</Emph>. Conceptually, `context` is the state of our store, while `transitions` are similar to `actions`.
+
+One could say that this is only marginally different to `zustand`, so what's intriguing about this? Well, to me, there are quite many things. Let's break it down:
+
+### TypeScript
+
+It will infer TypeScript types of the `store` from the initial context. This is pretty great and something that was usually a lot more verbose with `zustand` (There are some ways to make this better with the [combine middleware](https://docs.pmnd.rs/zustand/guides/typescript)).
+
+Note that the above example is already in TypeScript, and the only thing we needed to manually type was the `event` passed into our `increasePopulation` transition. That's really how user-land TypeScript should be: The more it looks like plain JavaScript, the better.
+
+### Transitions
+
+The store has a natural split between state and actions, which is something that I recommend doing with `zustand` as well. Except that in `xstate/store`, transitions aren't part of the store state, so we don't have to select them to perform updates / exclude them when persisting the store somewhere etc.
+
+### Event driven
+
+Speaking of updates: if we don't select actions from the store - how do we trigger a transition? Quite simply with `store.send`:
+
+```tsx:title=transitions
+function App() {
+  const bears = useBears()
+
+  return (
+    <div>
+      Bears: {bears}
+      <button
+        onClick={() =>
+          store.send({ type: 'increasePopulation', by: 10 })
+        }
+      >
+        Increment
+      </button>
+    </div>
+  )
+}
+```
+
+It wouldn't be an `xstate` like library if the store itself wasn't event driven. Again, this is something I've also recommended for doing with `zustand`, because events are a lot more descriptive than setters and they make sure that the logic lives in the store, not in the UI that triggers the update.
+
+So with `store.send`, we are triggering a transition from one state to the next. It takes an object with `type`, which is derived from the keys of the transition object we've defined on our store. And of course, it's totally type-safe.
+
+This is where I've seen some similarities with [redux toolkit](https://redux-toolkit.js.org/), and dispatching events has always been my favourite part of the redux design.
+
+### Selectors
+
+Yes, `zustand` is built on selectors as well, but notice how the created store isn't a hook itself - we have to pass it to `useSelector`, which requires us to pass a selector function, too. That means we are less likely to subscribe to the complete store by accident, which is a common performance pitfall with `zustand`. Additionally, we can also pass a comparison function as 3rd argument to `useSelector` in case the default referential comparison isn't good enough.
+
+### Framework agnostic
+
+Maybe you've seen it - `creatStore` is imported from `@xstate/store` while `useSelector` is imported from `@xstate/store/react`. That's because the store itself knows nothing about React, and the React adapter is literally just a wrapper around `store.subscribe` put into `useSyncExternalStore`.
+
+If this sounds familiar, maybe that's because TanStack Query has the same approach, so maybe we'll see different framework adapters for `xstate/store` in the future, too.
+
+### Upgrade to state machines
+
+State machines have the reputation of being a complex tool to adopt, which is why a lot of people shy away from them. And I think it's true that they are likely "overkill" for most state that gets managed in web applications.
+
+However, state usually evolves over time, getting more complex as requirements are added. I've seen lots of code in `useReducer` or an external `zustand` store where I thought: This should obviously be a state machine - why isn't this one?
+
+The answer is usually that by the time we realize that it should be a state machine, it's already so complex that creating one out of it is not an easy thing to do anymore.
+
+And that's again where `xstate/store` shines because it offers a simple upgrade path to [convert a store into a state machine](https://stately.ai/docs/xstate-store#converting-stores-to-state-machines). It might not be something you think you need, but it's exactly the thing that you're happy you have available for free if you need it.
+
+---
+
+When my article [working with zustand](working-with-zustand) came out, it was very well received because it provides some opinionated guidance for working with a tool that mostly stays out of your way. It lets you structure and update your store the way you want to - total freedom that can also be a bit paralyzing.
+
+`xstate/store` feels to me like a more opinionated way of achieving the same thing. And the fact that the opinions overlap a lot (like really a lot) with how I would do things make it a very good choice for me.
+
+---
+
+That's it for today. Feel free to reach out to me on [twitter](https://twitter.com/tkdodo)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />
