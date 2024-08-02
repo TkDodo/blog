@@ -68,7 +68,7 @@ const store = createStore(
 export const useBears = () =>
   useSelector(store, (state) => state.context.bears)
 export const useFish = () =>
-  useSelector(store, (state) => state.context.bears)
+  useSelector(store, (state) => state.context.fish)
 ```
 
 `createStore` is the main function we need to use from `xstate/store`, which is split into two parts: <Emph>context</Emph> and <Emph>transitions</Emph>. Conceptually, `context` is the state of our store, while `transitions` are similar to `actions`.
