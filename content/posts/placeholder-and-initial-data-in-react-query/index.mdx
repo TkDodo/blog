@@ -73,7 +73,7 @@ Lastly, neither has an effect if you already have data in your cache. So what di
 
 For each Query Key, there is only one cache entry. This is kinda obvious because part of what makes React Query great is the possibility to share the same data "globally" in our application.
 
-Some options we provide to `useQuery` will affect that cache entry, prominent examples are `staleTime` and `gcTime`. Since there is only _one_ cache entry, those options specify when that entry is considered stale, or when it can be garbage collected.
+Some options we provide to `useQuery` will affect that cache entry, prominent examples are `queryFn` and `gcTime`. Since there is only _one_ cache entry, those options specify how to get data for that entry, or when it can be garbage collected.
 
 ### On observer level
 
@@ -85,7 +85,7 @@ By the way, you can see how many observers a query has by the number on the left
 
 <img src="./observers.png" />
 
-Some options that work on observer level would be `select` or `keepPreviousData`. In fact, what makes `select` so great for [data transformations](./react-query-data-transformations#3-using-the-select-option) is the ability to watch the same cache entry, but subscribe to different slices of its data in different components.
+Some options that work on observer level would be `select` or `refetchInterval`. In fact, what makes `select` so great for [data transformations](./react-query-data-transformations#3-using-the-select-option) is the ability to watch the same cache entry, but subscribe to different slices of its data in different components.
 
 ## Differences
 
