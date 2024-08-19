@@ -127,7 +127,7 @@ Yes, `zustand` is built on selectors as well, but notice how the created store i
 
 ### Framework agnostic
 
-Maybe you've seen it - `creatStore` is imported from `@xstate/store` while `useSelector` is imported from `@xstate/store/react`. That's because the store itself knows nothing about React, and the React adapter is literally just a wrapper around `store.subscribe` put into `useSyncExternalStore`.
+Maybe you've seen it - `createStore` is imported from `@xstate/store` while `useSelector` is imported from `@xstate/store/react`. That's because the store itself knows nothing about React, and the React adapter is literally just a wrapper around `store.subscribe` put into `useSyncExternalStore`.
 
 If this sounds familiar, maybe that's because TanStack Query has the same approach, so maybe we'll see different framework adapters for `xstate/store` in the future, too.
 
