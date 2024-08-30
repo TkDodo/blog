@@ -87,7 +87,7 @@ Alright, so the client lets us work with the cache - what is the cache?
 
 Simply put - the `QueryCache` is an in-memory object where the keys are a stably serialized version of your _queryKeys_ (called a _queryKeyHash_) and the values are an instance of the `Query` class.
 
-I think it's important to understand that React Query, per default, _only_ stores data in-memory and nowhere else. If you reload your browser page, the cache is gone. Have a look at the [persisters](https://tanstack.com/query/v4/docs/plugins/persistQueryClient) if you want to write the cache to an external storage like localstorage.
+I think it's important to understand that React Query, per default, _only_ stores data in-memory and nowhere else. If you reload your browser page, the cache is gone. Have a look at the [persisters](https://tanstack.com/query/v5/docs/framework/react/plugins/persistQueryClient) if you want to write the cache to an external storage like localstorage.
 
 ## Query
 
