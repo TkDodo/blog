@@ -185,7 +185,7 @@ const ExpensiveTree = React.memo(ExpensiveComponent)
 
 Oof, I have to admit - I didn't know for a long time that this will break memoization. Why would it? I'm always passing the same, stable `<p>` tag as children, right? Well, not really. JSX is just syntactic sugar for `React.createElement`, which will create a new object on every render. So, even though the `<p>` tag looks like it's the same to us, it won't be the same reference.
 
-We can surely wrap the children we're passing the the memoized component into `useMemo` too, but I hope you're realizing by now that we're fighting an uphill battle that's hardly winnable. The next person might just come and pass an empty object or array as fallback value to a prop on our memoized component, and we're back to square one:
+We can surely wrap the children we're passing the memoized component into `useMemo` too, but I hope you're realizing by now that we're fighting an uphill battle that's hardly winnable. The next person might just come and pass an empty object or array as fallback value to a prop on our memoized component, and we're back to square one:
 
 ```jsx:title=fallback-value
 //💥 why can't we have nice things 😭
