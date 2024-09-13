@@ -164,7 +164,7 @@ export const CurrentUserContextProvider = ({
 }) => {
   const currentUserQuery = useCurrentUserQuery()
 
-  if (currentUserQuery.isLoading) {
+  if (currentUserQuery.isPending) {
     return <SkeletonLoader />
   }
 
