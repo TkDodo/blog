@@ -95,6 +95,10 @@ const mapping = [
     id: 'automatic-query-invalidation-after-mutations',
     title: '#25: Automatic Query Invalidation after Mutations',
   },
+  {
+    id: 'how-infinite-queries-work',
+    title: '#26: How Infinite Queries work',
+  },
 ]
 
 export const RqToc = ({ id }: Props) => {
