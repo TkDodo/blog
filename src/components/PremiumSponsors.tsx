@@ -231,6 +231,28 @@ const PremiumSponsors = () => (
         🥳 Awesome Algorand
       </Link>
     </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img
+        src="https://avatars.githubusercontent.com/u/20194907?s=64"
+        alt="Jeremy Brown"
+        style={{
+          marginRight: '0.875rem',
+          width: '4rem',
+          height: '4rem',
+          borderRadius: '50%',
+        }}
+      />
+      <Link
+        href="https://github.com/jlbmagic"
+        target="_blank"
+        rel="noopener noreferrer"
+        sx={{
+          fontSize: [2, 2, 3],
+        }}
+      >
+        🥳 Jeremy Brown
+      </Link>
+    </div>
   </Grid>
 )
 

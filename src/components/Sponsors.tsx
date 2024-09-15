@@ -174,23 +174,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://github.com/markbenliyan"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Mark Benliyan</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/92900079?s=300"
-            height="300"
-            alt="Mark Benliyan"
-          />
-        </Link>
-        <div>
-          <Text>🥳 Sponsor</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://awesomealgo.com/"
           target="_blank"
           rel="noopener noreferrer"
@@ -200,6 +183,23 @@ const Sponsors = () => (
             src="https://avatars.githubusercontent.com/u/144172458?s=300"
             height="300"
             alt="Awesome Algorand"
+          />
+        </Link>
+        <div>
+          <Text>🥳 Sponsor</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://github.com/jlbmagic"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Jeremy Brown</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/20194907?s=300"
+            height="300"
+            alt="Jeremy Brown"
           />
         </Link>
         <div>
@@ -303,23 +303,6 @@ const Sponsors = () => (
             src="https://avatars.githubusercontent.com/u/31615341?s=300"
             height="300"
             alt="fl-y"
-          />
-        </Link>
-        <div>
-          <Text>🎗 Supporter</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
-          href="https://github.com/mandava"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Bharat Mandava</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/125006?s=300"
-            height="300"
-            alt="mandava"
           />
         </Link>
         <div>
