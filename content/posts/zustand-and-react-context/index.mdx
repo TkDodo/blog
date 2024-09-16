@@ -191,7 +191,7 @@ This is a little bit more code to write than just creating a global store, but i
 2. Testing becomes a piece of cake because we can either render a component that contains a `BearStoreProvider`, or we can render one ourselves just for the test. In both situations, the created store will be fully isolated to the test, so no resetting between tests is necessary.
 3. A component can now render a `BearStoreProvider` to provide its children with an encapsulated zustand store. We can render this component as often as we want on one page - each instance will have its own store, so we've achieved reusability.
 
-So even though the [zustand docs](https://docs.pmnd.rs/zustand/getting-started/introduction#then-bind-your-components,-and-that's-it!) pride themselves about not needing a Context Provider to access a store, I think knowing how to combine store creation with React Context can come in quite handy in situations where encapsulation an reusability is required. I for one have used this abstraction more than truly global zustand stores. 😄
+So even though the [zustand docs](https://docs.pmnd.rs/zustand/getting-started/introduction#then-bind-your-components,-and-that's-it!) pride themselves about not needing a Context Provider to access a store, I think knowing how to combine store creation with React Context can come in quite handy in situations where encapsulation and reusability are required. I for one have used this abstraction more than truly global zustand stores. 😄
 
 ---
 
