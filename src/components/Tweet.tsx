@@ -190,6 +190,15 @@ export const AvatarHousecor = () => (
   />
 )
 
+export const AvatarMxstbr = () => (
+  <StaticImage
+    style={{ borderRadius: '50%' }}
+    src="../../static/images/mxstbr.jpg"
+    alt="Avatar for mxstbr"
+    placeholder="blurred"
+  />
+)
+
 export const TweetImage = ({
   children,
 }: {
@@ -273,6 +282,14 @@ export const CynicsVsBuilders = () => (
   <StaticImage
     placeholder="blurred"
     src="../../static/images/EXx9RHYVAAUgegZ.jpeg"
+    alt="Cynics vs Builders"
+  />
+)
+
+export const SeparationOfConcerns = () => (
+  <StaticImage
+    placeholder="blurred"
+    src="../../static/images/separation_of_concerns.jpeg"
     alt="Cynics vs Builders"
   />
 )
