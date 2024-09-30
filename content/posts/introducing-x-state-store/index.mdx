@@ -52,25 +52,25 @@ Let's take a look at an example, and for easy comparison, I'll be using a simila
 import { createStore } from '@xstate/store'
 import { useSelector } from '@xstate/store/react'
 
-const store = createStore(
+const store = createStore({
   // context
-  {
+  context: {
     bears: 0,
     fish: 0,
   },
   // transitions
-  {
-    increasePopulation: (context, event: { by: number }) => ({
-      bears: context.bears + event.by,
-    }),
-    eatFish: (context) => ({
-      fish: context.fish - 1,
-    }),
-    removeAllBears: () => ({
+  on: {
+    increasePopulation: {
+      bears: (context, event: { by: number }) => context.bears + event.by,
+    },
+    eatFish: {
+      fish: (context) => context.fish - 1,
+    },
+    removeAllBears: {
       bears: 0,
-    }),
-  }
-)
+    },
+  },
+})
 
 export const useBears = () =>
   useSelector(store, (state) => state.context.bears)
