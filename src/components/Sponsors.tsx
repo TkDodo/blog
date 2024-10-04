@@ -328,23 +328,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://github.com/ixahmedxi"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Ahmed Elsakaan</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/20271968?s=300"
-            height="300"
-            alt="Ahmed Elsakaan"
-          />
-        </Link>
-        <div>
-          <Text>🎗 Supporter</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://github.com/hobbescodes"
           target="_blank"
           rel="noopener noreferrer"
@@ -354,6 +337,23 @@ const Sponsors = () => (
             src="https://avatars.githubusercontent.com/u/87732294?s=300"
             height="300"
             alt="hobbescodes"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://www.robinwieruch.de/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Robin Wieruch</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/2479967?s=300"
+            height="300"
+            alt="Robin Wieruch"
           />
         </Link>
         <div>
