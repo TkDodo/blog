@@ -308,7 +308,7 @@ If React Query sees a rejected Promise, it can potentially start retries, pause 
 
 Luckily, many data fetching libraries like [axios](https://axios-http.com/) or [ky](https://github.com/sindresorhus/ky) transform erroneous status codes like 4xx or 5xx into failed Promises, so if your network request fails, your query fails too. The notable exception is the built-in [fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), which will only give you a failed Promise if the request failed due to a network error.
 
-This is of course [documented here](https://tanstack.com/query/v4/docs/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default), but it's still a stumbling block if you've missed this.
+This is of course [documented here](https://tanstack.com/query/latest/docs/framework/react/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default), but it's still a stumbling block if you've missed this.
 
 ```js:title=wrong-fetch-api-example {5-6}
 useQuery({
