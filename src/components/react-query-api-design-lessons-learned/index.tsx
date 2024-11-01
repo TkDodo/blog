@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Flex, Box, Link } from '@theme-ui/components'
+import { Flex, Box } from '@theme-ui/components'
 import { useLocation } from '@reach/router'
 import { useColorMode } from 'theme-ui'
 import { useSpringCarousel } from 'react-spring-carousel'
@@ -76,35 +76,33 @@ const slides: ReadonlyArray<React.ReactNode> = [
     It needs to be both minimal and intuitive as well as powerful and
     flexible. Now for any given API...
   </p>,
-  <>
-    <p>
-      ... those two things are usually at the opposite side of the
-      same scale.
-    </p>
-    <p>
-      Take <code>Array.join</code> for example: very good example for
-      a minimal API that does one thing very well, no surprises, super
-      intuitive. On the other side of the spectrum, I'd see
-      <code>Array.reduce</code>, which is very powerful (you can
-      implement all array functions with reduce) and flexible, but can
-      be hard to understand and if that's the only API we have
-      available, we'd also not be happy.
-    </p>
-  </>,
-  <>
-    <p>
-      So the missing part is the second scale, which is usually "app
-      complexity". As app complexity grows, your APIs should likely
-      become more powerful & flexible.
-    </p>
-    <p>
-      So on that scale, <code>useQuery</code> would be right about
-      here (bottom left) if you pass the minimal required options to
-      it:
-    </p>
-  </>,
   <p>
-    Simple API, easy to use, but it gives you a ton of things:
+    ... those two things are usually at the opposite side of the same
+    scale.
+  </p>,
+  <p>
+    Take <code>Array.join</code> for example: very good example for a
+    minimal API that does one thing very well, no surprises, super
+    intuitive.
+  </p>,
+  <p>
+    On the other side of the spectrum, I'd see
+    <code>Array.reduce</code>, which is very powerful (you can
+    implement all array functions with reduce) and flexible, but can
+    be hard to understand and if that's the only API we have
+    available, we'd also not be happy.
+  </p>,
+  <p>
+    So the missing part is the second scale, which is usually "app
+    complexity". As app complexity grows, your APIs should likely
+    become more powerful & flexible.
+  </p>,
+  <p>
+    So on that scale, <code>useQuery</code> would be right about here
+    (bottom left) if you pass the minimal required options to it:
+  </p>,
+  <p>Simple API, easy to use, but it gives you a ton of things:</p>,
+  <p>
     Caching, Request Deduplication, stale-while-revalidate background
     updates, global state management, automatic garbage collection,
     handling loading states, error states + retries, the list goes
@@ -119,16 +117,18 @@ const slides: ReadonlyArray<React.ReactNode> = [
     </p>
     <p>And as your app complexity grows,</p>
   </>,
+  <p>
+    ...so does the flexibility of the Query APIs that you are using.
+    You might want to add an optimistic update, or an infinite query -
+    those are certainly a bit more involved.
+  </p>,
   <>
     <p>
-      ...so does the flexibility of the Query APIs that you are using.
-      You might want to add an optimistic update, or an infinite query
-      - those are certainly a bit more involved. And all the way on
-      the right side of the scale, we have our Persister Plugins and
-      fine-grained direct cache subscriptions (which we e.g. use to
-      build the devtools). Now you don't need to learn those when
-      you're starting out, but once you reach a certain app
-      complexity, you are probably happy that those exist.
+      And all the way on the right side of the scale, we have our
+      Persister Plugins and fine-grained direct cache subscriptions
+      (which we e.g. use to build the devtools). Now you don't need to
+      learn those when you're starting out, but once you reach a
+      certain app complexity, you are probably happy that those exist.
     </p>
     <p>Okay, so we got to this API that evolves with you ...</p>
   </>,
@@ -141,21 +141,19 @@ const slides: ReadonlyArray<React.ReactNode> = [
     I'm no longer excited about major versions (and probably neither
     should you).
   </p>,
+  <p>
+    I think API design is especially hard in open source because
+    whatever we decide - we can't easily revert it.
+  </p>,
+  <p>
+    At adverity, we used to distribute our design-system via a private
+    npm registry. Now we have a monorepo so we don't need to anymore,
+    but we adhered to semantic versioning, and do you know what the
+    latest version of that was?
+  </p>,
   <>
     <p>
-      I think API design is especially hard in open source because
-      whatever we decide - we can't easily revert it.
-    </p>
-    <p>
-      At adverity, we used to distribute our design-system via a
-      private npm registry. Now we have a monorepo so we don't need to
-      anymore
-    </p>
-  </>,
-  <>
-    <p>
-      But, we adhered to semantic versioning, and do you know what the
-      latest version of that was ? <code>105.2.0</code>
+      <code>105.2.0</code>
     </p>
     <p>
       Nobody cared. It's just numbers going up. Most projects would
@@ -171,8 +169,8 @@ const slides: ReadonlyArray<React.ReactNode> = [
       tweets and videos and blogposts and everything
     </p>
     <p>
-      Users hear about a new “major” version. Major sounds “huge”, and
-      “good”, so the immediate question is always:
+      Users hear about a new "major" version. Major sounds "huge", and
+      "good", so the immediate question is always:
     </p>
   </>,
   <>
@@ -188,7 +186,7 @@ const slides: ReadonlyArray<React.ReactNode> = [
       loaders in 6.4, and bun added windows support in 1.1
     </p>
     <p>
-      That’s because adding features rarely needs to break an existing
+      That's because adding features rarely needs to break an existing
       API. Of course there are exceptions, e.g. when you re-design
       something from the ground up that enables some new features. But
       usually, features come in minors.
@@ -198,77 +196,79 @@ const slides: ReadonlyArray<React.ReactNode> = [
     <p>
       So when I got asked about the new features in React Query v5, I
       started to sweat. We basically wanted to break a lot of APIs and
-      rename things, and there weren’t any features planned.
+      rename things, and there weren't any features planned.
     </p>
     <p>
-      So we added some things that honestly, we could’ve also
-      backported to v4. This is by no means great because we’re
+      So we added some things that honestly, we could've also
+      backported to v4. This is by no means great because we're
       withholding features from users just to have some kind of
-      “marketing event” and “great new version”.
+      "marketing event" and "great new version".
     </p>
   </>,
   <p>
-    If it were up to me, I’d want a better system. Something where we
-    decouple “breaking changes” from “marketing events”. Anthony Fu
+    If it were up to me, I'd want a better system. Something where we
+    decouple "breaking changes" from "marketing events". Anthony Fu
     had a great suggestion:
   </p>,
   <>
     <p>
       to do 4-digit semver, so you can have an epoch number before
       major that you can use for big overhauls or for marketing. I
-      think it’s a nice idea. I doubt it will happen though - just
+      think it's a nice idea. I doubt it will happen though - just
       something to think about.
     </p>
     <p>
       And maybe, when a new version comes out - don't think about
       what's new - ask what's breaking instead.
     </p>
-    <p>Okay, So I’m no longer excited about major versions...</p>
   </>,
   <p>
-    but what I am still excited about, even more than before I started
-    with open source, is TYPESCRIPT. Don’t worry - we’re not gonna go
-    into library level typescript today, but if you’re building
-    something, I think it helps tremendously to think about types from
-    the beginning and
+    Okay, So I'm no longer excited about major versions, but what I am
+    still excited about, even more than before I started with open
+    source, is TYPESCRIPT.
+  </p>,
+  <p>
+    Don't worry - we're not gonna go into library level typescript
+    today, but if you're building something, I think it helps
+    tremendously to think about types from the beginning and
   </p>,
   <>
     <p>design your APIs with types in mind.</p>
     <p>
-      Now there are lots of people who say that you should “just make
-      it work” first and you can figure out the types later. I think
-      they’re wrong.
+      Now there are lots of people who say that you should "just make
+      it work" first and you can figure out the types later. I think
+      they're wrong. When working with JavaScript, we can come up with
+      all sorts of cute and dynamic constructs that work at runtime,
+      but are very hard to type.
     </p>
+  </>,
+  <>
     <p>
-      When working with JavaScript, we can come up with all sorts of
-      cute and dynamic constructs that work at runtime, but are very
-      hard to type. Sure, almost everything is doable with enough
-      magic, but usually, the price for that is type complexity and
-      maintenance burden.
+      Sure, almost everything is doable with enough magic, but
+      usually, the price for that is type complexity and maintenance
+      burden.
     </p>
     <p>Not sure who said it, but this phrase stuck with me:</p>
   </>,
   <>
     <p>
-      If something is hard for a compiler to figure out, it’s also
-      hard for humans to understand.
+      If something is hard for a compiler to figure out, it's also
+      hard for humans to understand. So if we are having troubles
+      expressing what we want to the compiler, maybe the API we've
+      chosen isn't the best.
     </p>
     <p>
-      So if we are having troubles expressing what we want to the
-      compiler, maybe the API we’ve chosen isn’t the best.
-    </p>
-    <p>
-      So one of the “cute and dynamic” constructs we had in React
-      Query from when it started out (where it had no types), was was
+      One of the "cute and dynamic" constructs we had in React Query
+      from when it started out (where it had no types), was was
       actually <code>useQuery</code>, because you could call it 3
       different ways:
     </p>
   </>,
   <p>
-    with different positional arguments. There’s no good way to make
+    with different positional arguments. There's no good way to make
     this work in TypeScript except with overloads, which is what we
     did. Overloads are problematic because they are a lot of overhead
-    and error messages aren’t good.
+    and error messages aren't good.
   </p>,
   <p>
     TypeScript will try all overloads and then show an error for the
@@ -285,8 +285,8 @@ const slides: ReadonlyArray<React.ReactNode> = [
     </p>
     <p>
       Had we started with types in mind from the beginning, I think
-      this is where we would’ve landed right away. Okay enough about
-      TypeScript already, there’s one thing that always comes up once
+      this is where we would've landed right away. Okay enough about
+      TypeScript already, there's one thing that always comes up once
       a library reaches a certain threshold of usage:
     </p>
   </>,
@@ -306,15 +306,15 @@ const slides: ReadonlyArray<React.ReactNode> = [
     <p>
       My advice here would be to just take your time before adding
       anything. Users can be very demanding, and in that relationship
-      between user and maintainer, it’s their job to tell you all
+      between user and maintainer, it's their job to tell you all
       about their use-case and how important it is for them and their
       deadlines
     </p>
     <p>
-      But it’s the maintainer’s job to have the bigger picture in
+      But it's the maintainer's job to have the bigger picture in
       mind. Will this work for everybody? What about cases that the
-      original requester hasn’t considered because they don’t even
-      know about them… Remember: once an API is added, we can’t change
+      original requester hasn't considered because they don't even
+      know about them… Remember: once an API is added, we can't change
       it without a new major release.
     </p>
   </>,
@@ -348,7 +348,7 @@ const slides: ReadonlyArray<React.ReactNode> = [
   <>
     <p>
       The API is weird and confusing. refetchPage now exists on
-      invalidateQueries, but invalidateQueries doesn’t know about the
+      invalidateQueries, but invalidateQueries doesn't know about the
       type of a query. If there is a match for tasks that is a
       non-infinite query, the param does nothing.
     </p>
@@ -366,15 +366,167 @@ const slides: ReadonlyArray<React.ReactNode> = [
     </p>
   </>,
   <p>
-    So I took a step back and asked people that used it what their
+    So we took a step back and asked people that used it what their
     main motivation was, and it was always the same: If the user
-    scrolls down a lot, and I have 100 pages in the cache, I don’t
-    want to spam my server. That’s fair, so we tried to find an API
+    scrolls down a lot, and I have 100 pages in the cache, I don't
+    want to spam my server. That's fair, so we tried to find an API
     that solves that problem instead. Eventually,
   </p>,
+  <>
+    <p>
+      we settled on a new option on useInfiniteQuery - maxPages, which
+      simply allows you to limit how many pages you have in your
+      cache.
+    </p>
+    <p>
+      This API is a lot better because it solves the problem
+      holistically (from a different point of view), for all kinds of
+      refetches, and also speeds up rendering when you navigate to a
+      page that has cached entries. We shipped in v5 and removed
+      refetchPages completely.
+    </p>
+    <p>
+      My takeaway here is that I landed on a suboptimal API decision
+      too quickly, and had I given myself more time to really
+      understand the problem we're trying to solve, I could've come up
+      with something better.
+    </p>
+  </>,
+  <p>
+    The only alternative really is to ship new APIs with an unstable
+    or experimental name, which can work but might lead to users not
+    really wanting to use it. We did this for some APIs, and these are
+    the messages I get, so I'm not sure if that's really better.
+  </p>,
+  <p>
+    Another API that also gets requested often is to be able to
+    debounce API calls. You would want that for example when having a
+    search field and you want to auto-filter.
+  </p>,
+  <>
+    <p>
+      Unless you want to fetch on every keystroke, you likely want
+      some way of debouncing that. This is a very good example for a
+      feature that will not make it into React Query because it's not
+      its responsibility. There are a lot of ways to do debouncing in
+      different ways, and it likely needs more than just a number as
+      an option. This can get complicated fast, and also adds more
+      bundle size.
+    </p>
+    <p>
+      The good news is that you can relatively easily implement this
+      in user-land
+    </p>
+  </>,
+  <p>
+    You can use your favourite <code>useDebounce</code>{' '}
+    implementation, write one yourself,
+  </p>,
+  <p>
+    or just <code>useDeferredValue</code> from React. The way this
+    works is that filter will contain the current user input to
+    display, and debouncedFilter has the debounced value that you pass
+    to React Query.
+  </p>,
+  <>
+    <p>
+      This "Inversion of Control" is a great way to give users the
+      flexibility to implement features on their own and still keep a
+      small API surface.
+    </p>
+    <p>
+      Now the QueryKey is quite special here, but we can get inversion
+      of control on other options as well by simply making them a
+      function.
+    </p>
+  </>,
+  <p>
+    On example is a discussion I had with a user who felt that
+    refetches on window focus, which are turned on by default via
+    refetchOnWindowFocus: true aren't great when the Query is in error
+    state, which I agree might not be what you want. But to add a
+    separate option just for that case is not a great API. So instead,
+    what we did was make it accept a callback function:
+  </p>,
+  <>
+    <p>
+      The function always gets the query passed, and you can derive
+      from that what you want. That makes it very easy to implement
+      that and similar feature in user-land. So by now, we've made
+      almost all options accept callback functions. It's a cheap trick
+      to allow users to implement certain behaviours for different
+      states of the Query.
+    </p>
+    <p>
+      Okay lastly, even if we keep all these points in mind, no matter
+      how well we try to design an API, some people will be unhappy
+      with it.
+    </p>
+  </>,
+  <p>
+    And they will usually be the loudest. And open source maintainers
+    are not immune to making errors, so chances are that eventually,
+    we'll release an API that isn't well received. I learned that
+    lesson the hard way in v4 of React Query, where we made some
+    changes to our primary states.
+  </p>,
+  <p>
+    Let's take that search example from before again and see what
+    happens if we handle loading and error states in v4 with the
+    derived boolean flags isLoading and isError.
+  </p>,
+  <p>
+    This worked fine in v3, but in v4, it would just render a spinner
+    for all eternity.
+  </p>,
+  <p>
+    That's because queries that start in a disabled state are also in
+    "isLoading" state. Now there are of course reasons for this, and
+    it didn't sound as bad when I thought about it, but objectively,
+    when you zoom out a bit and have no knowledge about React Query
+    and you see this code and how it behaves - it's a very bad API.
+    Absolutely horrible, no excuses. Turns out, a lot of people felt
+    that way:
+  </p>,
+  <>
+    <p>
+      And I agree - that's messed up. Btw, that counter is still going
+      up even though we've since fixed this in v5. But we got those
+      reports right AFTER we had released the v4 major version. That
+      feedback would've been very good a couple of days earlier.
+    </p>
+    <p>
+      What stuck with me is the user expectation that maintainers get
+      everything right in their APIs while at the same time, the
+      willingness to try out beta versions and report feedback is
+      limited.
+    </p>
+    <p>
+      So if there's one thing that you take away from this talk, I
+      want it to be this:
+    </p>
+  </>,
+  <>
+    <p>
+      Please help out maintainers of open source libraries you are
+      using by trying out a beta version and report feedback. I
+      guarantee you it's the best time to be heard.
+    </p>
+    <p>
+      Without that early feedback, mistakes might make it into the
+      "stable" release. But "stable" doesn't mean bug-free or
+      battle-tested - it just means we can't change our APIs anymore -
+      it's now set in stone.
+    </p>
+    <p>
+      Open source is a two-way street, and this is one of the best
+      ways to help while also getting the most in return.
+    </p>
+  </>,
+  <p>That's all I got, thank you 🙏</p>,
 ]
 
-export const Presentation = () => {
+export const ApiDesignPresentation = () => {
   const location = useLocation()
 
   const page = new URLSearchParams(location.search).get('page')
