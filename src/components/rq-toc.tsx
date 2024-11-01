@@ -99,6 +99,10 @@ const mapping = [
     id: 'how-infinite-queries-work',
     title: '#26: How Infinite Queries work',
   },
+  {
+    id: 'react-query-api-design-lessons-learned',
+    title: '#27: React Query API Design - Lessons Learned',
+  },
 ]
 
 export const RqToc = ({ id }: Props) => {
