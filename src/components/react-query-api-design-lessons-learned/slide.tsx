@@ -21,9 +21,9 @@ export const Slide = ({ children, index }) => {
           backgroundSize: 'contain',
           height: [300, 400, 500],
           backgroundImage: `url(${withPrefix(
-            `images/react-query-api-design-lessons-learned/${colorMode}/${
-              index + 1
-            }.png`
+            `images/react-query-api-design-lessons-learned/${
+              colorMode === 'light' ? 'light' : 'dark'
+            }/${index + 1}.png`
           )})`,
         }}
       />
