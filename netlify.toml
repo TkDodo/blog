@@ -17,3 +17,7 @@
   from = "/api/event"
   to = "https://plausible.io/api/event"
   status = 202
+
+[build]
+  command = "npm run build"
+  environment = { NODE_OPTIONS = "--legacy-peer-deps" }
