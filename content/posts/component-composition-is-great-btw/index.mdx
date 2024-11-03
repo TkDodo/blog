@@ -307,7 +307,7 @@ I know some people are concerned about the duplication of rendering the `<Layout
 function Layout(props: { children: ReactNode; title?: string }) {
   return (
     <Card>
-      <CardHeading>Welcome 👋 {title}</CardHeading>
+      <CardHeading>Welcome 👋 {props.title}</CardHeading>
       <CardContent>{props.children}</CardContent>
     </Card>
   )
