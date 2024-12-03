@@ -119,8 +119,8 @@ module.exports = {
         ],
         externalLinks: [
           {
-            name: `Twitter`,
-            url: `https://twitter.com/tkdodo`,
+            name: `Bluesky`,
+            url: `https://bsky.app/profile/tkdodo.eu`,
           },
           {
             name: `Github`,
