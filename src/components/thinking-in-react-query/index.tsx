@@ -533,11 +533,11 @@ const slides: ReadonlyArray<React.ReactNode> = [
   <p>
     So, that's all I got, thanks for listening. Be sure to follow me on{' '}
     <Link
-      href="https://twitter.com/tkdodo"
+      href="https://bsky.app/profile/tkdodo.eu"
       target="_blank"
       rel="noreferrer noopener"
     >
-      twitter
+      bluesky
     </Link>
     , and subscribe to my{' '}
     <Link
