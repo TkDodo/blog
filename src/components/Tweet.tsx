@@ -67,7 +67,7 @@ export const AvatarRalex1993 = () => (
 export const AvatarT3dotgg = () => (
   <StaticImage
     style={{ borderRadius: '50%' }}
-    src="../../static/images/t3dotgg.jpeg"
+    src="../../static/images/theo_twitter.jpg"
     alt="Avatar for t3dotgg"
     placeholder="blurred"
   />
