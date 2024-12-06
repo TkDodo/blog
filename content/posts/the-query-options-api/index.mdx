@@ -76,8 +76,10 @@ So why did we do it?
 
 First of all, having all those overloads is a chore for maintainers, and it's also not clear for users. Why can I call the same function in multiple ways - is one better than the other? So, streamlining the API, thus making it easier for new starters to understand it, was one goal. "Always pass one object" is as simple and extensible as it gets.
 
-But also, it turns out that one object to rule them all is simply a very good abstraction for when you want to share query options between different functions. I discovered this "by accident" when I wrote the [React Query meets React Router](react-query-meets-react-router) article, where want to share query options between prefetching and our `useQuery` call. Now usually, you could just write custom hooks as your primary way to re-use queries. But that doesn't work when imperative function calls like `prefetching` are involved. So I came up with something, and [Alex](https://twitter.com/ralex1993) noted this as a good pattern:
+But also, it turns out that one object to rule them all is simply a very good abstraction for when you want to share query options between different functions. I discovered this "by accident" when I wrote the [React Query meets React Router](react-query-meets-react-router) article, where want to share query options between prefetching and our `useQuery` call. Now usually, you could just write custom hooks as your primary way to re-use queries. But that doesn't work when imperative function calls like `prefetching` are involved. So I came up with something, and [Alex](https://bsky.app/profile/ralexanderson‍.com) noted this as a good pattern:
 
+
+{/* NOTE: The tweet id leads to Alex's now protected X account */}
 <Tweet
   name="R. Alex Anderson 🚀"
   handle="ralex1993"
