@@ -77,7 +77,7 @@ function Counter({ count }) {
 }
 ```
 
-_logCount_ can access everything we define in the _Counter_ component, for example, the _count_ prop. You can easily check that you are relying on closures by moving the function to the outside of its parent. If it doesn't work anymore, it's because you don't have access to something you were "closuring over" anymore:
+_logCount_ can access everything we define in the _Counter_ component, for example, the _count_ prop. You can easily check that you are relying on closures by moving the function to the outside of its parent. If it doesn't work anymore, it's because you don't have access to something you were "closing over" anymore:
 
 ```js:title=moving-it-up
 // ❌ 'count' is not defined. (no-undef)
