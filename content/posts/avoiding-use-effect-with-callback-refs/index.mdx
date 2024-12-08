@@ -9,6 +9,7 @@ tags:
   - TypeScript
 ---
 
+import Aside from 'components/Aside'
 import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
@@ -16,7 +17,13 @@ import Highlight from 'components/Highlight'
 
 <img src="./callback.jpeg" />
 
-<Attribution name="Annie Spratt" url="https://unsplash.com/@anniespratt" />
+<Attribution
+  name="Annie Spratt"
+  url="https://unsplash.com/@anniespratt"
+/>
+
+- <b>#1: Avoiding useEffect with callback refs</b>
+- [#2: Ref Callbacks, React 19 and the Compiler](ref-callbacks-react-19-and-the-compiler)
 
 <Translations>
   {[
@@ -30,6 +37,8 @@ import Highlight from 'components/Highlight'
     },
   ]}
 </Translations>
+
+**Last Update: 2024-12-08**
 
 **Note: This article assumes a basic understanding of what _refs_ are in React.**
 
@@ -151,6 +160,12 @@ With that knowledge, what stops us from focussing the input right inside the cal
 Well, a tiny detail does: React will run this function after _every_ render. So unless we are fine with focussing our input that often (which we are likely not), we have to tell React to only run this when we want to.
 
 ### useCallback to the rescue
+
+<Aside title="Update" icon="bell">
+
+My view on using `useCallback` for those situations has changed a bit. I'll keep this post as it is for posterity, but please read [#2: Ref Callbacks, React 19 and the Compiler](ref-callbacks-react-19-and-the-compiler) to get the full picture.
+
+</Aside>
 
 Luckily, React uses referential stability to check if the callback ref should be run or not. That means if we pass the same ref(erence, pun intended) to it, execution will be skipped.
 
