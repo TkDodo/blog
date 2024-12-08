@@ -1,0 +1,207 @@
+---
+title: Ref Callbacks, React 19 and the Compiler
+description: Reflecting on useCallback, how the Compiler changed my thinking about it, and what React 19 has in store for Ref Callbacks...
+date: 2024-12-08
+banner: ./ref-callbacks.jpg
+tags:
+  - ReactJs
+  - JavaScript
+  - TypeScript
+---
+
+import Aside from 'components/Aside'
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import Highlight from 'components/Highlight'
+import { VerticalRuler } from 'components/VerticalRuler'
+import Tweet, { AvatarSathya } from 'components/Tweet'
+
+<img
+  src="./ref-callbacks.jpg"
+  alt="minimalist photography of three crank phones"
+/>
+
+<Attribution
+  name="Pavan Trikutam"
+  url="https://unsplash.com/@ptrikutam"
+/>
+
+- [#1: Avoiding useEffect with callback refs](avoiding-use-effect-with-callback-refs)
+- <b>#2: Ref Callbacks, React 19 and the Compiler</b>
+
+<Translations>{[]}</Translations>
+
+It's been more than two years since I published my first article about [callback refs](avoiding-use-effect-with-callback-refs). I didn't think I'd write about that topic again, but time moves on, things change, and I learned a thing or two as well in the meantime.
+
+Turns out, some of the things I wrote were not 100% correct, and React also changes with v19, so I thought it's a good idea to re-visit this topic.
+
+<Aside title="Note">
+
+Please make sure you've read [#1: Avoiding useEffect with callback refs](avoiding-use-effect-with-callback-refs), so we're on the same page.
+
+</Aside>
+
+There are two things I dislike about that first blogpost:
+
+1. It's using a `focus` example. "Just use the autoFocus attribute" is something I heard a lot. Yes, it was just an example to show something you can do with a node. From now on, I'll replace that with `node.scrollIntoView({ behavior: "smooth" })`. This is not an important change, but needs to be said regardless.
+
+2. It's focusing too much on `useCallback` as a solution, which wasn't really the point, and is also technically not correct. This _is_ an important change, so let's focus on that for a second:
+
+## `useCallback`
+
+I wrote [a full blogpost](use-state-for-one-time-initializations) on why `useMemo` is no semantic guarantee that the computation will only run when the dependency array changes, and since `useCallback` is just a variation of `useMemo`, the same rules apply. The [react docs](https://react.dev/reference/react/useCallback#caveats) clearly say that while the cached result will not be arbitrarily thrown away between renders, you should still treat `useCallback` as a performance optimization only, which means your code should still work if you remove it. It might not work as efficiently as before, but it also shouldn't crash.
+
+One of my example clearly violates that:
+
+```jsx:title=ref-callback-with-use-callback
+function CustomInput() {
+  const ref = React.useCallback((node) => {
+    node?.scrollIntoView({ behavior: 'smooth' })
+  }, [])
+
+  return <input ref={ref} defaultValue="Hello world" />
+}
+```
+
+If our intention here is to scroll to the node when we "mount" the `input`, we rely on `useCallback` to do that for us. Once we remove it, we will scroll to our node on every re-render. That's likely not what we want.
+
+The better solution here is to move the function out of the `CustomInput` component:
+
+```jsx:title=ref-with-stable-function {1-3}
+function scrollIntoView(node) {
+  node?.scrollIntoView({ behavior: 'smooth' })
+}
+
+function CustomInput() {
+  return <input ref={scrollIntoView} defaultValue="Hello world" />
+}
+```
+
+This will never re-create the function during a re-render of `CustomInput`, so it captures our intent perfectly. This is great for when we want to do something with just the node, and we want to perform that operation only once.
+
+<VerticalRuler height="5em" />
+
+But what if we can't move it out of the component, because we depend on something inside it - like in the other example - where we are measuring a DOM node and storing that value in react state?
+
+```jsx:title=measure-a-dom-node {4,8}
+function MeasureExample() {
+  const [height, setHeight] = React.useState(0)
+
+  const measuredRef = React.useCallback(node => {
+    if (node !== null) {
+      setHeight(node.getBoundingClientRect().height)
+    }
+  }, [])
+
+  return (
+    <>
+      <h1 ref={measuredRef}>Hello, world</h1>
+      <h2>The above header is {Math.round(height)}px tall</h2>
+    </>
+  )
+}
+```
+
+I think this example is still perfectly fine, because we can remove `useCallback` and our code will still work just the same. If you're wondering why that is, here's what's happening:
+
+- On the first render, React will execute the `measureRef` function after it rendered the `h1`.
+- Then, it will call `setHeight` with a new value (e.g. 56), triggering another re-render.
+- That render will then again call `measureRef` (because it will be invoked on every render if we pass an inline function).
+- This time however, `setHeight` will get the same value (56) passed, so it will bail out of re-rendering, stopping the chain.
+
+So the neat little `useState` optimization to skip re-renders when it sees an identical value works to our advantage here, but it also means this falls apart if we try to store newly created objects in state every time:
+
+```jsx:title=store-rect-in-state {2,6,7}
+function MeasureExample() {
+  const [rect, setRect] = React.useState({ height: 0 })
+
+  const measuredRef = (node) => {
+    if (node !== null) {
+      // 🚨 infinite re-renders here ⬇️
+      setRect(node.getBoundingClientRect())
+    }
+  })
+
+  return (
+    <>
+      <h1 ref={measuredRef}>Hello, world</h1>
+      <h2>The above header is {Math.round(rect.height)}px tall</h2>
+    </>
+  )
+}
+```
+
+This isn't great, so I would stick to storing primitive values, or `useLayoutEffect` if I really have to.
+
+### React Compiler
+
+Another reason to not use `useCallback` for those cases is the upcoming React Compiler. I know it's still in beta, but I like to think that there is a future where adopting the React Compiler is a given for any codebase out there. The problem with `useCallback` calls that we need for our code to work is that we then don't know which ones we can safely remove. [Sathya](https://bsky.app/profile/gsathya.bsky.social) (who works on the compiler) said it very well:
+
+<Tweet
+  name="Sathya"
+  handle="gsathya.bsky.social"
+  tweetId="3lbjz4g3czc2t"
+  avatar={<AvatarSathya />}
+  date={new Date('2024-11-22')}
+  type="bsky"
+>
+  <p>
+    Imagine you're adopting the compiler and the compiler works great
+    on your app and you ship it. Now you want to delete the
+    useMemo/useCallback from your code to improve dx. How do you know
+    which ones are safe to remove?
+  </p>
+</Tweet>
+
+This thinking makes the theoretical "React might throw away the cached result and ruin my app" a really practical "I might remove the `useCallback` call and ruin my app", which isn't something I'm looking forward to.
+
+## React 19
+
+Ref callbacks got an upgrade in React 19 - they can now return a [cleanup function](https://react.dev/blog/2024/12/05/react-19#cleanup-functions-for-refs). They work the same as cleanup functions in effects - React will call them when the component unmounts. In those cases, the ref won't be called with `null` anymore.
+
+That's a nice convenience change, and it means we can now do things that require a cleanup inside our ref. We might not want to use `getBoundingClientRect` to measure our DOM node, as it could cause [layout thrashing](https://gist.github.com/paulirish/5d52fb081b3570c81e3a), and it also doesn't update to dynamic sizing.
+
+A [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver) can address both problems, and we can now create one and clean it up inside our ref callback (with or without `useCallback`):
+
+```jsx:title=ResizeObserver {5-13}
+function MeasureExample() {
+  const [height, setHeight] = React.useState(0)
+
+  const measuredRef = (node) => {
+    const observer = new ResizeObserver(([entry]) => {
+      setHeight(entry.contentRect.height)
+    })
+
+    observer.observe(node)
+
+    return () => {
+      observer.disconnect()
+    }
+  }
+
+  return (
+    <>
+      <h1 ref={measuredRef}>Hello, world</h1>
+      <h2>The above header is {Math.round(height)}px tall</h2>
+    </>
+  )
+}
+```
+
+## Ref Callback or useEffect?
+
+Thanks to cleanup functions, ref callbacks might look like the new `useEffect`, so the real question is: When should we use which solution? My rules of thumb are:
+
+- If we need access to the `node`, I prefer ref callbacks - especially if I can extract the function out of the react component. Those are still less code than `useRef` + `useEffect`, and, as pointed out in my first article, they convey intent better because they are tied to rendering of the child, not the parent.
+
+- If I have a (real) side-effect that doesn't need the node (like writing to `document.title`), I wouldn't do that in a ref. This just causes confusion and seems like an unnecessary step just to "avoid" effects at all costs.
+
+- For async operations, choose neither - use [Tanstack React Query](https://tanstack.com/query/latest).
+
+---
+
+That's it for today. Feel free to reach out to me on [bluesky](https://bsky.app/profile/tkdodo.eu)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />
