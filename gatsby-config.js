@@ -143,13 +143,7 @@ module.exports = {
         background_color: `#fff`,
         theme_color: `#a10f15`,
         display: `standalone`,
-        icons: [
-          {
-            src: `/stack.png`,
-            sizes: `256x256`,
-            type: `image/png`,
-          },
-        ],
+        icon: 'static/stack.png',
       },
     },
     `gatsby-plugin-offline`,
