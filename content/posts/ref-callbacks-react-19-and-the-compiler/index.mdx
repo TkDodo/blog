@@ -105,9 +105,9 @@ function MeasureExample() {
 
 I think this example is still perfectly fine, because we can remove `useCallback` and our code will still work just the same. If you're wondering why that is, here's what's happening:
 
-- On the first render, React will execute the `measureRef` function after it rendered the `h1`.
+- On the first render, React will execute the `measuredRef` function after it rendered the `h1`.
 - Then, it will call `setHeight` with a new value (e.g. 56), triggering another re-render.
-- That render will then again call `measureRef` (because it will be invoked on every render if we pass an inline function).
+- That render will then again call `measuredRef` (because it will be invoked on every render if we pass an inline function).
 - This time however, `setHeight` will get the same value (56) passed, so it will bail out of re-rendering, stopping the chain.
 
 So the neat little `useState` optimization to skip re-renders when it sees an identical value works to our advantage here, but it also means this falls apart if we try to store newly created objects in state every time:
