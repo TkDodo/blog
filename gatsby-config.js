@@ -14,7 +14,7 @@ module.exports = {
     siteHeadline: `TkDodo's blog`,
     siteUrl: `https://tkdodo.eu/blog`,
     siteDescription: `A technical blog about frontend-development, TypeScript and React`,
-    siteImage: `/stack.png`,
+    siteImage: `/blog-banner.png`,
     siteLanguage: `en`,
   },
   plugins: [
