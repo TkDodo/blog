@@ -348,23 +348,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://github.com/adam-beck"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Adam Beck</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/6046654?s=300"
-            height="300"
-            alt="Adam Beck"
-          />
-        </Link>
-        <div>
-          <Text>🎗 Supporter</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://github.com/hobbescodes"
           target="_blank"
           rel="noopener noreferrer"
