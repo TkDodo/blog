@@ -32,6 +32,28 @@ const PremiumSponsors = () => (
     </div>
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <img
+        src="https://avatars.githubusercontent.com/u/53535748?s=64"
+        alt="Workleap"
+        style={{
+          marginRight: '0.875rem',
+          width: '4rem',
+          height: '4rem',
+          borderRadius: '50%',
+        }}
+      />
+      <Link
+        href="https://www.workleap.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        sx={{
+          fontSize: [2, 2, 3],
+        }}
+      >
+        💎 Workleap
+      </Link>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img
         src="https://avatars.githubusercontent.com/u/109633172?s=64"
         alt="wevm"
         style={{
@@ -251,6 +273,28 @@ const PremiumSponsors = () => (
         }}
       >
         🥳 Devhuset
+      </Link>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img
+        src="https://avatars.githubusercontent.com/u/64249481?s=64"
+        alt="Ndeye Fatou Diop"
+        style={{
+          marginRight: '0.875rem',
+          width: '4rem',
+          height: '4rem',
+          borderRadius: '50%',
+        }}
+      />
+      <Link
+        href="https://github.com/nfdiop"
+        target="_blank"
+        rel="noopener noreferrer"
+        sx={{
+          fontSize: [2, 2, 3],
+        }}
+      >
+        🥳 Ndeye Fatou Diop
       </Link>
     </div>
   </Grid>

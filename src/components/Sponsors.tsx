@@ -36,6 +36,23 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
+          href="https://www.workleap.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Workleap</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/53535748?s=300"
+            height="300"
+            alt="Workleap"
+          />
+        </Link>
+        <div>
+          <Text>💎 Diamond</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
           href="https://wevm.dev/"
           target="_blank"
           rel="noopener noreferrer"
@@ -160,20 +177,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://vianneycarel.me/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Vianney Carel</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/1541093?s=300"
-            height="300"
-            alt="Vianney Carel"
-          />
-        </Link>
-      </Card>
-      <Card>
-        <Link
           href="https://awesomealgo.com/"
           target="_blank"
           rel="noopener noreferrer"
@@ -217,6 +220,23 @@ const Sponsors = () => (
             src="https://avatars.githubusercontent.com/u/105810695?s=300"
             height="300"
             alt="Devhuset"
+          />
+        </Link>
+        <div>
+          <Text>🥳 Sponsor</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://github.com/nfdiop"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Ndeye Fatou Diop</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/64249481?s=300"
+            height="300"
+            alt="Ndeye Fatou Diop"
           />
         </Link>
         <div>
