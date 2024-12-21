@@ -77,7 +77,7 @@ const fetchTodo = async (id: number) => {
 
 const query = useQuery<Todo>({
   queryKey: ['todos', id],
-  queryFn: fetchTodo,
+  queryFn: () => fetchTodo(id),
 })
 
 query.data
