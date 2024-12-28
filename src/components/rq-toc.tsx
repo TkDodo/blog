@@ -103,6 +103,10 @@ const mapping = [
     id: 'react-query-api-design-lessons-learned',
     title: '#27: React Query API Design - Lessons Learned',
   },
+  {
+    id: 'react-query-the-bad-parts',
+    title: '#28: React Query - The Bad Parts',
+  },
 ]
 
 export const RqToc = ({ id }: Props) => {
