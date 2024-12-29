@@ -301,6 +301,14 @@ export const SelfieInception = () => (
   />
 )
 
+export const QueryGGImage = () => (
+  <StaticImage
+    placeholder="blurred"
+    src="../../static/images/eC_qCxd4.jpeg"
+    alt="Query.gg - The Official React Query Course"
+  />
+)
+
 export const CynicsVsBuilders = () => (
   <StaticImage
     placeholder="blurred"
