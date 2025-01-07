@@ -11,7 +11,6 @@ tags:
 import Comments from 'components/Comments'
 import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
-import Emph from 'components/Emph'
 import Aside from 'components/Aside'
 import { QueryGG } from 'components/QueryGG'
 import Attribution from 'components/Attribution'
@@ -53,6 +52,10 @@ import Attribution from 'components/Attribution'
     {
       language: 'Русский',
       url: 'https://garbalau-blog.vercel.app/blog/react-query-overview',
+    },
+    {
+      language: 'Polski',
+      url: 'https://medium.com/@grzegorz.chyla/react-query-w-praktyce-f1da6e334065',
     },
   ]}
 </Translations>
@@ -132,7 +135,7 @@ but also got involved in the React Query community, answering questions on Disco
 ### The Defaults explained
 
 I believe the React Query [Defaults](https://tanstack.com/query/latest/docs/react/guides/important-defaults)
-are very well chosen, but they can catch you off guard from time to time, especially at the beginning.
+are very well-chosen, but they can catch you off guard from time to time, especially at the beginning.
 
 First of all: React Query does _not_ invoke the `queryFn` on every re-render, even with the default `staleTime` of zero.
 Your app can re-render for various reasons at any time, so fetching every time would be insane!
@@ -154,7 +157,7 @@ especially because focusing between the Browser DevTools and your app will also 
 
 <Aside title="Update" icon="bell">
 
-Since React Query v5, `refechOnWindowFocus` no
+Since React Query v5, `refetchOnWindowFocus` no
 longer listens to the `focus` event - the `visibilitychange` event
 is used exclusively. This means you'll get fewer unwanted re-fetches
 in development mode, while still retaining the trigger for most
@@ -358,7 +361,7 @@ You have already seen an example of that in the [todos queries above](#treat-the
 
 ---
 
-I hope that these practical tips will help you getting started with React
+I hope that these practical tips will help you to get started with React
 Query, so go check it out :) If you have any further questions, please let
 me know in the comments below. ⬇️
 
