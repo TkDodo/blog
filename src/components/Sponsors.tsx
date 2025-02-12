@@ -380,6 +380,23 @@ const Sponsors = () => (
           <Text>🎗 Supporter</Text>
         </div>
       </Card>
+      <Card>
+        <Link
+          href="https://www.venue.ink/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Venue Ink</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/67328248?s=300"
+            height="300"
+            alt="Venue Ink"
+          />
+        </Link>
+        <div>
+          <Text>🎗 Supporter</Text>
+        </div>
+      </Card>
     </Grid>
   </Box>
 )
