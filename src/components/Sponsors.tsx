@@ -331,23 +331,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://github.com/fl-y"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>fl-y</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/31615341?s=300"
-            height="300"
-            alt="fl-y"
-          />
-        </Link>
-        <div>
-          <Text>🎗 Supporter</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://github.com/hobbescodes"
           target="_blank"
           rel="noopener noreferrer"
