@@ -194,7 +194,7 @@ I personally think that most of the time, invalidation should be preferred. Of c
 
 ## Optimistic updates
 
-Optimistic updates are one of the key selling points for using React Query mutations. The _useQuery_ cache gives us data instantly when switching between queries, especially when combined with [prefetching](https://react-query.tanstack.com/guides/prefetching). Our whole UI feels very snappy because of it, so why not get the same advantage for mutations as well?
+Optimistic updates are one of the key selling points for using React Query mutations. The `useQuery` cache gives us data instantly when switching between queries, especially when combined with [prefetching](https://react-query.tanstack.com/guides/prefetching). Our whole UI feels very snappy because of it, so why not get the same advantage for mutations as well?
 
 A lot of the time, we are quite certain that an update will go through. Why should the user wait for a couple of seconds until we get the okay from the backend to show the result in the UI? The idea of optimistic updates is to fake the success of a mutation even before we have sent it to the server. Once we get a successful response back, all we have to do is invalidate our view again to see the real data. In case the request fails, we're going to roll back our UI to the state from before the mutation.
 

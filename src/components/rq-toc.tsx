@@ -107,6 +107,10 @@ const mapping = [
     id: 'react-query-the-bad-parts',
     title: '#28: React Query - The Bad Parts',
   },
+  {
+    id: 'concurrent-optimistic-updates-in-react-query',
+    title: '#29: Concurrent Optimistic Updates in React Query',
+  },
 ]
 
 export const RqToc = ({ id }: Props) => {
