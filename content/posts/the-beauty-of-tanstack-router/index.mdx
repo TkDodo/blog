@@ -201,7 +201,7 @@ Anyways, TanStack Router supports both code-based and file-based routing, becaus
 
 ## Integrated Suspense Support
 
-My personal [relationship with React Suspense](https://tkdodo.eu/blog/react-19-and-suspense-a-drama-in-3-acts) feels more like a situationship, but I love that React Router has built-in support for it. Per default, every route is wrapped in a `<Suspense>` boundary and an `<ErrorBoundary>`, so I can just `useSuspenseQuery` inside my route components and have data guaranteed to be available:
+My personal [relationship with React Suspense](https://tkdodo.eu/blog/react-19-and-suspense-a-drama-in-3-acts) feels more like a situationship, but I love that TanStack Router has built-in support for it. Per default, every route is wrapped in a `<Suspense>` boundary and an `<ErrorBoundary>`, so I can just `useSuspenseQuery` inside my route components and have data guaranteed to be available:
 
 ```tsx:title="useSuspenseQuery" {10-11}
 export const Route = createFileRoute('/issues/$issueId')({
