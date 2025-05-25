@@ -151,7 +151,7 @@ That's it! Now calling `useSearch({ from: '/issues' })` will be fully validated 
 
 ### Fine-grained Subscriptions
 
-Speaking of unnecessary re-renders, I don't think we talk enough about how one update to the url will usually re-render all subscribers. Now that's usually not a problem if you navigate between two pages, but if you have multiple nested routes that each want to write to the url, re-rending the whole page can be extremely wasteful and worsen the user experience.
+Speaking of unnecessary re-renders, I don't think we talk enough about how one update to the url will usually re-render all subscribers. Now that's usually not a problem if you navigate between two pages, but if you have multiple nested routes that each want to write to the url, re-rendering the whole page can be extremely wasteful and worsen the user experience.
 
 In one case, we had a table on a route with many filters that were all stored in the url. Upon clicking a row, the user was taken to a sub-route, which was opened as a dialog.
 
