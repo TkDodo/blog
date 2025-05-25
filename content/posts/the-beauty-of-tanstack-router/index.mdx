@@ -34,7 +34,7 @@ import { Alert } from '@theme-ui/components'
 
 ---
 
-Choosing a Router is probably one of the most important architectural decisions we have to make. The router is not just a utility - it's the backbone of every application. It makes sure our users have a great experience when navigating between pages, and ideally, it also provides awesome DX to keep us sane while we have to add more and more routes.
+Choosing a Router is probably one of the most important architectural decisions we have to make. The router isn't just another dependency in `node_modules` - it's what holds your whole application together. It makes sure our users have a great experience when navigating between pages, and ideally, it also provides awesome DX to keep us sane while we have to add more and more routes.
 
 Last year, I was tasked with merging two applications that were using different routing techniques. We carefully evaluated our options. We really liked aspects of one router and loved some parts that the other one did. But none of them felt like we could "have it all".
 
@@ -54,11 +54,11 @@ As I said, routing is one of the most fundamental building blocks of your web ap
 
 - Here's a `useParams` hook, we'll give you `Record<string, string | undefined>`, go figure out the rest.
 
-- Here's a `<Link>` component that will prevent a full page reload and do a client-side transition instead. Great, but please build the url yourself - we accept any `string`: `<Link to={｀/issues/${issueId}｀}>`. If the url is valid, we don't know. That's _your_ responsibility.
+- Here's a `<Link>` component that will prevent a full page reload and do a client-side transition instead. Great, but please build the url yourself - we accept any `string`: `<Link to={｀/issues/${issueId}｀}>`. We don't know if the url is valid. That's _your_ responsibility.
 
-Feels like leftovers from a time where TypeScript didn't exist, things were implement with plain JS and we had types plucked on top that are only slightly better than `any`. I think that's literally what happened in a lot of existing routers, and to be fair, they have the disadvantage that they existed _before_ TypeScript.
+Feels like leftovers from a time where TypeScript didn't exist, things were implement with plain JS and we had types plucked on top that are only slightly better than `any`. I think that's literally what happened in a lot of existing routers, and to be fair, they have the disadvantage of being around _before_ TypeScript.
 
-TanStack Router lives and breathes TypeScript - it's meant for it. It can't exist without it. All features were engineered with fully inferred type-safety in mind. That means no manual type assertions, no angle brackets `<>` to pass type parameters and type errors with informative messages when you do something that's invalid.
+TanStack Router lives and breathes TypeScript - it's meant for it, they are a perfect match. Sure, you could use it without types, but why would you when the TypeScript support is this good? All features were engineered with fully inferred type-safety in mind. That means no manual type assertions, no angle brackets `<>` to pass type parameters and type errors with informative messages when you do something that's invalid.
 
 ### StrictOrFrom
 
@@ -111,7 +111,7 @@ Here, you'll get the obvious type errors if you don't pass `issueId`, if you pas
 
 ## Search Param State Management
 
-Use the platform is a great principle, and nothing is more platform than the address bar in your browser. It's something the user can see. It's something they can copy-paste and share with others. It has automatic undo/redo built-in with the back and forward navigations.
+Use the platform is a great principle, and nothing is more platform than the address bar in your browser. It's something the user can see. It's something they can copy-paste and share with others. It has automatic undo/redo built-in with back and forward navigations.
 
 But, again, [URLSearchParams](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams) are a mess when it comes to types. Yes, we can't know what's in there because users can directly manipulate it. The consensus is that user input can't be trusted and needs to be validated.
 
@@ -195,7 +195,7 @@ This will likely become a huge, nested tree of Routes, which is fine, but there'
 
 That brings us to <Emph>Code-Based Routing</Emph>, which is the natural next evolution: If we want to have all our route definitions co-located anyway, why not move them out of the react component? That way, we can get extra type information about which routes exist upfront. That's what [createBrowserRoute](https://reactrouter.com/start/data/custom#1-create-a-router) in React Router does, and that's also how [createRouter](https://tanstack.com/router/latest/docs/framework/react/api/router/createRouterFunction) works in TanStack Router.
 
-&#8203;<Emph>File-Based Routing</Emph> just takes the route config you would usually write yourself and moves them into a file system tree. I know it's controversial, but I kinda like that. I've found it to be the fastest way to get started, as well as the fastest way to map a url you see in your bug report to the code that gets rendered on your screen. It's also the best way to get [automatic code splitting](https://tanstack.com/router/latest/docs/framework/react/guide/code-splitting#using-automatic-code-splitting) for your routes. If you don't like deep directory trees, you can use [flat routes](https://tanstack.com/router/latest/docs/framework/react/routing/file-based-routing#flat-routes), too.
+&#8203;<Emph>File-Based Routing</Emph> just takes the route config you would usually write yourself and moves them into a file system tree. I know it's controversial, but I kinda like that. I've found it to be the fastest way to get started, as well as the fastest way to map a url you see in your bug report to the code that gets rendered on your screen. It's also the best way to get [automatic code splitting](https://tanstack.com/router/latest/docs/framework/react/guide/code-splitting#using-automatic-code-splitting) for your routes. If you don't like deep directory trees, you can use [flat routes](https://tanstack.com/router/latest/docs/framework/react/routing/file-based-routing#flat-routes) too, or even create [Virtual File Routes](https://tanstack.com/router/latest/docs/framework/react/routing/virtual-file-routes) if you want to customize the location of your route files.
 
 Anyways, TanStack Router supports both code-based and file-based routing, because in the end, it's all code-based. 🤓
 
