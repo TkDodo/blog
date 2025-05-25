@@ -157,9 +157,9 @@ This is literally the prime use case of "global state managers" like [redux](htt
 You can try to fight [The Uphill Battle of Memoization](the-uphill-battle-of-memoization) on your own, or you can use TanStack Router, which provides you with `selectors`:
 
 ```ts:title=fine-grained-selectors {3}
-const page = useParams({
+const page = useSearch({
   from: '/issues',
-  select: (params) => params.page,
+  select: (search) => search.page,
 })
 ```
 
