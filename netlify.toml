@@ -17,3 +17,9 @@
   from = "/api/event"
   to = "https://plausible.io/api/event"
   status = 202
+
+[[redirects]]
+  from = "/query"
+  to = "https://github.com/TkDodo/react-query-beyond-the-basics"
+  status = 301
+  force = true
