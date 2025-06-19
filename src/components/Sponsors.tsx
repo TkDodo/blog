@@ -228,23 +228,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://github.com/nfdiop"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Ndeye Fatou Diop</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/64249481?s=300"
-            height="300"
-            alt="Ndeye Fatou Diop"
-          />
-        </Link>
-        <div>
-          <Text>🥳 Sponsor</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://github.com/msutkowski"
           target="_blank"
           rel="noopener noreferrer"
