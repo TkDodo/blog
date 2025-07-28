@@ -1,0 +1,81 @@
+---
+title: TanStack Router and Query
+description:
+
+date: 2025-07-13
+banner: ./beauty.jpg
+tags:
+  - ReactJs
+  - TanStack Router
+  - TypeScript
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import { TsrToc } from 'components/tsr-toc'
+import Emph from 'components/Emph'
+import Aside from 'components/Aside'
+import { QueryGG } from 'components/QueryGG'
+import Highlight from 'components/Highlight'
+import { Alert } from '@theme-ui/components'
+
+<img
+  src="./beauty.jpg"
+  alt="Water droplets on white-petaled flower, TanStack router logo in the middle"
+/>
+
+<Attribution
+  name="Vivek Doshi"
+  url="https://unsplash.com/@wildandbeyondbyvivek"
+/>
+
+<TsrToc />
+
+<Translations>{[]}</Translations>
+
+---
+
+It shouldn't come as a surprise that TanStack Router integrates well with TanStack Query, after all, they're from the same "stack".
+
+But wait a second - doesn't TanStack Router already come with support for caching?
+
+```tsx
+export const Route = createFileRoute('/issues/$id')({
+  component: Issue,
+  staleTime: 10_000,
+  loader: ({ params }) => fetchIssue(params.id),
+})
+
+function Issue() {
+  const issue = Route.useLoaderData()
+  return <h1>{issue.title}</h1>
+}
+```
+
+We can now access our `issue` thanks to `Route.useLoaderData`, and if users navigate away and come back to our route within the supplied `staleTime` (10 seconds), they will see cached data.
+
+This is great, and works very well as long as we're talking about <Emph>Route Specific Data</Emph>. If our `/issues/$id` route, or a child like `/issues/$id/comments` is the only one that needs issue detail data, the router cache is perfect.
+
+But a lot of the time, we'll
+
+## Setup
+
+Please read [the docs]() about the setup - or ask AI to do it. We have to tweak some default settings, as the router comes with its own per-route caching mechanism. We also have to provide the `queryClient` to the router context so that we can access it in the router methods like the `loader`. This is boring stuff you can copy-paste so I don't want to focus too much on it.
+
+Once we have that, there are still a few things we need to keep in mind:
+
+### Always use a Query
+
+While the router does give you a way to access data with `useLoaderData`, it's not recommended when combining it with Query. The reason is that Query keeps track of which queries are actively used, and for that, it needs Query Observers. Those observers are created with `useQuery` (or `useSuspenseQuery`). Without those hook calls, queries are seen as "inactive", which has a bunch of implications:
+
+- You don't get automatic refetches on triggers like window focus or when you re-gain network connection, because that relies on the query being actively used.
+- Query Invalidation won't re-fetch a Query because that too relies on the query being actively used (unless you change the `refetchType`).
+- Queries that aren't actively used are eligible for garbage collection, so you might see your Query being removed from the cache even though you are "using" it.
+
+---
+
+That's it for today. Feel free to reach out to me on [bluesky](https://bsky.app/profile/tkdodo.eu)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />
