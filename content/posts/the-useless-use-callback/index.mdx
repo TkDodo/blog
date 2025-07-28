@@ -1,6 +1,6 @@
 ---
 title: The Useless useCallback
-description: Please stop writing useCallback in situations where they are totally useless!
+description: Why most memoization is downright useless...
 date: 2025-07-28
 banner: ./useless.jpg
 tags:
@@ -158,9 +158,9 @@ Other ways to fix this include a "we memoize everything all the time" policy, or
 
 ### A Real Life Example
 
-Since I'm working on the [sentry codebase](https://github.com/getsentry/sentry) now, which is open source 🎉, I have a lot of real life usages to link towards. One situation that I found is our [useHotKeys](https://github.com/getsentry/sentry/blob/94f19a20bd5680ddc86b3e139853c3d505182b43/static/app/utils/useHotkeys.tsx) custom hook. The important bits look something like this:
+Since I'm working on the [sentry codebase](https://github.com/getsentry/sentry) now, which is open source 🎉, I have a lot of real life usages to link towards. One situation that I found is our [useHotkeys](https://github.com/getsentry/sentry/blob/94f19a20bd5680ddc86b3e139853c3d505182b43/static/app/utils/useHotkeys.tsx) custom hook. The important bits look something like this:
 
-```tsx:title=useHotKeys
+```tsx:title=useHotkeys
 export function useHotkeys(hotkeys: Hotkey[]): {
   const onKeyDown = useCallback(() => ..., [hotkeys])
 
@@ -176,9 +176,7 @@ export function useHotkeys(hotkeys: Hotkey[]): {
 
 This custom hook takes an Array of `hotkeys` as input, and then creates a memoized `onKeyDown` function, which is passed to an effect. The function is clearly memoized to prevent the effect from firing too often, but the `hotkeys` being an Array means consumers must memoize them manually.
 
-I set out to find all usages of `useHotKeys`, and was positively surprised to see that [all but one](https://github.com/getsentry/sentry/blob/a80e48ce659dea903e4d9594420cde019b33b757/static/app/views/issueDetails/streamline/hooks/useCopyIssueDetails.tsx#L161-L172) of them memoize the input. However, that's not the whole story, because if we look deeper, things still tend to fall apart.
-
-Let's take, for example, [this usage](https://github.com/getsentry/sentry/blob/97130081986520a2035882249b5670189d859dda/static/app/components/events/eventTagsAndScreenshot/screenshot/modal.tsx#L86):
+I set out to find all usages of `useHotkeys`, and was positively surprised to see that [all but one](https://github.com/getsentry/sentry/blob/a80e48ce659dea903e4d9594420cde019b33b757/static/app/views/issueDetails/streamline/hooks/useCopyIssueDetails.tsx#L161-L172) of them memoize the input. However, that's not the whole story, because if we look deeper, things still tend to fall apart. Let's take, for example, [this usage](https://github.com/getsentry/sentry/blob/97130081986520a2035882249b5670189d859dda/static/app/components/events/eventTagsAndScreenshot/screenshot/modal.tsx#L86):
 
 ```tsx:title=paginateHotKeys
 const paginateHotkeys = useMemo(() => {
@@ -235,7 +233,7 @@ export function useHotkeys(hotkeys: Hotkey[]): {
 
 Then, we can use the `hotkeysRef` inside our effect without having to add it to the dependency array and without having to worry about [stale closures](hooks-dependencies-and-stale-closures) that we could run into if we just ignored the linter.
 
-Note: We also use this pattern in React Query for keeping track of the latest options being passed in, e.g. in the [PersistQueryClientProvider](https://github.com/TanStack/query/blob/dfbda9de66230e67b7e1c2f07e24eb5859ea14cb/packages/react-query-persist-client/src/PersistQueryClientProvider.tsx#L29-L31) or in [useMutationState](https://github.com/TanStack/query/blob/34eedd601c7b19ac6a9fb8ab9c1ec0b600c2b95f/packages/react-query/src/useMutationState.ts#L53-L55).
+React Query also uses this pattern for keeping track of the latest options being passed in, e.g. in the [PersistQueryClientProvider](https://github.com/TanStack/query/blob/dfbda9de66230e67b7e1c2f07e24eb5859ea14cb/packages/react-query-persist-client/src/PersistQueryClientProvider.tsx#L29-L31) or in [useMutationState](https://github.com/TanStack/query/blob/34eedd601c7b19ac6a9fb8ab9c1ec0b600c2b95f/packages/react-query/src/useMutationState.ts#L53-L55), so I'd say it's a tried an true pattern. Imagine if the library would need consumers to memoize their `options` manually...
 
 ### UseEffectEvent
 
