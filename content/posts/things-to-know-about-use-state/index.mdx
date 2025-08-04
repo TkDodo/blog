@@ -73,7 +73,7 @@ function App() {
 render(<App />)
 ```
 
-Each click will only increment the count once, because both calls to _setCount_ closure over the same value (_count_). It's important to know that _setCount_ will _not_ immediately set the count. The useState updater only schedules an update. It basically tells React:
+Each click will only increment the count once, because both calls to _setCount_ close over the same value (_count_). It's important to know that _setCount_ will _not_ immediately set the count. The useState updater only schedules an update. It basically tells React:
 
 > Please set this value to the new value, somewhen.
 
@@ -120,13 +120,13 @@ I can second that conclusion and encourage you to read that article thoroughly.
 
 ### Bonus: Avoiding dependencies
 
-The functional updater form can also help you to avoid dependencies for _useEffect_, _useMemo_ or _useCallback_. Suppose you want to pass an increment function to a memoized child component. We can make sure the function doesn't change too often with _useCallback_, but if we closure over _count_, we will still create a new reference whenever count changes. The functional updater avoids this problem altogether:
+The functional updater form can also help you to avoid dependencies for _useEffect_, _useMemo_ or _useCallback_. Suppose you want to pass an increment function to a memoized child component. We can make sure the function doesn't change too often with _useCallback_, but if we close over _count_, we will still create a new reference whenever count changes. The functional updater avoids this problem altogether:
 
 ```js:title=avoiding-dependencies
 function Counter({ incrementBy = 1 }) {
   const [count, setCount] = React.useState(0)
 
-  // 🚨 will create a new function whenever count changes because we closure over it
+  // 🚨 will create a new function whenever count changes because we close over it
   const increment = React.useCallback(() => setCount(count + incrementBy), [
     incrementBy,
     count,

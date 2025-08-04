@@ -255,7 +255,7 @@ This works the same, but is not as extensible as the previous example. So genera
 
 #### passing props to reducers
 
-Another great trait of reducers is that you can inline them, or closure over props. This comes in very handy if you need access to props or server state (e.g. coming from a [useQuery](https://react-query.tanstack.com/) hook) _inside_ your reducer. Instead of "copying" these things into the reducer by using the state initializer, you can pass it to a function:
+Another great trait of reducers is that you can inline them, or close over props. This comes in very handy if you need access to props or server state (e.g. coming from a [useQuery](https://react-query.tanstack.com/) hook) _inside_ your reducer. Instead of "copying" these things into the reducer by using the state initializer, you can pass it to a function:
 
 ```js:title=reducer-with-props
 const reducer = (data) => (state, action) => {

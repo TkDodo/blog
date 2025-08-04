@@ -111,6 +111,10 @@ const mapping = [
     id: 'concurrent-optimistic-updates-in-react-query',
     title: '#29: Concurrent Optimistic Updates in React Query',
   },
+  {
+    id: 'react-query-selectors-supercharged',
+    title: '#30: React Query Selectors, Supercharged',
+  },
 ]
 
 export const RqToc = ({ id }: Props) => {

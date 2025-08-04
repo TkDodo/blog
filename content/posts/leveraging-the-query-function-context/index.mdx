@@ -54,7 +54,7 @@ That's why I've decided to write this addendum to my [Effective React Query Keys
   given to you, and use a Query Key factory that produces object keys
 </Highlight>
 
-Inline functions are by far the easiest way to pass parameters to your `queryFn`, because they let you closure over other variables available in your custom hook. Let's look at the evergreen todo example:
+Inline functions are by far the easiest way to pass parameters to your `queryFn`, because they let you close over other variables available in your custom hook. Let's look at the evergreen todo example:
 
 ```ts:title=inline-query-fn
 type State = 'all' | 'open' | 'done'
@@ -147,7 +147,7 @@ useInfiniteQuery({
 
 React Query uses that object to inject information about the _query_ to the `queryFn`. In case of _infinite queries_, you'll get the return value of `getNextPageParam` injected as `pageParam`.
 
-However, the context also contains the `queryKey` that is used for this query (and we're about to add more cool things to the context), which means you actually don't have to closure over things, as they will be provided for you by React Query:
+However, the context also contains the `queryKey` that is used for this query (and we're about to add more cool things to the context), which means you actually don't have to close over things, as they will be provided for you by React Query:
 
 ```js:title=query-function-context {1,3,12-15}
 const fetchTodos = async ({ queryKey }) => {
