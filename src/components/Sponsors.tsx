@@ -263,23 +263,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://twitter.com/ianvanschooten"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Ian VanSchooten</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/4616705?s=300"
-            height="300"
-            alt="Ian VanSchooten"
-          />
-        </Link>
-        <div>
-          <Text>🎗 Supporter</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://github.com/zilahir"
           target="_blank"
           rel="noopener noreferrer"
