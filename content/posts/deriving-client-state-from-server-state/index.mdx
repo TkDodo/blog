@@ -86,7 +86,7 @@ But can't we change that thinking to be a bit more declarative:
 
 > Here is the `users` from the backend and the current selection, please give me the real state.
 
-```ts:title=derived-selection
+```ts:title=derived-selection {8-10}
 const useSelectedUser = () => {
   const { data: users } = useQuery({
     queryKey: ['users'],
@@ -110,7 +110,7 @@ And since we don't touch the store, we also get some additional benefits with th
 
 - Maybe our UX changes and we don't want to remove the selection, but we just want to visually indicate that the selection is invalid instead. That's easily doable now because we always retain the original value:
 
-```ts:title=isSelectionValid
+```ts:title=isSelectionValid {7}
 const useSelectedUser = () => {
   const { data: users } = useQuery({
     queryKey: ['users'],
@@ -135,7 +135,7 @@ And since the reddit question also mentions that redux toolkit "solves this" - I
 
 The concept of not updating <Emph>Client State</Emph> when <Emph>Server State</Emph> changes can be useful in many cases. A common example is when prefilling forms with default values from the server:
 
-```tsx:title=default-value-effect
+```tsx:title=default-value-effect {9-13}
 function UserSelection() {
   const { data: users } = useQuery({
     queryKey: ['users'],
@@ -156,7 +156,7 @@ function UserSelection() {
 
 This effect is not only verbose, it also has a bug 🐛 where it overwrites the current selection when new data comes in from the Query. This is easily fixable by adding another check, but the better solution would still be deriving state:
 
-```tsx:title=derived-default-value
+```tsx:title=derived-default-value {8}
 function UserSelection() {
   const { data: users } = useQuery({
     queryKey: ['users'],
