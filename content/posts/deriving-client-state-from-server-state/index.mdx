@@ -1,0 +1,180 @@
+---
+title: Deriving Client State from Server State
+description: How to use derived state in React to keep client state and server data aligned without manual sync or effects.
+date: 2025-09-01
+banner: ./deriving.jpg
+tags:
+  - ReactJs
+  - React Query
+  - TypeScript
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import Emph from 'components/Emph'
+import Aside from 'components/Aside'
+
+<img
+  src="./deriving.jpg"
+  alt="red and blue lights from tower steel wool photography"
+/>
+
+<Attribution
+  name="Hunter Harritt"
+  url="https://unsplash.com/@hharritt"
+/>
+
+<Translations>{[]}</Translations>
+
+Just as I came back from vacation, I saw [this reddit question](https://www.reddit.com/r/reactjs/comments/1n4fz2m/is_this_the_biggest_tradeoff_for_zustand_am_i/) about the biggest trade-off when it comes to using `zustand`. The code looked something like this (I altered it slightly for updated syntax and packed it into a custom hook):
+
+```ts:title=manual-sync
+const useSelectedUser = () => {
+  const { data: users } = useQuery({
+    queryKey: ['users'],
+    queryFn: fetchUsers,
+  })
+  const { selectedUserId, setSelectedUserId } = useUserStore()
+
+  // If the selected user gets deleted from the server,
+  // Zustand won't automatically clear selectedUserId
+  // You have to manually handle this:
+  useEffect(() => {
+    if (!users?.some((u) => u.id === selectedUserId)) {
+      setSelectedUserId(null) // Manual sync required
+    }
+  }, [users, selectedUserId])
+
+  return [selectedUserId, selectedUserId]
+}
+```
+
+Of course, whenever I see a `useEffect`, especially one that calls `setSate` inside it, I want to find a better solution. In my experience, there is almost always one, and it's usually worth pursuing it. So let's take a step back and try to find out what we want to achieve first.
+
+## Keeping State in Sync
+
+In a nutshell, we want to keep our <Emph>Client State</Emph> - the `selectedUserId`, in sync with our <Emph>Server State</Emph> - the list of `users`. This makes sense: If a background refetch comes in from `useQuery`, and the user was deleted from our list while we still have it stored in state, that selection becomes invalid.
+
+<Aside title="Client State">
+
+Note that this approach is not specific to `zustand` at all. We could just as easily replace `useUserStore()` with a local state:
+
+`const [selectedUserId, setSelectedUserId] = useState()`
+
+or with URL state like [nuqs](https://nuqs.47ng.com/):
+
+`const [selectedUserId, setSelectedUserId] = useQueryState('userId')`
+
+It doesn't matter where that state is stored - what matters is that it's <Emph>Client State</Emph> that we want to "update" when <Emph>Server State</Emph> changes.
+
+</Aside>
+
+Since Queries [don't have an onSuccess callback](breaking-react-querys-api-on-purpose), and the [trick to call setState during render](https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes) only works with React's built-in state, it seems that the only other available option is the dreaded `useEffect`
+
+After all - how else should we update the user selection?
+
+## Don't Sync State - Derive It
+
+Remember [this article](https://kentcdodds.com/blog/dont-sync-state-derive-it) by [Kent C. Dodds](https://twitter.com/kentcdodds) where he takes a complex set of four different `useStates` and reduces them to just one by deriving the rest from the single source of truth ?
+
+It turns out we can do something similar in our situation. The `useEffect` solution is a pretty imperative way of thinking:
+
+> IF the `users` change AND our selection is invalid, THEN re-set the selection to `null`.
+
+But can't we change that thinking to be a bit more declarative:
+
+> Here is the `users` from the backend and the current selection, please give me the real state.
+
+```ts:title=derived-selection {8-10}
+const useSelectedUser = () => {
+  const { data: users } = useQuery({
+    queryKey: ['users'],
+    queryFn: fetchUsers,
+  })
+  const { selectedUserId, setSelectedUserId } = useUserStore()
+
+  const selectedId = users?.some((u) => u.id === selectedUserId)
+    ? selectedUserId
+    : null
+
+  return [selectedId, setSelectedUserId]
+}
+```
+
+This code is dead simple. Instead of updating the store value, we keep the selection as it is, but just return something different from our custom hook if the id cannot be found in the <Emph>Server State</Emph> anymore. In places where we call `useSelectedUser()`, we'll get back `null` just like before.
+
+And since we don't touch the store, we also get some additional benefits with this:
+
+- If the user gets re-added to the list of users, our selection will automatically be restored too.
+
+- Maybe our UX changes and we don't want to remove the selection, but we just want to visually indicate that the selection is invalid instead. That's easily doable now because we always retain the original value:
+
+```ts:title=isSelectionValid {7}
+const useSelectedUser = () => {
+  const { data: users } = useQuery({
+    queryKey: ['users'],
+    queryFn: fetchUsers,
+  })
+  const { selectedUserId, setSelectedUserId } = useUserStore()
+  const isSelectionValid = users?.some((u) => u.id === selectedUserId)
+
+  return [selectedUserId, setSelectedUserId, isSelectionValid]
+}
+```
+
+## Where's the catch?
+
+One obvious drawback to the deriving state solution is that you can't "trust" what is stored inside the user store anymore. If you read the `selectedUserId` from `useUserStore` somewhere else, you don't get the additional check, so you always have to read it from your custom hook.
+
+I genuinely don't mind this, since I se the store more as a record of what was actually selected in the UI, rather than a source of the final, validated values.
+
+And since the reddit question also mentions that redux toolkit "solves this" - I don't think it would work any different there. You would likely write a `selector` that reads from the API slice _and_ the slice that contains the user selection and combine the two, which is exactly what our custom hook does, too. If anything, it nudges you towards deriving state a bit more, which is great. 🎉
+
+## A different Example
+
+The concept of not updating <Emph>Client State</Emph> when <Emph>Server State</Emph> changes can be useful in many cases. A common example is when prefilling forms with default values from the server:
+
+```tsx:title=default-value-effect {9-13}
+function UserSelection() {
+  const { data: users } = useQuery({
+    queryKey: ['users'],
+    queryFn: fetchUsers,
+  })
+  const [selection, setSelection] = useState()
+
+  // use the first value as default selection
+  useEffect(() => {
+    if (data?.[0]) {
+      setSelection(data[0])
+    }
+  }, [data])
+
+  // return markup
+}
+```
+
+This effect is not only verbose, it also has a bug 🐛 where it overwrites the current selection when new data comes in from the Query. This is easily fixable by adding another check, but the better solution would still be deriving state:
+
+```tsx:title=derived-default-value {8}
+function UserSelection() {
+  const { data: users } = useQuery({
+    queryKey: ['users'],
+    queryFn: fetchUsers,
+  })
+  const [selection, setSelection] = useState()
+
+  const derivedSelection = selection ?? data?.[0]
+
+  // return markup
+}
+```
+
+All we need to do now is continue to work with `derivedSelection` instead of `selection` and we'll always get the value we want. 🚀
+
+---
+
+That's it for today. Feel free to reach out to me on [bluesky](https://bsky.app/profile/tkdodo.eu)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />
