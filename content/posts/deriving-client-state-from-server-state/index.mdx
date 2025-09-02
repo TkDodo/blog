@@ -127,7 +127,7 @@ const useSelectedUser = () => {
 
 One obvious drawback to the deriving state solution is that you can't "trust" what is stored inside the user store anymore. If you read the `selectedUserId` from `useUserStore` somewhere else, you don't get the additional check, so you always have to read it from your custom hook.
 
-I genuinely don't mind this, since I se the store more as a record of what was actually selected in the UI, rather than a source of the final, validated values.
+I genuinely don't mind this, since I see the store more as a record of what was actually selected in the UI, rather than a source of the final, validated values.
 
 And since the reddit question also mentions that redux toolkit "solves this" - I don't think it would work any different there. You would likely write a `selector` that reads from the API slice _and_ the slice that contains the user selection and combine the two, which is exactly what our custom hook does, too. If anything, it nudges you towards deriving state a bit more, which is great. 🎉
 
