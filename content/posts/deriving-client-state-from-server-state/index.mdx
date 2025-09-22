@@ -145,10 +145,10 @@ function UserSelection() {
 
   // use the first value as default selection
   useEffect(() => {
-    if (data?.[0]) {
-      setSelection(data[0])
+    if (users?.[0]) {
+      setSelection(users[0])
     }
-  }, [data])
+  }, [users])
 
   // return markup
 }
@@ -164,7 +164,7 @@ function UserSelection() {
   })
   const [selection, setSelection] = useState()
 
-  const derivedSelection = selection ?? data?.[0]
+  const derivedSelection = selection ?? users?.[0]
 
   // return markup
 }
