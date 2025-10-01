@@ -194,23 +194,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://devhuset.no/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Devhuset</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/105810695?s=300"
-            height="300"
-            alt="Devhuset"
-          />
-        </Link>
-        <div>
-          <Text>🥳 Sponsor</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://github.com/msutkowski"
           target="_blank"
           rel="noopener noreferrer"

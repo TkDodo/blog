@@ -231,28 +231,6 @@ const PremiumSponsors = () => (
         🥳 Jeremy Brown
       </Link>
     </div>
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <img
-        src="https://avatars.githubusercontent.com/u/105810695?s=64"
-        alt="Devhuset"
-        style={{
-          marginRight: '0.875rem',
-          width: '4rem',
-          height: '4rem',
-          borderRadius: '50%',
-        }}
-      />
-      <Link
-        href="https://devhuset.no/"
-        target="_blank"
-        rel="noopener noreferrer"
-        sx={{
-          fontSize: [2, 2, 3],
-        }}
-      >
-        🥳 Devhuset
-      </Link>
-    </div>
   </Grid>
 )
 
