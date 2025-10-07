@@ -231,6 +231,28 @@ const PremiumSponsors = () => (
         🥳 Jeremy Brown
       </Link>
     </div>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img
+        src="https://avatars.githubusercontent.com/u/120005519?s=64"
+        alt="deliver.media"
+        style={{
+          marginRight: '0.875rem',
+          width: '4rem',
+          height: '4rem',
+          borderRadius: '50%',
+        }}
+      />
+      <Link
+        href="https://deliver.media/"
+        target="_blank"
+        rel="noopener noreferrer"
+        sx={{
+          fontSize: [2, 2, 3],
+        }}
+      >
+        🥳 deliver.media
+      </Link>
+    </div>
   </Grid>
 )
 

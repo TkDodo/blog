@@ -194,6 +194,23 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
+          href="https://deliver.media/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>deliver.media</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/120005519?s=300"
+            height="300"
+            alt="deliver.media"
+          />
+        </Link>
+        <div>
+          <Text>🥳 Sponsor</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
           href="https://github.com/msutkowski"
           target="_blank"
           rel="noopener noreferrer"
@@ -238,23 +255,6 @@ const Sponsors = () => (
             src="https://mmmikem.github.io/assets/photo.173b7bbb.webp"
             height="300"
             alt="Mike Murray"
-          />
-        </Link>
-        <div>
-          <Text>🎗 Supporter</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
-          href="https://github.com/zilahir"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Richard Zilahi</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/6687149?s=300"
-            height="300"
-            alt="Richard Zilahi"
           />
         </Link>
         <div>
