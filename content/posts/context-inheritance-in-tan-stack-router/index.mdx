@@ -48,6 +48,8 @@ To show a quite minimal example, let's just take two nested routes:
 
 As recommended, I'm using file-based routing, and just because I can, I'm using [a mix of directory and flat routes](https://tanstack.com/router/latest/docs/framework/react/routing/file-based-routing#mixed-flat-and-directory-routes). This is a personal preference, and if you don't like that, there are other ways to do file-based routing in TanStack Router, including creating your very own structure with [Virtual File Routes](https://tanstack.com/router/latest/docs/framework/react/routing/virtual-file-routes).
 
+However, everything I'm showing will also work with code-based routing, as file-based routing is really just an ergonomic way to generate code you would otherwise write for yourself.
+
 </Aside>
 
 If we look at the child route (a widget on a dashboard), we can see that we get all params from our hierarchy back when calling `Route.useParams()`:
