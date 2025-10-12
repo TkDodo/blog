@@ -217,11 +217,11 @@ This is great, but Route Context is more than just dependency injection. Again, 
 
 ### Route Context
 
-To modify the context for a specific route, we can define the `context` function and return whatever we want:
+To modify the context for a specific route, we can define the `beforeLoad` function and return whatever we want:
 
-```tsx:title=context-function {2,6}
+```tsx:title=beforeLoad {2,6}
 export const Route = createFileRoute('/dashboard/$dashboardId')({
-  context: () => ({ hello: 'world' } as const),
+  beforeLoad: () => ({ hello: 'world' } as const),
   loader: async ({ context, params }) => {
     //             ^? {
     //                  queryClient: QueryClient;
@@ -243,6 +243,12 @@ function Widget() {
   //      ^? "world"
 }
 ```
+
+<Aside title="beforeLoad">
+
+Note that right now, `beforeLoad` is the only function that can augment the Route Context, but there are plans to extend this functionality to more lifecycle methods in the future.
+
+</Aside>
 
 Okay, so the context can also evolve and inherit values from its parents, but where would that be useful? Of course we can use it for things like [building generic breadcrumbs](https://tanstack.com/router/latest/docs/framework/react/guide/router-context#processing-accumulated-route-context), but I think I've found a killer use-case for React Query as well that I will be writing about in the next blog post.
 
