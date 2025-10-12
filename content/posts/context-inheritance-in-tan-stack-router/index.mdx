@@ -1,0 +1,260 @@
+---
+title: Context Inheritance in TanStack Router
+description: An overview of how TanStack Router automatically shares and infers path params, search params, and context between nested routes in a type-safe way.
+date: 2025-10-12
+banner: ./inheritance.jpg
+tags:
+  - ReactJs
+  - TanStack Router
+  - TypeScript
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import { TsrToc } from 'components/tsr-toc'
+import Aside from 'components/Aside'
+
+<img
+  src="./inheritance.jpg"
+  alt="photo of library with turned on lights"
+/>
+
+<Attribution
+  name="Janko Ferlič"
+  url="https://unsplash.com/@itfeelslikefilm"
+/>
+
+<TsrToc id="context-inheritance-in-tan-stack-router" />
+
+<Translations>{[]}</Translations>
+
+[TanStack Router](https://tanstack.com/router) has a lot of great features, so it's hard to pick favorites. That said, there is one thing that blew my mind once I saw it in action, and that is how the router lets you accumulate state between nested routes - not just at runtime, but also on type-level.
+
+This feature works in a type-safe and fully inferred way for all parent-child route relations, but let's start with the most simple one where I think you'd be surprised if that didn't work:
+
+## Path Params
+
+To show a quite minimal example, let's just take two nested routes:
+
+```:title=nested-routes
+- dashboard.$dashboardId
+  - route.tsx
+  - widget.$widgetId
+    - index.tsx
+```
+
+<Aside title="File-Based Routes">
+
+As recommended, I'm using file-based routing, and just because I can, I'm using [a mix of directory and flat routes](https://tanstack.com/router/latest/docs/framework/react/routing/file-based-routing#mixed-flat-and-directory-routes). This is a personal preference, and if you don't like that, there are other ways to do file-based routing in TanStack Router, including creating your very own structure with [Virtual File Routes](https://tanstack.com/router/latest/docs/framework/react/routing/virtual-file-routes).
+
+However, everything I'm showing will also work with code-based routing, as file-based routing is really just an ergonomic way to generate code you would otherwise write for yourself.
+
+</Aside>
+
+If we look at the child route (a widget on a dashboard), we can see that we get all params from our hierarchy back when calling `Route.useParams()`:
+
+```tsx:title=use-params {8,9}
+export const Route = createFileRoute(
+  '/dashboard/$dashboardId/widget/$widgetId/'
+)({
+  component: Widget,
+})
+
+function Widget() {
+  const params = Route.useParams()
+  //    ^? { dashboardId: string, widgetId: string }
+}
+```
+
+This is literally what you'd expect from a type-safe router, after all, `$dashboardId` is right there in the path next to `$widgetId`, so why is this cool?
+
+Well, what if we'd want to express that `$dashboardId` is a number? We would define that on the parent route by parsing the `params` with our favourite validation library:
+
+```tsx:title=params-parsing {5-7}
+import { type } from 'arktype'
+
+export const Route = createFileRoute('/dashboard/$dashboardId')({
+  component: Dashboard,
+  params: {
+    parse: type({ dashboardId: 'string.integer.parse' }).assert,
+  },
+})
+```
+
+<Aside title="Standard Schema">
+
+TanStack Router is compatible with any validation library that supports [Standard Schema](https://standardschema.dev/). There's over 20 libraries that have implemented that common interface so far, so you are free to choose among them.
+
+</Aside>
+
+This change leads to something amazing: Every child route in the route tree now knows about this. [The docs](https://tanstack.com/router/latest/docs/framework/react/guide/path-params#path-params-can-be-used-by-child-routes) simply say that "once a path param has been parsed, it is available to all child routes", but look what happens to our types:
+
+```tsx:title=dashboardId-number {2,3}
+function Widget() {
+  const params = Route.useParams()
+  //    ^? { dashboardId: number, widgetId: string }
+}
+```
+
+The `Widget` now knows that the `dashboardId` is a `number`. Just like that. It knows. 🤯
+
+Let that sink in for a minute, because it has some cool implications. Because if we can define things on the parent and have the children know about their types for path params, what stops us from applying the same concept to other state our router manages?
+
+Nothing stops us, that's what. And in fact, there are a couple of other places where this inheritance works as well:
+
+## Search Params
+
+Yes, `searchParams` can inherit context on type-level from their parents, too. Let's say we want to have an optional `?debug` boolean flag available everywhere in our app. All we need to do is define it on our root component with:
+
+```tsx:title=debug-search-param {2}
+export const Route = createRootRouteWithContext<RouteContext>()({
+  validateSearch: type({ debug: 'boolean=false' }).assert,
+  component: Root,
+})
+```
+
+and now any component will get access to that boolean flag via `useSearch`:
+
+```tsx:title=useSearch {2,3}
+function Widget() {
+  const search = Route.useSearch()
+  //    ^? { debug: boolean }
+}
+```
+
+<Aside title="Tip: Search Middleware" icon="lightbulb">
+
+If you're tired of having search param default values, like
+`?debug=false` show up in your URL all the time, you can use the
+Router's [Search Middleware](https://tanstack.com/router/latest/docs/framework/react/guide/search-params#transforming-search-with-search-middlewares) to alter what gets written to it.
+
+For this specific use-case, there's a build-in middleware called `stripSearchParams` that can remove values if they are equal to the specified default:
+
+```tsx:title=search-middleware {3-5}
+export const Route = createRootRouteWithContext<RouteContext>()({
+  validateSearch: type({ debug: 'boolean=false' }).assert,
+  search: {
+    middlewares: [stripSearchParams({ debug: false })],
+  },
+  component: Root,
+})
+```
+
+</Aside>
+
+If we add more search params in our tree, they will be merged on type-level to produce the most accurate result. For example, our widget route might get a date range filter:
+
+```tsx:title=merged-search-params {4,9,10}
+export const Route = createFileRoute(
+  '/dashboard/$dashboardId/widget/$widgetId/'
+)({
+  validateSearch: type({ 'range?': "'7d' | '30d' | '90d'" }).assert,
+  component: Widget,
+})
+
+function Widget() {
+  const search = Route.useSearch()
+  //    ^? { debug: boolean, range?: '7d' | '30d' | '90d' }
+}
+```
+
+But if we used `useSearch` on the dashboard route, we would only get access to the `debug` flag. This merging is insanely powerful, because it makes sure that every component gains access to all the state available throughout its parent route hierarchy. All it needs to do is to declare which route is used on.
+
+<Aside
+  title="Deep Dive: How does this work?"
+  icon="lightbulb"
+>
+
+Honestly, I have no idea 😂. I looked at the types in the Router repo and nope, I couldn't figure it out. We'll have to wait for a blogpost from someone smarter than me to do this deep dive.
+
+</Aside>
+
+## Router Context
+
+Another property of the Router that can do inheritance is the [Router Context](https://tanstack.com/router/latest/docs/framework/react/guide/router-context). This context is created at the root route if we use `createRootRouteWithContext`, and it's initial values are passed to `createRouter` itself. It is generally used for dependency injection into route loaders. When used with TanStack Query, we usually use it to distribute the `QueryClient`:
+
+```tsx:title=router-context {5-7}
+const queryClient = new QueryClient()
+
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient,
+  },
+  Wrap: ({ children }) => {
+    return (
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    )
+  },
+})
+```
+
+Then, this `queryClient` instance is available in all loaders:
+
+```tsx:title=queryClient-in-loader {2-3}
+export const Route = createFileRoute('/dashboard/$dashboardId')({
+  loader: async ({ context, params }) => {
+    //             ^? { queryClient: QueryClient }
+    await context.queryClient.ensureQueryData(
+      dashboardQueryOptions(params.dashboardId)
+    )
+  },
+  component: Dashboard,
+})
+
+function Dashboard() {
+  const params = Route.useParams()
+  const { data } = useSuspenseQuery(
+    dashboardQueryOptions(params.dashboardId)
+  )
+}
+```
+
+This is great, but Route Context is more than just dependency injection. Again, the [docs state](https://tanstack.com/router/latest/docs/framework/react/guide/router-context#modifying-the-router-context) that "that you can modify the context at each route and the modifications will be available to all child routes."
+
+### Route Context
+
+To modify the context for a specific route, we can define the `beforeLoad` function and return whatever we want:
+
+```tsx:title=beforeLoad {2,6}
+export const Route = createFileRoute('/dashboard/$dashboardId')({
+  beforeLoad: () => ({ hello: 'world' } as const),
+  loader: async ({ context, params }) => {
+    //             ^? {
+    //                  queryClient: QueryClient;
+    //                  readonly hello: "world";
+    //                }
+    await context.queryClient.ensureQueryData(
+      dashboardQueryOptions(params.dashboardId)
+    )
+  },
+  component: Dashboard,
+})
+```
+
+Whatever we return will not only be available to this route's loader, but also wherever we consume the context in child routes, for example, with `useRouteContext`:
+
+```tsx:title=useRouteContext {2,3}
+function Widget() {
+  const { hello } = Route.useRouteContext()
+  //      ^? "world"
+}
+```
+
+<Aside title="beforeLoad">
+
+Note that right now, `beforeLoad` is the only function that can augment the Route Context, but there are plans to extend this functionality to more lifecycle methods in the future.
+
+</Aside>
+
+Okay, so the context can also evolve and inherit values from its parents, but where would that be useful? Of course we can use it for things like [building generic breadcrumbs](https://tanstack.com/router/latest/docs/framework/react/guide/router-context#processing-accumulated-route-context), but I think I've found a killer use-case for React Query as well that I will be writing about in the next blog post.
+
+---
+
+That's it for today. Feel free to reach out to me on [bluesky](https://bsky.app/profile/tkdodo.eu)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />
