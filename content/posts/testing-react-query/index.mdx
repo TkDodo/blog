@@ -206,7 +206,7 @@ const ReactQueryConfigProvider = ({ children, defaultOptions }) => {
     () =>
       new QueryClient({
         queryCache: client.getQueryCache(),
-        muationCache: client.getMutationCache(),
+        mutationCache: client.getMutationCache(),
         defaultOptions,
       })
   )
