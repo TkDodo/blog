@@ -13,7 +13,6 @@ import Comments from 'components/Comments'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
 import Emph from 'components/Emph'
-import Aside from 'components/Aside'
 import Highlight from 'components/Highlight'
 
 <img src="./nope.jpg" alt="Nope Hand Lettering On Wood and Glass" />
@@ -38,7 +37,7 @@ Over the years, I've seen many design systems try to implement a `<Tooltip>` com
 
 I'm not saying tooltips themselves should not exist. They are a valuable tool when applied "correctly" - whatever that means for your use-cases. Sure, you might get there with education, but let's be honest: Very few people read docs and AI only reproduces what it already sees, so chances are it will amplify the anti-patterns we have in our codebase.
 
-So let's did into the potential problems you can get when using tooltips the wrong way before I'm trying to outline what an alternative world could look like.
+So let's dig into the potential problems you can get when using tooltips the wrong way before I'm trying to outline what an alternative world could look like.
 
 ## Keyboard Interactivity
 
@@ -74,7 +73,7 @@ There's also no way to make this type-safe, as we can't control the type of chil
 
 ## Least Surprise For All Users
 
-If you can stick a Tooltip on <Emph>any</Emph> element, someone will. I've seen tooltips in the weirdest of places, like on a certain text in the middle of a sentence - without any indication that there is additional information behind that.
+If a `<Tooltip>` can be added to <Emph>any</Emph> element, someone will try. I've seen tooltips in the weirdest of places, like on a certain text in the middle of a sentence - without any indication that there is additional information behind that.
 
 But I've also seen the opposite. It's super annoying to me to see a button that only consists of an icon that I don't understand, but I'm not getting any information about what's going to happen when I click that button.
 
@@ -90,10 +89,10 @@ So, if a standalone `<Tooltip>` component isn’t ideal, what other approaches c
 Some things that I've seen work really well in the past are:
 
 - Interactive components like `<Button>` or `<Link>` get an optional `title` prop.<br/>
-  This allows us to show additional information if we want to. Interactive elements are usually easily discoverable in the UI, and they will be found with keyboard tabbing.
+  This allows us to show additional information if we want to. Interactive elements are usually easily discoverable in the UI, and they will also be found with keyboard tabbing.
 - `<IconButton>` gets a <Emph>required</Emph> `title` prop.<br/>
   This ensures icons are explained to users and additionally gives us a way to properly label the Button for accessibility.
-- Expose an additional `<InfoIcon>` component to render an info icon + a tooltip.<br/>
+- Expose an additional `<InfoIcon>` component to render an info or question mark icon + a tooltip.<br/>
   This makes sure that users know where to find additional information, and we can internally ensure that it's focusable.
 - Create an `<InfoText>` to allow giving more context to text.<br/>
   This component should be visually distinct from other texts, e.g. with a dashed underline, and obviously also keyboard interactive.
