@@ -1,0 +1,199 @@
+---
+title: Omit for Discriminated Unions in TypeScript
+description: Why TypeScript’s built-in Omit breaks discriminated unions, and how a distributive version preserves them.
+date: 2025-11-22
+banner: ./omit.jpg
+tags:
+  - TypeScript
+  - React
+---
+
+import Aside from 'components/Aside'
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import Emph from 'components/Emph'
+import Highlight from 'components/Highlight'
+import { TsError } from 'components/TsError'
+
+<img
+  src="./omit.jpg"
+  alt="Guitar picks with different color backgrounds yellow and blue"
+/>
+
+<Attribution
+  name="Rombo"
+  url="https://unsplash.com/@rombo_guitar_picks"
+/>
+
+<Translations>{[]}</Translations>
+
+You're probably aware that TypeScript has built-in utility types to help with common type transformation on objects, like [Omit](https://www.typescriptlang.org/docs/handbook/utility-types.html#omittype-keys) and [Pick](https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys).
+
+When building React components that are specific wrappers over lower-level primitives, `Omit` can be helpful when typing `Props`, as it can tie your implementation to the underlying one.
+
+```ts:title=SelectProps {7}
+type SelectProps = {
+  onChange: (value: string) => void
+  options: ReadonlyArray<SelectOption>
+  value: string | null
+}
+
+type UserSelectProps = Omit<SelectProps, 'options'>
+```
+
+It basically says: I want all the props of the component I'm depending upon, _except_ this one thing (or multiple things). We can then build our `UserSelect` component by spreading props and setting the missing things ourselves:
+
+```tsx:title=UserSelect
+function UserSelect(props: UserSelectProps) {
+  const users = useSuspenseQuery(usersQueryOptions)
+
+  return <Select {...props} options={users.data} />
+}
+```
+
+This has two advantages: It means we don't have to re-declare (and thus copy) all the fields of `SelectProps` when building wrapper components around it, and they're automatically in-sync with each other, too. The dependency is on purpose: since we're spreading `{...props}` onto a `Select`, the types also already declare that, and if we add a field to `Select`, `UserSelect` will profit from that, too.
+
+There are also disadvantages: It can become harder to see which props a component actually receives when these types stack across multiple layers. I'd avoid going beyond one layer, but generally, this is a nice pattern - until `SelectProps` become too smart.
+
+## Discriminated Union Types
+
+Let's add a new feature to `Select`: a `clearable` prop, which allows users to unselect the current value. If that happens, we'd want to trigger `onChange` with `null`. A first draft for types might look like this:
+
+```ts:title=clearable {2,5}
+type SelectProps = {
+  onChange: (value: string | null) => void
+  options: ReadonlyArray<SelectOption>
+  value: string | null
+  clearable?: boolean
+}
+```
+
+That works, but it introduces a new problem: all existing `Select` usages now error because their `onChange` handlers don't handle `null`. That's not great because they will never receive `null` at runtime, as they clearly aren't `clearable`.
+
+We'd really want to tell the type-checker: "If we pass `clearable`, `onChange` might get `null`, otherwise, it won't". [Discriminated Unions](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions) can help us with that:
+
+```ts:title=Discriminated-Union-Type
+type BaseSelectProps = {
+  options: ReadonlyArray<SelectOption>
+  value: string | null
+}
+
+type ClearableSelectProps = BaseSelectProps & {
+  clearable: true
+  onChange: (value: string | null) => void
+}
+
+type UnclearableSelectProps = BaseSelectProps & {
+  onChange: (value: string) => void
+  clearable?: false
+}
+
+type SelectProps = ClearableSelectProps | UnclearableSelectProps
+```
+
+This looks more complicated than before, but it's worth the troubles for us. Now, TypeScript can discriminate the union on the `clearable` flag: If it's passed as `true`, `onChange` will get a different structure than when it's passed as `false` or not passed at all. The extraction to `BaseSelectProps` was just done to avoid repeating the types that are the same in both parts of the union.
+
+Now our new `clearable` feature becomes backwards compatible on type-level too, so we should be good to ship it. Except that, to our surprise, we find an error in CI on our `UserSelect` component. Something like:
+
+<TsError>
+  Types of property 'clearable' are incompatible.
+  <br />
+  &nbsp;&nbsp;Type 'boolean | undefined' is not assignable to type
+  'false | undefined'.
+  <br />
+  &nbsp;&nbsp;&nbsp;&nbsp;Type 'true' is not assignable to type
+  'false'.(2345)
+</TsError>
+
+That made little sense to me when I read it the first time - after all, I'm just <Emph>composing</Emph> types with `Omit`, and it worked before. 🤔 So what's changed?
+
+It started to make more sense once I inspected what my `UserSelectProps` now expands to:
+
+```ts:title=Expanded-UserSelectProps
+type UserSelectProps = {
+  onChange:
+    | ((value: string | null) => void)
+    | ((value: string) => void)
+  value: string | null
+  clearable?: boolean | undefined
+}
+```
+
+The union type that discriminates over `clearable` is gone - adding the `Omit` basically "expanded" everything. Surely that's a bug in `Omit`, but no, it [works as intended](https://github.com/microsoft/TypeScript/issues/31501).
+
+`Omit` doesn't look at each union individually (it's not <Emph>distributive</Emph>), it treats the union as a whole and just maps over all members one by one. As [Ryan Cavanaugh
+](https://github.com/RyanCavanaugh) says in [one of the issue comments](https://github.com/microsoft/TypeScript/issues/31501#issuecomment-501534342), all possible definitions of `Omit` have certain trade-offs, and they've chosen one they think is the best general fit.
+
+If you can run [Doom in TypeScript Types](https://www.youtube.com/watch?v=0mCsluv5FXA), it should be possible to write an `Omit` helper that doesn't destroy our unions, and luckily, we have to look no further than towards Distributive Conditional Types.
+
+<Aside title="Conditional Types">
+
+A conditional type lets TypeScript choose between two types based on a test. It's the type-level version of an if statement:
+
+```ts
+T extends U ? X : Y
+```
+
+You can read it as: "If T can be assigned to U, then use type X. Otherwise use type Y."
+
+</Aside>
+
+## Distributive Conditional Types
+
+As the [TypeScript docs](https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types) put it: "When conditional types act on a generic type, they become distributive when given a union type." In other words, the conditional runs on each member of the union individually, which is exactly what we'd want. However, we don't have a conditional type, and we don't really want one. So where is this going?
+
+## Distributive Omit
+
+Have you ever seen a type say `T extends any ? ... : never` and wondered: Why would you do that? Obviously, everything extends `any` - it's TypeScript's top type.
+
+Yes - it is, and that's exactly the point. It's a <Emph>fake conditional type</Emph> that will always match the true branch of the condition. This _should_ be equivalent to just using whatever is inside the true branch, except that it now becomes <Emph>distributive</Emph>.
+
+With that, we can create an `Omit` helper type that works better with our unions, simply by calling `Omit` in the true branch of such a fake conditional type:
+
+```ts:title=DistributiveOmit
+type DistributiveOmit<T, K extends keyof T> = T extends any
+  ? Omit<T, K>
+  : never
+```
+
+Have a look at what happens if we apply this to our `UserSelectProps`:
+
+```ts:title=New-UserSelectProps
+type UserSelectProps = DistributiveOmit<SelectProps, 'options'>
+```
+
+If we hover this type, it will expand to:
+
+```ts:title=New-Expanded-UserSelectProps
+type UserSelectProps =
+  | Omit<ClearableSelectProps, 'options'>
+  | Omit<UnclearableSelectProps, 'options'>
+```
+
+which clearly shows that it works as expected: `Omit` is applied to each part of our union type, and our `UserSelect` will now also implicitly benefit from the `clearable` feature.🎉
+
+Here's a [TypeScript Playground](https://www.typescriptlang.org/play/?#code/C4TwDgpgBAyhA2EDGwDyZgEsD2A7KAvFAN4BuAhvAK4QBcUAzsAE6a4DmANFPOQEYJ6TVhwC+AKHGhIUAELkGEOIhQAFZtjANCJcVCgVqdRizbsoAHyi4q8eHqiaseBvQBKEcgBM88EAEFmZnIQAB5lZDQMHFwAPnEJKXBoAGFEcmC+RAi1DS0deUUc4HVNbQAyXX0kdMzEehYaBzwUgAtyDmMACkMaIVMOS2tbeABKQliDbEwvBMlpaABVXBrPOqUESNL8okKNlRK8iqqoVYz+RAB+egAzSkVm3DaO9m7e42EzcYJJ0mnZxILWCbXJlHRpNYXfZbI5DZZndbFbYMSQ3KgrZz4YpdMBHehIo7jYiJNEYmJQRaKZjFACiQWwzBxeKgqAAtphgOEQYcytwAOROGIMPmxIkOZgQYBUZhY7ldYgAOiVuN5jmiLnoAG0ALqiUZzcQAekNUBumAAHhAvAYIMwGDFaPNklAACKYT58KhYUgQNkc0IAFW4AGkoBBzcAILgvNoANYQEDYG5QAOTIgBsMRqMxqAdEBQS4s9mcoNQYOTei4CA+5gAbiSMkptoJYKIbo9XswPr9nJbWn5gpcIqNJv0AD1Lqj0ShyU3qdzUMGmWV6HO+wwxfoJVKZcCDvKlQqVf21ZjXFAdXqEkA) if you want to play around with that solution, and note that you can apply the same trick to other helper types like `Pick`, too.
+
+Additionally, there's one more benefit we've coded into our `DistributiveOmit` solution that the regular `Omit` doesn't have:
+
+## Limited Keys
+
+If we look at the type signature of `Omit`:
+
+```ts:title=Omit
+type Omit<T, K extends keyof any> = {
+  [P in Exclude<keyof T, K>]: T[P]
+}
+```
+
+we can see that it doesn't have any upper bound on the `K` type parameter (`keyof any` just expands to `string | number | symbol`). This means you can pass keys that don't actually exist on the object. That's harmless in practice, as omitting something that isn't there doesn't change anything, but it did surprise me. When I switched to `DistributiveOmit` (which uses `K extends keyof T`), TypeScript suddenly flagged places where we were omitting five keys even though two of them no longer existed.
+
+They likely existed at some ponit and were just left behind during a cleanup. And if you know me, you know I'm not a fan of dead code, so this turned into a nice little opportunity to tidy things up. ✂️
+
+---
+
+That's it for today. Feel free to reach out to me on [bluesky](https://bsky.app/profile/tkdodo.eu)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />
