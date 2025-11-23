@@ -1,6 +1,11 @@
 import * as React from 'react'
+import { Box } from '@theme-ui/components'
 
-const injectScript = (src: string, id: string, onload: () => void) => {
+const injectScript = (
+  src: string,
+  id: string,
+  onload: () => void
+) => {
   const script = document.createElement('script')
 
   script.async = true
@@ -29,14 +34,22 @@ const Ads = () => {
   }, [])
 
   return (
-    <div
-      id="blog-ad"
-      data-ea-publisher="tkdodoeu"
-      className="flat adaptive"
-      data-ea-type="image"
-      data-ea-style="stickybox"
-      data-ea-manual="true"
-    />
+    <>
+      <Box
+        sx={{
+          display: 'none',
+          ':has(+ .loaded)': { display: 'block' },
+        }}
+      />
+      <div
+        id="blog-ad"
+        data-ea-publisher="tkdodoeu"
+        className="flat adaptive"
+        data-ea-type="image"
+        data-ea-style="stickybox"
+        data-ea-manual="true"
+      />
+    </>
   )
 }
 
