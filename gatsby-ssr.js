@@ -12,6 +12,11 @@ const noFlashDark = `(function () {
       document.querySelector('html').setAttribute('data-theme', 'dark')
       if (!hasLocalStorage) {
         document.documentElement.classList.add('theme-ui-dark')
+        window.addEventListener('load', () => {
+          setTimeout(() => {
+            document.documentElement.classList.remove('theme-ui-dark')
+          }, 3000)
+        });
       }
     }
   } catch (err) {}
