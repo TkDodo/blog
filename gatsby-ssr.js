@@ -12,9 +12,6 @@ const noFlashDark = `(function () {
       document.querySelector('html').setAttribute('data-theme', 'dark')
       if (!hasLocalStorage) {
         document.documentElement.classList.add('theme-ui-dark')
-        window.addEventListener('load', () => {
-          document.documentElement.classList.remove('theme-ui-dark')
-        });
       }
     }
   } catch (err) {}
