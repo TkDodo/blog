@@ -7,6 +7,10 @@ import DocSearch from './DocSearch'
 const HeaderTitle = (
   props: React.ComponentProps<typeof OriginalHeaderTitle>
 ) => {
+  React.useEffect(() => {
+    document.dispatchEvent(new Event('hydrated'))
+  }, [])
+
   return (
     <Flex sx={{ alignItems: 'center' }}>
       <OriginalHeaderTitle {...props} />

@@ -12,7 +12,7 @@ const noFlashDark = `(function () {
       document.querySelector('html').setAttribute('data-theme', 'dark')
       if (!hasLocalStorage) {
         document.documentElement.classList.add('theme-ui-dark')
-        window.addEventListener('load', () => {
+        document.addEventListener('hydrated', () => {
           document.documentElement.classList.remove('theme-ui-dark')
         });
       }
