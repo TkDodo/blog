@@ -156,6 +156,12 @@ module.exports = {
       },
     },
     {
+      resolve: 'gatsby-plugin-theme-ui',
+      options: {
+        injectColorFlashScript: false,
+      },
+    },
+    {
       resolve: `gatsby-plugin-feed`,
       options: {
         query: `

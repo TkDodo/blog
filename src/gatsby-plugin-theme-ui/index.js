@@ -2,6 +2,11 @@ import baseTheme from '@lekoarts/gatsby-theme-minimal-blog/src/gatsby-plugin-the
 
 const theme = {
   ...baseTheme,
+  config: {
+    ...baseTheme.config,
+    useColorSchemeMediaQuery: 'system',
+    useLocalStorage: true,
+  },
   fontSizes: [
     '0.875rem',
     '1rem',
