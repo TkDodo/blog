@@ -25,7 +25,11 @@ async function run() {
     const filePath = path.join(baseDirectory, file)
     const isDirectory = fs.statSync(filePath).isDirectory()
     if (isDirectory) {
-      await convert(file)
+      try {
+        await convert(file)
+      } catch (e) {
+        console.warn(`Error processing ${file}, skipping:`, e)
+      }
     }
   }
 }
