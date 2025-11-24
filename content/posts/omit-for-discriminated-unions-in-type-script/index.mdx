@@ -189,7 +189,7 @@ type Omit<T, K extends keyof any> = {
 
 we can see that it doesn't have any upper bound on the `K` type parameter (`keyof any` just expands to `string | number | symbol`). This means you can pass keys that don't actually exist on the object. That's harmless in practice, as omitting something that isn't there doesn't change anything, but it did surprise me. When I switched to `DistributiveOmit` (which uses `K extends keyof T`), TypeScript suddenly flagged places where we were omitting five keys even though two of them no longer existed.
 
-They likely existed at some ponit and were just left behind during a cleanup. And if you know me, you know I'm not a fan of dead code, so this turned into a nice little opportunity to tidy things up. ✂️
+They likely existed at some point and were just left behind during a cleanup. And if you know me, you know I'm not a fan of dead code, so this turned into a nice little opportunity to tidy things up. ✂️
 
 ---
 
