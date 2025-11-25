@@ -28,8 +28,9 @@ import Tweet, { AvatarAlexDotJs } from 'components/Tweet'
   url="https://unsplash.com/@rocknrollmonkey"
 />
 
-<RqToc id="automatic-query-invalidation-after-mutations" />
+**Last Update: 2025-11-25**
 
+<RqToc id="automatic-query-invalidation-after-mutations" />
 
 <Translations>
   {[
@@ -39,12 +40,12 @@ import Tweet, { AvatarAlexDotJs } from 'components/Tweet'
     },
     {
       language: '简体中文',
-      url: 'https://juejin.cn/post/7388033492569325622'
+      url: 'https://juejin.cn/post/7388033492569325622',
     },
     {
       language: '日本語',
       url: 'https://makotot.dev/posts/automatic-query-invalidation-after-mutations-translation-ja',
-    }
+    },
   ]}
 </Translations>
 
@@ -183,6 +184,12 @@ const queryClient = new QueryClient({
 ```
 
 Finding out the actual `staleTime` for a Query is not that trivial, because `staleTime` is an observer level property. But it's doable, and we can also combine the `predicate` filter with other filters like `queryKey`. Neat.
+
+<Aside title="Update" icon="bell">
+
+We've since introduced `staleTime: 'static'` to support this use-case out of the box. You can now set staleTime to 'static' to never trigger a refetch, even if the Query is invalidated manually.
+
+</Aside>
 
 ### Use the `meta` option
 
