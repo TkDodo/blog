@@ -7,16 +7,16 @@ type Props = {
 
 const mapping = [
   {
-    id: 'the-beauty-of-tan-stack-router',
-    title: '#1: The Beauty of TanStack Router',
+    id: 'designing-design-systems',
+    title: '#1: Designing Design Systems',
   },
   {
-    id: 'context-inheritance-in-tan-stack-router',
-    title: '#2: Context Inheritance in TanStack Router',
+    id: 'tooltip-components-should-not-exist',
+    title: '#2: Tooltip Components Should Not Exist',
   },
 ]
 
-export const TsrToc = ({ id }: Props) => {
+export const DsToc = ({ id }: Props) => {
   return (
     <Flex
       as="ul"
