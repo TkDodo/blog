@@ -18,6 +18,9 @@ module.exports = {
     siteLanguage: `en`,
   },
   plugins: [
+    {
+      resolve: '@sentry/gatsby',
+    },
     `gatsby-plugin-image`,
     `gatsby-plugin-sharp`,
     {
