@@ -245,23 +245,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://github.com/hobbescodes"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>hobbescodes</h2>
-          <img
-            src="https://avatars.githubusercontent.com/u/87732294?s=300"
-            height="300"
-            alt="hobbescodes"
-          />
-        </Link>
-        <div>
-          <Text>🎗 Supporter</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://www.robinwieruch.de/"
           target="_blank"
           rel="noopener noreferrer"
@@ -292,6 +275,23 @@ const Sponsors = () => (
         </Link>
         <div>
           <Text>🎗 Supporter</Text>
+        </div>
+      </Card>
+      <Card>
+        <Link
+          href="https://nuqs.dev/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>nuqs</h2>
+          <img
+            src="https://avatars.githubusercontent.com/u/43356325?s=300"
+            height="300"
+            alt="47ng"
+          />
+        </Link>
+        <div>
+          <Text>🪙 Custom</Text>
         </div>
       </Card>
     </Grid>
