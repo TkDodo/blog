@@ -24,6 +24,16 @@ const injectScript = (
 
 const Ads = () => {
   React.useEffect(() => {
+    // Check if the script is already loaded
+    const existingScript = document.getElementById('ethical-ads')
+    
+    if (existingScript) {
+      // Script already exists, use reload() instead of load() to prevent double-loading errors
+      ;(window as any).ethicalads?.reload()
+      return
+    }
+
+    // Script doesn't exist, inject it
     return injectScript(
       'https://media.ethicalads.io/media/client/ethicalads.min.js',
       'ethical-ads',
