@@ -14,6 +14,10 @@ const mapping = [
     id: 'tooltip-components-should-not-exist',
     title: '#2: Tooltip Components Should Not Exist',
   },
+  {
+    id: 'building-type-safe-compound-components',
+    title: '#3: Building Type-Safe Compound Components',
+  },
 ]
 
 export const DsToc = ({ id }: Props) => {
