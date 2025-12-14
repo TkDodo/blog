@@ -37,9 +37,9 @@ import Aside from 'components/Aside'
   ]}
 </Translations>
 
-I think we can all agree that using TypeScript is a good idea. Who doesn't like type-safety? It's a great way to catch bugs early on, and it allows us to offload some complexity of our apps to the type definitions so that we don't have to keep them in our heads forever.
+I think we can all agree that using TypeScript is a good idea. Who doesn't like type safety? It's a great way to catch bugs early on, and it allows us to offload some complexity of our apps to the type definitions so that we don't have to keep them in our heads forever.
 
-The level of type-safety can drastically vary from project to project. After all, every valid JavaScript code _can_ be valid TypeScript code - depending on the TS settings. And there is also a big difference between "having types" and "being type-safe".
+The level of type safety can drastically vary from project to project. After all, every valid JavaScript code _can_ be valid TypeScript code - depending on the TS settings. And there is also a big difference between "having types" and "being type-safe".
 
 To truly leverage the power of TypeScript, there is one thing that you need above all:
 
@@ -208,7 +208,7 @@ It also goes nicely with another guideline of mine:
   The more your TypeScript code looks like JavaScript, the better.
 </Highlight>
 
-Apart from `id: number`, there isn't a single thing that differentiates this TS code from JS. There is no added TypeScript complexity - we just get the benefits of type-safety. Type inference "flows" through our code like a hot knife through butter. 🤤
+Apart from `id: number`, there isn't a single thing that differentiates this TS code from JS. There is no added TypeScript complexity - we just get the benefits of type safety. Type inference "flows" through our code like a hot knife through butter. 🤤
 
 ### Tradeoffs
 
@@ -238,7 +238,7 @@ v5 offers a new way to define query options, which can also make `getQueryData` 
 
 </Aside>
 
-## End-to-end type-safety
+## End-to-end type safety
 
 While there isn't a lot more that React Query can do for us in this regard, there are other tools that can. If you are in control over both your frontend and backend, and if they even live in the same monorepo together, consider using tools like [tRPC](https://trpc.io/) or [zodios](https://www.zodios.org/). They both build on top of React Query for the client-side data fetching solution, but they both have what it takes to become truly type-safe: an upfront API / router definition.
 
