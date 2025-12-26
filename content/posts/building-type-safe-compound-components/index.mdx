@@ -27,6 +27,96 @@ import Highlight from 'components/Highlight'
 
 <DsToc id="building-type-safe-compound-components" />
 
+- Intro to Compound Components
+- Example you'll see a lot: <Select><Option/><Option/><Option/></Select>
+- Why this isn't good:
+  - When I mention type-safety, lots of folks will think _children_.
+  - This is neither possible nor desirable
+  - When we use compound components, we want the flexibility of layouting children however we want
+  - Also, we rarely have hard-coded options - they are likely dynamic:
+    <Select>
+      {options.map((opt) => (
+        <Option />
+      ))}
+    </Select>
+    So those are two indicators ("fixed layout", "mostly dynamic content")
+    where a simple options={options} prop is likely better: We don't
+    need the power / flexibility of compound components here.
+- Modal is another good example where _slots_ would be better
+  - <ModalDialog title="Foo"> renders <Dialog><DialogBackdrop /><DialogHeader><DialogTitle>{title}</DialogTitle></DialogHeader></Dialog>
+  - explain slots
+  - how do you make slots type-safe: branded types maybe.
+- So we want compound components mainly for dynamically layouted children with mostly fixed elements. Yes, your light/dark/system dropdown should likely be something else. Fewer than 5 options: It is generally better to use radio buttons or a toggle switch, as hiding a small number of choices in a dropdown adds unnecessary clicks and cognitive load.
+- The real example: Radio Group
+
+/\***\*\*\*\*\***\*\*\***\*\*\*\*\***\*\***\*\*\*\*\***\*\*\***\*\*\*\*\***/
+
+I think compound components are a really good design-pattern when building component libraries. They give consumers some freedom when working with what the library offers without adding a ton of props to a single component. They allow to group props together and explain the relationship between components.
+
+One way to use compound components is via slots.
+
+## Slots
+
+In my terminology, `slots` are nothing more than props that accept JSX. To see why this can be useful, let's start with a pretty basic `Layout` component:
+
+```tsx
+function Layout({ children }) {
+  return (
+    <div>
+      <Navigation />
+      <main>{children}</main>
+      <Footer />
+    </div>
+  )
+}
+```
+
+We can use it like this:
+
+```tsx
+<Layout>Hello World</Layout>
+```
+
+nice. but then we decide we want to add some props to our layout, to customize the title of the navigation and maybe pass some more info to our footer:
+
+```
+<Layout navTitle="Navigation" logo={}>Hello World</Layout>
+```
+
+The React docs show this example, and I think it's pretty good:
+
+```tsx
+<Layout left={<Sidebar />} right={<Content />} />
+<Layout left={<Sidebar />}>{content}</Layout>
+```
+
+Ever seen this?
+
+```tsx
+<Component
+  triggerWidth={150}
+  triggerLabel="Click me"
+  menuTitle="MyMenu"
+  menuWidth={500}
+  maxMenuHeight={750}
+  menuBody={body}
+  menuFooter={footer}
+/>
+```
+
+With slots, this could've been:
+
+```tsx
+<Component
+  trigger={<DefaultTrigger width="150">Click Me</DefaultTrigger>}
+  menu={
+    <Menu title="MyMenu" width={500} maxHeight={750} footer={footer}>
+      {body}
+    </Menu>
+  }
+/>
+```
+
 <Translations>{[]}</Translations>
 
 ---
