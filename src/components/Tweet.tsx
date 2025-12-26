@@ -309,6 +309,14 @@ export const QueryGGImage = () => (
   />
 )
 
+export const ADayOnTheOrangeSite = () => (
+  <StaticImage
+    placeholder="blurred"
+    src="../../static/images/bafkreiazq5owsx6neqzgvjquwenob6su4kgd7zzl3z5ytfq4oywwjwbis4.jpg"
+    alt="Unique Visitor stats, showing a huge outlier for one day in July"
+  />
+)
+
 export const CynicsVsBuilders = () => (
   <StaticImage
     placeholder="blurred"
