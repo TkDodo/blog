@@ -126,7 +126,7 @@ Interestingly, there is a single way to fix all of these problems:
 
 It's funny and ironic that React Context is the solution here, because using Context as a state management tool is what caused the aforementioned issue in the first place. But that's not what I'm proposing. The idea is to merely share the <Emph>store instance</Emph> via React Context - not the store values themselves.
 
-Conceptually, this is what React Query is doing with the `<QueryClientProvider>`, and what `redux` is doing as well with their single store as well. Because the store instances are static singletons that don't change often, we can put them into React Context easily without causing re-rending issues. Then, we can still create subscribers to the store that will be optimized by zustand. Here's how that can look like:
+Conceptually, this is what React Query is doing with the `<QueryClientProvider>`, and what `redux` is doing as well with their single store as well. Because the store instances are static singletons that don't change often, we can put them into React Context easily without causing re-rendering issues. Then, we can still create subscribers to the store that will be optimized by zustand. Here's how that can look like:
 
 <Aside title="v5 syntax" icon="info">
 

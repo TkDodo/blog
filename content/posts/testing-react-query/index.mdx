@@ -88,7 +88,7 @@ I prefer to give each test its own QueryClientProvider and create a `new QueryCl
 
 ### For custom hooks
 
-If you are testing custom hooks, I'm quite certain you're using [react-hooks-testing-library](https://react-hooks-testing-library.com/). It's the easiest thing there is to test hooks. With that library, we can wrap our hook in a [wrapper](https://react-hooks-testing-library.com/reference/api#wrapper), which is a React component to wrap the test component in when rendering. I think this is the perfect place to create the QueryClient, because it will be executed once per test:
+If you are testing custom hooks, I'm quite certain you're using [react-testing-library](https://testing-library.com/docs/react-testing-library/intro). It's the easiest thing there is to test hooks. With that library, we can wrap our hook in a [renderHook wrapper](https://testing-library.com/docs/react-testing-library/api/#renderhook), which is a React component to wrap the test component in when rendering. I think this is the perfect place to create the QueryClient, because it will be executed once per test:
 
 ```tsx:title=wrapper
 const createWrapper = () => {
