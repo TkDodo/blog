@@ -228,23 +228,6 @@ const Sponsors = () => (
       </Card>
       <Card>
         <Link
-          href="https://linkedin.com/in/dev-mike/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>Mike Murray</h2>
-          <img
-            src="https://mmmikem.github.io/assets/photo.173b7bbb.webp"
-            height="300"
-            alt="Mike Murray"
-          />
-        </Link>
-        <div>
-          <Text>🎗 Supporter</Text>
-        </div>
-      </Card>
-      <Card>
-        <Link
           href="https://www.robinwieruch.de/"
           target="_blank"
           rel="noopener noreferrer"
