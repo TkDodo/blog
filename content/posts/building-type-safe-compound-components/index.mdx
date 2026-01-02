@@ -1,0 +1,257 @@
+---
+title: Building Type-Safe Compound Components
+description: Compound Components are great, but should be type-safe. No, this isn't about the children prop ...
+date: 2026-01-02
+banner: ./stack.jpg
+tags:
+  - Design System
+  - API Design
+  - TypeScript
+  - React
+---
+
+import Aside from 'components/Aside'
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import { DsToc } from 'components/ds-toc'
+import Emph from 'components/Emph'
+import Highlight from 'components/Highlight'
+import { VerticalRuler } from 'components/VerticalRuler'
+
+<img src="./stack.jpg" alt="stack rock on seashore" />
+
+<Attribution
+  name="Jeremy Thomas"
+  url="https://unsplash.com/@jeremythomasphoto"
+/>
+
+<DsToc id="building-type-safe-compound-components" />
+
+<Translations>{[]}</Translations>
+
+I think compound components are a really good design-pattern when building component libraries. They give consumers flexibility in how components are composed, without forcing every variation into a single, prop-heavy API. Additionally, they make relationships between components explicit in the markup.
+
+This doesn't mean that compound components are _always_ a good fit. Sometimes, using `props` is just better.
+
+## A Bad Example
+
+A common example we'll see regarding compound components is a `Select` with `Options`, likely because that's also how it works in HTML.
+
+```tsx:title=Compound-Select
+import { Select, Option } from '@/components/select'
+
+function ThemeSwitcher({ value, onChange }) {
+  return (
+    <Select value={value} onChange={onChange}>
+      <Option value="system">🤖</Option>
+      <Option value="light">☀️</Option>
+      <Option value="dark">🌑</Option>
+    </Select>
+  )
+}
+```
+
+There are a couple of reasons why I think this example is <Emph>not ideal</Emph> at showing what compound components are good for.
+
+### 1. Fixed Layout
+
+Compound components excel at allowing users to layout `children` however they want. For `Selects`, we likely don't need that. The `options` go into a menu, and we want to show each option one after the other. This is exactly why lots of people want to [limit what you can pass](https://github.com/microsoft/TypeScript/issues/21699) into `children` on type-level - like only allowing `Option` to be passed into `Select`.
+
+This is not only [impossible](https://www.totaltypescript.com/type-safe-children-in-react-and-typescript) as of now (the issue is open since 2018), it's also <Emph>undesirable</Emph>. I know you were hoping that I would tell you how to make compound components type-safe in this article, and I will - it's just not about `children` at all. My take is that if you want to limit `children` to a specific type, compound components are the wrong abstraction.
+
+### 2. Dynamic Content
+
+Compound components are really good when your content is mostly static. The above example has three hardcoded options, so it qualifies, right?
+
+In reality, we likely won't have `Selects` with just three options, as the content will mostly likely come from an API call with a dynamic resultset. Also, most design guides will tell us that we [shouldn't use a Select for less than five options](https://baymard.com/blog/drop-down-usability), as hiding a small number of choices in a dropdown adds unnecessary clicks and cognitive load.
+
+In fact, at Adverity, we started out with a compound component `Select` and then had to write this mapping code for most of our usages:
+
+```tsx:title=Select-Usage
+import { Select, Option } from '@/components/select'
+
+function UserSelect({ value, onChange })
+
+const userQuery = useSuspenseQuery(userOptions)
+
+return (
+  <Select value={value} onChange={onChange}>
+    {userQuery.data.map((option) => (
+      <Option value={option.value}>{option.label}</Option>
+    ))}
+  </Select>
+)
+```
+
+At that point, we just switched to exposing a `Select` that used `props` instead of `children`:
+
+```tsx:title=Select-With-Options
+import { Select } from '@/components/select'
+
+function UserSelect({ value, onChange })
+
+const userQuery = useSuspenseQuery(userOptions)
+
+return (
+  <Select
+    value={value}
+    onChange={onChange}
+    options={userQuery.data}
+  />
+)
+```
+
+This not only allowed us to get rid of the tedious mapping we had to do everywhere, it also gave us the type safety we wanted, as there were no `children` that we needed to restrict. Also, `Select` can easily be made generic to make sure `value`, `onChange` and `options` all get the same type:
+
+```tsx:title=SelectProps
+type SelectValue = string | number
+type SelectOption<T> = { value: T; label: string }
+type SelectProps<T extends SelectValue> = {
+  value: T
+  onChange: (value: T) => void
+  options: ReadonlyArray<SelectOption<T>>
+}
+```
+
+## Slots
+
+A `ModalDialog` component is another example where I we'd rather not give our users the full power of compound components. I mean, it doesn't make sense to render the `DialogFooter` above the `DialogHeader`. We also don't want anyone to accidentally leave out the `DialogBackdrop` or create different spacings between `DialogBody` and `DialogFooter`. In cases where consistency and order is important, <Emph>slots</Emph> are usually a better abstraction:
+
+```tsx:title=ModalDialog
+function ModalDialog({ header, body, footer }) {
+  return (
+    <DialogRoot>
+      <DialogBackdrop />
+      <DialogContent>
+        <DialogHeader>{header}</DialogHeader>
+        <DialogBody>{body}</DialogBody>
+        <DialogFooter>{footer}</DialogFooter>
+      </DialogContent>
+    </DialogRoot>
+  )
+}
+
+// usage:
+
+<ModalDialog header="Hello" body="World" />
+```
+
+They still allow some form of flexibility by injecting arbitrary React components into specific positions while making sure no one has to copy-paste that boilerplate everywhere. It is of course great to have these `Dialog` primitives inside a design-system, I would just not expose them for consumers.
+
+<VerticalRuler height="5em" />
+
+So those are two indicators - <Emph>fixed layout</Emph> and mostly <Emph>dynamic content</Emph> - that make me question if we really want a compound component. So when is it a really good fit then? And what does it have to do with type safety?
+
+## A Better Example
+
+A good use-case I that would likely benefit from dynamically layouted children with mostly fixed elements is a `<ButtonGroup>`, a `<TabBar>` or a `<RadioGroup>`:
+
+```tsx:title=RadioGroup
+import { RadioGroup, RadioGroupItem } from '@/components/radio'
+import { Flex } from '@/components/layout'
+
+function ThemeSwitcher({ value, onChange }) {
+  return (
+    <RadioGroup value={value} onChange={onChange}>
+      <Flex direction={['row', 'column']} gap="sm">
+        <RadioGroupItem value="system">🤖</RadioGroupItem>
+        <RadioGroupItem value="light">☀️</RadioGroupItem>
+        <RadioGroupItem value="dark">🌑</RadioGroupItem>
+      </Flex>
+    </RadioGroup>
+  )
+}
+```
+
+The main difference to `Select` is that we explicitly want to have `children` that aren't of type `RadioGroupItem`. Being able to layout them how we want, maybe even with additional help texts, is essential. Sure, we might have some instances where our `RadioGroup` needs dynamic options as well, but in that case, crating a loop like I've shown before isn't the end of the world.
+
+That still leaves the problem of type safety, as `value` passed to `ThemeSwitcher` hopefully isn't just a string - it's likely a string literal:
+
+```ts:title=ThemeValue
+type ThemeValue = 'system' | 'light' | 'dark'
+```
+
+The `value` and `onChange` props can be tied to `ThemeValue` simply by making `RadioGroup` generic like I've shown before, but what about `RadioGroupItem` ? How do we make sure that the `value` passed to each one of them can be statically analyzed?
+
+## Type Safety
+
+We can of course also make `RadioGroupItem` generic. The problem with that approach is that types from the `RadioGroup` wouldn't be automatically available to the items, because JSX children don't "inherit" type parameters from the parent component. So even if `RadioGroup` is perfectly typed and infers `<ThemeValue>`, we would still need to parameterize each `RadioGroupItem`:
+
+```tsx:title=Generic-RadioGroupItem {4,6-9,15-17}
+import { RadioGroup, RadioGroupItem } from '@/components/radio'
+import { Flex } from '@/components/layout'
+
+type ThemeValue = 'system' | 'light' | 'dark'
+
+type ThemeSwitcherProps = {
+  value: ThemeValue
+  onChange: (value: ThemeValue) => void
+}
+
+function ThemeSwitcher({ value, onChange }) {
+  return (
+    <RadioGroup value={value} onChange={onChange}>
+      <Flex direction={['row', 'column']} gap="sm">
+        <RadioGroupItem<ThemeValue> value="system">🤖</RadioGroupItem>
+        <RadioGroupItem<ThemeValue> value="light">☀️</RadioGroupItem>
+        <RadioGroupItem<ThemeValue> value="dark">🌑</RadioGroupItem>
+      </Flex>
+    </RadioGroup>
+  )
+}
+```
+
+That's not a great API, because every manual type annotation is easily forgotten. If you know me, you know that I like my types fully inferred whenever possible. The best way to do this for compound components is by _not_ exposing those components directly, but by only giving your users a method to invoke.
+
+### Component Factory Pattern
+
+Not sure if this is the correct name for this pattern, but I think it's good enough to get the concept across. Basically, we can't fully get rid of the manual type annotation, but we can try to hide it and make it explicit. Instead of exposing `RadioGroup` and `RadioGroupItem`, we only export a function called `createRadioGroup` that should be called once with a type parameter. This function will then return the statically typed `RadioGroup` and its `RadioGroupItem` with types that are tied together:
+
+```ts:title=createRadioGroup
+import { RadioGroup, RadioGroupItem } from './internal/radio'
+
+export const createRadioGroup = <T extends GroupValue = never>(): {
+  RadioGroup: (props: RadioGroupProps<T>) => JSX.Element
+  RadioGroupItem: (props: Item<T>) => JSX.Element
+} => ({ RadioGroup, RadioGroupItem })
+```
+
+This doesn't do anything at runtime, except wrapping our internal `RadioGroup` and `RadioGroupItem` into an object. But on type-level, it ties the type parameters together. And the fact that we default our generic to `never` means users will have to pass it in order to be able to do anything meaningful with the result, allowing us to use it like this:
+
+```tsx:title=Typed-RadioGroup {11}
+import { createRadioGroup } from '@/components/radio'
+import { Flex } from '@/components/layout'
+
+type ThemeValue = 'system' | 'light' | 'dark'
+
+type ThemeSwitcherProps = {
+  value: ThemeValue
+  onChange: (value: ThemeValue) => void
+}
+
+const Theme = createRadioGroup<ThemeValue>()
+
+function ThemeSwitcher({ value, onChange }) {
+  return (
+    <Theme.RadioGroup value={value} onChange={onChange}>
+      <Flex direction={['row', 'column']} gap="sm">
+        <Theme.RadioGroupItem value="system">🤖</Theme.RadioGroupItem>
+        <Theme.RadioGroupItem value="light">☀️</Theme.RadioGroupItem>
+        <Theme.RadioGroupItem value="dark">🌑</Theme.RadioGroupItem>
+      </Flex>
+    </Theme.RadioGroup>
+  )
+}
+```
+
+Of course, this version isn't bullet proof. We can still create a differently typed `RadioGroup` and pass those items to our `Theme.RadioGroup`, but this is far less likely to happen by accident.
+
+All in all, this approach preserves the flexibility that makes compound components great while adding strong type guarantees. The only real cost is that consumers don't import the components directly, but instead create a <Emph>typed instance</Emph> of the component family via a function call. I think that's a worthwhile tradeoff and the best way to make a compound component as type-safe as possible for the users of your design-system.
+
+---
+
+That's it for today. Feel free to reach out to me on [bluesky](https://bsky.app/profile/tkdodo.eu)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />

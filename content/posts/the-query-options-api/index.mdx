@@ -78,8 +78,8 @@ First of all, having all those overloads is a chore for maintainers, and it's al
 
 But also, it turns out that one object to rule them all is simply a very good abstraction for when you want to share query options between different functions. I discovered this "by accident" when I wrote the [React Query meets React Router](react-query-meets-react-router) article, where want to share query options between prefetching and our `useQuery` call. Now usually, you could just write custom hooks as your primary way to re-use queries. But that doesn't work when imperative function calls like `prefetching` are involved. So I came up with something, and [Alex](https://bsky.app/profile/ralexanderson‍.com) noted this as a good pattern:
 
+{/_ NOTE: The tweet id leads to Alex's now protected X account _/}
 
-{/* NOTE: The tweet id leads to Alex's now protected X account */}
 <Tweet
   name="R. Alex Anderson 🚀"
   handle="ralex1993"
@@ -219,7 +219,7 @@ This is pure TypeScript magic, contributed by the one and only [Mateusz Burzyńs
 }
 ```
 
-That information will then be read out by `getQueryData` (and other functions like `setQueryData`, too), to infer the type for us. This brings a whole new level of type-safety to React Query, while at the same time making it easier for us to re-use query options. A huge win in DX. 🚀
+That information will then be read out by `getQueryData` (and other functions like `setQueryData`, too), to infer the type for us. This brings a whole new level of type safety to React Query, while at the same time making it easier for us to re-use query options. A huge win in DX. 🚀
 
 ## Query Factories
 
@@ -239,7 +239,7 @@ Additionally, I'm seeing [Query Key Factories](effective-react-query-keys) in a 
 
 The `queryKey` defines the dependencies to our `queryFn` - everything we use inside it must go into the key. So why define keys in one central place while having the functions far a way from them in our custom hooks?
 
-However, if we <Emph>combine</Emph> the two patterns, we're getting the best of all worlds: Type-safety, co-location and great DX. 🚀
+However, if we <Emph>combine</Emph> the two patterns, we're getting the best of all worlds: Type safety, co-location and great DX. 🚀
 
 <Aside title="Query.gg 🔮">
 

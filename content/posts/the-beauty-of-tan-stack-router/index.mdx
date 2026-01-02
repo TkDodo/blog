@@ -65,7 +65,7 @@ I'm now helping out with TanStack Router as a contributor - but that wasn't the 
 
 </Aside>
 
-## Type Safe Routing
+## Type-Safe Routing
 
 As I said, routing is one of the most fundamental building blocks of your web application. So how come types around routing are ... so bad ? Like, literally an afterthought:
 
@@ -75,7 +75,7 @@ As I said, routing is one of the most fundamental building blocks of your web ap
 
 Feels like leftovers from a time where TypeScript didn't exist, things were implement with plain JS and we had types plucked on top that are only slightly better than `any`. I think that's literally what happened in a lot of existing routers, and to be fair, they have the disadvantage of being around _before_ TypeScript.
 
-TanStack Router lives and breathes TypeScript - it's meant for it, they are a perfect match. Sure, you could use it without types, but why would you when the TypeScript support is this good? All features were engineered with fully inferred type-safety in mind. That means no manual type assertions, no angle brackets `<>` to pass type parameters and type errors with informative messages when you do something that's invalid.
+TanStack Router lives and breathes TypeScript - it's meant for it, they are a perfect match. Sure, you could use it without types, but why would you when the TypeScript support is this good? All features were engineered with fully inferred type safety in mind. That means no manual type assertions, no angle brackets `<>` to pass type parameters and type errors with informative messages when you do something that's invalid.
 
 ### StrictOrFrom
 
@@ -132,7 +132,7 @@ Use the platform is a great principle, and nothing is more platform than the add
 
 But, again, [URLSearchParams](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams) are a mess when it comes to types. Yes, we can't know what's in there because users can directly manipulate it. The consensus is that user input can't be trusted and needs to be validated.
 
-So, if search params are tied to a route, and we have to validate them because they can't be trusted, and we can't get type-safety without validation - why doesn't the router validate them?
+So, if search params are tied to a route, and we have to validate them because they can't be trusted, and we can't get type safety without validation - why doesn't the router validate them?
 
 I really don't know, because that's exactly what TanStack Router does. You can get access to search params with `useSearch` - it's built on the same `StrictOrFrom` principle like path params - and validate the params directly on the route definition:
 
@@ -208,7 +208,7 @@ export function App() {
 }
 ```
 
-This will likely become a huge, nested tree of Routes, which is fine, but there's another problem: In order to achieve type-safety, routes must be known _in advance_, which is fundamentally incompatible with declarative routing.
+This will likely become a huge, nested tree of Routes, which is fine, but there's another problem: In order to achieve type safety, routes must be known _in advance_, which is fundamentally incompatible with declarative routing.
 
 That brings us to <Emph>Code-Based Routing</Emph>, which is the natural next evolution: If we want to have all our route definitions co-located anyway, why not move them out of the react component? That way, we can get extra type information about which routes exist upfront. That's what [createBrowserRoute](https://reactrouter.com/start/data/custom#1-create-a-router) in React Router does, and that's also how [createRouter](https://tanstack.com/router/latest/docs/framework/react/api/router/createRouterFunction) works in TanStack Router.
 
@@ -253,9 +253,9 @@ We are eagerly awaiting [concurrent stores](https://react.dev/blog/2025/04/23/re
 
 I haven't even touched on Route Context, Nested Routes, Query Integration, Search Middleware, how to get started in a monorepo or the optional SSR layer that is [TanStack Start](https://tanstack.com/start/latest), but let me tell you: They'll surely all blow your mind away.
 
-The biggest problem with TanStack Router is that once you've worked with it, you'll have a harder time going back to other routing solutions - you get spoiled by its DX and type-safety. Combined with React Query, this stack has been a game-changer for my productivity, and I can't wait to share more about it.
+The biggest problem with TanStack Router is that once you've worked with it, you'll have a harder time going back to other routing solutions - you get spoiled by its DX and type safety. Combined with React Query, this stack has been a game-changer for my productivity, and I can't wait to share more about it.
 
-Kudos to [Tanner](https://bsky.app/profile/tannerlinsley.com), [Manuel](https://bsky.app/profile/manuelschiller.bsky.social), [Sean](https://bsky.app/profile/seancassiere.com) and [Christopher](https://bsky.app/profile/chorobin.bsky.social) - they've truly created a work of beauty. Their attention to detail, DX and type-safety shows in every aspect of the router.
+Kudos to [Tanner](https://bsky.app/profile/tannerlinsley.com), [Manuel](https://bsky.app/profile/manuelschiller.bsky.social), [Sean](https://bsky.app/profile/seancassiere.com) and [Christopher](https://bsky.app/profile/chorobin.bsky.social) - they've truly created a work of beauty. Their attention to detail, DX and type safety shows in every aspect of the router.
 
 ---
 
