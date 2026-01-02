@@ -100,7 +100,7 @@ return (
 )
 ```
 
-This not only allowed us to get rid of the tedious mapping we had to do everywhere, it also gave us the type-safety we wanted, as there were no `children` that we needed to restrict. Also, `Select` can easily be made generic to make sure `value`, `onChange` and `options` all get the same type:
+This not only allowed us to get rid of the tedious mapping we had to do everywhere, it also gave us the type safety we wanted, as there were no `children` that we needed to restrict. Also, `Select` can easily be made generic to make sure `value`, `onChange` and `options` all get the same type:
 
 ```tsx:title=SelectProps
 type SelectValue = string | number
@@ -139,7 +139,7 @@ They still allow some form of flexibility by injecting arbitrary React component
 
 <VerticalRuler height="5em" />
 
-So those are two indicators - <Emph>fixed layout</Emph> and mostly <Emph>dynamic content</Emph> - that make me question if we really want a compound component. So when is it a really good fit then? And what does it have to do with type-safety?
+So those are two indicators - <Emph>fixed layout</Emph> and mostly <Emph>dynamic content</Emph> - that make me question if we really want a compound component. So when is it a really good fit then? And what does it have to do with type safety?
 
 ## A Better Example
 
@@ -164,7 +164,7 @@ function ThemeSwitcher({ value, onChange }) {
 
 The main difference to `Select` is that we explicitly want to have `children` that aren't of type `RadioGroupItem`. Being able to layout them how we want, maybe even with additional help texts, is essential. Sure, we might have some instances where our `RadioGroup` needs dynamic options as well, but in that case, crating a loop like I've shown before isn't the end of the world.
 
-That still leaves the problem of type-safety, as `value` passed to `ThemeSwitcher` hopefully isn't just a string - it's likely a string literal:
+That still leaves the problem of type safety, as `value` passed to `ThemeSwitcher` hopefully isn't just a string - it's likely a string literal:
 
 ```ts:title=ThemeValue
 type ThemeValue = 'system' | 'light' | 'dark'
@@ -172,7 +172,7 @@ type ThemeValue = 'system' | 'light' | 'dark'
 
 The `value` and `onChange` props can be tied to `ThemeValue` simply by making `RadioGroup` generic like I've shown before, but what about `RadioGroupItem` ? How do we make sure that the `value` passed to each one of them can be statically analyzed?
 
-## Type-Safety
+## Type Safety
 
 We can of course also make `RadioGroupItem` generic. The problem with that approach is that types from the `RadioGroup` wouldn't be automatically available to the items, because JSX children don't "inherit" type parameters from the parent component. So even if `RadioGroup` is perfectly typed and infers `<ThemeValue>`, we would still need to parameterize each `RadioGroupItem`:
 
