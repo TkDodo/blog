@@ -32,9 +32,11 @@ import { VerticalRuler } from 'components/VerticalRuler'
 
 I think compound components are a really good design-pattern when building component libraries. They give consumers flexibility in how components are composed, without forcing every variation into a single, prop-heavy API. Additionally, they make relationships between components explicit in the markup.
 
-This doesn't mean that compound components are _always_ a good fit. Sometimes, using `props` is just better. A common example we'll see regarding compound components is a `Select` with `Options`, likely because that's also how it works in HTML.
+This doesn't mean that compound components are _always_ a good fit. Sometimes, using `props` is just better.
 
 ## A Bad Example
+
+A common example we'll see regarding compound components is a `Select` with `Options`, likely because that's also how it works in HTML.
 
 ```tsx:title=Compound-Select
 import { Select, Option } from '@/components/select'
