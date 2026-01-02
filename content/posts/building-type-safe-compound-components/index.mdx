@@ -71,17 +71,17 @@ In fact, at Adverity, we started out with a compound component `Select` and then
 ```tsx:title=Select-Usage
 import { Select, Option } from '@/components/select'
 
-function UserSelect({ value, onChange })
+function UserSelect({ value, onChange }) {
+  const userQuery = useSuspenseQuery(userOptions)
 
-const userQuery = useSuspenseQuery(userOptions)
-
-return (
-  <Select value={value} onChange={onChange}>
-    {userQuery.data.map((option) => (
-      <Option value={option.value}>{option.label}</Option>
-    ))}
-  </Select>
-)
+  return (
+    <Select value={value} onChange={onChange}>
+      {userQuery.data.map((option) => (
+        <Option value={option.value}>{option.label}</Option>
+      ))}
+    </Select>
+  )
+}
 ```
 
 At that point, we just switched to exposing a `Select` that used `props` instead of `children`:
@@ -89,17 +89,17 @@ At that point, we just switched to exposing a `Select` that used `props` instead
 ```tsx:title=Select-With-Options
 import { Select } from '@/components/select'
 
-function UserSelect({ value, onChange })
+function UserSelect({ value, onChange }) {
+  const userQuery = useSuspenseQuery(userOptions)
 
-const userQuery = useSuspenseQuery(userOptions)
-
-return (
-  <Select
-    value={value}
-    onChange={onChange}
-    options={userQuery.data}
-  />
-)
+  return (
+    <Select
+      value={value}
+      onChange={onChange}
+      options={userQuery.data}
+    />
+  )
+}
 ```
 
 This not only allowed us to get rid of the tedious mapping we had to do everywhere, it also gave us the type safety we wanted, as there were no `children` that we needed to restrict. Also, `Select` can easily be made generic to make sure `value`, `onChange` and `options` all get the same type:
