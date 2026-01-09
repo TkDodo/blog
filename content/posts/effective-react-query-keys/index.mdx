@@ -46,13 +46,13 @@ import Highlight from 'components/Highlight'
   ]}
 </Translations>
 
-[Query Keys](https://react-query.tanstack.com/guides/query-keys) are a very important core concept in React Query. They are necessary so that the library can internally cache your data correctly and refetch automatically when a dependency to your query changes. Lastly, it will allow you to interact with the Query Cache manually when needed, for example, when updating data after a mutation or when you need to manually invalidate some queries.
+[Query Keys](https://tanstack.com/query/v5/docs/framework/react/guides/query-keys) are a very important core concept in React Query. They are necessary so that the library can internally cache your data correctly and refetch automatically when a dependency to your query changes. Lastly, it will allow you to interact with the Query Cache manually when needed, for example, when updating data after a mutation or when you need to manually invalidate some queries.
 
 Let's quickly have a look at what these three points mean before showing you how I personally organize Query Keys to be able to do these things more effectively.
 
 ## Caching Data
 
-Internally, the Query Cache is just a JavaScript object, where the keys are serialized Query Keys and the values are your Query Data plus meta information. The keys are hashed in a [deterministic way](https://react-query.tanstack.com/guides/query-keys#query-keys-are-hashed-deterministically), so you can use objects as well (on the top level, keys have to be strings or arrays though).
+Internally, the Query Cache is just a JavaScript object, where the keys are serialized Query Keys and the values are your Query Data plus meta information. The keys are hashed in a [deterministic way](https://tanstack.com/query/latest/docs/framework/react/guides/query-keys#query-keys-are-hashed-deterministically), so you can use objects as well (on the top level, keys have to be strings or arrays though).
 
 The most important part is that keys need to be _unique_ for your queries. If React Query finds an entry for a key in the cache, it will use it. Please also be aware that you cannot use the same key for `useQuery` _and_ `useInfiniteQuery`. There is, after all, only _one_ Query Cache, and you would share the data between these two. That is not good because infinite queries have a fundamentally different structure than "normal" queries.
 
@@ -118,7 +118,7 @@ The re-render triggered by the `setFilters` update will pass a different Query K
 
 ## Manual Interaction
 
-Manual Interactions with the Query Cache are where the structure of your Query Keys is most important. Many of those interaction methods, like [invalidateQueries](https://react-query.tanstack.com/reference/QueryClient#queryclientinvalidatequeries) or [setQueriesData](https://react-query.tanstack.com/reference/QueryClient#queryclientsetqueriesdata) support [Query Filters](https://react-query.tanstack.com/guides/filters#query-filters), which allow you to fuzzily match your Query Keys.
+Manual Interactions with the Query Cache are where the structure of your Query Keys is most important. Many of those interaction methods, like [invalidateQueries](https://tanstack.com/query/latest/docs/reference/QueryClient#queryclientinvalidatequeries) or [setQueriesData](https://tanstack.com/query/latest/docs/reference/QueryClient#queryclientsetquerydata) support [Query Filters](https://tanstack.com/query/latest/docs/framework/react/guides/filters#query-filters), which allow you to fuzzily match your Query Keys.
 
 ## Effective React Query Keys
 
