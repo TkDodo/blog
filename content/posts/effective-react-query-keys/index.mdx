@@ -184,7 +184,7 @@ function useUpdateTitle() {
       // ✅ update all the lists that contain this todo
       queryClient.setQueriesData(['todos', 'list'], (previous) =>
         previous.map((todo) =>
-          todo.id === newTodo.id ? newtodo : todo
+          todo.id === newTodo.id ? newTodo : todo
         )
       )
     },
