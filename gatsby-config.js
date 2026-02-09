@@ -149,7 +149,46 @@ module.exports = {
         icon: 'static/stack.png',
       },
     },
-    `gatsby-plugin-offline`,
+    {
+      resolve: `gatsby-plugin-offline`,
+      options: {
+        workboxConfig: {
+          // Enable immediate activation of new service workers
+          skipWaiting: true,
+          clientsClaim: true,
+          // Define runtime caching strategies
+          runtimeCaching: [
+            {
+              // Use NetworkFirst for page-data.json files to prevent stale chunk references
+              // This ensures fresh page metadata is always fetched during deployments
+              urlPattern: /^https?:.*\/page-data\/.*\/page-data\.json$/,
+              handler: `NetworkFirst`,
+              options: {
+                networkTimeoutSeconds: 5,
+              },
+            },
+            {
+              // NetworkFirst for app-data.json to keep app metadata fresh
+              urlPattern: /^https?:.*\/page-data\/app-data\.json$/,
+              handler: `NetworkFirst`,
+              options: {
+                networkTimeoutSeconds: 5,
+              },
+            },
+            {
+              // CacheFirst for static resources (JS, CSS) - they're content-hashed
+              urlPattern: /(\.js$|\.css$|static\/)/,
+              handler: `CacheFirst`,
+            },
+            {
+              // StaleWhileRevalidate for images and fonts
+              urlPattern: /\.(?:png|jpg|jpeg|webp|svg|gif|tiff|js|woff|woff2|json|css)$/,
+              handler: `StaleWhileRevalidate`,
+            },
+          ],
+        },
+      },
+    },
     {
       resolve: `@devular/gatsby-plugin-plausible`,
       options: {
