@@ -1,0 +1,25 @@
+---
+import { slugifyTag } from '@utils'
+import Link from './link.astro'
+
+interface Props {
+	tags: string[]
+}
+
+const { tags } = Astro.props
+---
+
+{
+	tags.map((tag, i) => (
+		<>
+				<Link
+					class="font-normal no-underline hover:underline!"
+					data-pagefind-filter="tag"
+					href={`/tags/${slugifyTag(tag)}/`}
+				>
+					{tag}
+				</Link>
+			{i < tags.length - 1 && ', '}
+		</>
+	))
+}

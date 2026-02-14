@@ -1,0 +1,26 @@
+---
+import { SKIP_NAV_ID } from '@constants'
+import type { HTMLAttributes } from 'astro/types'
+
+interface Props extends HTMLAttributes<'a'> {
+	contentId?: string
+}
+
+const { contentId, ...rest } = Astro.props
+const id = contentId || SKIP_NAV_ID
+---
+
+<a
+	{...rest}
+	class="border-0 h-px w-px -m-px p-0 overflow-hidden absolute focus:p-4 focus:fixed focus:top-1 focus:left-1 focus:bg-gray-100 dark:focus:bg-gray-800 focus:z-50 focus:w-auto focus:h-auto focus:text-black dark:focus:text-white"
+	href={`#${id}`}><slot>Skip to content</slot></a
+>
+
+<style>
+	a {
+		clip: rect(0, 0, 0, 0);
+	}
+	a:focus {
+		clip: auto;
+	}
+</style>

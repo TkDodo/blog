@@ -165,7 +165,7 @@ function App({ style }) {
 
 This memoization doesn't really achieve anything. We don't know if `style` will be passed as an inline object to `App`, so memoizing it here is pointless. We'd need to create a stable reference at the call-side of `App`.
 
-## {children}
+## children
 
 What's worse - this isn't the only way how our perf improvement can break. Another gotcha is that memoized components won't work as you might expect if they accept `children`:
 

@@ -1,0 +1,26 @@
+---
+import { SITE } from '@constants'
+import SkipNavLink from '@components/a11y/skip-nav-link.astro'
+import Header from '@components/header.astro'
+import Footer from '@components/footer.astro'
+import ThemeProvider from '@components/theme-provider.astro'
+import '@styles/global.css'
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<ThemeProvider />
+		<slot name="seo" />
+	</head>
+	<body class="min-h-screen bg-bg text-text">
+		<SkipNavLink />
+		<Header />
+		<slot />
+		<Footer />
+	</body>
+</html>

@@ -1,0 +1,17 @@
+---
+import Layout from '@layouts/layout.astro'
+import Seo from '@components/seo.astro'
+import SkipNavContent from '@components/a11y/skip-nav-content.astro'
+import { Content } from '@assets/about.mdx'
+import Prose from '@components/prose.astro'
+---
+
+<Layout>
+	<Seo slot="seo" title="About" />
+	<SkipNavContent>
+		<h1 class="sr-only">About</h1>
+		<Prose>
+			<Content />
+		</Prose>
+	</SkipNavContent>
+</Layout>

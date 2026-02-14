@@ -1,0 +1,87 @@
+---
+/**
+ * Adjusted from https://github.com/withastro/starlight/blob/574e594bade56cac8425be6ee722af668ade18df/packages/starlight/components/ThemeSelect.astro
+ *
+ * MIT License
+ * Copyright (c) 2023 Astro Contributors
+ */
+
+import Icon from './icon.astro'
+---
+
+<atmb-theme-select>
+	<label class="relative flex items-center gap-2">
+		<span class="sr-only">Select theme</span>
+		<Icon name="laptop" class="icon label-icon" />
+		<select value="auto" autocomplete="off">
+			{
+				[
+					{ label: 'Dark', selected: false, value: 'dark' },
+					{ label: 'Light', selected: false, value: 'light' },
+					{ label: 'Auto', selected: true, value: 'auto' },
+				].map(({ value, selected, label }) => <option value={value} selected={selected} set:html={label} />)
+			}
+		</select>
+	</label>
+</atmb-theme-select>
+
+{/* Inlined to avoid FOUC. Uses global scope from `ThemeProvider.astro` */}
+<script is:inline>
+	AtmbThemeProvider.updatePickers()
+</script>
+
+<script>
+	type Theme = 'auto' | 'dark' | 'light'
+
+	/** Key in `localStorage` to store color theme preference at. */
+	const storageKey = 'atmb-theme'
+
+	/** Get a typesafe theme string from any JS value (unknown values are coerced to `'auto'`). */
+	function parseTheme(theme: unknown): Theme {
+		return theme === 'auto' || theme === 'dark' || theme === 'light' ? theme : 'auto'
+	}
+
+	/** Load the user’s preference from `localStorage`. */
+	function loadTheme(): Theme {
+		return parseTheme(typeof localStorage !== 'undefined' && localStorage.getItem(storageKey))
+	}
+
+	/** Store the user’s preference in `localStorage`. */
+	function storeTheme(theme: Theme): void {
+		if (typeof localStorage !== 'undefined') {
+			localStorage.setItem(storageKey, theme === 'light' || theme === 'dark' ? theme : '')
+		}
+	}
+
+	/** Get the preferred system color scheme. */
+	function getPreferredColorScheme(): Theme {
+		return matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+	}
+
+	/** Update select menu UI, document theme, and local storage state. */
+	function onThemeChange(theme: Theme): void {
+		AtmbThemeProvider.updatePickers(theme)
+		document.documentElement.dataset.theme = theme === 'auto' ? getPreferredColorScheme() : theme
+		storeTheme(theme)
+	}
+
+	// React to changes in system color scheme.
+	matchMedia(`(prefers-color-scheme: light)`).addEventListener('change', () => {
+		// prettier-ignore
+		if (loadTheme() === 'auto')
+onThemeChange('auto')
+	})
+
+	class AtmbThemeSelect extends HTMLElement {
+		constructor() {
+			super()
+			onThemeChange(loadTheme())
+			this.querySelector('select')?.addEventListener('change', (e) => {
+				if (e.currentTarget instanceof HTMLSelectElement) {
+					onThemeChange(parseTheme(e.currentTarget.value))
+				}
+			})
+		}
+	}
+	customElements.define('atmb-theme-select', AtmbThemeSelect)
+</script>

@@ -1,0 +1,49 @@
+---
+import { SITE } from '@constants'
+
+interface Props {
+	title?: string
+	forceTitle?: string
+	description?: string
+	image?: string
+	noIndex?: boolean
+}
+
+const { title, forceTitle, description, image, noIndex = false } = Astro.props
+const {
+	title: siteTitle,
+	titleDefault: siteTitleDefault,
+	description: siteDescription,
+	url: siteUrl,
+	defaultOgImage: siteImage,
+} = SITE
+
+const seo = {
+	title: title ? `${title} | ${siteTitle}` : siteTitleDefault,
+	description: description || siteDescription,
+	url: new URL(Astro.url.pathname, siteUrl),
+	image: new URL(image || siteImage, siteUrl),
+}
+
+if (forceTitle) {
+	seo.title = forceTitle
+}
+---
+
+<title>{seo.title}</title>
+<meta name="description" content={seo.description} />
+<meta name="image" content={seo.image} />
+<link rel="alternate" type="application/rss+xml" title={SITE.titleDefault} href={new URL('rss.xml', Astro.site)} />
+<link rel="canonical" href={seo.url} />
+<meta property="og:title" content={seo.title} />
+<meta property="og:url" content={seo.url} />
+<meta property="og:description" content={seo.description} />
+<meta property="og:image" content={seo.image} />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={seo.title} />
+<meta name="twitter:url" content={seo.url} />
+<meta name="twitter:description" content={seo.description} />
+<meta name="twitter:image" content={seo.image} />
+{noIndex && <meta name="robots" content="noindex, nofollow" />}
+<slot />

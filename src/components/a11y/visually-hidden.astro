@@ -1,0 +1,9 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+interface Props extends HTMLAttributes<'span'> {}
+
+const { class: className, ...rest } = Astro.props
+---
+
+<span class:list={['sr-only', className]} {...rest}><slot /></span>

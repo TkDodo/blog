@@ -1,0 +1,48 @@
+---
+import Layout from '@layouts/layout.astro'
+import Seo from '@components/seo.astro'
+import { getCollection } from 'astro:content'
+import { Content as Hero } from '@assets/hero.mdx'
+import SkipNavContent from '@components/a11y/skip-nav-content.astro'
+import { defaultDateFormat, getPostSlug, sortAsc } from '@utils'
+import Link from '@components/link.astro'
+import Prose from '@components/prose.astro'
+import Spacer from '@components/spacer.astro'
+import { SITE } from '@constants'
+
+const POSTS_TO_SHOW = 3
+
+const posts = sortAsc(await getCollection('blog')).slice(0, POSTS_TO_SHOW)
+---
+
+<Layout>
+	<Seo slot="seo" />
+	<SkipNavContent>
+		<h1 class="sr-only">{SITE.title}</h1>
+		<Prose>
+			<Hero />
+		</Prose>
+		<Spacer axis="vertical" size={32} />
+		<section>
+			<div class="border-b border-border pb-4 flex justify-between items-center">
+				<h2 class="font-medium text-xl md:text-2xl lg:text-3xl text-highlight">Latest Posts</h2>
+				<div><Link href="/all/">Read all posts</Link></div>
+			</div>
+			<Spacer axis="vertical" size={8} />
+			<div class="flex gap-10 flex-col">
+			{
+				posts.map((entry) => (
+					<div>
+						<Link variant="highlight" href={`/${getPostSlug(entry)}/`}>
+							{entry.data.title}
+						</Link>
+						<Spacer axis="vertical" size={2} />
+						<div class="text-faded">{defaultDateFormat(entry.data.date)}</div>
+					</div>
+				))
+			}
+			</div>
+		</section>
+		<Spacer axis="vertical" size={32} />
+	</SkipNavContent>
+</Layout>

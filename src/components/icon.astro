@@ -1,0 +1,24 @@
+---
+import { type IconName, Icons } from '@assets/icons'
+
+interface Props {
+	name: IconName
+	label?: string
+	class?: string
+}
+
+const { name, label, class: className } = Astro.props
+const a11yAttrs = label ? ({ 'aria-label': label } as const) : ({ 'aria-hidden': 'true' } as const)
+---
+
+<>
+	<svg
+		{...a11yAttrs}
+		class={className}
+		width="16"
+		height="16"
+		viewBox="0 0 24 24"
+		fill="currentColor"
+		set:html={Icons[name]}
+	/>
+</>

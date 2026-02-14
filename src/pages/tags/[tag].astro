@@ -1,0 +1,52 @@
+---
+import SkipNavContent from '@components/a11y/skip-nav-content.astro'
+import Link from '@components/link.astro'
+import Seo from '@components/seo.astro'
+import Spacer from '@components/spacer.astro'
+import Layout from '@layouts/layout.astro'
+import { defaultDateFormat, getPostSlug, getPostsByTag, getTags } from '@utils'
+import { getCollection } from 'astro:content'
+
+/**
+ * 1. Generate static pages for all tags.
+ * 2. Each tag page will have a list of entries associated with that tag.
+ */
+export async function getStaticPaths() {
+	const entries = await getCollection('blog')
+	return getTags(entries).map(({ tag, slug }) => ({
+		params: { tag: slug },
+		props: {
+			tagName: tag,
+			postsWithTag: getPostsByTag(entries, tag),
+		},
+	}))
+}
+
+const { tagName, postsWithTag } = Astro.props
+---
+
+<Layout>
+	<Seo slot="seo" title={`Tag: ${tagName}`} />
+	<SkipNavContent>
+		<div class="border-b border-border pb-4 flex justify-between items-center">
+			<h1 class="font-medium text-xl md:text-2xl lg:text-3xl text-highlight">Tag: {tagName}</h1>
+			<div><Link href="/tags/">See all tags</Link></div>
+		</div>
+		<Spacer axis="vertical" size={8} />
+		<div class="flex gap-10 flex-col">
+			{
+				postsWithTag.map((entry) => (
+					<div>
+						<Link variant="highlight" href={`/${getPostSlug(entry)}/`}>
+							{entry.data.title}
+						</Link>
+						<Spacer axis="vertical" size={2} />
+						<div class="text-faded">
+							{defaultDateFormat(entry.data.date)} — {(entry.data.tags ?? []).join(', ')}
+						</div>
+					</div>
+				))
+			}
+		</div>
+	</SkipNavContent>
+</Layout>

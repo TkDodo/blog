@@ -1,0 +1,55 @@
+---
+import { getCollection, render } from 'astro:content'
+import Seo from '@components/seo.astro'
+import Layout from '@layouts/layout.astro'
+import Prose from '@components/prose.astro'
+import { SITE } from '@constants'
+import { defaultDateFormat, getPostSlug, isoDateFormat } from '@utils'
+import SkipNavContent from '@components/a11y/skip-nav-content.astro'
+import Spacer from '@components/spacer.astro'
+import Aside from '@components/aside.astro'
+import TagLinks from '@components/tag-links.astro'
+import Playground from '@components/playground.astro'
+import RepoData from 'components/RepoData'
+import Suspense from 'components/Suspense'
+import ErrorBoundary from 'components/ErrorBoundary'
+
+export async function getStaticPaths() {
+	const entries = await getCollection('blog')
+
+	return entries.map((e) => ({
+		params: {
+			blog: getPostSlug(e),
+		},
+		props: {
+			entry: e,
+		},
+	}))
+}
+
+const { entry } = Astro.props
+const { data: post } = entry
+const { Content } = await render(entry)
+---
+
+<Layout>
+	<Seo slot="seo" forceTitle={post.title} description={post.description} image={post.banner}>
+		<meta name="twitter:label1" value="Author" />
+		<meta name="twitter:data1" data-pagefind-meta="author" value={SITE.defaultAuthor} />
+		<meta name="twitter:label2" value="Tags" />
+		<meta name="twitter:data2" value={(post.tags ?? []).join(', ')} />
+		<meta name="article:published_time" data-pagefind-meta="published_time" content={isoDateFormat(post.date)} />
+		<meta name="article:modified_time" data-pagefind-meta="modified_time" content={isoDateFormat(post.date)} />
+	</Seo>
+	<SkipNavContent searchIndex={post.searchIndex}>
+		<Prose>
+			<h1 class="mb-0!" data-pagefind-meta="title">{post.title}</h1>
+			<Spacer axis="vertical" size={4} />
+			<div class="text-faded">
+				{defaultDateFormat(post.date)} — <TagLinks tags={post.tags ?? []} />
+			</div>
+			<Spacer axis="vertical" size={12} />
+			<Content components={{ Aside, Playground, RepoData, Suspense, ErrorBoundary }} />
+		</Prose>
+	</SkipNavContent>
+</Layout>

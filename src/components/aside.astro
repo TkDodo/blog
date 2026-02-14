@@ -1,0 +1,52 @@
+---
+import type { AsideType } from '@constants'
+import { capitalize } from '@utils'
+import Icon from './icon.astro'
+
+interface Props {
+	type: AsideType
+	title: string
+}
+
+const { title: _title, type } = Astro.props
+const capitalizedType = capitalize(type)
+const title = _title === '' ? capitalizedType : _title
+
+const styleVariants: Record<AsideType, { bg: string; accent: string; border: string }> = {
+	note: {
+		bg: 'bg-blue-100 dark:bg-blue-900/50',
+		accent: 'text-blue-600 dark:text-blue-300',
+		border: 'border-blue-400 dark:border-blue-600',
+	},
+	tip: {
+		bg: 'bg-purple-100 dark:bg-purple-900/50',
+		accent: 'text-purple-600 dark:text-purple-300',
+		border: 'border-purple-400 dark:border-purple-600',
+	},
+	caution: {
+		bg: 'bg-yellow-100 dark:bg-yellow-900/50',
+		accent: 'text-yellow-600 dark:text-yellow-300',
+		border: 'border-yellow-400 dark:border-yellow-600',
+	},
+	danger: {
+		bg: 'bg-red-100 dark:bg-red-900/50',
+		accent: 'text-red-600 dark:text-red-300',
+		border: 'border-red-400 dark:border-red-600',
+	},
+}
+
+const svgStyle = 'w-7 h-7 shrink-0 fill-current'
+---
+
+<aside
+	aria-label={capitalizedType}
+	class={`${styleVariants[type].bg} p-4 my-6 rounded-sm border-l-4 ${styleVariants[type].border}`}
+>
+	<p aria-hidden="true" class={`flex gap-4 items-center font-semibold ${styleVariants[type].accent} mt-0!`}>
+		<Icon name={type} class={svgStyle} />
+		{title}
+	</p>
+	<div class="[&>:first-child]:mt-0 [&>:last-child]:mb-0">
+		<slot />
+	</div>
+</aside>

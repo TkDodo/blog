@@ -1,0 +1,18 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+type Variant = 'highlight' | 'subtle'
+
+interface Props extends HTMLAttributes<'a'> {
+	variant?: Variant
+}
+
+const { class: className, variant = 'subtle', ...rest } = Astro.props
+
+const styleVariants: Record<Variant, string> = {
+	highlight: 'text-lg md:text-xl lg:text-2xl',
+	subtle: 'text-subtle',
+}
+---
+
+<a class:list={[styleVariants[variant], 'hover:underline hover:text-highlight', className]} {...rest}><slot /></a>

@@ -1,0 +1,35 @@
+---
+import Layout from '@layouts/layout.astro'
+import Seo from '@components/seo.astro'
+import { getCollection } from 'astro:content'
+import SkipNavContent from '@components/a11y/skip-nav-content.astro'
+import { defaultDateFormat, getPostSlug, sortAsc } from '@utils'
+import Spacer from '@components/spacer.astro'
+import Link from '@components/link.astro'
+
+const posts = sortAsc(await getCollection('blog'))
+---
+
+<Layout>
+	<Seo slot="seo" title="Blog" />
+	<SkipNavContent>
+		<h1 class="sr-only">Blog</h1>
+		<div class="flex gap-10 flex-col">
+			{
+				posts.map((entry) => (
+					<div>
+						<Link variant="highlight" class="font-medium" href={`/${getPostSlug(entry)}/`}>
+							{entry.data.title}
+						</Link>
+						<Spacer axis="vertical" size={2} />
+						<div class="text-faded">
+							{defaultDateFormat(entry.data.date)} — {(entry.data.tags ?? []).join(', ')}
+						</div>
+						<Spacer axis="vertical" size={4} />
+						<div class="text-subtle text-md md:text-lg">{entry.data.description}</div>
+					</div>
+				))
+			}
+		</div>
+	</SkipNavContent>
+</Layout>

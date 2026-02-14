@@ -1,0 +1,19 @@
+---
+import { SKIP_NAV_ID } from '@constants'
+import type { HTMLAttributes } from 'astro/types'
+
+/**
+ * Wrap the main content of a page with this, thus also the <main> tag
+ */
+interface Props extends HTMLAttributes<'main'> {
+	id?: string
+	searchIndex?: boolean
+}
+
+const { id: idProp, class: className, searchIndex = false } = Astro.props
+const id = idProp || SKIP_NAV_ID
+const dataAttributes: DOMStringMap = {}
+if (searchIndex) dataAttributes['data-pagefind-body'] = ''
+---
+
+<main id={id} class:list={['container', className]} {...dataAttributes}><slot /></main>

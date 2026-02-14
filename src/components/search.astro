@@ -1,0 +1,163 @@
+---
+/**
+ * Modified from Starlight's default search component.
+ * Source: https://github.com/withastro/starlight/blob/99faf85e1f13f2ddfef82596e1f978b3d7177f6f/packages/starlight/components/Search.astro
+ *
+ * MIT License
+ * Copyright (c) 2023 Astro Contributors
+ */
+
+import { trailingSlash } from 'astro:config/client'
+import Icon from './icon.astro'
+
+const dataAttributes: DOMStringMap = {}
+if (trailingSlash === 'never') dataAttributes['data-strip-trailing-slash'] = ''
+---
+
+<site-search class="contents" {...dataAttributes}>
+	<button
+		class="flex items-center sm:border sm:border-border sm:rounded-sm gap-2 sm:py-1 sm:px-3 sm:bg-white sm:dark:bg-black hover:cursor-pointer hover:border-gray-400 dark:hover:border-gray-500"
+		data-open-modal
+		disabled
+		aria-label="Search"
+		aria-keyshortcuts="Control+K"
+	>
+		<Icon name="search" class="w-5 h-5 sm:w-4 sm:h-4" />
+		<span class="hidden sm:block text-faded" aria-hidden="true">Search</span>
+		<kbd
+			class="hidden sm:flex bg-gray-100 dark:bg-gray-800 px-2 rounded-sm gap-1 ml-0 sm:ml-8 md:ml-12"
+			style="display: none;"
+		>
+			<kbd class="text-sm">Ctrl</kbd><kbd class="text-sm">K</kbd>
+		</kbd>
+	</button>
+
+	<dialog
+		class="p-0 m-0 w-full h-full max-w-full max-h-full shadow-xl open:flex flex-col backdrop:backdrop-blur-lg backdrop:bg-gray-900/20 border border-gray-300 dark:border-gray-600 sm:w-[90%] sm:max-w-3xl sm:h-max sm:min-h-64 sm:max-h-[calc(100%_-_8rem)] sm:rounded-lg sm:mt-12 sm:mx-auto bg-gray-100 dark:bg-gray-800"
+		aria-label="Search"
+	>
+		<div id="dialog-frame" class="relative overflow-auto flex flex-col gap-2 p-4 grow">
+			<button
+				data-close-modal
+				class="flex absolute self-end items-center p-0.5 text-subtle z-10 cursor-pointer sm:hidden"
+			>
+				Cancel
+			</button>
+			<div class="search-container">
+				<div id="search"></div>
+			</div>
+		</div>
+		<div class="hidden sm:block px-4 py-2 bg-gray-50 dark:bg-gray-900 text-faded">
+			<kbd class="text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-sm mr-1">Esc</kbd> to close
+		</div>
+	</dialog>
+</site-search>
+
+<script is:inline>
+	;(() => {
+		const openBtn = document.querySelector('button[data-open-modal]')
+		const shortcut = openBtn?.querySelector('kbd')
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return
+		const platformKey = shortcut.querySelector('kbd')
+		if (platformKey && /Mac|iPhone|iPod|iPad/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘'
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K')
+		}
+		shortcut.style.display = ''
+	})()
+</script>
+
+<script>
+	class SiteSearch extends HTMLElement {
+		constructor() {
+			super()
+			const openBtn = this.querySelector<HTMLButtonElement>('button[data-open-modal]')!
+			const closeBtn = this.querySelector<HTMLButtonElement>('button[data-close-modal]')!
+			const dialog = this.querySelector('dialog')!
+			const dialogFrame = this.querySelector('#dialog-frame')!
+
+			const closeModal = () => dialog.close()
+
+			/** Close the modal if a user clicks on a link or outside of the modal. */
+			const onClick = (event: MouseEvent) => {
+				const isLink = 'href' in (event.target || {})
+				if (isLink || (document.body.contains(event.target as Node) && !dialogFrame.contains(event.target as Node))) {
+					closeModal()
+				}
+			}
+
+			const openModal = (event?: MouseEvent) => {
+				dialog.showModal()
+				document.body.toggleAttribute('data-search-modal-open', true)
+				this.querySelector('input')?.focus()
+				event?.stopPropagation()
+				window.addEventListener('click', onClick)
+			}
+
+			openBtn.addEventListener('click', openModal)
+			openBtn.disabled = false
+			closeBtn.addEventListener('click', closeModal)
+
+			dialog.addEventListener('close', () => {
+				document.body.toggleAttribute('data-search-modal-open', false)
+				window.removeEventListener('click', onClick)
+			})
+
+			// Listen for `ctrl + k` and `cmd + k` keyboard shortcuts.
+			window.addEventListener('keydown', (e) => {
+				if ((e.metaKey === true || e.ctrlKey === true) && e.key === 'k') {
+					dialog.open ? closeModal() : openModal()
+					e.preventDefault()
+				}
+			})
+
+			const shouldStrip = this.dataset.stripTrailingSlash !== undefined
+			const stripTrailingSlash = (path: string) => path.replace(/(.)\/(#.*)?$/, '$1$2')
+			const formatURL = shouldStrip ? stripTrailingSlash : (path: string) => path
+
+			window.addEventListener('DOMContentLoaded', () => {
+				const onIdle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1))
+				onIdle(async () => {
+					// @ts-expect-error — Missing types for @pagefind/default-ui package.
+					const { PagefindUI } = await import('@pagefind/default-ui')
+					// eslint-disable-next-line no-new
+					new PagefindUI({
+						element: '#search',
+						baseUrl: import.meta.env.BASE_URL,
+						bundlePath: `${import.meta.env.BASE_URL.replace(/\/$/, '')}/pagefind/`,
+						showImages: false,
+						showSubResults: true,
+						resetStyles: false,
+						processResult: (result: { url: string; sub_results: Array<{ url: string }> }) => {
+							result.url = formatURL(result.url)
+							result.sub_results = result.sub_results.map((sub_result) => {
+								sub_result.url = formatURL(sub_result.url)
+								return sub_result
+							})
+						},
+					})
+				})
+			})
+		}
+	}
+	customElements.define('site-search', SiteSearch)
+</script>
+
+<style is:global>
+	@import url('@pagefind/default-ui/css/ui.css');
+
+	[data-search-modal-open] {
+		overflow: hidden;
+	}
+
+	[data-close-modal] {
+		height: calc(64px * var(--pagefind-ui-scale));
+	}
+
+	:root {
+		--pagefind-ui-primary: var(--color-primary);
+		--pagefind-ui-text: var(--color-text);
+		--pagefind-ui-background: var(--color-bg);
+		--pagefind-ui-border: var(--color-border);
+	}
+</style>
