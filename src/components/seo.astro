@@ -24,6 +24,9 @@ const seo = {
 	url: new URL(Astro.url.pathname, siteUrl),
 	image: new URL(image || siteImage, siteUrl),
 }
+const normalizedBase = import.meta.env.BASE_URL.replace(/^\/|\/$/g, '')
+const rssPath = normalizedBase ? `${normalizedBase}/rss.xml` : 'rss.xml'
+const rssUrl = new URL(rssPath, siteUrl)
 
 if (forceTitle) {
 	seo.title = forceTitle
@@ -33,7 +36,7 @@ if (forceTitle) {
 <title>{seo.title}</title>
 <meta name="description" content={seo.description} />
 <meta name="image" content={seo.image} />
-<link rel="alternate" type="application/rss+xml" title={SITE.titleDefault} href={new URL('rss.xml', Astro.site)} />
+<link rel="alternate" type="application/rss+xml" title={SITE.titleDefault} href={rssUrl} />
 <link rel="canonical" href={seo.url} />
 <meta property="og:title" content={seo.title} />
 <meta property="og:url" content={seo.url} />

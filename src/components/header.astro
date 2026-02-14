@@ -5,17 +5,17 @@ import Link from './link.astro'
 import Search from './search.astro'
 
 const { pathname } = Astro.url
-const normalizedPath = pathname.replace(/^\/blog/, '') || '/'
+const normalizedPath = (pathname.replace(/^\/blog/, '') || '/').replace(/\/$/, '') || '/'
 ---
 
 <header class="container">
 	<Spacer axis="vertical" size={8} />
 	<div class="flex flex-row justify-between items-center">
 		<div>
-			<a
+			<Link
 				class="font-semibold text-xl md:text-2xl lg:text-3xl text-highlight"
 				href="/"
-				aria-label={`${SITE.title} - Back to home`}>{SITE.title}</a
+				aria-label={`${SITE.title} - Back to home`}>{SITE.title}</Link
 			>
 		</div>
 		<Search />
@@ -27,8 +27,8 @@ const normalizedPath = pathname.replace(/^\/blog/, '') || '/'
 				HEADER.internal.map((link) => (
 					<Link
 						href={link.url}
-						class={normalizedPath === link.url ? 'active' : ''}
-						aria-current={normalizedPath === link.url ? 'page' : 'false'}
+						class={(link.url.replace(/\/$/, '') || '/') === normalizedPath ? 'active' : ''}
+						aria-current={(link.url.replace(/\/$/, '') || '/') === normalizedPath ? 'page' : 'false'}
 					>
 						{link.title}
 					</Link>

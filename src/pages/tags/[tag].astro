@@ -30,14 +30,14 @@ const { tagName, postsWithTag } = Astro.props
 	<SkipNavContent>
 		<div class="border-b border-border pb-4 flex justify-between items-center">
 			<h1 class="font-medium text-xl md:text-2xl lg:text-3xl text-highlight">Tag: {tagName}</h1>
-			<div><Link href="/tags/">See all tags</Link></div>
+			<div><Link href="/tags">See all tags</Link></div>
 		</div>
 		<Spacer axis="vertical" size={8} />
 		<div class="flex gap-10 flex-col">
 			{
 				postsWithTag.map((entry) => (
 					<div>
-						<Link variant="highlight" href={`/${getPostSlug(entry)}/`}>
+						<Link variant="highlight" href={`/${getPostSlug(entry)}`}>
 							{entry.data.title}
 						</Link>
 						<Spacer axis="vertical" size={2} />

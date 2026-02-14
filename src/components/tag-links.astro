@@ -15,7 +15,7 @@ const { tags } = Astro.props
 				<Link
 					class="font-normal no-underline hover:underline!"
 					data-pagefind-filter="tag"
-					href={`/tags/${slugifyTag(tag)}/`}
+					href={`/tags/${slugifyTag(tag)}`}
 				>
 					{tag}
 				</Link>

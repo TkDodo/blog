@@ -10,19 +10,21 @@ function generateContent(description: string, link: string) {
 }
 
 export const GET: APIRoute = async () => {
+	const normalizedBase = import.meta.env.BASE_URL.replace(/^\/|\/$/g, '')
+	const siteWithBase = new URL(normalizedBase ? `${normalizedBase}/` : '', SITE.url)
 	const items = (sortAsc(await getCollection('blog'))).map(entry => ({
 		title: entry.data.title,
 		description: entry.data.description,
 		content: generateContent(entry.data.description, getPostSlug(entry)),
-		link: `/${getPostSlug(entry)}/`,
+		link: getPostSlug(entry),
 		pubDate: entry.data.date,
 	} satisfies RSSFeedItem))
 
 	return rss({
-		trailingSlash: true,
+		trailingSlash: false,
 		title: SITE.titleDefault,
 		description: SITE.description,
-		site: SITE.url,
+		site: siteWithBase.toString(),
 		items,
 		customData: '<language>en-us</language>',
 	})

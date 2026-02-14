@@ -21,9 +21,9 @@ interface Header {
  */
 export const HEADER: Header = {
 	internal: [
-		{ title: 'Blog', url: '/all/' },
-		{ title: 'Tags', url: '/tags/' },
-		{ title: 'Sponsors', url: '/sponsors/' },
+		{ title: 'Blog', url: '/all' },
+		{ title: 'Tags', url: '/tags' },
+		{ title: 'Sponsors', url: '/sponsors' },
 	],
 	external: [
 		{
