@@ -55,5 +55,15 @@ const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
     <Header />
     <slot />
     <Footer />
+    <script is:inline>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.getRegistrations().then((regs) => {
+          regs.forEach((r) => r.unregister());
+        });
+        if (window.caches) {
+          caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
+        }
+      }
+    </script>
   </body>
 </html>
