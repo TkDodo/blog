@@ -148,6 +148,10 @@
 
 /* Custom styles */
 
+a {
+  transition: 0.3s ease-in-out;
+}
+
 a.active {
   color: var(--color-highlight);
 }
