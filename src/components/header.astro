@@ -12,16 +12,19 @@ const normalizedPath = (pathname.replace(/^\/blog/, '') || '/').replace(/\/$/, '
 <header class="container">
 	<Spacer axis="vertical" size={8} />
 	<div class="flex flex-row justify-between items-center">
-		<div>
-			<Link
-				variant="highlight"
-				underlineOnHover={false}
-				class="font-semibold text-xl md:text-2xl lg:text-3xl text-text"
-				href="/"
-				aria-label={`${SITE.title} - Back to home`}>{SITE.title}</Link
-			>
+		<div class="flex items-center gap-3">
+			<div>
+				<Link
+					variant="highlight"
+					underlineOnHover={false}
+					class="font-semibold text-xl md:text-2xl lg:text-3xl text-text"
+					href="/"
+					aria-label={`${SITE.title} - Back to home`}>{SITE.title}</Link
+				>
+			</div>
+			<Search />
 		</div>
-		<Search />
+		<ThemeSelect />
 	</div>
 	<Spacer axis="vertical" size={6} />
 	<div class="flex flex-row justify-between items-center border-b border-border pb-4 text-base md:text-lg">
@@ -39,7 +42,6 @@ const normalizedPath = (pathname.replace(/^\/blog/, '') || '/').replace(/\/$/, '
 			}
 		</nav>
 		<div class="flex items-center gap-4">
-			<ThemeSelect />
 			{
 				HEADER.external.map((link) => (
 					<Link href={link.url} {...link.props}>
