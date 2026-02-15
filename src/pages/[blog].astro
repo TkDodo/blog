@@ -30,6 +30,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { data: post } = entry;
+const postSlug = getPostSlug(entry);
 const { Content } = await render(entry);
 const banners = import.meta.glob(
   "/content/posts/**/*.{avif,gif,jpeg,jpg,png,webp}",
@@ -47,6 +48,7 @@ const postBanner = (() => {
 
   return banners[key] ?? null;
 })();
+const ogImagePath = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/og-images/${postSlug}.png`;
 ---
 
 <Layout>
@@ -54,7 +56,7 @@ const postBanner = (() => {
     slot="seo"
     forceTitle={post.title}
     description={post.description}
-    image={postBanner ? postBanner.src : post.banner}
+    image={ogImagePath}
   >
     <meta name="twitter:label1" value="Author" />
     <meta

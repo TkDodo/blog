@@ -13,7 +13,7 @@
     "lint:fix": "eslint --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "assistant": "tsx ./scripts/assistant.ts"
+    "ogimages": "tsx ./scripts/og-image.tsx"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.9",
@@ -35,6 +35,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-spring-carousel": "^2.0.19",
+    "satori": "^0.18.4",
     "tailwindcss": "^4.1.16"
   },
   "devDependencies": {
@@ -48,6 +49,7 @@
     "eslint": "^9.39.0",
     "eslint-plugin-astro": "^1.4.0",
     "eslint-plugin-format": "^1.0.2",
+    "gray-matter": "^4.0.3",
     "hast-util-to-string": "^3.0.1",
     "hastscript": "^9.0.1",
     "mdast-util-mdx-jsx": "^3.2.0",
