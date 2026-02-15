@@ -4,6 +4,21 @@
   status = 301
 
 [[redirects]]
+  from = "/blog"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/blog/"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/blog/*"
+  to = "/:splat"
+  status = 200
+
+[[redirects]]
   from = "/images/*"
   to = "/blog/images/:splat"
   status = 301
