@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import { getCollection, render } from "astro:content";
 import Seo from "@components/seo.astro";
 import Layout from "@layouts/layout.astro";
@@ -30,6 +31,22 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { data: post } = entry;
 const { Content } = await render(entry);
+const banners = import.meta.glob(
+  "/content/posts/**/*.{avif,gif,jpeg,jpg,png,webp}",
+  {
+    eager: true,
+    import: "default",
+  },
+);
+const postBanner = (() => {
+  if (!entry.filePath || !post.banner) return null;
+
+  const basePath = entry.filePath.replace(/\/index\.mdx$/, "/");
+  const bannerPath = post.banner.replace(/^\.?\//, "");
+  const key = `/${basePath}${bannerPath}`;
+
+  return banners[key] ?? null;
+})();
 ---
 
 <Layout>
@@ -37,7 +54,7 @@ const { Content } = await render(entry);
     slot="seo"
     forceTitle={post.title}
     description={post.description}
-    image={post.banner}
+    image={postBanner ? postBanner.src : post.banner}
   >
     <meta name="twitter:label1" value="Author" />
     <meta
@@ -66,6 +83,14 @@ const { Content } = await render(entry);
         {defaultDateFormat(post.date)} — <TagLinks tags={post.tags ?? []} />
       </div>
       <Spacer axis="vertical" size={12} />
+      {
+        postBanner && (
+          <>
+            <Image src={postBanner} alt={post.title} class="rounded-lg" />
+            <Spacer axis="vertical" size={8} />
+          </>
+        )
+      }
       <Content
         components={{ Aside, Playground, RepoData, Suspense, ErrorBoundary }}
       />

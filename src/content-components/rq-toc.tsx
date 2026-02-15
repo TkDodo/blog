@@ -1,52 +1,116 @@
-import SeriesToc from "./series-toc";
-
 type Props = {
   id?: string;
 };
 
-const RQ_SERIES = [
-  { id: "practical-react-query", title: "Practical React Query" },
-  { id: "status-checks-in-react-query", title: "Status Checks in React Query" },
-  { id: "testing-react-query", title: "Testing React Query" },
-  { id: "react-query-and-type-script", title: "React Query and TypeScript" },
-  { id: "effective-react-query-keys", title: "Effective React Query Keys" },
-  { id: "react-query-fa-qs", title: "React Query FAQs" },
-  {
-    id: "mastering-mutations-in-react-query",
-    title: "Mastering Mutations in React Query",
-  },
-  { id: "react-query-error-handling", title: "React Query Error Handling" },
+const mapping = [
+  { id: "practical-react-query", title: "#1: Practical React Query" },
   {
     id: "react-query-data-transformations",
-    title: "React Query Data Transformations",
+    title: "#2: React Query Data Transformations",
+  },
+  {
+    id: "react-query-render-optimizations",
+    title: "#3: React Query Render Optimizations",
+  },
+  {
+    id: "status-checks-in-react-query",
+    title: "#4: Status Checks in React Query",
+  },
+  { id: "testing-react-query", title: "#5: Testing React Query" },
+  {
+    id: "react-query-and-type-script",
+    title: "#6: React Query and TypeScript",
+  },
+  {
+    id: "using-web-sockets-with-react-query",
+    title: "#7: Using WebSockets with React Query",
+  },
+  {
+    id: "effective-react-query-keys",
+    title: "#8: Effective React Query Keys",
+  },
+  {
+    id: "leveraging-the-query-function-context",
+    title: "#8a: Leveraging the Query Function Context",
+  },
+  {
+    id: "placeholder-and-initial-data-in-react-query",
+    title: "#9: Placeholder and Initial Data in React Query",
   },
   {
     id: "react-query-as-a-state-manager",
-    title: "React Query as a State Manager",
+    title: "#10: React Query as a State Manager",
   },
+  {
+    id: "react-query-error-handling",
+    title: "#11: React Query Error Handling",
+  },
+  {
+    id: "mastering-mutations-in-react-query",
+    title: "#12: Mastering Mutations in React Query",
+  },
+  { id: "offline-react-query", title: "#13: Offline React Query" },
+  {
+    id: "react-query-and-forms",
+    title: "#14: React Query and Forms",
+  },
+  { id: "react-query-fa-qs", title: "#15: React Query FAQs" },
   {
     id: "react-query-meets-react-router",
-    title: "React Query meets React Router",
+    title: "#16: React Query meets React Router",
   },
-  { id: "inside-react-query", title: "Inside React Query" },
   {
-    id: "placeholder-and-initial-data-in-react-query",
-    title: "Placeholder and Initial Data",
+    id: "seeding-the-query-cache",
+    title: "#17: Seeding the Query Cache",
   },
-  { id: "the-query-options-api", title: "The Query Options API" },
-  { id: "how-infinite-queries-work", title: "How Infinite Queries work" },
-  { id: "seeding-the-query-cache", title: "Seeding the Query Cache" },
+  { id: "inside-react-query", title: "#18: Inside React Query" },
+  {
+    id: "type-safe-react-query",
+    title: "#19: Type-safe React Query",
+  },
+  {
+    id: "you-might-not-need-react-query",
+    title: "#20: You Might Not Need React Query",
+  },
+  {
+    id: "thinking-in-react-query",
+    title: "#21: Thinking in React Query",
+  },
+  {
+    id: "react-query-and-react-context",
+    title: "#22: React Query and React Context",
+  },
+  {
+    id: "why-you-want-react-query",
+    title: "#23: Why You Want React Query",
+  },
+  {
+    id: "the-query-options-api",
+    title: "#24: The Query Options API",
+  },
   {
     id: "automatic-query-invalidation-after-mutations",
-    title: "Automatic Query Invalidation",
+    title: "#25: Automatic Query Invalidation after Mutations",
   },
   {
-    id: "react-query-selectors-supercharged",
-    title: "React Query Selectors, Supercharged",
+    id: "how-infinite-queries-work",
+    title: "#26: How Infinite Queries work",
+  },
+  {
+    id: "react-query-api-design-lessons-learned",
+    title: "#27: React Query API Design - Lessons Learned",
+  },
+  {
+    id: "react-query-the-bad-parts",
+    title: "#28: React Query - The Bad Parts",
   },
   {
     id: "concurrent-optimistic-updates-in-react-query",
-    title: "Concurrent Optimistic Updates",
+    title: "#29: Concurrent Optimistic Updates in React Query",
+  },
+  {
+    id: "react-query-selectors-supercharged",
+    title: "#30: React Query Selectors, Supercharged",
   },
 ];
 
@@ -54,6 +118,32 @@ export function RqToc({ id }: Props) {
   if (!id) return null;
 
   return (
-    <SeriesToc title="React Query Series" currentId={id} items={RQ_SERIES} />
+    <ul
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        listStyleType: "none",
+        gap: "0.7rem",
+        paddingTop: "0.5rem",
+        paddingBottom: "1rem",
+        paddingLeft: 0,
+      }}
+    >
+      {mapping.map((item) => {
+        if (item.id === id) {
+          return (
+            <li key={item.id}>
+              <b>{item.title}</b>
+            </li>
+          );
+        }
+
+        return (
+          <li key={item.id}>
+            <a href={`./${item.id}`}>{item.title}</a>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
