@@ -186,7 +186,7 @@ a.active {
 
 /* Global keyboard focus ring */
 :where(
-    a,
+  a,
   button,
   input,
   select,
