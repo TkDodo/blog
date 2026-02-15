@@ -15,10 +15,12 @@ interface Props {
 const { files, template, customSetup } = Astro.props;
 ---
 
-<Sandpack
-  theme="auto"
-  files={files}
-  template={template}
-  customSetup={customSetup}
-  client:visible
-/>
+<div class="not-prose my-8" data-playground>
+  <Sandpack
+    theme="auto"
+    files={files}
+    template={template}
+    customSetup={customSetup}
+    client:visible
+  />
+</div>
