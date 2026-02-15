@@ -25,7 +25,8 @@ import Tweet, { AvatarHousecor } from "components/Tweet";
 - <b>#1: The Uphill Battle of Memoization</b>
 - [#2: The Useless useCallback](the-useless-use-callback)
 
-<Translations translations={[
+<Translations
+  translations={[
     {
       language: "한국어",
       url: "https://velog.io/@cnsrn1874/the-uphill-battle-of-memoization",
@@ -34,7 +35,8 @@ import Tweet, { AvatarHousecor } from "components/Tweet";
       language: "Português (Brasil)",
       url: "https://dev.to/oaraujocesar/a-ardua-batalha-da-memoizacao-3nja",
     },
-  ]} />
+  ]}
+/>
 
 ---
 
@@ -212,11 +214,8 @@ So using `React.memo` is a bit of a minefield, and choosing one of the proposed 
     changes, everything renders. It's slow.
   </p>
   <p>Solution:</p>
-  <p>
-    1. I wrapped each table in memo.
-    <br />
-    2. I wrapped the functions passed down in useCallback.
-  </p>
+  <p>1. I wrapped each table in memo.</p>
+  <p>2. I wrapped the functions passed down in useCallback.</p>
   <p>MUCH faster.</p>
 </Tweet>
 

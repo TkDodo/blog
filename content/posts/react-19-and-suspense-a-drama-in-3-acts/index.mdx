@@ -31,12 +31,14 @@ import Tweet, {
 
 <Attribution name="Jr Korpa" url="https://unsplash.com/@jrkorpa" />
 
-<Translations translations={[
+<Translations
+  translations={[
     {
       language: "한국어",
       url: "https://velog.io/@cnsrn1874/react-19-and-suspense-a-drama-in-3-acts",
     },
-  ]} />
+  ]}
+/>
 
 That was quite a roller-coaster last week 🎢. Some things unravelled, some things went down, and in the middle of it: [React Summit](https://reactsummit.com/), the biggest React conference in the world.
 
@@ -85,19 +87,14 @@ Full disclosure upfront: I wasn't the first to discover this. Shout out to [Gabr
   date={new Date("2024-04-26")}
 >
   <p>A ton of great changes! 🥳</p>
-  <p>
-    However this change probably deserve a bigger disclaimer.
-    <br />
-    https://github.com/facebook/react...
-  </p>
+  <p>However this change probably deserve a bigger disclaimer.</p>
+  <p>https://github.com/facebook/react...</p>
   <p>
     Code using suspense with libraries like react-query will get waterfalls
     where loading previously happened in parallel.
-    <br />
-    https://codesandbox.io/p/devbox/react...
-    <br />
-    https://codesandbox.io/p/devbox/react...
   </p>
+  <p>https://codesandbox.io/p/devbox/react...</p>
+  <p>https://codesandbox.io/p/devbox/react...</p>
 </Tweet>
 
 It's funny because I saw the tweet, and even commented on it, but didn't think too much of it at the time. As I said, I was quite busy and planned to look into React 19 later.
@@ -312,15 +309,13 @@ On the next day, the react team met and decided to hold the release:
   avatar={<AvatarSophiebits />}
   date={new Date("2024-06-14")}
 >
+  <p>good news re Suspense, just met w/ @rickhanlonii @en_JS @acdlite</p>
   <p>
-    good news re Suspense, just met w/ @rickhanlonii @en_JS @acdlite
-    <br />
     * we care a lot about SPAs, team misjudged how many people rely on this
     today
-    <br />
-    * still recommend preloading but recognize not always practical
-    <br />* we plan to hold the 19.0 release until we find a good fix
   </p>
+  <p>* still recommend preloading but recognize not always practical</p>
+  <p>* we plan to hold the 19.0 release until we find a good fix</p>
 </Tweet>
 
 It's very reassuring that the react team is open to feedback at this stage. Postponing a release that was already announced and presented at a conference is a big move - one that everyone involved really appreciated. I'll gladly work with the react team as best I can to find good compromise in that matter.

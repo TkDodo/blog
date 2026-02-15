@@ -289,7 +289,9 @@ export default function Tweet({
           </div>
         </div>
       </div>
-      <div className="my-4">{children}</div>
+      <div className="my-4 leading-normal [&_p]:m-0 [&_p]:leading-normal [&_p+p]:mt-0 [&_br]:leading-normal">
+        {children}
+      </div>
       <div className="text-xs md:text-base text-faded">
         -{" "}
         {Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(
