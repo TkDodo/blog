@@ -236,3 +236,33 @@ samp {
 .expressive-code {
   --ec-codeFontFamily: var(--font-mono);
 }
+
+.tweet-poll-progress {
+  appearance: none;
+  border: none;
+  border-radius: 4px;
+  background-color: transparent;
+  overflow: hidden;
+}
+
+.tweet-poll-progress::-webkit-progress-bar {
+  background-color: transparent;
+}
+
+.tweet-poll-progress::-webkit-progress-value {
+  background-color: var(--color-twitter-poll-bg);
+  border-radius: 4px;
+}
+
+.tweet-poll-progress.is-winner::-webkit-progress-value {
+  background-color: var(--color-twitter-poll-bg-winner);
+}
+
+.tweet-poll-progress::-moz-progress-bar {
+  background-color: var(--color-twitter-poll-bg);
+  border-radius: 4px;
+}
+
+.tweet-poll-progress.is-winner::-moz-progress-bar {
+  background-color: var(--color-twitter-poll-bg-winner);
+}

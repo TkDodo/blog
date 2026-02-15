@@ -13,13 +13,7 @@ const CATEGORY_ID =
 
 export default function Comments() {
   return (
-    <section
-      style={{
-        marginTop: "3rem",
-        paddingTop: "1.5rem",
-        borderTop: "1px solid var(--color-border)",
-      }}
-    >
+    <section className="mt-12 pt-6 border-t border-border">
       <div className="giscus" />
       <script
         src="https://giscus.app/client.js"

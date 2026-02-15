@@ -12,50 +12,21 @@ type Props = {
 
 export function TweetPoll({ options, votes }: Props) {
   return (
-    <span
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "4px",
-        padding: 0,
-      }}
-    >
+    <span className="tweet-poll flex flex-col gap-1 p-0">
       {options.map(({ id, name, percentage, winner = false }) => (
-        <span
-          key={id}
-          style={{
-            position: "relative",
-            minHeight: "32px",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <span
-            style={{
-              zIndex: 0,
-              position: "absolute",
-              width: percentage,
-              borderRadius: "4px",
-              minHeight: "32px",
-              backgroundColor: winner
-                ? "var(--color-twitter-poll-bg-winner)"
-                : "var(--color-twitter-poll-bg)",
-            }}
+        <span key={id} className="relative min-h-8 flex items-center justify-between">
+          <progress
+            max={100}
+            value={Number.parseFloat(percentage)}
+            className={`tweet-poll-progress absolute inset-0 h-8 w-full ${winner ? "is-winner" : ""}`}
           />
-          <span
-            style={{
-              zIndex: 1,
-              flexShrink: "1",
-              paddingLeft: "12px",
-              paddingRight: "12px",
-            }}
-          >
+          <span className="z-10 shrink px-3">
             {winner ? <b>{name}</b> : name}
           </span>
-          <span>{percentage}</span>
+          <span className="z-10 pr-3">{percentage}</span>
         </span>
       ))}
-      <span style={{ fontSize: "0.85rem", color: "var(--color-faded)" }}>
+      <span className="text-[0.85rem] text-faded">
         {votes} votes · Final results
       </span>
     </span>

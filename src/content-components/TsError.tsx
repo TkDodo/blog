@@ -6,7 +6,7 @@ type Props = {
 
 export function TsError({ children }: Props) {
   return (
-    <pre style={{ color: "#b00020", whiteSpace: "pre-wrap" }}>
+    <pre className="text-[#b00020] whitespace-pre-wrap">
       <code>{children}</code>
     </pre>
   );

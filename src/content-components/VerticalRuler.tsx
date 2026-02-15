@@ -3,16 +3,10 @@ type Props = {
 };
 
 export function VerticalRuler({ height = "4rem" }: Props) {
+  const heightClass =
+    height === "15em" ? "h-[15em]" : height === "5em" ? "h-[5em]" : "h-16";
+
   return (
-    <hr
-      style={{
-        width: "4px",
-        height,
-        background: "var(--color-primary)",
-        margin: "5em auto",
-        border: "none",
-        borderRadius: "5px",
-      }}
-    />
+    <hr className={`w-1 ${heightClass} bg-primary my-[5em] mx-auto border-0 rounded-[5px]`} />
   );
 }

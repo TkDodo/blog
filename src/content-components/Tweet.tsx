@@ -73,21 +73,13 @@ const AvatarImage = ({ handle, name }: { handle: string; name: string }) => {
   const src = avatarSrc(handle);
   if (!src)
     return (
-      <div
-        style={{ width: "3.5rem", height: "3.5rem", marginRight: "1rem" }}
-        aria-hidden="true"
-      />
+      <div className="w-14 h-14 mr-4" aria-hidden="true" />
     );
 
   return (
-    <div style={{ width: "3.5rem", height: "3.5rem", marginRight: "1rem" }}>
+    <div className="w-14 h-14 mr-4">
       <img
-        style={{
-          borderRadius: "50%",
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-        }}
+        className="rounded-full w-full h-full object-cover"
         src={src}
         alt={`Avatar for ${name}`}
         loading="lazy"
@@ -118,12 +110,7 @@ export const AvatarHousecor = () => null;
 export const AvatarMxstbr = () => null;
 
 export const TweetImage = ({ children }: { children: ReactNode }) => (
-  <div
-    style={{
-      borderRadius: "0.75rem",
-      overflow: "hidden",
-    }}
-  >
+  <div className="rounded-xl overflow-hidden">
     {children}
   </div>
 );
@@ -208,43 +195,25 @@ export default function Tweet({
 
   return (
     <a
-      style={{
-        color: "var(--color-text)",
-        textDecoration: "none",
-        display: "block",
-        width: "100%",
-        maxWidth: "550px",
-        margin: "1em 0",
-        position: "relative",
-        borderRadius: "0.5rem",
-        padding: "1.5rem",
-        fontSize: "1rem",
-        border: "1px solid var(--color-border)",
-      }}
+      className="text-text no-underline block w-full max-w-[550px] my-4 relative rounded-lg p-6 text-base border border-border"
       href={href}
       target="_blank"
       rel="noopener noreferrer"
     >
-      <div style={{ position: "absolute", right: "1rem", top: "1rem" }}>
+      <div className="absolute right-4 top-4">
         {normalizedType === "bsky" ? <BskyIcon /> : <TwitterIcon />}
       </div>
-      <div style={{ display: "flex" }}>
+      <div className="flex">
         <AvatarImage handle={handle} name={name} />
         <div>
-          <div style={{ fontWeight: 600 }}>{name}</div>
-          <div
-            style={{
-              fontSize: "0.85rem",
-              lineHeight: "0.95rem",
-              color: "var(--color-faded)",
-            }}
-          >
+          <div className="font-semibold">{name}</div>
+          <div className="text-[0.85rem] leading-[0.95rem] text-faded">
             @{handle}
           </div>
         </div>
       </div>
-      <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>{children}</div>
-      <div style={{ fontSize: "0.85rem", color: "var(--color-faded)" }}>
+      <div className="my-4">{children}</div>
+      <div className="text-[0.85rem] text-faded">
         -{" "}
         {Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(
           dateValue,

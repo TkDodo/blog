@@ -61,27 +61,23 @@ export default function Aside({
   color = "var(--color-primary)",
 }: Props) {
   const Icon = icons[icon];
+  const isWarning =
+    color === "var(--theme-ui-colors-warning)" || color === "warning";
+  const isDanger = color === "danger" || color === "var(--red)";
+  const headerClass = isWarning
+    ? "text-warning"
+    : isDanger
+      ? "text-danger"
+      : "text-primary";
+  const borderClass = isWarning
+    ? "border-warning"
+    : isDanger
+      ? "border-danger"
+      : "border-primary";
 
   return (
-    <aside
-      style={{
-        color: "var(--color-text)",
-        borderLeft: `6px solid ${color}`,
-        borderRadius: "0.5rem",
-        padding: "1rem",
-        margin: "1.25rem 0",
-        overflow: "hidden",
-        backgroundColor: "var(--color-border)",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          color,
-        }}
-      >
+    <aside className={`text-text border-l-[6px] rounded-lg p-4 my-5 overflow-hidden bg-border ${borderClass}`}>
+      <div className={`flex items-center justify-between ${headerClass}`}>
         {title ? <Emph color={color}>{title}</Emph> : null}
         <Icon />
       </div>

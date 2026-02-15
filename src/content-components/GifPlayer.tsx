@@ -12,24 +12,16 @@ export default function GifPlayer({ gif, still, alt = "" }: Props) {
   const src = playing ? gif : stillSrc;
 
   return (
-    <figure style={{ margin: "1rem 0" }}>
+    <figure className="my-4">
       <button
         type="button"
         onClick={() => setPlaying((prev) => !prev)}
-        style={{
-          display: "block",
-          border: "1px solid var(--color-border)",
-          borderRadius: "0.5rem",
-          padding: 0,
-          overflow: "hidden",
-          cursor: "pointer",
-          background: "transparent",
-        }}
+        className="block border border-border rounded-lg p-0 overflow-hidden cursor-pointer bg-transparent"
         aria-label={playing ? "Pause animation" : "Play animation"}
       >
         <img src={`/${src}`} alt={alt} loading="lazy" />
       </button>
-      <figcaption style={{ opacity: 0.8, fontSize: "0.9em" }}>
+      <figcaption className="opacity-80 text-[0.9em]">
         {playing ? "Playing animation" : "Click image to play animation"}
       </figcaption>
     </figure>
