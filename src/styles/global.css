@@ -175,6 +175,23 @@ a.active {
   color: var(--color-highlight);
 }
 
+/* Global keyboard focus ring */
+:where(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    summary,
+    [role="button"],
+    [tabindex]:not([tabindex="-1"])
+  ):focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 24%, transparent);
+  border-radius: 0.375rem;
+}
+
 @media (width >= --theme(--breakpoint-sm)) {
   #search {
     --search-cancel-space: 0px;
