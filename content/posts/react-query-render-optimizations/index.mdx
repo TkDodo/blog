@@ -190,7 +190,8 @@ React.useEffect(() => {
 const queryInfo = useQuery(...)
 
 if (someCondition()) {
-    // 🟡 we will track the data field if someCondition was true in any previous render cycle
+    // 🟡 we will track the data field if someCondition
+    // was true in any previous render cycle
     return <div>{queryInfo.data}</div>
 }
 ```

@@ -15,12 +15,14 @@ import Translations from "components/Translations";
 
 <Attribution name="Alexander Sinn" url="https://unsplash.com/@swimstaralex" />
 
-<Translations translations={[
+<Translations
+  translations={[
     {
       language: "한국어",
       url: "https://www.datoybi.com/no-love-for-boolean-parameters",
     },
-  ]} />
+  ]}
+/>
 
 Ah, booleans. 0 or 1, true or false. Always either one of them, never something in between. So simple and predictable. At the end of the day, all code we write winds up in lots of zeros and ones.
 
@@ -61,7 +63,8 @@ Flags can be confusing, especially in languages where you don't have named param
 ```kt:title=equals-with-ignore-case-flag
 fun String?.equals(other: String?, ignoreCase: Boolean): Boolean
 
-// Returns true if this string is equal to other, optionally ignoring character case.
+// Returns true if this string is equal to other,
+// optionally ignoring character case.
 ```
 
 As opposed to the first example, the function doesn't do two things at once, it does one thing in two different _variations_ - an important difference. This can be highly confusing when you have to read the call-side that looks something like this:
