@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { isValidElement, type ReactNode } from "react";
 
 type TweetType = "x" | "twitter" | "bsky";
 
@@ -46,6 +46,7 @@ const BskyIcon = () => (
 
 function avatarSrc(handle: string): string | null {
   const key = handle.toLowerCase();
+  const normalized = key.replace(/^avatar[_-]?/, "");
   const map: Record<string, string> = {
     tkdodo: "/images/1021430.jpeg",
     "gsathya.bsky.social": "/images/sathya.jpg",
@@ -70,54 +71,107 @@ function avatarSrc(handle: string): string | null {
     housecor: "/images/housecor.png",
     mxstbr: "/images/mxstbr.jpg",
   };
-  const src = map[key];
+  const src = map[key] ?? map[normalized];
   return src ? withBasePath(src) : null;
 }
 
+const avatarImageClass = "h-full w-full rounded-full object-cover";
+
+const Avatar = ({ children }: { children?: ReactNode }) => (
+  <div className="mr-4 h-14 w-14">{children}</div>
+);
+
 const AvatarImage = ({ handle, name }: { handle: string; name: string }) => {
   const src = avatarSrc(handle);
-  if (!src)
-    return (
-      <div className="w-14 h-14 mr-4" aria-hidden="true" />
-    );
-
+  if (!src) return <div className="h-full w-full" aria-hidden="true" />;
   return (
-    <div className="w-14 h-14 mr-4">
-      <img
-        className="rounded-full w-full h-full object-cover"
-        src={src}
-        alt={`Avatar for ${name}`}
-        loading="lazy"
-      />
-    </div>
+    <img
+      className={avatarImageClass}
+      src={src}
+      alt={`Avatar for ${name}`}
+      loading="lazy"
+    />
   );
 };
 
-export const AvatarTkDodo = () => null;
-export const AvatarSathya = () => null;
-export const AvatarGabbeV_ = () => null;
-export const AvatarAcdlite = () => null;
-export const AvatarRalex1993 = () => null;
-export const AvatarT3dotgg = () => null;
-export const AvatarMichaelC = () => null;
-export const AvatarMattpocockuk = () => null;
-export const AvatarTannerlinsley = () => null;
-export const AvatarSophiebits = () => null;
-export const AvatarDiegohaz = () => null;
-export const AvatarRyanflorence = () => null;
-export const AvatarWillMcGugan = () => null;
-export const AvatarDanvdk = () => null;
-export const AvatarAcemarke = () => null;
-export const AvatarAlexDotJs = () => null;
-export const AvatarLeeerob = () => null;
-export const AvatarSwyx = () => null;
-export const AvatarHousecor = () => null;
-export const AvatarMxstbr = () => null;
+const AvatarAsset = ({ src, alt }: { src: string; alt: string }) => (
+  <img
+    className={avatarImageClass}
+    src={withBasePath(src)}
+    alt={alt}
+    loading="lazy"
+  />
+);
+
+export const AvatarTkDodo = () => (
+  <AvatarAsset src="/images/1021430.jpeg" alt="Avatar for TkDodo" />
+);
+export const AvatarSathya = () => (
+  <AvatarAsset src="/images/sathya.jpg" alt="Avatar for Satya" />
+);
+export const AvatarGabbeV_ = () => (
+  <AvatarAsset src="/images/GabbeV_.jpg" alt="Avatar for GabbeV_" />
+);
+export const AvatarAcdlite = () => (
+  <AvatarAsset src="/images/acdlite.jpg" alt="Avatar for acdlite" />
+);
+export const AvatarRalex1993 = () => (
+  <AvatarAsset src="/images/ralex1993.jpg" alt="Avatar for ralex1993" />
+);
+export const AvatarT3dotgg = () => (
+  <AvatarAsset src="/images/theo_twitter.jpg" alt="Avatar for t3dotgg" />
+);
+export const AvatarMichaelC = () => (
+  <AvatarAsset
+    src="/images/michaelc_1991.jpeg"
+    alt="Avatar for michaelc_1991"
+  />
+);
+export const AvatarMattpocockuk = () => (
+  <AvatarAsset src="/images/mattpocockuk.jpeg" alt="Avatar for mattpocockuk" />
+);
+export const AvatarTannerlinsley = () => (
+  <AvatarAsset
+    src="/images/tannerlinsley.jpeg"
+    alt="Avatar for tannerlinsley"
+  />
+);
+export const AvatarSophiebits = () => (
+  <AvatarAsset src="/images/sophiebits.jpeg" alt="Avatar for sophiebits" />
+);
+export const AvatarDiegohaz = () => (
+  <AvatarAsset src="/images/diegohaz.jpeg" alt="Avatar for diegohaz" />
+);
+export const AvatarRyanflorence = () => (
+  <AvatarAsset src="/images/ryanflorence.jpeg" alt="Avatar for ryanflorence" />
+);
+export const AvatarWillMcGugan = () => (
+  <AvatarAsset src="/images/willmcgugan.jpeg" alt="Avatar for willmcgugan" />
+);
+export const AvatarDanvdk = () => (
+  <AvatarAsset src="/images/danvdk.jpeg" alt="Avatar for danvdk" />
+);
+export const AvatarAcemarke = () => (
+  <AvatarAsset src="/images/acemarke.jpeg" alt="Avatar for acemarke" />
+);
+export const AvatarAlexDotJs = () => (
+  <AvatarAsset src="/images/alexdotjs.jpg" alt="Avatar for alexdotjs" />
+);
+export const AvatarLeeerob = () => (
+  <AvatarAsset src="/images/leeerob.jpeg" alt="Avatar for leeerob" />
+);
+export const AvatarSwyx = () => (
+  <AvatarAsset src="/images/swyx.jpeg" alt="Avatar for swyx" />
+);
+export const AvatarHousecor = () => (
+  <AvatarAsset src="/images/housecor.png" alt="Avatar for housecor" />
+);
+export const AvatarMxstbr = () => (
+  <AvatarAsset src="/images/mxstbr.jpg" alt="Avatar for mxstbr" />
+);
 
 export const TweetImage = ({ children }: { children: ReactNode }) => (
-  <div className="rounded-xl overflow-hidden">
-    {children}
-  </div>
+  <div className="[&>*]:rounded-xl">{children}</div>
 );
 
 function TweetIllustration({ src, alt }: { src: string; alt: string }) {
@@ -201,6 +255,7 @@ export default function Tweet({
   tweetId,
   handle,
   name,
+  avatar,
   children,
   date,
   type = "x",
@@ -211,10 +266,11 @@ export default function Tweet({
       ? `https://bsky.app/profile/${handle}/post/${tweetId}`
       : `https://x.com/${handle}/status/${tweetId}`;
   const dateValue = date instanceof Date ? date : new Date(date);
+  const avatarElement = isValidElement(avatar) ? avatar : null;
 
   return (
     <a
-      className="text-text no-underline block w-full max-w-[550px] my-4 relative rounded-lg p-6 text-base border border-border"
+      className="not-prose text-text no-underline hover:no-underline hover:text-text block w-full max-w-[550px] my-4 relative rounded-lg p-6 text-base md:text-lg border border-border transition-colors hover:bg-[var(--color-ic-bg)]"
       href={href}
       target="_blank"
       rel="noopener noreferrer"
@@ -223,16 +279,18 @@ export default function Tweet({
         {normalizedType === "bsky" ? <BskyIcon /> : <TwitterIcon />}
       </div>
       <div className="flex">
-        <AvatarImage handle={handle} name={name} />
+        <Avatar>
+          {avatarElement ?? <AvatarImage handle={handle} name={name} />}
+        </Avatar>
         <div>
           <div className="font-semibold">{name}</div>
-          <div className="text-[0.85rem] leading-[0.95rem] text-faded">
+          <div className="text-xs md:text-base leading-3 md:leading-4 text-faded">
             @{handle}
           </div>
         </div>
       </div>
       <div className="my-4">{children}</div>
-      <div className="text-[0.85rem] text-faded">
+      <div className="text-xs md:text-base text-faded">
         -{" "}
         {Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(
           dateValue,
