@@ -1,18 +1,28 @@
-import type { ReactNode } from 'react'
-import Emph from './Emph'
+import type { ReactNode } from "react";
+import Emph from "./Emph";
 
 type Props = {
-  icon?: 'bell' | 'info' | 'shield-alert' | 'lightbulb'
-  color?: string
-  title?: string
-  children?: ReactNode
-}
+  icon?: "bell" | "info" | "shield-alert" | "lightbulb";
+  color?: string;
+  title?: string;
+  children?: ReactNode;
+};
 
 const Svg = ({ children }: { children: ReactNode }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     {children}
   </svg>
-)
+);
 
 const icons = {
   bell: () => (
@@ -28,7 +38,7 @@ const icons = {
       <path d="M12 8h.01" />
     </Svg>
   ),
-  'shield-alert': () => (
+  "shield-alert": () => (
     <Svg>
       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
       <path d="M12 8v4" />
@@ -42,28 +52,40 @@ const icons = {
       <path d="M10 22h4" />
     </Svg>
   ),
-}
+};
 
-export default function Aside({ title, children, icon = 'info', color = 'var(--color-primary)' }: Props) {
-  const Icon = icons[icon]
+export default function Aside({
+  title,
+  children,
+  icon = "info",
+  color = "var(--color-primary)",
+}: Props) {
+  const Icon = icons[icon];
 
   return (
     <aside
       style={{
-        color: 'var(--color-text)',
+        color: "var(--color-text)",
         borderLeft: `6px solid ${color}`,
-        borderRadius: '0.5rem',
-        padding: '1rem',
-        margin: '1.25rem 0',
-        overflow: 'hidden',
-        backgroundColor: 'var(--color-border)',
+        borderRadius: "0.5rem",
+        padding: "1rem",
+        margin: "1.25rem 0",
+        overflow: "hidden",
+        backgroundColor: "var(--color-border)",
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          color,
+        }}
+      >
         {title ? <Emph color={color}>{title}</Emph> : null}
         <Icon />
       </div>
       <div>{children}</div>
     </aside>
-  )
+  );
 }

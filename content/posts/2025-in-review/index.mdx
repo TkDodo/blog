@@ -9,31 +9,25 @@ tags:
   - Year in Review
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Emph from 'components/Emph'
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import Emph from "components/Emph";
 import Tweet, {
   AvatarTkDodo,
   TweetImage,
   ADayOnTheOrangeSite,
-} from 'components/Tweet'
+} from "components/Tweet";
 
-<img
-  alt="A close up of the number 2025 with flowers on it"
-  src="./2025.jpg"
-/>
+<img alt="A close up of the number 2025 with flowers on it" src="./2025.jpg" />
 
-<Attribution
-  name="Kelly Sikkema"
-  url="https://unsplash.com/@kellysikkema"
-/>
+<Attribution name="Kelly Sikkema" url="https://unsplash.com/@kellysikkema" />
 
 <Translations>
   {[
     {
-      language: '한국어',
-      url: 'https://chapdo.vercel.app/posts/%EB%B2%88%EC%97%AD-2025-in-Review/',
+      language: "한국어",
+      url: "https://chapdo.vercel.app/posts/%EB%B2%88%EC%97%AD-2025-in-Review/",
     },
   ]}
 </Translations>
@@ -95,7 +89,7 @@ I even made it to the front page of Hacker News, as you can see in this beautifu
   handle="tkdodo.eu"
   tweetId="3m33upgcdjc2c"
   avatar={<AvatarTkDodo />}
-  date={new Date('2025-10-13')}
+  date={new Date("2025-10-13")}
   type="bsky"
 >
   <p>PoV: A day on the orange site in July 🟠</p>

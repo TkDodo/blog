@@ -1,7 +1,7 @@
 type Props = {
-  name?: string
-}
+  name?: string;
+};
 
 export default function RepoData({ name }: Props) {
-  return <code>{name ?? 'repo'}</code>
+  return <code>{name ?? "repo"}</code>;
 }

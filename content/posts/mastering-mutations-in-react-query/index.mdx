@@ -10,13 +10,13 @@ tags:
   - TypeScript
 ---
 
-import Comments from 'components/Comments'
-import Highlight from 'components/Highlight'
-import SpacingBox from 'components/SpacingBox'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
-import Aside from 'components/Aside'
+import Comments from "components/Comments";
+import Highlight from "components/Highlight";
+import SpacingBox from "components/SpacingBox";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import { RqToc } from "components/rq-toc";
+import Aside from "components/Aside";
 
 <img src="./mutations.jpeg" />
 
@@ -29,12 +29,12 @@ import Aside from 'components/Aside'
 <Translations>
   {[
     {
-      language: '한국어',
-      url: 'http://highjoon-dev.vercel.app/blogs/12-mastering-mutations-in-react-query',
+      language: "한국어",
+      url: "http://highjoon-dev.vercel.app/blogs/12-mastering-mutations-in-react-query",
     },
     {
-      language: 'Español',
-      url: 'https://rubenvara.io/react-query/mutaciones-react-query',
+      language: "Español",
+      url: "https://rubenvara.io/react-query/mutaciones-react-query",
     },
   ]}
 </Translations>
@@ -83,9 +83,7 @@ Starting with v5, the similarities end even sooner, as the callbacks are no long
 ## Differences to useQuery
 
 <SpacingBox />
-<Highlight>
-  useQuery is declarative, useMutation is imperative.
-</Highlight>
+<Highlight>useQuery is declarative, useMutation is imperative.</Highlight>
 
 By that, I mean that queries mostly run automatically. You define the dependencies, but React Query takes care of running the query immediately, and then also performs smart background updates when deemed necessary. That works great for queries because we want to keep what we see on the screen _in sync_ with the actual data on the backend.
 

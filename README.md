@@ -54,12 +54,10 @@ It's referenced by Astro's content collections and also by the [`assistant.ts`](
 You can add a new tag like so:
 
 ```ts
-export const FRONTMATTER_TAGS = new Map(
-	[
-		// Existing tags...
-		['Display name', 'slug-of-your-tag'] as const,
-	],
-)
+export const FRONTMATTER_TAGS = new Map([
+  // Existing tags...
+  ["Display name", "slug-of-your-tag"] as const,
+]);
 ```
 
 ## 🔍 Reference
@@ -112,7 +110,7 @@ Read the [Aside Example](./content/blog/2025-04-02--mdx-asides/index.mdx) to lea
 
 ```js name=App.js active
 export default function App() {
-  return <h1>Hello World</h1>
+  return <h1>Hello World</h1>;
 }
 ```
 

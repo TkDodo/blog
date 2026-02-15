@@ -1,11 +1,25 @@
-const REPO = (import.meta.env.PUBLIC_GISCUS_REPO as string | undefined) ?? 'tkdodo/blog-comments'
-const REPO_ID = (import.meta.env.PUBLIC_GISCUS_REPO_ID as string | undefined) ?? 'MDEwOlJlcG9zaXRvcnkyOTE1MzI1NjI='
-const CATEGORY = (import.meta.env.PUBLIC_GISCUS_CATEGORY as string | undefined) ?? 'Announcements'
-const CATEGORY_ID = (import.meta.env.PUBLIC_GISCUS_CATEGORY_ID as string | undefined) ?? 'DIC_kwDOEWBvEs4COl22'
+const REPO =
+  (import.meta.env.PUBLIC_GISCUS_REPO as string | undefined) ??
+  "tkdodo/blog-comments";
+const REPO_ID =
+  (import.meta.env.PUBLIC_GISCUS_REPO_ID as string | undefined) ??
+  "MDEwOlJlcG9zaXRvcnkyOTE1MzI1NjI=";
+const CATEGORY =
+  (import.meta.env.PUBLIC_GISCUS_CATEGORY as string | undefined) ??
+  "Announcements";
+const CATEGORY_ID =
+  (import.meta.env.PUBLIC_GISCUS_CATEGORY_ID as string | undefined) ??
+  "DIC_kwDOEWBvEs4COl22";
 
 export default function Comments() {
   return (
-    <section style={{ marginTop: '3rem', paddingTop: '1.5rem', borderTop: '1px solid var(--color-border)' }}>
+    <section
+      style={{
+        marginTop: "3rem",
+        paddingTop: "1.5rem",
+        borderTop: "1px solid var(--color-border)",
+      }}
+    >
       <div className="giscus" />
       <script
         src="https://giscus.app/client.js"
@@ -24,5 +38,5 @@ export default function Comments() {
         async
       />
     </section>
-  )
+  );
 }

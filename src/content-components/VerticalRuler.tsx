@@ -1,18 +1,18 @@
 type Props = {
-  height?: string
-}
+  height?: string;
+};
 
-export function VerticalRuler({ height = '4rem' }: Props) {
+export function VerticalRuler({ height = "4rem" }: Props) {
   return (
     <hr
       style={{
-        width: '4px',
+        width: "4px",
         height,
-        background: 'var(--color-primary)',
-        margin: '5em auto',
-        border: 'none',
-        borderRadius: '5px',
+        background: "var(--color-primary)",
+        margin: "5em auto",
+        border: "none",
+        borderRadius: "5px",
       }}
     />
-  )
+  );
 }

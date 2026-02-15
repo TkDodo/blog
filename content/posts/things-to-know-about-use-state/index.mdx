@@ -10,8 +10,8 @@ tags:
   - TypeScript
 ---
 
-import Comments from 'components/Comments'
-import Translations from 'components/Translations'
+import Comments from "components/Comments";
+import Translations from "components/Translations";
 
 <img src="./use-state-pitfalls.png" />
 
@@ -26,8 +26,8 @@ import Translations from 'components/Translations'
 <Translations>
   {[
     {
-      language: '한국어',
-      url: 'https://www.philly.im/blog/things-to-know-about-use-state',
+      language: "한국어",
+      url: "https://www.philly.im/blog/things-to-know-about-use-state",
     },
   ]}
 </Translations>
@@ -56,21 +56,21 @@ Live example:
 
 ```js react-live
 function App() {
-  const [count, setCount] = React.useState(0)
+  const [count, setCount] = React.useState(0);
 
   return (
     <button
       onClick={() => {
-        setCount(count + 1)
-        setCount(count + 1)
+        setCount(count + 1);
+        setCount(count + 1);
       }}
     >
       🚨 This will not work as expected, count is: {count}
     </button>
-  )
+  );
 }
 
-render(<App />)
+render(<App />);
 ```
 
 Each click will only increment the count once, because both calls to _setCount_ close over the same value (_count_). It's important to know that _setCount_ will _not_ immediately set the count. The useState updater only schedules an update. It basically tells React:
@@ -91,21 +91,21 @@ The functional updater form ensures this:
 
 ```js react-live
 function App() {
-  const [count, setCount] = React.useState(0)
+  const [count, setCount] = React.useState(0);
 
   return (
     <button
       onClick={() => {
-        setCount((previousCount) => previousCount + 1)
-        setCount((previousCount) => previousCount + 1)
+        setCount((previousCount) => previousCount + 1);
+        setCount((previousCount) => previousCount + 1);
       }}
     >
       ✅ Increment by 2, count is: {count}
     </button>
-  )
+  );
 }
 
-render(<App />)
+render(<App />);
 ```
 
 ### When async actions are involved
@@ -186,17 +186,17 @@ When you call the updater function, React will not always re-render your compone
 
 ```js react-live
 function App() {
-  const [name, setName] = React.useState('Elias')
+  const [name, setName] = React.useState("Elias");
 
   // 🤯 clicking this button will not re-render the component
   return (
-    <button onClick={() => setName('Elias')}>
+    <button onClick={() => setName("Elias")}>
       Name is: {name}, Date is: {new Date().getTime()}
     </button>
-  )
+  );
 }
 
-render(<App />)
+render(<App />);
 ```
 
 ## 4: The convenience overload

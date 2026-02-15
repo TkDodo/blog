@@ -11,11 +11,11 @@ tags:
   - TypeScript
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
-import Tweet, { AvatarTkDodo } from 'components/Tweet'
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import { RqToc } from "components/rq-toc";
+import Tweet, { AvatarTkDodo } from "components/Tweet";
 
 <img src="./context.jpeg" />
 
@@ -29,8 +29,8 @@ import Tweet, { AvatarTkDodo } from 'components/Tweet'
 <Translations>
   {[
     {
-      language: '한국어',
-      url: 'https://velog.io/@cnsrn1874/react-query-and-react-context',
+      language: "한국어",
+      url: "https://velog.io/@cnsrn1874/react-query-and-react-context",
     },
   ]}
 </Translations>
@@ -119,22 +119,18 @@ There's quite the myth about React Context, so let's get this straight: No, Reac
   handle="TkDodo"
   tweetId="1495072479118864398"
   avatar={<AvatarTkDodo />}
-  date={new Date('2022-02-19')}
+  date={new Date("2022-02-19")}
 >
   <p>
-    🕵️ We've fixed a huge performance problem this week by moving
-    useState + context over to zustand. It was the same amount of
-    code. The lib is &lt; 1kb.
+    🕵️ We've fixed a huge performance problem this week by moving useState +
+    context over to zustand. It was the same amount of code. The lib is &lt;
+    1kb.
   </p>
   <p>
-    ⚛️ Don't use context for state management. Use it for dependency
-    injection only. The right tool for the job!
+    ⚛️ Don't use context for state management. Use it for dependency injection
+    only. The right tool for the job!
   </p>
-  <p>
-    
-      zustand.surge.sh
-    
-  </p>
+  <p>zustand.surge.sh</p>
 </Tweet>
 
 So you'll likely be better off just using a dedicated tool. [Mark Erikson](https://twitter.com/acemarke), maintainer of Redux and writer of very long blog posts, has a good article on that topic: [Blogged Answers: Why React Context is Not a "State Management" Tool (and Why It Doesn't Replace Redux)](https://blog.isquaredsoftware.com/2021/01/context-redux-differences/).

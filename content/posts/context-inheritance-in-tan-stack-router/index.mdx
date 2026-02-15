@@ -9,30 +9,26 @@ tags:
   - TypeScript
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { TsrToc } from 'components/tsr-toc'
-import Aside from 'components/Aside'
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import { TsrToc } from "components/tsr-toc";
+import Aside from "components/Aside";
 
-<img
-  src="./inheritance.jpg"
-  alt="photo of library with turned on lights"
-/>
+<img src="./inheritance.jpg" alt="photo of library with turned on lights" />
 
-<Attribution
-  name="Janko Ferlič"
-  url="https://unsplash.com/@itfeelslikefilm"
-/>
+<Attribution name="Janko Ferlič" url="https://unsplash.com/@itfeelslikefilm" />
 
 <TsrToc id="context-inheritance-in-tan-stack-router" />
 
-<Translations>{[
+<Translations>
+  {[
     {
-      language: '한국어',
-      url: 'https://chapdo.vercel.app/posts/%EB%B2%88%EC%97%AD-Context-Inheritance-in-TanStack-Router/',
+      language: "한국어",
+      url: "https://chapdo.vercel.app/posts/%EB%B2%88%EC%97%AD-Context-Inheritance-in-TanStack-Router/",
     },
-]}</Translations>
+  ]}
+</Translations>
 
 [TanStack Router](https://tanstack.com/router) has a lot of great features, so it's hard to pick favorites. That said, there is one thing that blew my mind once I saw it in action, and that is how the router lets you accumulate state between nested routes - not just at runtime, but also on type-level.
 

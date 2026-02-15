@@ -37,4 +37,3 @@ These are intentionally minimal for migration safety and should be replaced incr
 - Decide whether to keep `astro-expressive-code` or switch to a code-fence setup compatible with your current info-string format.
   - Current build works but logs many warnings because old info strings like `ts:title=...` are interpreted as unknown languages.
 - Clean up duplicate tag slugs caused by differently cased tags (e.g. `React` and `ReactJs`).
-

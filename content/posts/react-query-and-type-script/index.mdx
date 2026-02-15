@@ -9,13 +9,13 @@ tags:
   - TypeScript
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Tweet, { AvatarDanvdk } from 'components/Tweet'
-import { RqToc } from 'components/rq-toc'
-import Emph from 'components/Emph'
-import Aside from 'components/Aside'
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import Tweet, { AvatarDanvdk } from "components/Tweet";
+import { RqToc } from "components/rq-toc";
+import Emph from "components/Emph";
+import Aside from "components/Aside";
 
 <img src="./react-query-typescript.jpeg" />
 
@@ -31,16 +31,16 @@ import Aside from 'components/Aside'
 <Translations>
   {[
     {
-      language: '한국어',
-      url: 'https://highjoon-dev.vercel.app/blogs/6-react-query-and-typescript/',
+      language: "한국어",
+      url: "https://highjoon-dev.vercel.app/blogs/6-react-query-and-typescript/",
     },
     {
-      language: 'Español',
-      url: 'https://rubenvara.io/react-query/react-query-typescript',
+      language: "Español",
+      url: "https://rubenvara.io/react-query/react-query-typescript",
     },
     {
-      language: '简体中文',
-      url: 'https://juejin.cn/post/7260697121510490149',
+      language: "简体中文",
+      url: "https://juejin.cn/post/7260697121510490149",
     },
   ]}
 </Translations>
@@ -282,15 +282,13 @@ This has nothing to do with React Query, it is just how TypeScript works. [@danv
   handle="danvdk"
   tweetId="1363614288103964672"
   avatar={<AvatarDanvdk />}
-  date={new Date('2021-02-21')}
+  date={new Date("2021-02-21")}
 >
   <p>
-    The comment from{' '}
-    @TkDodo is
-    exactly right, TypeScript does refinement on the types of
-    individual symbols. Once you split them apart, it can't keep track
-    of the relationship any more. Doing this in general would be
-    computationally hard. It can also be hard for people.
+    The comment from @TkDodo is exactly right, TypeScript does refinement on the
+    types of individual symbols. Once you split them apart, it can't keep track
+    of the relationship any more. Doing this in general would be computationally
+    hard. It can also be hard for people.
   </p>
 </Tweet>
 
@@ -358,6 +356,7 @@ function useGroup(id: number | undefined) {
   })
 }
 ```
+
 </Aside>
 
 ## Optimistic Updates

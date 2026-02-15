@@ -1,28 +1,46 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
+import type { HTMLAttributes } from "astro/types";
 
-type Variant = 'highlight' | 'subtle'
+type Variant = "highlight" | "subtle";
 
-interface Props extends HTMLAttributes<'a'> {
-	variant?: Variant
-	underlineOnHover?: boolean
+interface Props extends HTMLAttributes<"a"> {
+  variant?: Variant;
+  underlineOnHover?: boolean;
 }
 
-const { class: className, variant = 'subtle', underlineOnHover = true, href: rawHref, ...anchorProps } = Astro.props
+const {
+  class: className,
+  variant = "subtle",
+  underlineOnHover = true,
+  href: rawHref,
+  ...anchorProps
+} = Astro.props;
 
 const styleVariants: Record<Variant, string> = {
-	highlight: 'text-lg md:text-xl lg:text-2xl',
-	subtle: 'text-subtle',
-}
+  highlight: "text-lg md:text-xl lg:text-2xl",
+  subtle: "text-subtle",
+};
 
-const href = typeof rawHref === 'string' ? rawHref : undefined
-const isInternalAbsolute = Boolean(href?.startsWith('/') && !href.startsWith('//'))
-const basePath = import.meta.env.BASE_URL.replace(/\/$/, '')
+const href = typeof rawHref === "string" ? rawHref : undefined;
+const isInternalAbsolute = Boolean(
+  href?.startsWith("/") && !href.startsWith("//"),
+);
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 const prefixedHref = isInternalAbsolute
-	? href === '/'
-		? (basePath || '/')
-		: `${basePath}${href}`
-	: href
+  ? href === "/"
+    ? basePath || "/"
+    : `${basePath}${href}`
+  : href;
 ---
 
-<a class:list={[styleVariants[variant], underlineOnHover ? 'hover:underline hover:text-highlight' : 'hover:text-highlight', className]} {...anchorProps} href={prefixedHref}><slot /></a>
+<a
+  class:list={[
+    styleVariants[variant],
+    underlineOnHover
+      ? "hover:underline hover:text-highlight"
+      : "hover:text-highlight",
+    className,
+  ]}
+  {...anchorProps}
+  href={prefixedHref}><slot /></a
+>

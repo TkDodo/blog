@@ -1,3 +1,3 @@
 export function FixTitle() {
-  return null
+  return null;
 }

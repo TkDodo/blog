@@ -1,29 +1,35 @@
 ---
-import { SITE } from '@constants'
-import SkipNavLink from '@components/a11y/skip-nav-link.astro'
-import Header from '@components/header.astro'
-import Footer from '@components/footer.astro'
-import ThemeProvider from '@components/theme-provider.astro'
-import '@styles/global.css'
+import { SITE } from "@constants";
+import SkipNavLink from "@components/a11y/skip-nav-link.astro";
+import Header from "@components/header.astro";
+import Footer from "@components/footer.astro";
+import ThemeProvider from "@components/theme-provider.astro";
+import "@styles/global.css";
 
-const basePath = import.meta.env.BASE_URL.replace(/\/$/, '')
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
 
 <!doctype html>
 <html lang={SITE.lang}>
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="preload" href={`${basePath}/fonts/Inter.woff2`} as="font" type="font/woff2" crossorigin="anonymous" />
-		<link rel="icon" type="image/svg+xml" href={`${basePath}/favicon.svg`} />
-		<meta name="generator" content={Astro.generator} />
-		<ThemeProvider />
-		<slot name="seo" />
-	</head>
-	<body class="min-h-screen bg-bg text-text font-sans">
-		<SkipNavLink />
-		<Header />
-		<slot />
-		<Footer />
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link
+      rel="preload"
+      href={`${basePath}/fonts/Inter.woff2`}
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link rel="icon" type="image/svg+xml" href={`${basePath}/favicon.svg`} />
+    <meta name="generator" content={Astro.generator} />
+    <ThemeProvider />
+    <slot name="seo" />
+  </head>
+  <body class="min-h-screen bg-bg text-text font-sans">
+    <SkipNavLink />
+    <Header />
+    <slot />
+    <Footer />
+  </body>
 </html>

@@ -9,24 +9,21 @@ tags:
   - Year in Review
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Emph from 'components/Emph'
-import { QueryGG } from 'components/QueryGG'
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import Emph from "components/Emph";
+import { QueryGG } from "components/QueryGG";
 import Tweet, {
   AvatarTkDodo,
   TanStackQueryV5,
   SelfieInception,
   TweetImage,
-} from 'components/Tweet'
+} from "components/Tweet";
 
 <img alt="2023" src="./2023.jpg" />
 
-<Attribution
-  name="Ricardo Loaiza"
-  url="https://unsplash.com/@rickpekar"
-/>
+<Attribution name="Ricardo Loaiza" url="https://unsplash.com/@rickpekar" />
 
 <Translations>{[]}</Translations>
 
@@ -57,7 +54,7 @@ Speaking of TanStack Query - we've released a new major version this year. 🎉
   handle="TkDodo"
   tweetId="1714262102305632643"
   avatar={<AvatarTkDodo />}
-  date={new Date('2023-10-17')}
+  date={new Date("2023-10-17")}
 >
   <p>📢 Announcing TanStack Query v5 🎉🥳</p>
   <p>
@@ -102,14 +99,9 @@ I went to React Summit again, this time as a speaker, and I had a blast. My talk
   handle="TkDodo"
   tweetId="1664598009282285568"
   avatar={<AvatarTkDodo />}
-  date={new Date('2023-06-02')}
+  date={new Date("2023-06-02")}
 >
-  <p>
-    The selfie inception 🤳{' '}
-    
-      #ReactSummit
-    
-  </p>
+  <p>The selfie inception 🤳 #ReactSummit</p>
   <p>
     <TweetImage>
       <SelfieInception />
@@ -143,11 +135,11 @@ I said last year that it won't happen any time soon, but I need to put some pres
   handle="TkDodo"
   tweetId="1715347367778553896"
   avatar={<AvatarTkDodo />}
-  date={new Date('2023-10-20')}
+  date={new Date("2023-10-20")}
 >
   <p>
-    It takes 62 seconds to start the dev server for my gatsby blog 😭.
-    When have I suffered enough to tackle a re-write?
+    It takes 62 seconds to start the dev server for my gatsby blog 😭. When have
+    I suffered enough to tackle a re-write?
   </p>
 </Tweet>
 

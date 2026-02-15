@@ -9,23 +9,20 @@ tags:
   - TypeScript
 ---
 
-import Aside from 'components/Aside'
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Highlight from 'components/Highlight'
-import { VerticalRuler } from 'components/VerticalRuler'
-import Tweet, { AvatarSathya } from 'components/Tweet'
+import Aside from "components/Aside";
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import Highlight from "components/Highlight";
+import { VerticalRuler } from "components/VerticalRuler";
+import Tweet, { AvatarSathya } from "components/Tweet";
 
 <img
   src="./ref-callbacks.jpg"
   alt="minimalist photography of three crank phones"
 />
 
-<Attribution
-  name="Pavan Trikutam"
-  url="https://unsplash.com/@ptrikutam"
-/>
+<Attribution name="Pavan Trikutam" url="https://unsplash.com/@ptrikutam" />
 
 - [#1: Avoiding useEffect with callback refs](avoiding-use-effect-with-callback-refs)
 - <b>#2: Ref Callbacks, React 19 and the Compiler</b>
@@ -150,14 +147,13 @@ Another reason to not use `useCallback` for those cases is the upcoming React Co
   handle="gsathya.bsky.social"
   tweetId="3lbjz4g3czc2t"
   avatar={<AvatarSathya />}
-  date={new Date('2024-11-22')}
+  date={new Date("2024-11-22")}
   type="bsky"
 >
   <p>
-    Imagine you're adopting the compiler and the compiler works great
-    on your app and you ship it. Now you want to delete the
-    useMemo/useCallback from your code to improve dx. How do you know
-    which ones are safe to remove?
+    Imagine you're adopting the compiler and the compiler works great on your
+    app and you ship it. Now you want to delete the useMemo/useCallback from
+    your code to improve dx. How do you know which ones are safe to remove?
   </p>
 </Tweet>
 

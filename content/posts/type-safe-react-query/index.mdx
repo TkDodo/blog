@@ -10,19 +10,16 @@ tags:
   - JavaScript
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Highlight from 'components/Highlight'
-import { RqToc } from 'components/rq-toc'
-import Aside from 'components/Aside'
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import Highlight from "components/Highlight";
+import { RqToc } from "components/rq-toc";
+import Aside from "components/Aside";
 
 <img src="./type-safe.jpeg" alt="safety helmet" />
 
-<Attribution
-  name="Ümit Yıldırım"
-  url="https://unsplash.com/@umityildirim"
-/>
+<Attribution name="Ümit Yıldırım" url="https://unsplash.com/@umityildirim" />
 
 **Last Update: 2023-10-21**
 
@@ -31,8 +28,8 @@ import Aside from 'components/Aside'
 <Translations>
   {[
     {
-      language: '한국어',
-      url: 'https://velog.io/@cnsrn1874/%EB%B2%88%EC%97%AD-Type-safe-React-Query',
+      language: "한국어",
+      url: "https://velog.io/@cnsrn1874/%EB%B2%88%EC%97%AD-Type-safe-React-Query",
     },
   ]}
 </Translations>
@@ -59,9 +56,7 @@ Generics are essential in TypeScript. As soon as you want to implement something
 
 However, as a user of a library, you ideally shouldn't need to care about their Generics. They are an implementation detail. So whenever you provide a generic "manually" to a function via the angle brackets, it's kinda bad for one of two reasons:
 
-<Highlight>
-  It's either unnecessary, or you're lying to yourself.
-</Highlight>
+<Highlight>It's either unnecessary, or you're lying to yourself.</Highlight>
 
 ## About angle brackets
 

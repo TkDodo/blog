@@ -5,8 +5,8 @@ export function QueryGG() {
         src="/images/query-gg.jpg"
         alt="Query.gg - The official React Query course"
         loading="lazy"
-        style={{ width: '100%', borderRadius: '0.5rem' }}
+        style={{ width: "100%", borderRadius: "0.5rem" }}
       />
     </a>
-  )
+  );
 }
