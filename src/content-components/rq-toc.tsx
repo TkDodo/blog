@@ -1,8 +1,10 @@
+import SeriesToc from "./series-toc";
+
 type Props = {
   id?: string;
 };
 
-const mapping = [
+const items = [
   { id: "practical-react-query", title: "#1: Practical React Query" },
   {
     id: "react-query-data-transformations",
@@ -112,38 +114,8 @@ const mapping = [
     id: "react-query-selectors-supercharged",
     title: "#30: React Query Selectors, Supercharged",
   },
-];
+] as const;
 
 export function RqToc({ id }: Props) {
-  if (!id) return null;
-
-  return (
-    <ul
-      style={{
-        listStyleType: "none",
-        margin: 0,
-        paddingTop: "0.5rem",
-        paddingBottom: "1rem",
-        paddingLeft: "0.75rem",
-        fontSize: "1rem",
-        lineHeight: "1.625",
-      }}
-    >
-      {mapping.map((item) => {
-        if (item.id === id) {
-          return (
-            <li key={item.id} style={{ margin: 0 }}>
-              <b>{item.title}</b>
-            </li>
-          );
-        }
-
-        return (
-          <li key={item.id} style={{ margin: 0 }}>
-            <a href={`./${item.id}`}>{item.title}</a>
-          </li>
-        );
-      })}
-    </ul>
-  );
+  return <SeriesToc id={id} items={items} />;
 }

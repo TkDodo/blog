@@ -4,40 +4,34 @@ type SeriesItem = {
 };
 
 type Props = {
-  title: string;
-  currentId?: string;
-  items: SeriesItem[];
+  id?: string;
+  items: ReadonlyArray<SeriesItem>;
 };
 
-function linkFor(id: string): string {
-  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-  return `${base}/${id}`;
-}
+export default function SeriesToc({ id, items }: Props) {
+  if (!id) return null;
 
-export default function SeriesToc({ title, currentId, items }: Props) {
   return (
-    <aside
-      style={{
-        border: "1px solid var(--color-border)",
-        borderRadius: "0.5rem",
-        padding: "0.75rem 1rem",
-        margin: "1.25rem 0",
-      }}
-    >
-      <p style={{ margin: "0 0 0.5rem", fontWeight: 600 }}>{title}</p>
-      <ul style={{ margin: 0, paddingLeft: "1.15rem" }}>
-        {items.map((item) => (
-          <li key={item.id} style={{ margin: "0.25rem 0" }}>
-            <a
-              href={linkFor(item.id)}
-              aria-current={item.id === currentId ? "page" : undefined}
-              style={item.id === currentId ? { fontWeight: 700 } : undefined}
-            >
-              {item.title}
-            </a>
+    <ul className="m-0 flex list-none flex-col gap-[0.125rem] pt-1 pb-2 pl-0">
+      {items.map((item) => {
+        if (item.id === id) {
+          return (
+            <li key={item.id} className="!m-0">
+              <span className="block text-base leading-relaxed font-bold">
+                {item.title}
+              </span>
+            </li>
+          );
+        }
+
+        return (
+          <li key={item.id} className="!m-0">
+            <span className="block text-base leading-relaxed">
+              <a href={`./${item.id}`}>{item.title}</a>
+            </span>
           </li>
-        ))}
-      </ul>
-    </aside>
+        );
+      })}
+    </ul>
   );
 }
