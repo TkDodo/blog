@@ -120,26 +120,26 @@ export function RqToc({ id }: Props) {
   return (
     <ul
       style={{
-        display: "flex",
-        flexDirection: "column",
         listStyleType: "none",
-        gap: "0.7rem",
+        margin: 0,
         paddingTop: "0.5rem",
         paddingBottom: "1rem",
-        paddingLeft: 0,
+        paddingLeft: "0.75rem",
+        fontSize: "1rem",
+        lineHeight: "1.625",
       }}
     >
       {mapping.map((item) => {
         if (item.id === id) {
           return (
-            <li key={item.id}>
+            <li key={item.id} style={{ margin: 0 }}>
               <b>{item.title}</b>
             </li>
           );
         }
 
         return (
-          <li key={item.id}>
+          <li key={item.id} style={{ margin: 0 }}>
             <a href={`./${item.id}`}>{item.title}</a>
           </li>
         );
