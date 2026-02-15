@@ -176,6 +176,38 @@ a.active {
   color: var(--color-highlight);
 }
 
+/* Immediate feedback while view transitions prepare/fetch */
+body[data-nav-pending="true"] {
+  cursor: progress;
+}
+
+body[data-nav-pending="true"]::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: clamp(120px, 28vw, 240px);
+  height: 2px;
+  z-index: 9999;
+  background: var(--color-primary);
+  box-shadow: 0 0 0.5rem
+    color-mix(in srgb, var(--color-primary) 45%, transparent);
+  animation: nav-pending-slide 1450ms ease-in-out infinite;
+}
+
+a[data-nav-pending="true"] {
+  opacity: 0.72;
+}
+
+@keyframes nav-pending-slide {
+  0% {
+    transform: translateX(-130%);
+  }
+  100% {
+    transform: translateX(calc(100vw + 130%));
+  }
+}
+
 /* Improve light-mode prose contrast for bullets, blockquote borders and separators */
 :root[data-theme="light"] .prose,
 :root:not([data-theme]) .prose {

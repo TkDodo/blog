@@ -79,5 +79,86 @@ const plausibleDomain = new URL(SITE.url).hostname;
         }
       }
     </script>
+    <script is:inline>
+      (() => {
+        if (window.__tkdodoNavFeedbackInit) return;
+        window.__tkdodoNavFeedbackInit = true;
+
+        let pendingLink = null;
+        let safetyTimer = null;
+
+        const clearPending = () => {
+          document.body?.removeAttribute("data-nav-pending");
+          if (pendingLink) pendingLink.removeAttribute("data-nav-pending");
+          pendingLink = null;
+          if (safetyTimer) {
+            clearTimeout(safetyTimer);
+            safetyTimer = null;
+          }
+        };
+
+        const setPending = (link) => {
+          document.body?.setAttribute("data-nav-pending", "true");
+          if (pendingLink && pendingLink !== link) {
+            pendingLink.removeAttribute("data-nav-pending");
+          }
+          if (link instanceof HTMLAnchorElement) {
+            pendingLink = link;
+            pendingLink.setAttribute("data-nav-pending", "true");
+          }
+          if (safetyTimer) clearTimeout(safetyTimer);
+          safetyTimer = setTimeout(clearPending, 5000);
+        };
+
+        const isInternalNavigationLink = (link) => {
+          const href = link.getAttribute("href");
+          if (!href) return false;
+          if (href.startsWith("#")) return false;
+          if (
+            href.startsWith("mailto:") ||
+            href.startsWith("tel:") ||
+            href.startsWith("javascript:")
+          ) {
+            return false;
+          }
+
+          const url = new URL(link.href, window.location.href);
+          if (url.origin !== window.location.origin) return false;
+          if (link.target === "_blank" || link.hasAttribute("download")) {
+            return false;
+          }
+          return true;
+        };
+
+        document.addEventListener(
+          "click",
+          (event) => {
+            if (event.defaultPrevented || event.button !== 0) return;
+            if (
+              event.metaKey ||
+              event.ctrlKey ||
+              event.shiftKey ||
+              event.altKey
+            )
+              return;
+            if (!(event.target instanceof Element)) return;
+
+            const link = event.target.closest("a");
+            if (!(link instanceof HTMLAnchorElement)) return;
+            if (!isInternalNavigationLink(link)) return;
+
+            setPending(link);
+          },
+          { capture: true },
+        );
+
+        document.addEventListener("astro:before-preparation", () => {
+          setPending(null);
+        });
+
+        document.addEventListener("astro:page-load", clearPending);
+        window.addEventListener("pageshow", clearPending);
+      })();
+    </script>
   </body>
 </html>
