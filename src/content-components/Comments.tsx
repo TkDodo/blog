@@ -26,11 +26,49 @@ export default function Comments() {
         data-reactions-enabled="1"
         data-emit-metadata="0"
         data-input-position="top"
-        data-theme="preferred_color_scheme"
+        data-theme="light"
         data-lang="en"
         crossOrigin="anonymous"
         async
       />
+      <script>
+        {`
+          (() => {
+            const getTheme = () =>
+              document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+
+            const updateGiscusTheme = () => {
+              const iframe = document.querySelector("iframe.giscus-frame");
+              if (!iframe || !iframe.contentWindow) return;
+              iframe.contentWindow.postMessage(
+                { giscus: { setConfig: { theme: getTheme() } } },
+                "https://giscus.app"
+              );
+            };
+
+            const onReady = () => {
+              updateGiscusTheme();
+              const observer = new MutationObserver((mutations) => {
+                for (const mutation of mutations) {
+                  if (mutation.type === "attributes" && mutation.attributeName === "data-theme") {
+                    updateGiscusTheme();
+                  }
+                }
+              });
+              observer.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ["data-theme"],
+              });
+            };
+
+            if (document.readyState === "loading") {
+              document.addEventListener("DOMContentLoaded", onReady, { once: true });
+            } else {
+              onReady();
+            }
+          })();
+        `}
+      </script>
     </section>
   );
 }
