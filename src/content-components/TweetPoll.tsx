@@ -31,8 +31,8 @@ export function TweetPoll({ options, votes }: Props) {
 							borderRadius: '4px',
 							minHeight: '32px',
 							backgroundColor: winner
-								? 'var(--theme-ui-colors-twitterPollBgWinner)'
-								: 'var(--theme-ui-colors-twitterPollBg)',
+								? 'var(--color-twitter-poll-bg-winner)'
+								: 'var(--color-twitter-poll-bg)',
 						}}
 					/>
 					<span style={{ zIndex: 1, flexShrink: '1', paddingLeft: '12px', paddingRight: '12px' }}>
@@ -41,7 +41,7 @@ export function TweetPoll({ options, votes }: Props) {
 					<span>{percentage}</span>
 				</span>
 			))}
-			<span style={{ fontSize: '0.85rem', color: 'var(--theme-ui-colors-textMuted)' }}>
+			<span style={{ fontSize: '0.85rem', color: 'var(--color-faded)' }}>
 				{votes} votes · Final results
 			</span>
 		</span>

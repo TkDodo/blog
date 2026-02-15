@@ -18,7 +18,7 @@ export default function GifPlayer({ gif, still, alt = '' }: Props) {
         onClick={() => setPlaying(prev => !prev)}
         style={{
           display: 'block',
-          border: '1px solid var(--theme-ui-colors-backgroundSecondary)',
+          border: '1px solid var(--color-border)',
           borderRadius: '0.5rem',
           padding: 0,
           overflow: 'hidden',

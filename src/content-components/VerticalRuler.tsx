@@ -8,7 +8,7 @@ export function VerticalRuler({ height = '4rem' }: Props) {
       style={{
         width: '4px',
         height,
-        background: 'var(--theme-ui-colors-primary)',
+        background: 'var(--color-primary)',
         margin: '5em auto',
         border: 'none',
         borderRadius: '5px',

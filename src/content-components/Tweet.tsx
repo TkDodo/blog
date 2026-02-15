@@ -14,8 +14,8 @@ type Props = {
 
 const TwitterIcon = () => (
 	<svg
-		stroke="var(--theme-ui-colors-twitterBlue)"
-		fill="var(--theme-ui-colors-twitterBlue)"
+		stroke="var(--color-twitter-blue)"
+		fill="var(--color-twitter-blue)"
 		strokeWidth="0"
 		viewBox="0 0 512 512"
 		height="22"
@@ -150,7 +150,7 @@ export default function Tweet({
 	return (
 		<a
 			style={{
-				color: 'var(--theme-ui-colors-text)',
+				color: 'var(--color-text)',
 				textDecoration: 'none',
 				display: 'block',
 				width: '100%',
@@ -160,7 +160,7 @@ export default function Tweet({
 				borderRadius: '0.5rem',
 				padding: '1.5rem',
 				fontSize: '1rem',
-				border: '1px solid var(--theme-ui-colors-backgroundSecondary)',
+				border: '1px solid var(--color-border)',
 			}}
 			href={href}
 			target="_blank"
@@ -173,13 +173,13 @@ export default function Tweet({
 				<AvatarImage handle={handle} name={name} />
 				<div>
 					<div style={{ fontWeight: 600 }}>{name}</div>
-					<div style={{ fontSize: '0.85rem', lineHeight: '0.95rem', color: 'var(--theme-ui-colors-textMuted)' }}>
+					<div style={{ fontSize: '0.85rem', lineHeight: '0.95rem', color: 'var(--color-faded)' }}>
 						@{handle}
 					</div>
 				</div>
 			</div>
 			<div style={{ marginTop: '1rem', marginBottom: '1rem' }}>{children}</div>
-			<div style={{ fontSize: '0.85rem', color: 'var(--theme-ui-colors-textMuted)' }}>
+			<div style={{ fontSize: '0.85rem', color: 'var(--color-faded)' }}>
 				- {Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(dateValue)}
 			</div>
 		</a>

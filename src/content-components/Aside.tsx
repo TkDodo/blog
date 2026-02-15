@@ -44,19 +44,19 @@ const icons = {
   ),
 }
 
-export default function Aside({ title, children, icon = 'info', color = 'var(--theme-ui-colors-primary)' }: Props) {
+export default function Aside({ title, children, icon = 'info', color = 'var(--color-primary)' }: Props) {
   const Icon = icons[icon]
 
   return (
     <aside
       style={{
-        color: 'var(--theme-ui-colors-text)',
+        color: 'var(--color-text)',
         borderLeft: `6px solid ${color}`,
         borderRadius: '0.5rem',
         padding: '1rem',
         margin: '1.25rem 0',
         overflow: 'hidden',
-        backgroundColor: 'var(--theme-ui-colors-backgroundSecondary)',
+        backgroundColor: 'var(--color-border)',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color }}>

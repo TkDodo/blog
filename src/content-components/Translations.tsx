@@ -26,7 +26,7 @@ export default function Translations({ children }: Props) {
 						<li
 							key={entry.url}
 							style={{
-								border: '1px solid var(--theme-ui-colors-primary)',
+								border: '1px solid var(--color-primary)',
 								borderRadius: '8px',
 							}}
 						>

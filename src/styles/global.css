@@ -76,56 +76,38 @@
 @theme {
 	--font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
-	/* Theme UI compatible color vars from the previous Gatsby theme */
-	--theme-ui-colors-background: #ffffff;
-	--theme-ui-colors-text: #1f2937;
-	--theme-ui-colors-textMuted: #6b7280;
-	--theme-ui-colors-primary: #387d6c;
-	--theme-ui-colors-secondary: #6b7280;
-	--theme-ui-colors-backgroundSecondary: #f3f4f6;
-	--theme-ui-colors-backgroundTertiary: #e5e7eb;
-	--theme-ui-colors-twitterBlue: #1d9bf0;
-	--theme-ui-colors-twitterPollBg: rgb(207, 217, 222);
-	--theme-ui-colors-twitterPollBgWinner: rgba(29, 155, 240, 0.58);
-	--theme-ui-colors-danger: #e03131;
-	--theme-ui-colors-warning: #f08c00;
-
-	--color-bg: var(--theme-ui-colors-background);
-	--color-text: var(--theme-ui-colors-text);
-	--color-highlight: var(--theme-ui-colors-text);
-	--color-primary: var(--theme-ui-colors-primary);
-	--color-subtle: var(--theme-ui-colors-secondary);
-	--color-faded: var(--theme-ui-colors-textMuted);
-	--color-border: var(--theme-ui-colors-backgroundSecondary);
-
-	--color-ic-bg: var(--theme-ui-colors-backgroundSecondary);
-	--color-ic-border: var(--theme-ui-colors-backgroundTertiary);
+	/* App color tokens (Tailwind-style naming) */
+	--color-bg: #f5f5f5;
+	--color-text: #1f2937;
+	--color-highlight: #1f2937;
+	--color-primary: #387d6c;
+	--color-subtle: #4b5563;
+	--color-faded: #6b7280;
+	--color-border: #e5e7eb;
+	--color-ic-bg: #e5e7eb;
+	--color-ic-border: #d1d5db;
+	--color-twitter-blue: #1d9bf0;
+	--color-twitter-poll-bg: rgb(207, 217, 222);
+	--color-twitter-poll-bg-winner: rgba(29, 155, 240, 0.58);
+	--color-danger: #dc2626;
+	--color-warning: #a16207;
 }
 
 @layer theme {
 	:root {
 		@variant dark {
-			--theme-ui-colors-background: #111827;
-			--theme-ui-colors-text: #f3f4f6;
-			--theme-ui-colors-textMuted: #9ca3af;
-			--theme-ui-colors-primary: #76c2af;
-			--theme-ui-colors-secondary: #9ca3af;
-			--theme-ui-colors-backgroundSecondary: #1f2937;
-			--theme-ui-colors-backgroundTertiary: #374151;
-			--theme-ui-colors-danger: #ff6b6b;
-			--theme-ui-colors-warning: #ffd43b;
-			--theme-ui-colors-twitterPollBg: rgb(51, 54, 57);
-
-			--color-bg: var(--theme-ui-colors-background);
-			--color-text: var(--theme-ui-colors-text);
-			--color-highlight: var(--theme-ui-colors-text);
-			--color-primary: var(--theme-ui-colors-primary);
-			--color-subtle: var(--theme-ui-colors-secondary);
-			--color-faded: var(--theme-ui-colors-textMuted);
-			--color-border: var(--theme-ui-colors-backgroundSecondary);
-
-			--color-ic-bg: var(--theme-ui-colors-backgroundSecondary);
-			--color-ic-border: var(--theme-ui-colors-backgroundTertiary);
+			--color-bg: #1a202c;
+			--color-text: #cbd5e0;
+			--color-highlight: #cbd5e0;
+			--color-primary: #76c2af;
+			--color-subtle: #a0aec0;
+			--color-faded: #a0aec0;
+			--color-border: #2d3748;
+			--color-ic-bg: #2d3748;
+			--color-ic-border: #4a5568;
+			--color-twitter-poll-bg: rgb(51, 54, 57);
+			--color-danger: #b91c1c;
+			--color-warning: #ca8a04;
 		}
 	}
 }
