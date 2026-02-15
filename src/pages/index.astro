@@ -40,27 +40,63 @@ const getTimeToRead = (body: string) => {
 const premiumSponsors = [
 	{
 		name: 'Tanner Linsley',
+		label: '💍 Tanner Linsley',
 		url: 'https://tanstack.com/',
-		image: 'https://avatars.githubusercontent.com/u/5580297?s=300',
-		tier: '💍 Platinum',
+		image: 'https://avatars.githubusercontent.com/u/5580297?s=64',
 	},
 	{
 		name: 'Workleap',
+		label: '💎 Workleap',
 		url: 'https://www.workleap.com',
-		image: 'https://avatars.githubusercontent.com/u/53535748?s=300',
-		tier: '💎 Diamond',
+		image: 'https://avatars.githubusercontent.com/u/53535748?s=64',
 	},
 	{
 		name: 'wevm',
+		label: '🥇 wevm',
 		url: 'https://wevm.dev/',
-		image: 'https://avatars.githubusercontent.com/u/109633172?s=300',
-		tier: '🥇 Gold',
+		image: 'https://avatars.githubusercontent.com/u/109633172?s=64',
 	},
 	{
 		name: 'React Bricks',
+		label: '🥉 React Bricks',
 		url: 'https://reactbricks.com/',
 		image: '/images/reactbricks.svg',
-		tier: '🥉 Bronze',
+	},
+	{
+		name: 'WorkflowGen',
+		label: '🥳 WorkflowGen',
+		url: 'https://www.workflowgen.com/',
+		image: '/images/workflowgen.png',
+	},
+	{
+		name: 'Jonas Daniels',
+		label: '🥳 Jonas Daniels',
+		url: 'https://github.com/jnsdls',
+		image: 'https://avatars.githubusercontent.com/u/8204858?s=64',
+	},
+	{
+		name: 'MonoLisa',
+		label: '🥳 MonoLisa',
+		url: 'https://www.monolisa.dev/?ref=dominik',
+		image: '/images/monolisa.jpeg',
+	},
+	{
+		name: 'Nadav Lebovitch',
+		label: '🥳 Nadav Lebovitch',
+		url: 'https://github.com/nadavl',
+		image: 'https://avatars.githubusercontent.com/u/5332234?s=64',
+	},
+	{
+		name: 'Jeremy Brown',
+		label: '🥳 Jeremy Brown',
+		url: 'https://github.com/jlbmagic',
+		image: 'https://avatars.githubusercontent.com/u/20194907?s=64',
+	},
+	{
+		name: 'deliver.media',
+		label: '🥳 deliver.media',
+		url: 'https://deliver.media/',
+		image: 'https://avatars.githubusercontent.com/u/120005519?s=64',
 	},
 ]
 ---
@@ -138,16 +174,20 @@ const premiumSponsors = [
 					🎗 Sponsor me on GitHub 🎗
 				</a>
 			</div>
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
 				{
 					premiumSponsors.map((sponsor) => (
-						<article class="rounded-xl border border-border p-4 bg-bg">
-							<a href={sponsor.url} target="_blank" rel="noopener noreferrer" class="block">
-								<h3 class="text-highlight text-lg md:text-xl mb-3">{sponsor.name}</h3>
-								<img src={sponsor.image} alt={sponsor.name} loading="lazy" class="w-full h-52 object-cover rounded-md bg-white" />
+						<div class="flex items-center">
+							<img src={sponsor.image} alt={sponsor.name} loading="lazy" class="mr-3.5 w-16 h-16 rounded-full object-cover bg-white" />
+							<a
+								href={sponsor.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="text-lg md:text-lg lg:text-xl leading-normal text-primary hover:underline"
+							>
+								{sponsor.label}
 							</a>
-							<p class="mt-3 text-subtle">{sponsor.tier}</p>
-						</article>
+						</div>
 					))
 				}
 			</div>
