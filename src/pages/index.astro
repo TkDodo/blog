@@ -3,11 +3,9 @@ import Layout from '@layouts/layout.astro'
 import Seo from '@components/seo.astro'
 import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
-import { Content as Hero } from '@assets/hero.mdx'
 import SkipNavContent from '@components/a11y/skip-nav-content.astro'
 import { defaultDateFormat, getPostSlug, sortAsc } from '@utils'
 import Link from '@components/link.astro'
-import Prose from '@components/prose.astro'
 import Spacer from '@components/spacer.astro'
 import { SITE } from '@constants'
 import type { ImageMetadata } from 'astro'
@@ -66,9 +64,34 @@ const premiumSponsors = [
 	<Seo slot="seo" />
 	<SkipNavContent>
 		<h1 class="sr-only">{SITE.title}</h1>
-		<Prose>
-			<Hero />
-		</Prose>
+		<section>
+			<div class="grid grid-cols-1 md:grid-cols-[19rem_minmax(0,25rem)] gap-4 items-center max-w-[50rem]">
+				<div class="w-60 md:w-76">
+					<img
+						src="https://avatars.githubusercontent.com/u/1021430?s=400"
+						alt="TkDodo"
+						class="rounded-full w-full h-auto"
+					/>
+				</div>
+				<div class="max-w-full md:max-w-[25rem]">
+					<h2 class="text-2xl md:text-3xl lg:text-4xl text-highlight leading-tight">Hi 👋, I&apos;m Dominik from Vienna 🇦🇹</h2>
+					<p class="mt-4 text-base md:text-lg">
+						I&apos;m a Web Developer and open source maintainer who ❤️ ReactJs and TypeScript. I&apos;m currently maintaining
+						<a class="text-primary hover:underline" href="https://github.com/TanStack/query" target="_blank" rel="noreferrer noopener"> TanStack/query </a>
+						and
+						<a class="text-primary hover:underline" href="https://github.com/TanStack/router" target="_blank" rel="noreferrer noopener"> TanStack/router</a>.
+					</p>
+				</div>
+			</div>
+			<p class="mt-6 text-base md:text-lg">
+				Welcome to my personal blog 📚, where I write about all things React, TypeScript and of course the
+				<a class="text-primary hover:underline" href="https://github.com/TanStack" target="_blank" rel="noreferrer noopener"> TanStack</a>.
+				If you enjoy my blog posts or want to support my open source work, you can
+				<a class="text-primary hover:underline whitespace-nowrap" href="https://github.com/sponsors/TkDodo" target="_blank" rel="noopener noreferrer">
+					🎗 sponsor me on Github 🎗
+				</a>
+			</p>
+		</section>
 		<Spacer axis="vertical" size={32} />
 		<section>
 			<div class="border-b border-border pb-4 flex justify-between items-center">

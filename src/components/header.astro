@@ -13,7 +13,9 @@ const normalizedPath = (pathname.replace(/^\/blog/, '') || '/').replace(/\/$/, '
 	<div class="flex flex-row justify-between items-center">
 		<div>
 			<Link
-				class="font-semibold text-xl md:text-2xl lg:text-3xl text-highlight"
+				variant="highlight"
+				underlineOnHover={false}
+				class="font-semibold text-xl md:text-2xl lg:text-3xl text-text"
 				href="/"
 				aria-label={`${SITE.title} - Back to home`}>{SITE.title}</Link
 			>
@@ -21,7 +23,7 @@ const normalizedPath = (pathname.replace(/^\/blog/, '') || '/').replace(/\/$/, '
 		<Search />
 	</div>
 	<Spacer axis="vertical" size={6} />
-	<div class="flex flex-row justify-between items-center border-b border-border pb-4 text-lg md:text-xl">
+	<div class="flex flex-row justify-between items-center border-b border-border pb-4 text-base md:text-lg">
 		<nav aria-label="Primary navigation" class="flex gap-4">
 			{
 				HEADER.internal.map((link) => (
