@@ -77,7 +77,12 @@ const postBanner = (() => {
   </Seo>
   <SkipNavContent searchIndex={post.searchIndex}>
     <Prose>
-      <h1 class="mb-0!" data-pagefind-meta="title">{post.title}</h1>
+      <h1
+        class="mb-0! font-bold! leading-[1.25]! md:leading-[1.25]! lg:leading-[1.25]!"
+        data-pagefind-meta="title"
+      >
+        {post.title}
+      </h1>
       <Spacer axis="vertical" size={4} />
       <div class="not-prose text-faded text-sm md:text-base leading-relaxed">
         {defaultDateFormat(post.date)} — <TagLinks tags={post.tags ?? []} />
