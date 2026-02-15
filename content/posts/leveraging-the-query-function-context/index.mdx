@@ -14,7 +14,6 @@ import Comments from "components/Comments";
 import Attribution from "components/Attribution";
 import Highlight from "components/Highlight";
 import SmallCentered from "components/SmallCentered";
-import SpacingBox from "components/SpacingBox";
 import Translations from "components/Translations";
 import { RqToc } from "components/rq-toc";
 import Aside from "components/Aside";
@@ -25,12 +24,14 @@ import Aside from "components/Aside";
 
 <RqToc id="leveraging-the-query-function-context" />
 
-<Translations translations={[
+<Translations
+  translations={[
     {
       language: "한국어",
       url: "https://highjoon-dev.vercel.app/blogs/8a-leveraging-the-query-function-context",
     },
-  ]} />
+  ]}
+/>
 
 We all strive to improve as engineers, and as time goes by, we hopefully succeed in that endeavour. Maybe we learn new things that invalidate or challenge our previous thinking. Or we realise that patterns that we thought ideal would not scale to the level we now need them to.
 
@@ -39,8 +40,6 @@ Quite some time has passed since I first started to use React Query. I think I l
 That's why I've decided to write this addendum to my [Effective React Query Keys](effective-react-query-keys) article. Please make sure to read it first to have an understanding of what we are talking about.
 
 ## Hot take
-
-<SpacingBox />
 
 <Highlight>
   Don't use inline functions - leverage the Query Function Context given to you,

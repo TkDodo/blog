@@ -12,7 +12,6 @@ tags:
 
 import Comments from "components/Comments";
 import Highlight from "components/Highlight";
-import SpacingBox from "components/SpacingBox";
 import Attribution from "components/Attribution";
 import Translations from "components/Translations";
 import { RqToc } from "components/rq-toc";
@@ -24,7 +23,8 @@ import Aside from "components/Aside";
 
 <RqToc id="mastering-mutations-in-react-query" />
 
-<Translations translations={[
+<Translations
+  translations={[
     {
       language: "한국어",
       url: "http://highjoon-dev.vercel.app/blogs/12-mastering-mutations-in-react-query",
@@ -33,7 +33,8 @@ import Aside from "components/Aside";
       language: "Español",
       url: "https://rubenvara.io/react-query/mutaciones-react-query",
     },
-  ]} />
+  ]}
+/>
 
 We've covered a lot of ground already when it comes to the features and concepts React Query provides. Most of them are about _retrieving_ data - via the `useQuery` hook. There is however a second, integral part to working with data: updating it.
 
@@ -78,7 +79,6 @@ Starting with v5, the similarities end even sooner, as the callbacks are no long
 
 ## Differences to useQuery
 
-<SpacingBox />
 <Highlight>useQuery is declarative, useMutation is imperative.</Highlight>
 
 By that, I mean that queries mostly run automatically. You define the dependencies, but React Query takes care of running the query immediately, and then also performs smart background updates when deemed necessary. That works great for queries because we want to keep what we see on the screen _in sync_ with the actual data on the backend.

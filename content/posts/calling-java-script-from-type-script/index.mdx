@@ -11,7 +11,6 @@ tags:
 
 import Attribution from "components/Attribution";
 import Comments from "components/Comments";
-import SpacingBox from "components/SpacingBox";
 import Translations from "components/Translations";
 import { TsError } from "components/TsError";
 
@@ -118,8 +117,6 @@ Especially if you are working with React components, destructing props is very c
 
 ### Assign default parameters
 
-<SpacingBox />
-
 ```js:title=default-params
 export const sum = ({ first, second, third = 0 }) => first + second + third
 ```
@@ -141,8 +138,6 @@ _undefined_ will also be the default value even if you don't explicitly specify 
 This is a non-invasive change, so if you have complex types where you can't easily come up with a default value, this seems like a good alternative.
 
 ### Convert the file to TypeScript
-
-<SpacingBox />
 
 ```ts:title=ts-all-the-things
 type Params = {

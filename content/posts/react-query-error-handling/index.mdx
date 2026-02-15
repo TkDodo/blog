@@ -11,7 +11,6 @@ tags:
 ---
 
 import Comments from "components/Comments";
-import SpacingBox from "components/SpacingBox";
 import Attribution from "components/Attribution";
 import Translations from "components/Translations";
 import { RqToc } from "components/rq-toc";
@@ -23,7 +22,8 @@ import Aside from "components/Aside";
 
 <RqToc id="react-query-error-handling" />
 
-<Translations translations={[
+<Translations
+  translations={[
     {
       language: "한국어",
       url: "https://highjoon-dev.vercel.app/blogs/11-react-query-error-handling",
@@ -32,7 +32,8 @@ import Aside from "components/Aside";
       language: "Español",
       url: "https://rubenvara.io/react-query/gestion-errores-react-query",
     },
-  ]} />
+  ]}
+/>
 
 Handling errors is an integral part of working with asynchronous data, especially data fetching. We have to face it: Not all requests will be successful, and not all Promises will be fulfilled.
 
