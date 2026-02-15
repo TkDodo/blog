@@ -26,7 +26,7 @@ export default function Translations({ translations = [] }: Props) {
                 href={entry.url}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="inline-block px-6 py-3 font-normal text-primary no-underline hover:underline leading-normal"
+                className="inline-block px-6 py-1 font-normal text-primary no-underline hover:underline leading-normal"
               >
                 {entry.language}
               </a>
