@@ -11,10 +11,7 @@
       "@constants": ["./src/constants.ts"],
       "@utils": ["./src/utils.ts"],
       "@styles/*": ["./src/styles/*"],
-      "components/*": ["./src/content-components/*"],
-      "@theme-ui/components": [
-        "./src/content-components/theme-ui-components.tsx"
-      ]
+      "components/*": ["./src/content-components/*"]
     }
   },
   "include": [".astro/types.d.ts", "**/*"],

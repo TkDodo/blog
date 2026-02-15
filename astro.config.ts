@@ -42,8 +42,6 @@ export default defineConfig({
     resolve: {
       alias: {
         components: "/src/content-components",
-        "@theme-ui/components":
-          "/src/content-components/theme-ui-components.tsx",
       },
     },
     plugins: [tailwindcss()],
@@ -55,8 +53,8 @@ export default defineConfig({
     enabled: false,
   },
   markdown: {
-    // @ts-expect-error: Astro types don't match remark plugin
     remarkPlugins: [
+      // @ts-expect-error: Astro types don't match remark plugin
       [remarkSmartypants, { backticks: false }],
       remarkDirective,
       remarkAsides,
