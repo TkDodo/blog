@@ -2,6 +2,7 @@ import type { Options as AutolinkHeadingsOptions } from "rehype-autolink-heading
 import type { Options as ExternalLinkOptions } from "rehype-external-links";
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
+import sentry from "@sentry/astro";
 import sitemap from "@astrojs/sitemap";
 import remarkSandpack from "@lekoarts/remark-sandpack";
 import tailwindcss from "@tailwindcss/vite";
@@ -25,6 +26,11 @@ export default defineConfig({
   trailingSlash: "never",
   site: SITE.url,
   integrations: [
+    sentry({
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+    }),
     expressiveCode(),
     mdx(),
     sitemap(),

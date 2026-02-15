@@ -26,6 +26,8 @@
     "@expressive-code/plugin-collapsible-sections": "^0.41.3",
     "@expressive-code/plugin-line-numbers": "^0.41.3",
     "@lekoarts/remark-sandpack": "^1.0.0",
+    "@sentry/astro": "^10.38.0",
+    "@sentry/profiling-node": "^10.38.0",
     "@tailwindcss/vite": "^4.1.16",
     "@unpic/astro": "^1.0.1",
     "astro": "^5.15.3",
