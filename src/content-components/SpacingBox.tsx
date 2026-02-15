@@ -1,3 +1,3 @@
 export default function SpacingBox() {
-  return <div style={{ height: '1.5rem' }} aria-hidden="true" />
+  return <p style={{ marginBottom: '1rem' }} aria-hidden="true"> </p>
 }

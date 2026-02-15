@@ -3,5 +3,16 @@ type Props = {
 }
 
 export function VerticalRuler({ height = '4rem' }: Props) {
-  return <div style={{ width: '1px', height, background: 'var(--color-border)', margin: '1rem auto' }} />
+  return (
+    <hr
+      style={{
+        width: '4px',
+        height,
+        background: 'var(--theme-ui-colors-primary)',
+        margin: '5em auto',
+        border: 'none',
+        borderRadius: '5px',
+      }}
+    />
+  )
 }

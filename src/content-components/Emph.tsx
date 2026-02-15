@@ -6,10 +6,11 @@ type Props = {
 }
 
 export default function Emph({ color, children }: Props) {
-  const style: CSSProperties = {
-    fontWeight: 600,
-    color: color ?? 'inherit',
-  }
+	const style: CSSProperties = {
+		letterSpacing: '0.05em',
+		fontWeight: 700,
+		color: color ?? 'var(--theme-ui-colors-primary)',
+	}
 
-  return <em style={style}>{children}</em>
+	return <span style={style}>{children}</span>
 }

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import SmallCentered from './SmallCentered'
 
 type Props = {
   name?: string
@@ -8,19 +9,19 @@ type Props = {
 }
 
 export default function Attribution({ name, url, prefix = 'Photo by', children }: Props) {
-  if (!name && !children) return null
+	if (!name && !children) return null
 
-  return (
-    <p style={{ opacity: 0.8, fontSize: '0.95em' }}>
-      {prefix}{' '}
-      {url ? (
-        <a href={url} target="_blank" rel="noreferrer noopener">
-          {name}
-        </a>
-      ) : (
-        name
-      )}
-      {children}
-    </p>
-  )
+	return (
+		<SmallCentered>
+			{prefix}{' '}
+			{url ? (
+				<a href={url} target="_blank" rel="noreferrer noopener">
+					{name}
+				</a>
+			) : (
+				name
+			)}
+			{children}
+		</SmallCentered>
+	)
 }
