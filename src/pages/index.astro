@@ -1,6 +1,7 @@
 ---
 import Layout from "@layouts/layout.astro";
 import Seo from "@components/seo.astro";
+import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import SkipNavContent from "@components/a11y/skip-nav-content.astro";
 import { sortAsc } from "@utils";
@@ -8,6 +9,8 @@ import Link from "@components/link.astro";
 import Spacer from "@components/spacer.astro";
 import PostCard from "@components/post-card.astro";
 import { SITE } from "@constants";
+import profileImage from "@assets/profile.jpg";
+import wallpaperImage from "@assets/wallpaper.jpg";
 import type { ImageMetadata } from "astro";
 
 const POSTS_TO_SHOW = 6;
@@ -105,66 +108,110 @@ const withBasePath = (url: string) =>
   <Seo slot="seo" />
   <SkipNavContent>
     <h1 class="sr-only">{SITE.title}</h1>
-    <section>
+    <section
+      class="relative isolate overflow-hidden rounded-2xl border border-border bg-[var(--color-ic-bg)] p-5 md:p-8"
+    >
+      <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+        <Image
+          src={wallpaperImage}
+          alt=""
+          class="h-full w-full object-cover opacity-40 dark:opacity-20"
+          loading="eager"
+        />
+        <div class="absolute inset-0 bg-bg/60 dark:bg-bg/84"></div>
+      </div>
       <div
-        class="grid grid-cols-1 md:grid-cols-[19rem_minmax(0,25rem)] gap-4 items-center max-w-[50rem]"
+        class="relative grid grid-cols-1 items-start gap-6 md:grid-cols-[minmax(0,1fr)_19rem] md:gap-8"
       >
-        <div class="w-60 md:w-76">
-          <img
-            src="https://avatars.githubusercontent.com/u/1021430?s=400"
-            alt="TkDodo"
-            class="rounded-full w-full h-auto"
-          />
-        </div>
-        <div class="max-w-full md:max-w-[25rem]">
-          <h2
-            class="text-2xl md:text-3xl lg:text-4xl text-highlight leading-tight"
-          >
-            Hi 👋, I&apos;m Dominik from Vienna 🇦🇹
-          </h2>
-          <p class="mt-4 text-base md:text-lg">
-            I&apos;m a Web Developer and open source maintainer who ❤️ ReactJs
-            and TypeScript. I&apos;m currently maintaining
+        <div>
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p
+                class="text-sm font-medium tracking-[0.08em] uppercase text-subtle"
+              >
+                TkDodo&apos;s Blog
+              </p>
+              <h2
+                class="mt-2 text-3xl leading-tight text-highlight md:text-4xl"
+              >
+                👋 Hey, I&apos;m Dominik
+              </h2>
+            </div>
+            <div class="shrink-0 md:hidden">
+              <Image
+                src={profileImage}
+                alt="Portrait of Dominik (TkDodo)"
+                class="h-14 w-14 rounded-full object-cover ring-1 ring-border"
+                loading="eager"
+              />
+            </div>
+          </div>
+          <p class="mt-4 text-base leading-relaxed md:text-lg">
+            🛠️ I build things for the web, work at{" "}
+            <a
+              class="text-primary hover:underline"
+              href="https://sentry.io"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              Sentry</a
+            >, and help maintain{" "}
             <a
               class="text-primary hover:underline"
               href="https://github.com/TanStack/query"
               target="_blank"
               rel="noreferrer noopener"
             >
-              TanStack/query
-            </a>
-            and
+              TanStack Query
+            </a>{" "}and{" "}
             <a
               class="text-primary hover:underline"
               href="https://github.com/TanStack/router"
               target="_blank"
               rel="noreferrer noopener"
             >
-              TanStack/router</a
-            >.
+              TanStack Router
+            </a>
+            . I spend a lot of my time thinking about React, TypeScript, and how to
+            make frontend code simpler and more reliable.
+          </p>
+          <p class="mt-4 hidden text-base leading-relaxed md:text-lg lg:block">
+            💖 I love open source. Not just the code, but the people. A big part
+            of my time goes into answering questions and discussing problems
+            with the community.
           </p>
         </div>
+        <div class="mx-auto hidden w-full max-w-[17rem] md:block md:max-w-none">
+          <Image
+            src={profileImage}
+            alt="Portrait of Dominik (TkDodo)"
+            class="aspect-square w-full rounded-3xl object-cover ring-1 ring-border"
+            loading="eager"
+          />
+        </div>
       </div>
-      <p class="mt-6 text-base md:text-lg">
-        Welcome to my personal blog 📚, where I write about all things React,
-        TypeScript and of course the
-        <a
-          class="text-primary hover:underline"
-          href="https://github.com/TanStack"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          TanStack</a
-        >. If you enjoy my blog posts or want to support my open source work,
-        you can
+      <p class="relative mt-4 text-base leading-relaxed md:text-lg lg:hidden">
+        💖 I love open source. Not just the code, but the people. A big part of
+        my time goes into answering questions and discussing problems with the
+        community.
+      </p>
+      <p class="relative mt-4 text-base leading-relaxed md:text-lg">
+        📝 At some point I made myself a rule: if I get a question three times,
+        I write the answer down. This blog is where those answers end up, along
+        with ideas, deep dives, and lessons from building real-world
+        applications.
+      </p>
+      <p class="relative mt-4 text-base leading-relaxed md:text-lg">
+        🎗 If something here helps you, that already makes it worth writing, but
+        if you want to further support my open source work, you can{" "}
         <a
           class="text-primary hover:underline whitespace-nowrap"
           href="https://github.com/sponsors/TkDodo"
           target="_blank"
           rel="noopener noreferrer"
         >
-          🎗 sponsor me on Github 🎗
-        </a>
+          sponsor me on Github</a
+        >.
       </p>
     </section>
     <Spacer axis="vertical" size={32} />
