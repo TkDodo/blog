@@ -175,9 +175,17 @@ a.active {
   color: var(--color-highlight);
 }
 
+/* Improve light-mode prose contrast for bullets, blockquote borders and separators */
+:root[data-theme="light"] .prose,
+:root:not([data-theme]) .prose {
+  --tw-prose-bullets: var(--color-ic-border);
+  --tw-prose-quote-borders: var(--color-ic-border);
+  --tw-prose-hr: var(--color-ic-border);
+}
+
 /* Global keyboard focus ring */
 :where(
-  a,
+    a,
   button,
   input,
   select,
