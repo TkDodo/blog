@@ -22,7 +22,11 @@ const tags = getTags(entries);
     <div class="flex gap-6 flex-col">
       {
         tags.map(({ tag, slug, count }) => (
-          <Link variant="highlight" href={`/tags/${slug}`}>
+          <Link
+            variant="subtle"
+            class="text-base md:text-lg lg:text-xl text-primary"
+            href={`/tags/${slug}`}
+          >
             {tag} ({count})
           </Link>
         ))
