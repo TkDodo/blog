@@ -32,6 +32,11 @@ const featuredPosts = posts.map(entry => ({
 	banner: getBanner(entry),
 }))
 
+const getTimeToRead = (body: string) => {
+	const words = body.match(/\b[\w'-]+\b/g)?.length ?? 0
+	return Math.max(1, Math.ceil(words / 265))
+}
+
 const premiumSponsors = [
 	{
 		name: 'Tanner Linsley',
@@ -108,15 +113,14 @@ const premiumSponsors = [
 								<Image src={banner} width={300} height={200} alt={entry.data.title} class="rounded-md w-full h-auto" />
 							</a>
 						)}
-						<p class="mt-2 mb-1 text-subtle text-sm md:text-base">
-							<time>{defaultDateFormat(entry.data.date)}</time>
+						<p class="mt-2 mb-1 text-subtle text-base lg:text-lg leading-normal">
+							<time>{defaultDateFormat(entry.data.date)}</time>, {getTimeToRead(entry.body)} min read
 						</p>
-						<div class="mt-2 font-semibold text-base md:text-lg lg:text-xl leading-snug">
-							<Link variant="highlight" href={`/${getPostSlug(entry)}`}>
+						<div class="mt-2 font-semibold text-base md:text-lg lg:text-xl leading-normal">
+							<Link variant="subtle" underlineOnHover={false} class="text-text" href={`/${getPostSlug(entry)}`}>
 								{entry.data.title}
 							</Link>
 						</div>
-						{entry.data.description && <p class="mt-3 text-subtle text-sm md:text-base">{entry.data.description}</p>}
 					</div>
 				))
 			}
