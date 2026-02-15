@@ -20,7 +20,12 @@ export default function Attribution({
     <SmallCentered>
       {prefix}{" "}
       {url ? (
-        <a href={url} target="_blank" rel="noreferrer noopener">
+        <a
+          href={url}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="font-normal text-subtle hover:text-subtle hover:underline"
+        >
           {name}
         </a>
       ) : (

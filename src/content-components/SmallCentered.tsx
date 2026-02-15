@@ -6,14 +6,7 @@ type Props = {
 
 export default function SmallCentered({ children }: Props) {
   return (
-    <small
-      style={{
-        display: "block",
-        textAlign: "center",
-        marginTop: "-1rem",
-        marginBottom: "1rem",
-      }}
-    >
+    <small className="not-prose block text-center -mt-10 mb-4 text-faded text-sm md:text-base leading-relaxed">
       {children}
     </small>
   );

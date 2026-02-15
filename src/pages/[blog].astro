@@ -79,14 +79,18 @@ const postBanner = (() => {
     <Prose>
       <h1 class="mb-0!" data-pagefind-meta="title">{post.title}</h1>
       <Spacer axis="vertical" size={4} />
-      <div class="text-faded">
+      <div class="not-prose text-faded text-sm md:text-base leading-relaxed">
         {defaultDateFormat(post.date)} — <TagLinks tags={post.tags ?? []} />
       </div>
       <Spacer axis="vertical" size={12} />
       {
         postBanner && (
           <>
-            <Image src={postBanner} alt={post.title} class="rounded-lg" />
+            <Image
+              src={postBanner}
+              alt={post.title}
+              class="rounded-lg mx-auto"
+            />
             <Spacer axis="vertical" size={8} />
           </>
         )
