@@ -15,25 +15,22 @@ import Highlight from "components/Highlight";
 import Attribution from "components/Attribution";
 import Translations from "components/Translations";
 import Emph from "components/Emph";
+import { UsToc } from "components/us-toc";
 
 <Attribution name="Piret Ilver" url="https://unsplash.com/@saltsup" />
 
 **Last Update: 2022-04-23**
 
----
+<UsToc id="use-state-vs-use-reducer" />
 
-- [#1: Don't over useState](dont-over-use-state)
-- [#2: Putting props to useState](putting-props-to-use-state)
-- [#3: Things to know about useState](things-to-know-about-use-state)
-- [#4: useState for one-time initializations](use-state-for-one-time-initializations)
-- <b>#5: useState vs. useReducer</b>
-
-<Translations translations={[
+<Translations
+  translations={[
     {
       language: "한국어",
       url: "https://www.philly.im/blog/use-state-vs-use-reducer",
     },
-  ]} />
+  ]}
+/>
 
 The question about which state management solution to use might be just as old as React itself (or maybe even older), and answers to it are manifold. To me, there is only one good answer, and it's the same answer I will give to every seemingly complex question:
 

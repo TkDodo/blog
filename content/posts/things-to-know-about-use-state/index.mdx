@@ -12,21 +12,18 @@ tags:
 
 import Comments from "components/Comments";
 import Translations from "components/Translations";
+import { UsToc } from "components/us-toc";
 
----
+<UsToc id="things-to-know-about-use-state" />
 
-- [#1: Don't over useState](dont-over-use-state)
-- [#2: Putting props to useState](putting-props-to-use-state)
-- <b>#3: Things to know about useState</b>
-- [#4: useState for one-time initializations](use-state-for-one-time-initializations)
-- [#5: useState vs. useReducer](use-state-vs-use-reducer)
-
-<Translations translations={[
+<Translations
+  translations={[
     {
       language: "한국어",
       url: "https://www.philly.im/blog/things-to-know-about-use-state",
     },
-  ]} />
+  ]}
+/>
 
 [React.useState](https://reactjs.org/docs/hooks-reference.html#usestate) is pretty straightforward to use. A value, a setter function, an initial state. What hidden gems could possibly be there to know about? Well, here are 5 things you can profit from on a daily basis that you might not have known:
 
