@@ -96,6 +96,9 @@ const premiumSponsors = [
     image: "https://avatars.githubusercontent.com/u/120005519?s=64",
   },
 ];
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+const withBasePath = (url: string) =>
+  url.startsWith("/") ? `${basePath}${url}` : url;
 ---
 
 <Layout>
@@ -201,7 +204,7 @@ const premiumSponsors = [
           premiumSponsors.map((sponsor) => (
             <div class="flex items-center">
               <img
-                src={sponsor.image}
+                src={withBasePath(sponsor.image)}
                 alt={sponsor.name}
                 loading="lazy"
                 class="mr-3.5 w-16 h-16 rounded-full object-cover bg-white"
