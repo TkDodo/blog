@@ -177,18 +177,19 @@ a.active {
 
 /* Global keyboard focus ring */
 :where(
-    a,
-    button,
-    input,
-    select,
-    textarea,
-    summary,
-    [role="button"],
-    [tabindex]:not([tabindex="-1"])
-  ):focus-visible {
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  summary,
+  [role="button"],
+  [tabindex]:not([tabindex="-1"])
+):focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 3px;
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 24%, transparent);
+  box-shadow: 0 0 0 4px
+    color-mix(in srgb, var(--color-primary) 24%, transparent);
   border-radius: 0.375rem;
 }
 
@@ -252,6 +253,16 @@ samp {
 
 .expressive-code {
   --ec-codeFontFamily: var(--font-mono);
+  --ec-codeFontSize: 1em;
+}
+
+.prose .expressive-code {
+  font-size: 1em !important;
+}
+
+.prose .expressive-code pre,
+.prose .expressive-code code {
+  font-size: inherit !important;
 }
 
 .tweet-poll-progress {
