@@ -32,6 +32,13 @@ export default defineConfig({
     react(),
   ],
   vite: {
+    ssr: {
+      noExternal: [
+        "react-spring-carousel",
+        "react-spring",
+        "@react-spring/web",
+      ],
+    },
     resolve: {
       alias: {
         components: "/src/content-components",
