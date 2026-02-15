@@ -254,6 +254,7 @@ samp {
 .expressive-code {
   --ec-codeFontFamily: var(--font-mono);
   --ec-codeFontSize: 1em;
+  --ec-frm-edActTabIndTopCol: var(--color-primary);
 }
 
 .prose .expressive-code {
