@@ -46,6 +46,7 @@ export default defineConfig({
       ],
     },
     resolve: {
+      dedupe: ["react", "react-dom"],
       alias: {
         components: "/src/content-components",
       },
