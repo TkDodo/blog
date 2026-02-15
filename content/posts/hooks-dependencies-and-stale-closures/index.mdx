@@ -83,35 +83,31 @@ function Counter({ count }) {
 
 The nice part about closures in React is that it will "just work" if your component re-renders with a new prop. Have a look at this interactive example:
 
-```js react-live
-function App() {
+<Playground template="react">
+
+```js name=App.js active
+import * as React from "react";
+
+export default function App() {
   const [count, increment] = React.useReducer((prev) => prev + 1, 1);
+  const [logged, setLogged] = React.useState(count);
 
   const logCount = () => {
-    log(count);
+    setLogged(count);
   };
 
   return (
     <div>
       <div>count is {count}</div>
+      <div>log: {logged}</div>
       <button onClick={increment}>increment</button>
       <button onClick={logCount}>log</button>
     </div>
   );
 }
-
-render(
-  <div style={{ color: "black " }}>
-    <App />
-    <div id="result">log:</div>
-  </div>,
-);
-
-// just a way to make logging work in this interactive example
-function log(value) {
-  document.getElementById("result").innerHTML = "log: " + String(value);
-}
 ```
+
+</Playground>
 
 You can click both buttons a bunch of times, and you should see that the log function, which closures over _count_, will always have access to the "latest" count. Or so it seems.
 
@@ -158,37 +154,33 @@ Whenever you do that, no new picture is taken. React will just give you the old 
 
 We can see how ignoring the linter in our example will lead to non working code:
 
-```js react-live
-function App() {
+<Playground template="react">
+
+```js name=App.js active
+import * as React from "react";
+
+export default function App() {
   const [count, increment] = React.useReducer((prev) => prev + 1, 1);
+  const [logged, setLogged] = React.useState(count);
 
   // 🚨 the linter says we should include count
   // as a dependency, but we don't
   const logCount = React.useCallback(() => {
-    log(count);
+    setLogged(count);
   }, []);
 
   return (
     <div>
       <div>count is {count}</div>
+      <div>log: {logged}</div>
       <button onClick={increment}>increment</button>
       <button onClick={logCount}>log</button>
     </div>
   );
 }
-
-render(
-  <div style={{ color: "black " }}>
-    <App />
-    <div id="result2">log:</div>
-  </div>,
-);
-
-// just a way to make logging work in this interactive example
-function log(value) {
-  document.getElementById("result2").innerHTML = "log: " + String(value);
-}
 ```
+
+</Playground>
 
 We instruct React to only create our _logCount_ function once, "on mount". It doesn't have any dependencies (an empty dependency array), so it will always "see" the count from the first render cycle, which is 1. Every time we click the button, it will log 1. This is certainly not what we had in mind.
 

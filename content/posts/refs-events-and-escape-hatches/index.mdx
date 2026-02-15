@@ -41,20 +41,27 @@ In React, we almost always think in immutability. _Props_ cannot be changed (fro
 
 We always see the things from the time they were created, but if they are _mutated_ in place, we would still see the latest value. Let's take the basic example from part 1 and store the value in a mutable variable outside the React component:
 
-```js react-live
+<Playground template="react">
+
+```js name=App.js active
+import * as React from "react";
+
 let count = 1;
-function App() {
+
+export default function App() {
   const rerender = React.useReducer(() => ({}))[1];
+  const [logged, setLogged] = React.useState(count);
 
   // 😱 logCount is stable, but it still sees
   // the latest value of count
   const logCount = React.useCallback(() => {
-    log(count);
+    setLogged(count);
   }, []);
 
   return (
     <div>
       <div>count is {count}</div>
+      <div>log: {logged}</div>
       <button
         onClick={() => {
           count++;
@@ -67,19 +74,9 @@ function App() {
     </div>
   );
 }
-
-render(
-  <div style={{ color: "black " }}>
-    <App />
-    <div id="result">log:</div>
-  </div>,
-);
-
-// just a way to make logging work in this interactive example
-function log(value) {
-  document.getElementById("result").innerHTML = "log: " + String(value);
-}
 ```
+
+</Playground>
 
 Now it's hopefully obvious that this is _not_ how you would work with React. Having a variable outside the component means it's shared between component instances, and React doesn't know about it, which is why we have to manually force our component to re-render.
 

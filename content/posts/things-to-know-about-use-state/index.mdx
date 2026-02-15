@@ -47,9 +47,13 @@ This might be totally irrelevant, but it might also introduce subtle bugs in som
 
 Live example:
 
-```js react-live
-function App() {
-  const [count, setCount] = React.useState(0);
+<Playground template="react">
+
+```js name=App.js active
+import { useState } from "react";
+
+export default function App() {
+  const [count, setCount] = useState(0);
 
   return (
     <button
@@ -58,13 +62,13 @@ function App() {
         setCount(count + 1);
       }}
     >
-      🚨 This will not work as expected, count is: {count}
+      🚨 This will not work, count is: {count}
     </button>
   );
 }
-
-render(<App />);
 ```
+
+</Playground>
 
 Each click will only increment the count once, because both calls to _setCount_ close over the same value (_count_). It's important to know that _setCount_ will _not_ immediately set the count. The useState updater only schedules an update. It basically tells React:
 
@@ -82,24 +86,28 @@ React does so, but this is probably not what we intended to say. We wanted to ex
 
 The functional updater form ensures this:
 
-```js react-live
-function App() {
-  const [count, setCount] = React.useState(0);
+<Playground template="react">
+
+```js name=App.js active
+import { useState } from "react";
+
+export default function App() {
+  const [count, setCount] = useState(0);
 
   return (
     <button
       onClick={() => {
-        setCount((previousCount) => previousCount + 1);
-        setCount((previousCount) => previousCount + 1);
+        setCount((prev) => prev + 1);
+        setCount((prev) => prev + 1);
       }}
     >
       ✅ Increment by 2, count is: {count}
     </button>
   );
 }
-
-render(<App />);
 ```
+
+</Playground>
 
 ### When async actions are involved
 
@@ -177,20 +185,25 @@ const [value, setValue] = React.useState(() =>
 
 When you call the updater function, React will not always re-render your component. It will bail out of rendering if you try to update to the same value that your state is currently holding. React uses [Object.is](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is#description) to determine if the values are different. See for yourself in this live example:
 
-```js react-live
-function App() {
-  const [name, setName] = React.useState("Elias");
+<Playground template="react">
 
-  // 🤯 clicking this button will not re-render the component
+```js name=App.js active
+import { useState } from "react";
+
+export default function App() {
+  const [name, setName] = useState("Elias");
+
+  // 🤯 clicking this button will
+  // not re-render the component
   return (
     <button onClick={() => setName("Elias")}>
       Name is: {name}, Date is: {new Date().getTime()}
     </button>
   );
 }
-
-render(<App />);
 ```
+
+</Playground>
 
 ## 4: The convenience overload
 
