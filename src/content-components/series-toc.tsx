@@ -17,7 +17,7 @@ export default function SeriesToc({ id, items }: Props) {
         if (item.id === id) {
           return (
             <li key={item.id} className="!m-0">
-              <span className="block text-base leading-relaxed font-bold">
+              <span className="block leading-relaxed font-bold">
                 {item.title}
               </span>
             </li>
@@ -26,7 +26,7 @@ export default function SeriesToc({ id, items }: Props) {
 
         return (
           <li key={item.id} className="!m-0">
-            <span className="block text-base leading-relaxed">
+            <span className="block leading-relaxed">
               <a href={`./${item.id}`}>{item.title}</a>
             </span>
           </li>

@@ -10,6 +10,7 @@ tags:
 import Attribution from "components/Attribution";
 import Comments from "components/Comments";
 import Translations from "components/Translations";
+import { TsError } from "components/TsError";
 
 <Attribution name="Jack B" url="https://unsplash.com/@nervum" />
 
@@ -68,11 +69,11 @@ Component(props)
 
 Here, the compiler will complain with:
 
-```
-Argument of type '{ variant: string; }' is not assignable to parameter of type 'Props'.
-  Types of property 'variant' are incompatible.
-    Type 'string' is not assignable to type 'Variant'.(2345)
-```
+<TsError>
+  Argument of type '&#123; variant: string; &#125; is not assignable to
+  parameter of type 'Props'. Types of property 'variant' are incompatible. Type
+  'string' is not assignable to type 'Variant'.(2345)
+</TsError>
 
 because variant will be inferred to string.
 TypeScript is doing this because nothing stops you from re-assigning another string to variant:
@@ -277,10 +278,15 @@ getFirst(strings)
 
 Even if you wouldn't sort the Array, it would still error with:
 
-```
-Argument of type 'readonly ["foo", "bar", "baz"]' is not assignable to parameter of type 'string[]'.
-  The type 'readonly ["foo", "bar", "baz"]' is 'readonly' and cannot be assigned to the mutable type 'string[]'.(2345)
-```
+<TsError>
+
+Argument of type 'readonly ["foo", "bar", "baz"]' is not assignable to
+parameter of type 'string[]'.
+
+The type 'readonly ["foo", "bar", "baz"]' is
+'readonly' and cannot be assigned to the mutable type 'string[]'.(2345)
+
+</TsError>
 
 By making the parameter readonly, we just guarantee that we are not mutating it (which is always good - don't mess with function parameters)
 and we make people's lives easier if they are using const assertions in the process.
