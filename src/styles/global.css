@@ -156,24 +156,6 @@ a.active {
   color: var(--color-highlight);
 }
 
-#search {
-  --search-cancel-space: calc(var(--spacing) * 20);
-}
-
-#search .pagefind-ui__form::before {
-  opacity: 1;
-}
-
-#search .pagefind-ui__search-input {
-  width: calc(100% - var(--search-cancel-space));
-}
-
-#search .pagefind-ui__search-input::placeholder {
-  color: var(--color-highlight);
-  font-weight: 400;
-  letter-spacing: normal;
-}
-
 @media (width >= --theme(--breakpoint-sm)) {
   #search {
     --search-cancel-space: 0px;
