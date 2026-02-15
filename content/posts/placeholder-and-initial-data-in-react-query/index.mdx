@@ -76,7 +76,7 @@ The basic way to create an observer is to call `useQuery`. Every time we do that
 
 By the way, you can see how many observers a query has by the number on the left of the Query Key in the React Query Devtools (3 in this example):
 
-<img src="./observers.png" />
+![](./observers.png)
 
 Some options that work on observer level would be `select` or `refetchInterval`. In fact, what makes `select` so great for [data transformations](./react-query-data-transformations#3-using-the-select-option) is the ability to watch the same cache entry, but subscribe to different slices of its data in different components.
 

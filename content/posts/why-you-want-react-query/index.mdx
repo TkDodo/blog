@@ -72,7 +72,7 @@ function Bookmarks({ category }) {
 
 If you think this code is fine for simple use cases where you don't need additional features, let me tell you that I immediately spotted 🐛 <Emph color="var(--red)">5 bugs</Emph> 🪲 hiding in these 10 lines of code.
 
-<img src="./this_is_fine.jpg" alt="This is fine meme" />
+![This is fine meme](./this_is_fine.jpg)
 
 Maybe take a minute or two and see if you can find them all. I'll wait...
 
@@ -88,10 +88,7 @@ There are reasons why the [official React docs](https://react.dev/reference/reac
 
 The effect is set up in a way that it re-fetches whenever `category` changes, which is certainly correct. However, network responses can arrive in a different order than you sent them. So if you change the category from `books` to `movies` and the response for `movies` arrives before the response for `books`, you'll end up with the wrong data in your component.
 
-<img
-  src="./race.png"
-  alt="Timeline that starts to fetch books, then fetches movies. Movies resolves faster so we setData(movies) before we setData(books)"
-/>
+![Timeline that starts to fetch books, then fetches movies. Movies resolves faster so we setData(movies) before we setData(books)](./race.png)
 
 At the end, you'll be left with an <Emph>inconsistent</Emph> state: Your local state will say that you have `movies` selected, but the data you're rendering is actually `books`.
 

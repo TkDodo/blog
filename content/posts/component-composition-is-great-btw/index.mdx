@@ -183,10 +183,7 @@ I'm not even talking about adding another state here, because it should be clear
 
 At this point, I would suggest to listen to the React docs and break down what the user actually sees on the screen into boxes. It might give us a clue about what is related enough to become it's own component:
 
-<img
-  src="./three-states.png"
-  alt="a pending, a data and an empty state, each sharing a common layout (red) with different content (blue)"
-/>
+![a pending, a data and an empty state, each sharing a common layout (red) with different content (blue)](./three-states.png)
 
 In all three states, we want to render a shared "layout" - the red part. That's why we made our component in the first place - because we have some common parts to render. The blue stuff is what's different between the three states. So how would a refactoring look like if we'd extract the red parts to their own layout component that accepts dynamic `children`:
 

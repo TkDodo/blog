@@ -135,10 +135,7 @@ My tweet mentions it already: React Context is a _dependency injection_ tool. It
 
 This is conceptually the same as prop-drilling, which is the process of passing props down via multiple layers. Context allows you to do the same: Take some values and pass them as props to children, except that you can leave out a couple of layers:
 
-<img
-  alt="Component tree show props passing over two components vs. context passing where the grand-child can read it directly"
-  src="./props-vs-context.png"
-/>
+![Component tree show props passing over two components vs. context passing where the grand-child can read it directly](./props-vs-context.png)
 
 With context, you just skip the middle man. In our `useCurrentUserQuery` example, it can help us make that dependency explicit: Instead of reading the `useCurrentUserQuery` directly in all components where we want to skip the data-availability check, we read it from React Context. And that context will be filled by the parent that actually does the first check:
 

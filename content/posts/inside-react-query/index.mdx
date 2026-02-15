@@ -38,10 +38,7 @@ To understand the architecture, we have to start at the beginning:
 
 ## The QueryClient
 
-<img
-  src="./queryClient.png"
-  alt="QueryClient with defaultOptions holds the QueryCache"
-/>
+![QueryClient with defaultOptions holds the QueryCache](./queryClient.png)
 
 It all starts with a `QueryClient`. That's the class you create an instance of, likely at the start of your application, and then make available everywhere via the `QueryClientProvider`:
 
@@ -73,10 +70,7 @@ It also holds some defaults that you can set for all your queries and mutations,
 
 Alright, so the client lets us work with the cache - what is the cache?
 
-<img
-  src="./queryCache.png"
-  alt="QueryCache consists of Queries and syncs with Persisters"
-/>
+![QueryCache consists of Queries and syncs with Persisters](./queryCache.png)
 
 Simply put - the `QueryCache` is an in-memory object where the keys are a stably serialized version of your _queryKeys_ (called a _queryKeyHash_) and the values are an instance of the `Query` class.
 
@@ -84,7 +78,7 @@ I think it's important to understand that React Query, per default, _only_ store
 
 ## Query
 
-<img src="./query.png" alt="Query informs Observers" />
+![Query informs Observers](./query.png)
 
 The cache has queries, and a `Query` is where most of the logic is happening. It not only contains all the information about a query (its data, status field or meta information like when the last fetch happened), it also executes the query function and contains the retry, cancellation and de-duplication logic.
 
@@ -94,10 +88,7 @@ Most importantly, the query _knows_ who's interested in the query data, and it c
 
 ## QueryObserver
 
-<img
-  src="./queryObserver.png"
-  alt="Observer is created by useQuery and informs the component about updates"
-/>
+![Observer is created by useQuery and informs the component about updates](./queryObserver.png)
 
 Observers are the glue between the `Query` and the components that want to use it. An `Observer` is created when you call `useQuery`, and it is always subscribed to exactly one query. That's why you _have to_ pass a `queryKey` to `useQuery`. 😉
 
@@ -109,14 +100,11 @@ Even more - each `Observer` can have a _select_ option, where you can decide whi
 
 A `Query` without an `Observer` is called an _inactive_ query. It's still in the cache, but it's not being used by any component. If you take a look at the React Query Devtools, you will see that inactive queries are greyed out. The number on the left side indicates the number of `Observers` that are subscribed to the query.
 
-<img
-  src="./devtools.png"
-  alt="Devtools where one query has 2 observers and another one has 0"
-/>
+![Devtools where one query has 2 observers and another one has 0](./devtools.png)
 
 ## The complete picture
 
-<img src="./architecture.png" alt="Full overview of the architecture" />
+![Full overview of the architecture](./architecture.png)
 
 Putting it all together, we can see that most of the logic lives inside the framework-agnostic Query Core: `QueryClient`, `QueryCache`, `Query` and `QueryObserver` are all there.
 
@@ -126,10 +114,7 @@ That's why it's fairly straightforward to create an adapter for a new framework.
 
 Lastly, let's look at the flow from another angle - starting with a component:
 
-<img
-  src="./flow.png"
-  alt="flow from component mounting over fetching data to rendering it"
-/>
+![flow from component mounting over fetching data to rendering it](./flow.png)
 
 - the component _mounts_, it calls `useQuery`, which creates an `Observer`.
 - that `Observer` _subscribes to_ the `Query`, which lives in the `QueryCache`.

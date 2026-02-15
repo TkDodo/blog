@@ -12,6 +12,10 @@ type Props = {
   type?: TweetType;
 };
 
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+const withBasePath = (url: string) =>
+  url.startsWith("/") ? `${basePath}${url}` : url;
+
 const TwitterIcon = () => (
   <svg
     stroke="var(--color-twitter-blue)"
@@ -66,7 +70,8 @@ function avatarSrc(handle: string): string | null {
     housecor: "/images/housecor.png",
     mxstbr: "/images/mxstbr.jpg",
   };
-  return map[key] ?? null;
+  const src = map[key];
+  return src ? withBasePath(src) : null;
 }
 
 const AvatarImage = ({ handle, name }: { handle: string; name: string }) => {
@@ -120,56 +125,70 @@ function TweetIllustration({ src, alt }: { src: string; alt: string }) {
 }
 
 export const TannerAndMe = () => (
-  <TweetIllustration src="/images/FVegS4nXwAQHskN.jpeg" alt="Tanner and me" />
+  <TweetIllustration
+    src={withBasePath("/images/FVegS4nXwAQHskN.jpeg")}
+    alt="Tanner and me"
+  />
 );
 export const TanStackQueryV5 = () => (
-  <TweetIllustration src="/images/TanStackQueryV5.png" alt="TanStackQuery v5" />
+  <TweetIllustration
+    src={withBasePath("/images/TanStackQueryV5.png")}
+    alt="TanStackQuery v5"
+  />
 );
 export const V5390 = () => (
-  <TweetIllustration src="/images/v5390.jpeg" alt="New Release v5.39.0" />
+  <TweetIllustration
+    src={withBasePath("/images/v5390.jpeg")}
+    alt="New Release v5.39.0"
+  />
 );
 export const SathyaAndMe = () => (
-  <TweetIllustration src="/images/GP-724-X0AAN_NK.jpeg" alt="Sathya and me" />
+  <TweetIllustration
+    src={withBasePath("/images/GP-724-X0AAN_NK.jpeg")}
+    alt="Sathya and me"
+  />
 );
 export const ContactDetailQuery = () => (
   <TweetIllustration
-    src="/images/Fcnj9l0XEAMnLdV.jpeg"
+    src={withBasePath("/images/Fcnj9l0XEAMnLdV.jpeg")}
     alt="Contact detail query code screenshot"
   />
 );
 export const SelfieInception = () => (
   <TweetIllustration
-    src="/images/FxnXEGVX0AEeYAf.jpeg"
+    src={withBasePath("/images/FxnXEGVX0AEeYAf.jpeg")}
     alt="selfie inception"
   />
 );
 export const QueryGGImage = () => (
   <TweetIllustration
-    src="/images/eC_qCxd4.jpeg"
+    src={withBasePath("/images/eC_qCxd4.jpeg")}
     alt="Query.gg - The official React Query course"
   />
 );
 export const ADayOnTheOrangeSite = () => (
   <TweetIllustration
-    src="/images/bafkreiazq5owsx6neqzgvjquwenob6su4kgd7zzl3z5ytfq4oywwjwbis4.jpg"
+    src={withBasePath(
+      "/images/bafkreiazq5owsx6neqzgvjquwenob6su4kgd7zzl3z5ytfq4oywwjwbis4.jpg",
+    )}
     alt="Unique visitor stats outlier"
   />
 );
 export const CynicsVsBuilders = () => (
   <TweetIllustration
-    src="/images/EXx9RHYVAAUgegZ.jpeg"
+    src={withBasePath("/images/EXx9RHYVAAUgegZ.jpeg")}
     alt="Cynics vs Builders"
   />
 );
 export const SeparationOfConcerns = () => (
   <TweetIllustration
-    src="/images/separation_of_concerns.jpeg"
+    src={withBasePath("/images/separation_of_concerns.jpeg")}
     alt="Separation of concerns"
   />
 );
 export const UseEvent = () => (
   <TweetIllustration
-    src="/images/FSJNvbJWUAIVEGB.jpeg"
+    src={withBasePath("/images/FSJNvbJWUAIVEGB.jpeg")}
     alt="useEvent code screenshot"
   />
 );
