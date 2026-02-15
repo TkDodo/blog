@@ -7,7 +7,10 @@ type SlideProps = {
 };
 
 export function Slide({ children, index, colorMode }: SlideProps) {
-  const src = `${import.meta.env.BASE_URL}images/react-query-api-design-lessons-learned/${colorMode}/${index + 1}.png`;
+  const baseUrl = import.meta.env.BASE_URL.endsWith("/")
+    ? import.meta.env.BASE_URL
+    : `${import.meta.env.BASE_URL}/`;
+  const src = `${baseUrl}images/react-query-api-design-lessons-learned/${colorMode}/${index + 1}.png`;
 
   return (
     <div className="grow cursor-grab flex flex-col">

@@ -1,6 +1,6 @@
 import * as React from "react";
-import { useSpringCarousel } from "react-spring-carousel";
 
+import { PresentationCarousel } from "components/presentation-carousel";
 import { Slide } from "./slide";
 
 type LinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement>;
@@ -518,89 +518,12 @@ const slides: ReadonlyArray<React.ReactNode> = [
 ];
 
 export const Presentation = () => {
-  const activePage = React.useMemo(() => {
-    if (typeof window === "undefined") return 1;
-    const page = new URLSearchParams(window.location.search).get("page");
-    return page ? Math.min(Math.max(Number(page), 1), slides.length) : 1;
-  }, []);
-
-  const {
-    carouselFragment,
-    slideToPrevItem,
-    slideToNextItem,
-    useListenToCustomEvent,
-  } = useSpringCarousel({
-    items: slides.map((slide, index) => ({
-      id: `slide-${index + 1}`,
-      renderItem: <Slide index={index}>{slide}</Slide>,
-    })),
-    initialActiveItem: activePage - 1,
-  });
-
-  useListenToCustomEvent((event) => {
-    // Triggered when the slide animation is completed
-    if (event.eventName === "onSlideChange") {
-      // const searchParams = new URLSearchParams(window.location.search)
-      // searchParams.set('page', String(event.currentItem.index + 1))
-      // window.history.replaceState(
-      //   null,
-      //   '',
-      //   '?' + searchParams.toString()
-      // )
-    }
-  });
-
-  React.useEffect(() => {
-    const listener = (event: KeyboardEvent) => {
-      if (event.key === "ArrowLeft") {
-        slideToPrevItem();
-      } else if (event.key === "ArrowRight") {
-        slideToNextItem();
-      }
-    };
-    document.addEventListener("keydown", listener);
-    return () => document.removeEventListener("keydown", listener);
-  }, [slideToPrevItem, slideToNextItem]);
-
-  const ref = React.useRef<HTMLDivElement>(null);
-
   return (
-    <div className="flex flex-col gap-2">
-      <div ref={ref} className="relative flex flex-col overflow-hidden">
-        <button
-          type="button"
-          className="absolute top-1/3 md:top-0 bottom-0 z-[1] flex items-start md:items-center justify-center bg-transparent border-0 text-center opacity-50 hover:opacity-100 transition-opacity duration-150 ease-in-out cursor-pointer text-text"
-          onClick={slideToPrevItem}
-        >
-          <span aria-label="previous slide" className="inline-flex h-8 w-8">
-            <svg
-              viewBox="0 0 16 16"
-              className="h-8 w-8 fill-current"
-              aria-hidden="true"
-            >
-              <path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
-            </svg>
-          </span>
-        </button>
-        <button
-          type="button"
-          className="absolute top-1/3 md:top-0 right-0 bottom-0 z-[1] flex items-start md:items-center justify-center bg-transparent border-0 text-center opacity-50 hover:opacity-100 transition-opacity duration-150 ease-in-out cursor-pointer text-text"
-          onClick={slideToNextItem}
-        >
-          <span aria-label="next slide" className="inline-flex h-8 w-8">
-            <svg
-              viewBox="0 0 16 16"
-              className="h-8 w-8 fill-current"
-              aria-hidden="true"
-            >
-              <path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-            </svg>
-          </span>
-        </button>
-        <div className="[&_a]:text-primary [&_a:hover]:underline grow">
-          {carouselFragment}
-        </div>
-      </div>
-    </div>
+    <PresentationCarousel
+      slides={slides}
+      slideIdPrefix="slide"
+      renderSlide={(slide, index) => <Slide index={index}>{slide}</Slide>}
+      contentClassName="[&_a]:text-primary [&_a:hover]:underline grow"
+    />
   );
 };

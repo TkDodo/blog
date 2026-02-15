@@ -6,7 +6,10 @@ type SlideProps = {
 };
 
 export function Slide({ children, index }: SlideProps) {
-  const src = `${import.meta.env.BASE_URL}images/react-query-the-bad-parts/${index + 1}.png`;
+  const baseUrl = import.meta.env.BASE_URL.endsWith("/")
+    ? import.meta.env.BASE_URL
+    : `${import.meta.env.BASE_URL}/`;
+  const src = `${baseUrl}images/react-query-the-bad-parts/${index + 1}.png`;
 
   return (
     <div className="grow cursor-grab flex flex-col">
