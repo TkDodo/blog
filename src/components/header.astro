@@ -3,6 +3,7 @@ import { HEADER, SITE } from '@constants'
 import Spacer from './spacer.astro'
 import Link from './link.astro'
 import Search from './search.astro'
+import ThemeSelect from './theme-select.astro'
 
 const { pathname } = Astro.url
 const normalizedPath = (pathname.replace(/^\/blog/, '') || '/').replace(/\/$/, '') || '/'
@@ -37,7 +38,8 @@ const normalizedPath = (pathname.replace(/^\/blog/, '') || '/').replace(/\/$/, '
 				))
 			}
 		</nav>
-		<div class="flex gap-4">
+		<div class="flex items-center gap-4">
+			<ThemeSelect />
 			{
 				HEADER.external.map((link) => (
 					<Link href={link.url} {...link.props}>
