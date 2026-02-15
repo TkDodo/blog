@@ -8,7 +8,7 @@ export const SITE: Record<string, string> = {
   description:
     "A technical blog about frontend-development, TypeScript and React",
   lang: "en-US",
-  defaultOgImage: "/blog-banner.png",
+  defaultOgImage: "/blog/blog-banner.png",
   defaultAuthor: "TkDodo",
 };
 
