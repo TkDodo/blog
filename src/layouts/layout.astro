@@ -21,6 +21,13 @@ const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
       type="font/woff2"
       crossorigin="anonymous"
     />
+    <link
+      rel="preload"
+      href={`${basePath}/fonts/MonoLisaVariableNormal.woff2`}
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
     <link rel="icon" type="image/svg+xml" href={`${basePath}/favicon.svg`} />
     <meta name="generator" content={Astro.generator} />
     <ThemeProvider />
