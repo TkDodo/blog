@@ -5,6 +5,30 @@ import { toString } from 'mdast-util-to-string'
 import { visit } from 'unist-util-visit'
 import { ASIDE_TYPES } from './constants'
 
+/**
+ * The Gatsby content used code-fence info strings like `ts:title=foo`.
+ * Normalize those to `lang=ts` and `meta=title=foo` so Astro's highlighter
+ * can resolve the language correctly.
+ */
+export function remarkLegacyCodeFenceInfo() {
+	return (tree: Root) => {
+		visit(tree, 'code', (node) => {
+			if (typeof node.lang !== 'string' || !node.lang.includes(':')) {
+				return
+			}
+
+			const [rawLang, ...rest] = node.lang.split(':')
+			const lang = rawLang.trim() || 'txt'
+			const legacyMeta = rest.join(':').trim()
+
+			node.lang = lang
+			if (legacyMeta) {
+				node.meta = node.meta ? `${node.meta} ${legacyMeta}` : legacyMeta
+			}
+		})
+	}
+}
+
 export function remarkAsides() {
 	return (tree: Root) => {
 		visit(tree, (node, nodeIndex, parent) => {
