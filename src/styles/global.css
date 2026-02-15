@@ -208,6 +208,14 @@ a[data-nav-pending="true"] {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  body[data-nav-pending="true"]::before {
+    animation: none;
+    width: 100%;
+    transform: none;
+  }
+}
+
 /* Improve light-mode prose contrast for bullets, blockquote borders and separators */
 :root[data-theme="light"] .prose,
 :root:not([data-theme]) .prose {
