@@ -25,7 +25,8 @@ import Aside from "components/Aside";
 
 <RqToc id="react-query-render-optimizations" />
 
-<Translations translations={[
+<Translations
+  translations={[
     {
       language: "한국어",
       url: "https://highjoon-dev.vercel.app/blogs/3-react-query-render-optimizations/",
@@ -46,9 +47,10 @@ import Aside from "components/Aside";
       language: "日本語",
       url: "https://zenn.dev/matazou/articles/0645957b2b9168",
     },
-  ]} />
+  ]}
+/>
 
-<Aside title="Disclaimer" icon="shield-alert" color="var(--theme-ui-colors-warning)">
+<Aside title="Disclaimer" icon="shield-alert" color="warning">
 
 Render optimizations are an advanced concept for any app. React Query already comes with very good optimizations and defaults out of the box, and most of the time, no further optimizations are needed. "Unneeded re-renders" is a topic that many people tend to put a lot of focus on, which is why I've decided to cover it. But I wanted to point out once again, that usually, for most apps, render optimizations probably don't matter as much as you'd think. Re-renders are a good thing. They make sure your app is up-to-date. I'd take an "unnecessary re-render" over a "missing render-that-should-have-been-there" all day every day. For more on this topic, please read:
 

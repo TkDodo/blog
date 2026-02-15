@@ -1,17 +1,22 @@
 import type { ReactNode } from "react";
+import type { ColorVariant } from "./color-variant";
 
 type Props = {
-  color?: string;
+  color?: ColorVariant;
   children?: ReactNode;
 };
 
-export default function Emph({ color, children }: Props) {
+export default function Emph({ color = "primary", children }: Props) {
   const colorClass =
-    color === "danger" || color === "var(--red)"
+    color === "danger"
       ? "text-danger"
-      : color === "warning" || color === "var(--theme-ui-colors-warning)"
+      : color === "warning"
         ? "text-warning"
         : "text-primary";
 
-  return <span className={`tracking-[0.05em] font-bold ${colorClass}`}>{children}</span>;
+  return (
+    <span className={`tracking-[0.05em] font-bold ${colorClass}`}>
+      {children}
+    </span>
+  );
 }

@@ -27,7 +27,8 @@ import { Alert } from "@theme-ui/components";
 
 <TsrToc id="the-beauty-of-tan-stack-router" />
 
-<Translations translations={[
+<Translations
+  translations={[
     {
       language: "한국어",
       url: "https://chapdo.vercel.app/posts/%EB%B2%88%EC%97%AD-The-Beauty-of-TanStack-Router/",
@@ -40,7 +41,8 @@ import { Alert } from "@theme-ui/components";
       language: "Tiếng Việt",
       url: "https://www.kirugi.pro/posts/the-beauty-of-tan-stack-router/",
     },
-  ]} />
+  ]}
+/>
 
 ---
 
@@ -233,7 +235,7 @@ This means I can fully focus my components on displaying the happy path, without
 <Aside
   title="React Transitions"
   icon="shield-alert"
-  color="var(--theme-ui-colors-warning)"
+  color="warning"
 >
 
 While TanStack Router fully supports Suspense, it doesn't have great support for [React Transitions](https://react.dev/reference/react/startTransition). Navigations are wrapped in `startTransition`, but it stores the state outside of React and uses [useSyncExternalStore](https://react.dev/reference/react/useSyncExternalStore) to enable fine-grained subscriptions. This comes at a cost, since `useSyncExternalStore` bails out from concurrent features.

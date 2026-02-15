@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
 import Emph from "./Emph";
+import type { ColorVariant } from "./color-variant";
 
 type Props = {
   icon?: "bell" | "info" | "shield-alert" | "lightbulb";
-  color?: string;
+  color?: ColorVariant;
   title?: string;
   children?: ReactNode;
 };
@@ -58,12 +59,11 @@ export default function Aside({
   title,
   children,
   icon = "info",
-  color = "var(--color-primary)",
+  color = "primary",
 }: Props) {
   const Icon = icons[icon];
-  const isWarning =
-    color === "var(--theme-ui-colors-warning)" || color === "warning";
-  const isDanger = color === "danger" || color === "var(--red)";
+  const isWarning = color === "warning";
+  const isDanger = color === "danger";
   const headerClass = isWarning
     ? "text-warning"
     : isDanger
@@ -76,7 +76,9 @@ export default function Aside({
       : "border-primary";
 
   return (
-    <aside className={`text-text border-l-[6px] rounded-lg p-4 my-5 overflow-hidden bg-border ${borderClass}`}>
+    <aside
+      className={`text-text border-l-[6px] rounded-lg p-4 my-5 overflow-hidden bg-border ${borderClass}`}
+    >
       <div className={`flex items-center justify-between ${headerClass}`}>
         {title ? <Emph color={color}>{title}</Emph> : null}
         <Icon />
