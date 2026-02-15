@@ -12,30 +12,45 @@ const CATEGORY_ID =
   "DIC_kwDOEWBvEs4COl22";
 
 export default function Comments() {
+  const config = {
+    repo: REPO,
+    repoId: REPO_ID,
+    category: CATEGORY,
+    categoryId: CATEGORY_ID,
+  };
+
   return (
     <section className="mt-12 pt-6 border-t border-border">
       <div className="giscus" />
-      <script
-        src="https://giscus.app/client.js"
-        data-repo={REPO}
-        data-repo-id={REPO_ID}
-        data-category={CATEGORY}
-        data-category-id={CATEGORY_ID}
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="light"
-        data-lang="en"
-        crossOrigin="anonymous"
-        async
-      />
       <script>
         {`
           (() => {
+            const giscusRoot = document.querySelector(".giscus");
+            if (!giscusRoot) return;
+
             const getTheme = () =>
               document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+
+            const injectGiscus = () => {
+              if (giscusRoot.querySelector("script[data-giscus-script='1']")) return;
+              const script = document.createElement("script");
+              script.src = "https://giscus.app/client.js";
+              script.async = true;
+              script.crossOrigin = "anonymous";
+              script.setAttribute("data-giscus-script", "1");
+              script.setAttribute("data-repo", ${JSON.stringify(config.repo)});
+              script.setAttribute("data-repo-id", ${JSON.stringify(config.repoId)});
+              script.setAttribute("data-category", ${JSON.stringify(config.category)});
+              script.setAttribute("data-category-id", ${JSON.stringify(config.categoryId)});
+              script.setAttribute("data-mapping", "pathname");
+              script.setAttribute("data-strict", "0");
+              script.setAttribute("data-reactions-enabled", "1");
+              script.setAttribute("data-emit-metadata", "0");
+              script.setAttribute("data-input-position", "top");
+              script.setAttribute("data-theme", getTheme());
+              script.setAttribute("data-lang", "en");
+              giscusRoot.appendChild(script);
+            };
 
             const updateGiscusTheme = () => {
               const iframe = document.querySelector("iframe.giscus-frame");
@@ -47,7 +62,17 @@ export default function Comments() {
             };
 
             const onReady = () => {
+              injectGiscus();
               updateGiscusTheme();
+
+              const frameObserver = new MutationObserver(() => {
+                updateGiscusTheme();
+              });
+              frameObserver.observe(giscusRoot, {
+                childList: true,
+                subtree: true,
+              });
+
               const observer = new MutationObserver((mutations) => {
                 for (const mutation of mutations) {
                   if (mutation.type === "attributes" && mutation.attributeName === "data-theme") {
