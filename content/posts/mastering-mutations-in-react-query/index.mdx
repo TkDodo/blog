@@ -24,8 +24,7 @@ import Aside from "components/Aside";
 
 <RqToc id="mastering-mutations-in-react-query" />
 
-<Translations>
-  {[
+<Translations translations={[
     {
       language: "한국어",
       url: "http://highjoon-dev.vercel.app/blogs/12-mastering-mutations-in-react-query",
@@ -34,8 +33,7 @@ import Aside from "components/Aside";
       language: "Español",
       url: "https://rubenvara.io/react-query/mutaciones-react-query",
     },
-  ]}
-</Translations>
+  ]} />
 
 We've covered a lot of ground already when it comes to the features and concepts React Query provides. Most of them are about _retrieving_ data - via the `useQuery` hook. There is however a second, integral part to working with data: updating it.
 

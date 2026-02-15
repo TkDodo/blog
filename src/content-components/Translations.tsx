@@ -1,12 +1,10 @@
-import type { ReactNode } from "react";
-
 type Translation = {
   language?: string;
   url?: string;
 };
 
 type Props = {
-  children?: ReactNode;
+  translations?: Translation[];
 };
 
 function isTranslation(input: unknown): input is Translation {
@@ -15,48 +13,20 @@ function isTranslation(input: unknown): input is Translation {
   return typeof entry.language === "string" && typeof entry.url === "string";
 }
 
-function extractTranslations(input: unknown): Translation[] {
-  if (isTranslation(input)) {
-    return [input];
-  }
-
-  if (Array.isArray(input)) {
-    return input.flatMap(extractTranslations);
-  }
-
-  return [];
-}
-
-export default function Translations({ children }: Props) {
-  const links = extractTranslations(children);
+export default function Translations({ translations = [] }: Props) {
+  const links = translations.filter(isTranslation);
 
   return (
     <div className="not-prose my-4 md:my-[1.125rem] rounded-lg bg-(--color-ic-bg) p-4 md:p-[1.125rem]">
-      <ul
-        style={{
-          display: "flex",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: "1rem",
-          listStyle: "none",
-          margin: 0,
-          padding: 0,
-        }}
-      >
+      <ul className="m-0 flex list-none flex-wrap items-center gap-4 md:gap-[1.125rem] p-0 text-base lg:text-[1.125rem] leading-normal">
         {links.length > 0 ? (
           links.map((entry) => (
-            <li
-              key={entry.url}
-              style={{
-                border: "1px solid var(--color-primary)",
-                borderRadius: "8px",
-              }}
-            >
+            <li key={entry.url} className="rounded-lg border border-primary">
               <a
                 href={entry.url}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="inline-block px-6 py-3 text-primary no-underline hover:underline"
+                className="inline-block px-6 py-3 font-normal text-primary no-underline hover:underline leading-normal"
               >
                 {entry.language}
               </a>
@@ -67,12 +37,12 @@ export default function Translations({ children }: Props) {
             <i>No translations available.</i>
           </li>
         )}
-        <li>
+        <li className="flex">
           <a
             href="https://github.com/TkDodo/blog/blob/main/CONTRIBUTING.md#translations"
             target="_blank"
             rel="noreferrer noopener"
-            className="text-primary no-underline hover:underline"
+            className="font-normal text-primary no-underline hover:underline leading-normal"
           >
             Add translation
           </a>

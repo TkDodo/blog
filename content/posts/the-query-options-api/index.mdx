@@ -32,14 +32,12 @@ import Tweet, {
 
 <RqToc id="the-query-options-api" />
 
-<Translations>
-  {[
+<Translations translations={[
     {
       language: "한국어",
       url: "https://velog.io/@cnsrn1874/the-query-options-api",
     },
-  ]}
-</Translations>
+  ]} />
 
 React Query version 5 was released about three months ago, and with it, we got one of the biggest "breaking" changes in the library's history. All of our functions now only get one object passed, instead of multiple arguments. We call this object the <Emph>Query Options</Emph>, because it contains all the options you need to create a query:
 

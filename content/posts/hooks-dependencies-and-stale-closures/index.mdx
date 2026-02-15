@@ -24,7 +24,7 @@ import Tweet, { AvatarAcemarke } from "components/Tweet";
 - <b>#1: Hooks, Dependencies and Stale Closures</b>
 - [#2: Refs, Events and Escape Hatches](refs-events-and-escape-hatches)
 
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 Working with [closures](<https://en.wikipedia.org/wiki/Closure_(computer_programming)>) is something that can become quite tricky, especially when dealing with hooks that have dependencies in React (think _useEffect_, _useMemo_, _useCallback_). A lot of bugs and frustration are tied pretty closely to that concept - even though it is nothing that React itself introduced. It's rather a language concept that hooks rely upon.
 

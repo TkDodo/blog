@@ -18,8 +18,7 @@ import { TsError } from "components/TsError";
 
 <Attribution name="Rombo" url="https://unsplash.com/@rombo_guitar_picks" />
 
-<Translations>
-  {[
+<Translations translations={[
     {
       language: "한국어",
       url: "https://velog.io/@samiehomie/%EB%B2%88%EC%97%AD-TypeScript%EC%9D%98-Discriminated-Union%EC%97%90%EC%84%9C-Omit-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0",
@@ -28,8 +27,7 @@ import { TsError } from "components/TsError";
       language: "Français",
       url: "https://developpeur-web.tech/posts/omit-pour-les-unions-discrimines-en-typescript",
     },
-  ]}
-</Translations>
+  ]} />
 
 You're probably aware that TypeScript has built-in utility types to help with common type transformation on objects, like [Omit](https://www.typescriptlang.org/docs/handbook/utility-types.html#omittype-keys) and [Pick](https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys).
 

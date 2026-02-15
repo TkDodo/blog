@@ -23,8 +23,7 @@ import Highlight from "components/Highlight";
 
 <RqToc id="effective-react-query-keys" />
 
-<Translations>
-  {[
+<Translations translations={[
     {
       language: "한국어",
       url: "https://highjoon-dev.vercel.app/blogs/8-effective-react-query-keys/",
@@ -41,8 +40,7 @@ import Highlight from "components/Highlight";
       language: "Español",
       url: "https://rubenvara.io/react-query/claves-eficaces-react-query/",
     },
-  ]}
-</Translations>
+  ]} />
 
 [Query Keys](https://tanstack.com/query/latest/docs/framework/react/guides/query-keys) are a very important core concept in React Query. They are necessary so that the library can internally cache your data correctly and refetch automatically when a dependency to your query changes. Lastly, it will allow you to interact with the Query Cache manually when needed, for example, when updating data after a mutation or when you need to manually invalidate some queries.
 
