@@ -15,23 +15,29 @@ function isTranslation(input: unknown): input is Translation {
   return typeof entry.language === "string" && typeof entry.url === "string";
 }
 
+function extractTranslations(input: unknown): Translation[] {
+  if (isTranslation(input)) {
+    return [input];
+  }
+
+  if (Array.isArray(input)) {
+    return input.flatMap(extractTranslations);
+  }
+
+  return [];
+}
+
 export default function Translations({ children }: Props) {
-  const links = Array.isArray(children) ? children.filter(isTranslation) : [];
+  const links = extractTranslations(children);
 
   return (
-    <div
-      style={{
-        margin: "1rem 0",
-        display: "flex",
-        flexDirection: "column",
-        gap: "0.75rem",
-      }}
-    >
+    <div className="not-prose my-4 md:my-[1.125rem] rounded-lg bg-(--color-ic-bg) p-4 md:p-[1.125rem]">
       <ul
         style={{
           display: "flex",
+          alignItems: "center",
           flexWrap: "wrap",
-          gap: "0.75rem",
+          gap: "1rem",
           listStyle: "none",
           margin: 0,
           padding: 0,
@@ -50,14 +56,14 @@ export default function Translations({ children }: Props) {
                 href={entry.url}
                 target="_blank"
                 rel="noreferrer noopener"
-                style={{ display: "inline-block", padding: "0.5rem 0.9rem" }}
+                className="inline-block px-6 py-3 text-primary no-underline hover:underline"
               >
                 {entry.language}
               </a>
             </li>
           ))
         ) : (
-          <li>
+          <li className="text-subtle">
             <i>No translations available.</i>
           </li>
         )}
@@ -66,6 +72,7 @@ export default function Translations({ children }: Props) {
             href="https://github.com/TkDodo/blog/blob/main/CONTRIBUTING.md#translations"
             target="_blank"
             rel="noreferrer noopener"
+            className="text-primary no-underline hover:underline"
           >
             Add translation
           </a>
