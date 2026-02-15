@@ -14,7 +14,7 @@ import Attribution from "components/Attribution";
 import Translations from "components/Translations";
 import Tweet, { AvatarMattpocockuk } from "components/Tweet";
 import { TweetPoll } from "components/TweetPoll";
-import { Alert } from "@theme-ui/components";
+import { TsError } from "components/TsError";
 
 <Attribution
   name="sterlinglanier Lanier"
@@ -145,10 +145,10 @@ function add(items: string | number[], newItem: string | number) {
 
 shows the following error:
 
-<Alert sx={{ fontFamily: "ml, monospace", fontSize: [0, 1] }}>
+<TsError>
   Type 'string' is not assignable to type 'ConcatArray&lt;number&gt; &amp;
   string' (2769)
-</Alert>
+</TsError>
 
 [TypeScript playground](https://www.typescriptlang.org/play?#code/GYVwdgxgLglg9mABAQwCaoBQygUwLYDOAXIgVAE4xgDmiAPomCHgEY7kDaAugDSM4B3AJK48JMpRr1GzNuQCUiAN4BYAFCJE2fAQB0EBBGRQMYQSPzz1AX3VA)
 
@@ -198,10 +198,10 @@ pick(myObject, ["foo", "bar"]);
 
 now yields:
 
-<Alert sx={{ fontFamily: "ml, monospace", fontSize: [0, 1] }}>
+<TsError>
   Argument of type 'string[]' is not assignable to parameter of type 'keyof
   TObject[]'.(2345)
-</Alert>
+</TsError>
 
 [TypeScript playground](https://www.typescriptlang.org/play?#code/GYVwdgxgLglg9mABABxhA1gHgCoHkBGAVgKbSLEAeUxYAJgM6IBKpcATrZvVGzGAOYAaROHRg4AdzAA+aQAo4RUlABciPEujD0xAJ701O3XGDqCJaAG0AugEpEAbwC+AWABQ7iAm6IAtrvNlRABeR3dERGA4ODUeEGJBcMR8AEM2NQBGRLcI1IAvNQByAAtiABsyuEQJdjLaQuzXDzdUDDl-QK1ES0KouAbEQtS2QutEW3cgA)
 

@@ -15,7 +15,7 @@ import Attribution from "components/Attribution";
 import Translations from "components/Translations";
 import Emph from "components/Emph";
 import Highlight from "components/Highlight";
-import { Alert } from "@theme-ui/components";
+import { TsError } from "components/TsError";
 import Aside from "components/Aside";
 import GifPlayer from "components/GifPlayer.astro";
 import Tweet, { AvatarAcdlite } from "components/Tweet";
@@ -26,9 +26,9 @@ import Tweet, { AvatarAcdlite } from "components/Tweet";
 
 Hydration mismatches are among the most dreaded errors a React developer could potentially face:
 
-<Alert sx={{ fontFamily: "ml, monospace", fontSize: [0, 1] }}>
+<TsError>
   Uncaught Error: Text content does not match server-rendered HTML.
-</Alert>
+</TsError>
 
 How can this even be? We were promised isomorphic rendering - first on the server, then on the client. Write your code once, execute twice.
 

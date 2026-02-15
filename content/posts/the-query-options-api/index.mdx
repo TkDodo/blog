@@ -18,7 +18,7 @@ import Emph from "components/Emph";
 import Aside from "components/Aside";
 import { QueryGG } from "components/QueryGG";
 import Highlight from "components/Highlight";
-import { Alert } from "@theme-ui/components";
+import { TsError } from "components/TsError";
 import Tweet, {
   AvatarRalex1993,
   TweetImage,
@@ -32,12 +32,14 @@ import Tweet, {
 
 <RqToc id="the-query-options-api" />
 
-<Translations translations={[
+<Translations
+  translations={[
     {
       language: "한국어",
       url: "https://velog.io/@cnsrn1874/the-query-options-api",
     },
-  ]} />
+  ]}
+/>
 
 React Query version 5 was released about three months ago, and with it, we got one of the biggest "breaking" changes in the library's history. All of our functions now only get one object passed, instead of multiple arguments. We call this object the <Emph>Query Options</Emph>, because it contains all the options you need to create a query:
 
@@ -133,11 +135,11 @@ useQuery({
 
 [TypeScript playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgVwM4FMCKz1QJ5wC+cAZlBCHAOQACMAhgHaoMDGA1gPRTr2swBaAI458VAFDiYeMOjgAVCABMIcALyJxcbXGBKAXHEbIQAI1zjC4pelYAbej1LJG-YBEal0MVgAtFKqgAFACUhgAK5CDAGAA8AIJQUPR4sQEQAHwZkmhYonhBCFpwIrh4ANLoeIYA2lQwyhCoVAC6ADTFpfgAYoyGJN5+6agd2iz0dnbyoOiGAKwADEsdhCFAA)
 
-<Alert sx={{ fontFamily: "ml, monospace", fontSize: [0, 1] }}>
+<TsError>
   Object literal may only specify known properties, but 'stallTime' does not
   exist in type 'UseQueryOptions&lt;Todo[], Error, Todo[], string[]&gt;'. Did
   you mean to write 'staleTime'?(2769)
-</Alert>
+</TsError>
 
 Which is cool, because it catches typos like the one above. But what if you abstract the whole object away into a constant, like our pattern suggests?
 
