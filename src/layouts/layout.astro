@@ -1,5 +1,6 @@
 ---
 import { SITE } from "@constants";
+import { ClientRouter } from "astro:transitions";
 import SkipNavLink from "@components/a11y/skip-nav-link.astro";
 import Header from "@components/header.astro";
 import Footer from "@components/footer.astro";
@@ -48,6 +49,7 @@ const plausibleDomain = new URL(SITE.url).hostname;
       href={`${basePath}/apple-touch-icon.png`}
     />
     <meta name="generator" content={Astro.generator} />
+    <ClientRouter />
     {
       import.meta.env.PROD && (
         <script
