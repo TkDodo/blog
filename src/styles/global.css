@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "./expressive-code.css";
 @plugin '@tailwindcss/typography';
 
 @font-face {

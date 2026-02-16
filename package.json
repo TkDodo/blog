@@ -63,6 +63,7 @@
     "remark-directive": "^4.0.0",
     "remark-smartypants": "^3.0.2",
     "sharp": "^0.34.4",
+    "shiki": "^3.22.0",
     "sirv": "^3.0.2",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
