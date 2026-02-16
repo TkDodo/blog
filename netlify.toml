@@ -64,3 +64,15 @@
   to = "https://github.com/TkDodo/react-query-beyond-the-basics"
   status = 301
   force = true
+
+[[headers]]
+  for = "/giscus-*.css"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, HEAD, OPTIONS"
+
+[[headers]]
+  for = "/blog/giscus-*.css"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, HEAD, OPTIONS"

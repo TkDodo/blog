@@ -38,6 +38,16 @@ export default defineConfig({
     react(),
   ],
   vite: {
+    server: {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    },
+    preview: {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    },
     ssr: {
       noExternal: [
         "react-spring-carousel",
