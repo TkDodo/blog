@@ -1,4 +1,24 @@
 import { isValidElement, type ReactNode } from "react";
+import tkdodoAvatar from "../assets/profile.jpg";
+import acdliteAvatar from "../assets/avatars/acdlite.jpg";
+import acemarkeAvatar from "../assets/avatars/acemarke.jpeg";
+import alexdotjsAvatar from "../assets/avatars/alexdotjs.jpg";
+import danvdkAvatar from "../assets/avatars/danvdk.jpeg";
+import diegohazAvatar from "../assets/avatars/diegohaz.jpeg";
+import gabbeVAvatar from "../assets/avatars/GabbeV_.jpg";
+import housecorAvatar from "../assets/avatars/housecor.png";
+import leeerobAvatar from "../assets/avatars/leeerob.jpeg";
+import mattpocockukAvatar from "../assets/avatars/mattpocockuk.jpeg";
+import michaelCAvatar from "../assets/avatars/michaelc_1991.jpeg";
+import mxstbrAvatar from "../assets/avatars/mxstbr.jpg";
+import ralex1993Avatar from "../assets/avatars/ralex1993.jpg";
+import ryanflorenceAvatar from "../assets/avatars/ryanflorence.jpeg";
+import sathyaAvatar from "../assets/avatars/sathya.jpg";
+import sophiebitsAvatar from "../assets/avatars/sophiebits.jpeg";
+import swyxAvatar from "../assets/avatars/swyx.jpeg";
+import t3dotggAvatar from "../assets/avatars/theo_twitter.jpg";
+import tannerlinsleyAvatar from "../assets/avatars/tannerlinsley.jpeg";
+import willmcguganAvatar from "../assets/avatars/willmcgugan.jpeg";
 
 type TweetType = "x" | "twitter" | "bsky";
 
@@ -15,6 +35,10 @@ type Props = {
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 const withBasePath = (url: string) =>
   url.startsWith("/") ? `${basePath}${url}` : url;
+
+type ImportedImage = { src: string } | string;
+const imageSrc = (asset: ImportedImage): string =>
+  typeof asset === "string" ? asset : asset.src;
 
 const TwitterIcon = () => (
   <svg
@@ -47,32 +71,34 @@ const BskyIcon = () => (
 function avatarSrc(handle: string): string | null {
   const key = handle.toLowerCase();
   const normalized = key.replace(/^avatar[_-]?/, "");
-  const map: Record<string, string> = {
-    tkdodo: "/images/1021430.jpeg",
-    "gsathya.bsky.social": "/images/sathya.jpg",
-    gsathya: "/images/sathya.jpg",
-    avatar_sophiebits: "/images/sophiebits.jpeg",
-    sophiebits: "/images/sophiebits.jpeg",
-    gabbe_v_: "/images/GabbeV_.jpg",
-    acdlite: "/images/acdlite.jpg",
-    ralex1993: "/images/ralex1993.jpg",
-    t3dotgg: "/images/theo_twitter.jpg",
-    michaelc_1991: "/images/michaelc_1991.jpeg",
-    mattpocockuk: "/images/mattpocockuk.jpeg",
-    tannerlinsley: "/images/tannerlinsley.jpeg",
-    diegohaz: "/images/diegohaz.jpeg",
-    ryanflorence: "/images/ryanflorence.jpeg",
-    willmcgugan: "/images/willmcgugan.jpeg",
-    danvdk: "/images/danvdk.jpeg",
-    acemarke: "/images/acemarke.jpeg",
-    alexdotjs: "/images/alexdotjs.jpg",
-    leeerob: "/images/leeerob.jpeg",
-    swyx: "/images/swyx.jpeg",
-    housecor: "/images/housecor.png",
-    mxstbr: "/images/mxstbr.jpg",
+  const map: Record<string, ImportedImage> = {
+    tkdodo: tkdodoAvatar,
+    "tkdodo.eu": tkdodoAvatar,
+    "bsky.app/profile/tkdodo.eu": tkdodoAvatar,
+    "gsathya.bsky.social": sathyaAvatar,
+    gsathya: sathyaAvatar,
+    avatar_sophiebits: sophiebitsAvatar,
+    sophiebits: sophiebitsAvatar,
+    gabbe_v_: gabbeVAvatar,
+    acdlite: acdliteAvatar,
+    ralex1993: ralex1993Avatar,
+    t3dotgg: t3dotggAvatar,
+    michaelc_1991: michaelCAvatar,
+    mattpocockuk: mattpocockukAvatar,
+    tannerlinsley: tannerlinsleyAvatar,
+    diegohaz: diegohazAvatar,
+    ryanflorence: ryanflorenceAvatar,
+    willmcgugan: willmcguganAvatar,
+    danvdk: danvdkAvatar,
+    acemarke: acemarkeAvatar,
+    alexdotjs: alexdotjsAvatar,
+    leeerob: leeerobAvatar,
+    swyx: swyxAvatar,
+    housecor: housecorAvatar,
+    mxstbr: mxstbrAvatar,
   };
-  const src = map[key] ?? map[normalized];
-  return src ? withBasePath(src) : null;
+  const asset = map[key] ?? map[normalized];
+  return asset ? imageSrc(asset) : null;
 }
 
 const avatarImageClass = "h-full w-full rounded-full object-cover";
@@ -94,80 +120,74 @@ const AvatarImage = ({ handle, name }: { handle: string; name: string }) => {
   );
 };
 
-const AvatarAsset = ({ src, alt }: { src: string; alt: string }) => (
+const AvatarAsset = ({ src, alt }: { src: ImportedImage; alt: string }) => (
   <img
     className={avatarImageClass}
-    src={withBasePath(src)}
+    src={imageSrc(src)}
     alt={alt}
     loading="lazy"
   />
 );
 
 export const AvatarTkDodo = () => (
-  <AvatarAsset src="/images/1021430.jpeg" alt="Avatar for TkDodo" />
+  <AvatarAsset src={tkdodoAvatar} alt="Avatar for TkDodo" />
 );
 export const AvatarSathya = () => (
-  <AvatarAsset src="/images/sathya.jpg" alt="Avatar for Satya" />
+  <AvatarAsset src={sathyaAvatar} alt="Avatar for Satya" />
 );
 export const AvatarGabbeV_ = () => (
-  <AvatarAsset src="/images/GabbeV_.jpg" alt="Avatar for GabbeV_" />
+  <AvatarAsset src={gabbeVAvatar} alt="Avatar for GabbeV_" />
 );
 export const AvatarAcdlite = () => (
-  <AvatarAsset src="/images/acdlite.jpg" alt="Avatar for acdlite" />
+  <AvatarAsset src={acdliteAvatar} alt="Avatar for acdlite" />
 );
 export const AvatarRalex1993 = () => (
-  <AvatarAsset src="/images/ralex1993.jpg" alt="Avatar for ralex1993" />
+  <AvatarAsset src={ralex1993Avatar} alt="Avatar for ralex1993" />
 );
 export const AvatarT3dotgg = () => (
-  <AvatarAsset src="/images/theo_twitter.jpg" alt="Avatar for t3dotgg" />
+  <AvatarAsset src={t3dotggAvatar} alt="Avatar for t3dotgg" />
 );
 export const AvatarMichaelC = () => (
-  <AvatarAsset
-    src="/images/michaelc_1991.jpeg"
-    alt="Avatar for michaelc_1991"
-  />
+  <AvatarAsset src={michaelCAvatar} alt="Avatar for michaelc_1991" />
 );
 export const AvatarMattpocockuk = () => (
-  <AvatarAsset src="/images/mattpocockuk.jpeg" alt="Avatar for mattpocockuk" />
+  <AvatarAsset src={mattpocockukAvatar} alt="Avatar for mattpocockuk" />
 );
 export const AvatarTannerlinsley = () => (
-  <AvatarAsset
-    src="/images/tannerlinsley.jpeg"
-    alt="Avatar for tannerlinsley"
-  />
+  <AvatarAsset src={tannerlinsleyAvatar} alt="Avatar for tannerlinsley" />
 );
 export const AvatarSophiebits = () => (
-  <AvatarAsset src="/images/sophiebits.jpeg" alt="Avatar for sophiebits" />
+  <AvatarAsset src={sophiebitsAvatar} alt="Avatar for sophiebits" />
 );
 export const AvatarDiegohaz = () => (
-  <AvatarAsset src="/images/diegohaz.jpeg" alt="Avatar for diegohaz" />
+  <AvatarAsset src={diegohazAvatar} alt="Avatar for diegohaz" />
 );
 export const AvatarRyanflorence = () => (
-  <AvatarAsset src="/images/ryanflorence.jpeg" alt="Avatar for ryanflorence" />
+  <AvatarAsset src={ryanflorenceAvatar} alt="Avatar for ryanflorence" />
 );
 export const AvatarWillMcGugan = () => (
-  <AvatarAsset src="/images/willmcgugan.jpeg" alt="Avatar for willmcgugan" />
+  <AvatarAsset src={willmcguganAvatar} alt="Avatar for willmcgugan" />
 );
 export const AvatarDanvdk = () => (
-  <AvatarAsset src="/images/danvdk.jpeg" alt="Avatar for danvdk" />
+  <AvatarAsset src={danvdkAvatar} alt="Avatar for danvdk" />
 );
 export const AvatarAcemarke = () => (
-  <AvatarAsset src="/images/acemarke.jpeg" alt="Avatar for acemarke" />
+  <AvatarAsset src={acemarkeAvatar} alt="Avatar for acemarke" />
 );
 export const AvatarAlexDotJs = () => (
-  <AvatarAsset src="/images/alexdotjs.jpg" alt="Avatar for alexdotjs" />
+  <AvatarAsset src={alexdotjsAvatar} alt="Avatar for alexdotjs" />
 );
 export const AvatarLeeerob = () => (
-  <AvatarAsset src="/images/leeerob.jpeg" alt="Avatar for leeerob" />
+  <AvatarAsset src={leeerobAvatar} alt="Avatar for leeerob" />
 );
 export const AvatarSwyx = () => (
-  <AvatarAsset src="/images/swyx.jpeg" alt="Avatar for swyx" />
+  <AvatarAsset src={swyxAvatar} alt="Avatar for swyx" />
 );
 export const AvatarHousecor = () => (
-  <AvatarAsset src="/images/housecor.png" alt="Avatar for housecor" />
+  <AvatarAsset src={housecorAvatar} alt="Avatar for housecor" />
 );
 export const AvatarMxstbr = () => (
-  <AvatarAsset src="/images/mxstbr.jpg" alt="Avatar for mxstbr" />
+  <AvatarAsset src={mxstbrAvatar} alt="Avatar for mxstbr" />
 );
 
 export const TweetImage = ({ children }: { children: ReactNode }) => (
