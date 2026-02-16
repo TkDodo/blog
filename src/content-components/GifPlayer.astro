@@ -19,24 +19,25 @@ const gifSrc = normalizeSrc(gif);
 const stillSrc = normalizeSrc(still ?? gif);
 ---
 
-<figure class="not-prose my-4 gif-player" data-gif={gifSrc} data-still={stillSrc}>
+<figure
+  class="not-prose my-4 gif-player"
+  data-gif={gifSrc}
+  data-still={stillSrc}
+>
   <button
     type="button"
     class="block rounded-lg p-0 overflow-hidden cursor-pointer bg-transparent"
     aria-label="Play animation"
     data-gif-button
   >
-    <img
-      src={stillSrc}
-      alt={alt}
-      loading="lazy"
-      class="m-0"
-      data-gif-image
-    />
+    <img src={stillSrc} alt={alt} loading="lazy" class="m-0" data-gif-image />
   </button>
-  <figcaption class="opacity-80 text-[0.9em] border-0 shadow-none" data-gif-caption
-    >Click image to play animation</figcaption
+  <figcaption
+    class="opacity-80 text-[0.9em] border-0 shadow-none"
+    data-gif-caption
   >
+    Click image to play animation
+  </figcaption>
 </figure>
 
 <script is:inline>
@@ -51,7 +52,10 @@ const stillSrc = normalizeSrc(still ?? gif);
     const caption = root.querySelector("[data-gif-caption]");
 
     if (!gif || !still || !(button instanceof HTMLButtonElement)) return;
-    if (!(image instanceof HTMLImageElement) || !(caption instanceof HTMLElement))
+    if (
+      !(image instanceof HTMLImageElement) ||
+      !(caption instanceof HTMLElement)
+    )
       return;
 
     let playing = false;

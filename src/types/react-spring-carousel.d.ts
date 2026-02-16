@@ -20,6 +20,8 @@ declare module "react-spring-carousel" {
     carouselFragment: React.ReactNode;
     slideToPrevItem: () => void;
     slideToNextItem: () => void;
-    useListenToCustomEvent: (callback: (event: SpringCarouselEvent) => void) => void;
+    useListenToCustomEvent: (
+      callback: (event: SpringCarouselEvent) => void,
+    ) => void;
   };
 }

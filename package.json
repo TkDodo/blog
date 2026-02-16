@@ -6,13 +6,14 @@
   "scripts": {
     "dev": "astro dev",
     "build:astro": "astro build",
-    "build": "pnpm run build:astro",
+    "build": "pnpm run typecheck && pnpm run build:astro",
     "preview": "astro preview",
+    "typecheck": "tsc --noEmit",
     "astro": "astro",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "format:write": "prettier --write .",
     "ogimages": "tsx ./scripts/og-image.tsx"
   },
   "dependencies": {

@@ -23,23 +23,30 @@ const getTimeToRead = (body: string | undefined) => {
 const tags = (entry.data.tags ?? []).map((tag) => tag.trim()).filter(Boolean);
 ---
 
-<div class="max-w-80 mx-auto lg:max-w-none w-full border-2 border-transparent rounded-xl p-2 hover:border-primary active:border-primary focus-within:border-primary transition-all duration-200 ease-in motion-safe:hover:-translate-y-2 motion-safe:active:-translate-y-1">
-  {banner && (
-    <a href={`${basePath}/${getPostSlug(entry)}`} tabindex="-1">
-      <Image
-        src={banner}
-        width={300}
-        height={200}
-        alt={entry.data.title}
-        class="rounded-md w-full h-auto"
-      />
-    </a>
-  )}
+<div
+  class="max-w-80 mx-auto lg:max-w-none w-full border-2 border-transparent rounded-xl p-2 hover:border-primary active:border-primary focus-within:border-primary transition-all duration-200 ease-in motion-safe:hover:-translate-y-2 motion-safe:active:-translate-y-1"
+>
+  {
+    banner && (
+      <a href={`${basePath}/${getPostSlug(entry)}`} tabindex="-1">
+        <Image
+          src={banner}
+          width={300}
+          height={200}
+          alt={entry.data.title}
+          class="rounded-md w-full h-auto"
+        />
+      </a>
+    )
+  }
   <p class="mt-2 mb-1 text-subtle text-base lg:text-lg leading-normal">
-    <time>{defaultDateFormat(entry.data.date)}</time>, {getTimeToRead(entry.body)
+    <time>{defaultDateFormat(entry.data.date)}</time>, {
+      getTimeToRead(entry.body)
     } min read
   </p>
-  <div class="mt-2 font-semibold text-base md:text-lg lg:text-xl leading-normal">
+  <div
+    class="mt-2 font-semibold text-base md:text-lg lg:text-xl leading-normal"
+  >
     <Link
       variant="subtle"
       underlineOnHover={false}
@@ -58,7 +65,9 @@ const tags = (entry.data.tags ?? []).map((tag) => tag.trim()).filter(Boolean);
               data-pagefind-filter="tag"
               class="font-normal text-subtle hover:text-subtle hover:underline"
               href={`${basePath}/tags/${slugifyTag(tag)}`}
-            >{tag + (i < entry.data.tags.length - 1 ? ',' : '')}</a>
+            >
+              {tag + (i < entry.data.tags.length - 1 ? "," : "")}
+            </a>
           </span>
         ))}
       </p>
