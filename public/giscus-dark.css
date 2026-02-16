@@ -97,7 +97,7 @@ a:hover,
 .gsc-social-reaction-summary-item {
   border-color: var(--g-border) !important;
   color: var(--g-text) !important;
-  background: var(--g-bg) !important;
+  background: transparent !important;
 }
 
 .btn.btn-primary,
@@ -112,6 +112,56 @@ a:hover,
 .gsc-reply-button:hover,
 .gsc-quote-button:hover {
   border-color: var(--g-primary) !important;
+}
+
+.gsc-comments-header .btn-group,
+.gsc-right-header.BtnGroup {
+  display: inline-flex !important;
+  gap: 0.25rem !important;
+  padding: 0.1875rem !important;
+  border: 1px solid var(--g-border) !important;
+  border-radius: 0.6rem !important;
+  background: var(--g-panel) !important;
+}
+
+.gsc-right-header.BtnGroup .BtnGroup-item {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.gsc-right-header.BtnGroup .BtnGroup-item::before,
+.gsc-right-header.BtnGroup .BtnGroup-item::after {
+  display: none !important;
+}
+
+.gsc-comments-header .btn-group .btn,
+.gsc-right-header.BtnGroup .BtnGroup-item .btn {
+  border: 0 !important;
+  border-radius: 0.45rem !important;
+  background: transparent !important;
+  color: var(--g-muted) !important;
+  padding: 0.3rem 0.7rem !important;
+  line-height: 1.15 !important;
+  box-shadow: none !important;
+}
+
+.gsc-comments-header .btn-group .btn:hover,
+.gsc-right-header.BtnGroup .BtnGroup-item .btn:hover {
+  color: var(--g-text) !important;
+  background: color-mix(in srgb, var(--g-bg) 55%, transparent) !important;
+  box-shadow: none !important;
+}
+
+.gsc-comments-header .btn-group .btn.btn-primary,
+.gsc-comments-header .btn-group .btn[aria-pressed="true"],
+.gsc-comments-header .btn-group .btn[aria-current="true"],
+.gsc-right-header.BtnGroup .BtnGroup-item[aria-current="true"] .btn,
+.gsc-right-header.BtnGroup .BtnGroup-item.BtnGroup-item--selected .btn {
+  background: color-mix(in srgb, var(--g-bg) 82%, transparent) !important;
+  color: var(--g-text) !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 .gsc-loading-image,
