@@ -8,6 +8,7 @@ import { sortAsc } from "@utils";
 import Link from "@components/link.astro";
 import Spacer from "@components/spacer.astro";
 import PostCard from "@components/post-card.astro";
+import ProgressiveImage from "@components/progressive-image.astro";
 import { SITE } from "@constants";
 import profileImage from "@assets/profile.jpg";
 import wallpaperImage from "@assets/wallpaper.jpg";
@@ -121,9 +122,6 @@ const premiumSponsors: PremiumSponsor[] = [
       <div aria-hidden="true" class="pointer-events-none absolute inset-0">
         <Image
           src={wallpaperImage}
-          width={479}
-          height={276}
-          sizes="(max-width: 767px) calc(100vw - 2.5rem), 479px"
           alt="TkDodo on stage at the React Advanced Conference 2024"
           class="h-full w-full object-cover opacity-40 dark:opacity-20"
           loading="eager"
@@ -150,13 +148,13 @@ const premiumSponsors: PremiumSponsor[] = [
               </h2>
             </div>
             <div class="shrink-0 md:hidden">
-              <Image
+              <ProgressiveImage
                 src={profileImage}
                 width={56}
                 height={56}
                 sizes="56px"
                 alt="Portrait of Dominik (TkDodo)"
-                class="h-14 w-14 rounded-full object-cover ring-1 ring-border"
+                wrapperClass="h-14 w-14 rounded-full ring-1 ring-border"
                 loading="eager"
               />
             </div>
@@ -197,13 +195,13 @@ const premiumSponsors: PremiumSponsor[] = [
           </p>
         </div>
         <div class="mx-auto hidden w-full max-w-[17rem] md:block md:max-w-none">
-          <Image
+          <ProgressiveImage
             src={profileImage}
             width={304}
             height={304}
             sizes="304px"
             alt="Portrait of Dominik (TkDodo)"
-            class="aspect-square w-full rounded-3xl object-cover ring-1 ring-border"
+            wrapperClass="aspect-square w-full rounded-3xl ring-1 ring-border"
             loading="eager"
           />
         </div>

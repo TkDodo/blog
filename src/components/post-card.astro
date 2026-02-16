@@ -1,9 +1,9 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import type { ImageMetadata } from "astro";
-import { Image } from "astro:assets";
 import { defaultDateFormat, getPostSlug, slugifyTag } from "@utils";
 import Link from "./link.astro";
+import ProgressiveImage from "./progressive-image.astro";
 
 interface Props {
   entry: CollectionEntry<"blog">;
@@ -29,12 +29,13 @@ const tags = (entry.data.tags ?? []).map((tag) => tag.trim()).filter(Boolean);
   {
     banner && (
       <a href={`${basePath}/${getPostSlug(entry)}`} tabindex="-1">
-        <Image
+        <ProgressiveImage
           src={banner}
           width={300}
           height={200}
           alt={entry.data.title}
-          class="rounded-md w-full h-auto"
+          sizes="(max-width: 768px) calc(100vw - 3rem), (max-width: 1024px) calc(50vw - 3rem), 300px"
+          wrapperClass="rounded-md w-full"
         />
       </a>
     )

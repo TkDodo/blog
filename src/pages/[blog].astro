@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import { getCollection, render } from "astro:content";
 import Seo from "@components/seo.astro";
 import Layout from "@layouts/layout.astro";
@@ -11,6 +10,7 @@ import Spacer from "@components/spacer.astro";
 import Aside from "@components/aside.astro";
 import TagLinks from "@components/tag-links.astro";
 import Playground from "@components/playground.astro";
+import ProgressiveImage from "@components/progressive-image.astro";
 import RepoData from "components/RepoData";
 import Suspense from "components/Suspense";
 import ErrorBoundary from "components/ErrorBoundary";
@@ -100,15 +100,17 @@ const ogImagePath = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/og-images/${
       {
         postBanner && (
           <>
-            <Image
+            <ProgressiveImage
               src={postBanner}
               alt={post.title}
               width={postBannerRenderWidth}
               height={postBannerRenderHeight}
               sizes="(max-width: 768px) calc(100vw - 2rem), 760px"
+              fill={false}
               loading="eager"
               fetchpriority="high"
-              class="rounded-lg mx-auto"
+              wrapperClass="mx-auto w-fit max-w-full rounded-lg"
+              imageClass="mx-auto block h-auto w-auto max-w-full"
             />
             <Spacer axis="vertical" size={8} />
           </>

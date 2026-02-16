@@ -1,0 +1,68 @@
+---
+import type { ImageMetadata } from "astro";
+import { Image, getImage } from "astro:assets";
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  width: number;
+  height: number;
+  sizes?: string;
+  fill?: boolean;
+  wrapperClass?: string;
+  imageClass?: string;
+  loading?: "eager" | "lazy";
+  fetchpriority?: "high" | "low" | "auto";
+  decoding?: "sync" | "async" | "auto";
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  sizes,
+  fill = true,
+  wrapperClass,
+  imageClass,
+  loading = "lazy",
+  fetchpriority = "auto",
+  decoding = "async",
+} = Astro.props;
+
+const placeholderWidth = Math.max(16, Math.min(32, Math.round(width / 24)));
+const placeholder = await getImage({
+  src,
+  width: placeholderWidth,
+  quality: 35,
+  format: "webp",
+});
+---
+
+<div class:list={["relative overflow-hidden", wrapperClass]}>
+  <img
+    src={placeholder.src}
+    alt={alt}
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 z-0 h-full w-full scale-[1.04] object-cover blur-xl transition-opacity duration-500 ease-out"
+    loading="eager"
+    decoding="async"
+  />
+  <Image
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    sizes={sizes}
+    loading={loading}
+    fetchpriority={fetchpriority}
+    decoding={decoding}
+    class:list={[
+      "relative z-10 transition-opacity duration-500 ease-out",
+      fill && "h-full w-full object-cover",
+      imageClass,
+      "opacity-0",
+    ]}
+    onload="this.classList.remove('opacity-0'); const placeholder = this.previousElementSibling; if (placeholder instanceof HTMLImageElement) { placeholder.style.opacity = '0'; }"
+  />
+</div>
