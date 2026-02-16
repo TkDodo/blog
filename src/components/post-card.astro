@@ -15,17 +15,17 @@ const { entry, banner = null, showTags = false } = Astro.props;
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
-const getTimeToRead = (body: string) => {
-  const words = body.match(/\b[\w'-]+\b/g)?.length ?? 0;
+const getTimeToRead = (body: string | undefined) => {
+  const words = body?.match(/\b[\w'-]+\b/g)?.length ?? 0;
   return Math.max(1, Math.ceil(words / 265));
 };
 
 const tags = (entry.data.tags ?? []).map((tag) => tag.trim()).filter(Boolean);
 ---
 
-<div class="max-w-80 mx-auto lg:max-w-none w-full border-2 border-transparent rounded-xl p-2 hover:border-primary focus-within:border-primary transition-all duration-200 ease-in motion-safe:hover:-translate-y-2">
+<div class="max-w-80 mx-auto lg:max-w-none w-full border-2 border-transparent rounded-xl p-2 hover:border-primary active:border-primary focus-within:border-primary transition-all duration-200 ease-in motion-safe:hover:-translate-y-2 motion-safe:active:-translate-y-1">
   {banner && (
-    <a href={`${basePath}/${getPostSlug(entry)}`} tabIndex={-1}>
+    <a href={`${basePath}/${getPostSlug(entry)}`} tabindex="-1">
       <Image
         src={banner}
         width={300}
