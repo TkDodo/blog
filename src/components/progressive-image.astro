@@ -10,6 +10,7 @@ interface Props {
   sizes?: string;
   fill?: boolean;
   wrapperClass?: string;
+  wrapperStyle?: string;
   imageClass?: string;
   loading?: "eager" | "lazy";
   fetchpriority?: "high" | "low" | "auto";
@@ -24,6 +25,7 @@ const {
   sizes,
   fill = true,
   wrapperClass,
+  wrapperStyle,
   imageClass,
   loading = "lazy",
   fetchpriority = "auto",
@@ -39,7 +41,7 @@ const placeholder = await getImage({
 });
 ---
 
-<div class:list={["relative overflow-hidden", wrapperClass]}>
+<div class:list={["relative overflow-hidden", wrapperClass]} style={wrapperStyle}>
   <img
     src={placeholder.src}
     alt={alt}

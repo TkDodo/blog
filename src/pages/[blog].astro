@@ -109,8 +109,9 @@ const ogImagePath = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/og-images/${
               fill={false}
               loading="eager"
               fetchpriority="high"
-              wrapperClass="mx-auto w-fit max-w-full rounded-lg"
-              imageClass="mx-auto block h-auto w-auto max-w-full"
+              wrapperClass="mx-auto w-full rounded-lg"
+              wrapperStyle={`max-width:${postBannerRenderWidth}px;`}
+              imageClass="mx-auto block h-auto w-full"
             />
             <Spacer axis="vertical" size={8} />
           </>
