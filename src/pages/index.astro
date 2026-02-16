@@ -114,9 +114,11 @@ const withBasePath = (url: string) =>
       <div aria-hidden="true" class="pointer-events-none absolute inset-0">
         <Image
           src={wallpaperImage}
-          alt=""
+          alt="TkDodo on stage at the React Advanced Conference 2024"
           class="h-full w-full object-cover opacity-40 dark:opacity-20"
           loading="eager"
+          fetchpriority="high"
+          decoding="sync"
         />
         <div class="absolute inset-0 bg-bg/60 dark:bg-bg/84"></div>
       </div>

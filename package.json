@@ -8,7 +8,7 @@
     "build:astro": "astro build",
     "build": "pnpm run build:astro",
     "preview": "astro preview",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "astro": "astro",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
