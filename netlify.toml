@@ -20,6 +20,31 @@
   status = 200
 
 [[redirects]]
+  from = "/favicon.ico"
+  to = "/blog/favicon.ico"
+  status = 200
+
+[[redirects]]
+  from = "/favicon.svg"
+  to = "/blog/favicon.svg"
+  status = 200
+
+[[redirects]]
+  from = "/favicon-32x32.png"
+  to = "/blog/favicon-32x32.png"
+  status = 200
+
+[[redirects]]
+  from = "/favicon-16x16.png"
+  to = "/blog/favicon-16x16.png"
+  status = 200
+
+[[redirects]]
+  from = "/apple-touch-icon.png"
+  to = "/blog/apple-touch-icon.png"
+  status = 200
+
+[[redirects]]
   from = "/images/*"
   to = "/blog/images/:splat"
   status = 301
