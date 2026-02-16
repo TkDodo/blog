@@ -8,14 +8,12 @@ tags:
   - React Query
 ---
 
-import Comments from 'components/Comments'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
-import Aside from 'components/Aside'
-import { QueryGG } from 'components/QueryGG'
-import Attribution from 'components/Attribution'
-
-<img src="./practical.jpg" alt="a wall full of old tools" />
+import Comments from "components/Comments";
+import Translations from "components/Translations";
+import { RqToc } from "components/rq-toc";
+import Aside from "components/Aside";
+import { QueryGG } from "components/QueryGG";
+import Attribution from "components/Attribution";
 
 <Attribution name="Lachlan Donald" url="https://unsplash.com/@lox" />
 
@@ -23,42 +21,40 @@ import Attribution from 'components/Attribution'
 
 <RqToc id="practical-react-query" />
 
-<Translations>
-  {[
+<Translations translations={[
     {
-      language: '한국어',
-      url: 'https://highjoon-dev.vercel.app/blogs/1-practical-react-query/',
+      language: "한국어",
+      url: "https://highjoon-dev.vercel.app/blogs/1-practical-react-query/",
     },
     {
-      language: '正體中文',
-      url: 'https://yuri-journal.me/%E8%BB%9F%E9%AB%94%E9%96%8B%E7%99%BC/2022060716',
+      language: "正體中文",
+      url: "https://yuri-journal.me/%E8%BB%9F%E9%AB%94%E9%96%8B%E7%99%BC/2022060716",
     },
     {
-      language: 'Português',
-      url: 'https://dbrno.vercel.app/pt-BR/blog/practical-react-query',
+      language: "Português",
+      url: "https://dbrno.vercel.app/pt-BR/blog/practical-react-query",
     },
     {
-      language: '日本語',
-      url: 'https://yamaneko.dev/blogs/translation_practical_react_query/',
+      language: "日本語",
+      url: "https://yamaneko.dev/blogs/translation_practical_react_query/",
     },
     {
-      language: 'Español',
-      url: 'https://rubenvara.io/react-query/consejos-practicos-react-query/',
+      language: "Español",
+      url: "https://rubenvara.io/react-query/consejos-practicos-react-query/",
     },
     {
-      language: '简体中文',
-      url: 'https://juejin.cn/post/7164602747361165349',
+      language: "简体中文",
+      url: "https://juejin.cn/post/7164602747361165349",
     },
     {
-      language: 'Русский',
-      url: 'https://garbalau-blog.vercel.app/blog/react-query-overview',
+      language: "Русский",
+      url: "https://garbalau-blog.vercel.app/blog/react-query-overview",
     },
     {
-      language: 'Polski',
-      url: 'https://medium.com/@grzegorz.chyla/react-query-w-praktyce-f1da6e334065',
+      language: "Polski",
+      url: "https://medium.com/@grzegorz.chyla/react-query-w-praktyce-f1da6e334065",
     },
-  ]}
-</Translations>
+  ]} />
 
 When GraphQL and especially [Apollo Client](https://www.apollographql.com/docs/react/)
 became popular in ca. 2018, there was a lot of fuss about it completely replacing redux, and the question

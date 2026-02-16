@@ -9,27 +9,20 @@ tags:
   - props-to-state
 ---
 
-import Comments from 'components/Comments'
-import Translations from 'components/Translations'
+import Comments from "components/Comments";
+import Translations from "components/Translations";
+import { UsToc } from "components/us-toc";
 
-<img src="./use-state-pitfalls.png" />
+<UsToc id="putting-props-to-use-state" />
 
----
-
-- [#1: Don't over useState](dont-over-use-state)
-- <b>#2: Putting props to useState</b>
-- [#3: Things to know about useState](things-to-know-about-use-state)
-- [#4: useState for one-time initializations](use-state-for-one-time-initializations)
-- [#5: useState vs. useReducer](use-state-vs-use-reducer)
-
-<Translations>
-  {[
+<Translations
+  translations={[
     {
-      language: '한국어',
-      url: 'https://www.philly.im/blog/putting-props-to-use-state',
+      language: "한국어",
+      url: "https://www.philly.im/blog/putting-props-to-use-state",
     },
   ]}
-</Translations>
+/>
 
 In the [first part](dont-over-use-state) of the useState pitfalls series,
 I talked about avoiding state all together for derived state.
@@ -45,22 +38,14 @@ We want to show the persons' email address in the detail form, and also have an 
 
 It's an interactive example, so feel free to click around (the code is also editable 🚀):
 
-```js react-live
-const persons = [
-  {
-    id: 1,
-    name: 'Dominik',
-    email: 'dominik@dorfmeister.cc',
-  },
-  {
-    id: 2,
-    name: 'John',
-    email: 'john@doe.com',
-  },
-]
+<Playground template="react">
 
-function App() {
-  const [selected, setSelected] = React.useState(persons[0])
+```js name=App.js active
+import { useState } from "react";
+import { persons } from "./persons.js";
+
+export default function App() {
+  const [selected, setSelected] = useState(persons[0]);
 
   return (
     <div>
@@ -70,18 +55,16 @@ function App() {
           key={person.id}
           onClick={() => setSelected(person)}
         >
-          {person.id === selected.id
-            ? person.name.toUpperCase()
-            : person.name}
+          {person.id === selected.id ? person.name.toUpperCase() : person.name}
         </button>
       ))}
       <DetailView initialEmail={selected.email} />
     </div>
-  )
+  );
 }
 
 function DetailView({ initialEmail }) {
-  const [email, setEmail] = React.useState(initialEmail)
+  const [email, setEmail] = useState(initialEmail);
 
   return (
     <div>
@@ -94,11 +77,26 @@ function DetailView({ initialEmail }) {
         Apply
       </button>
     </div>
-  )
+  );
 }
-
-render(<App />)
 ```
+
+```js name=persons.js readOnly
+export const persons = [
+  {
+    id: 1,
+    name: "Dominik",
+    email: "dominik@dorfmeister.cc",
+  },
+  {
+    id: 2,
+    name: "John",
+    email: "john@doe.com",
+  },
+];
+```
+
+</Playground>
 
 ## useState initial value
 
@@ -128,24 +126,16 @@ When the user closes the Modal, it will be _unmounted_, and the next time a pers
 
 Here is how that might look:
 
-```js react-live
-const persons = [
-  {
-    id: 1,
-    name: 'Dominik',
-    email: 'dominik@dorfmeister.cc',
-  },
-  {
-    id: 2,
-    name: 'John',
-    email: 'john@doe.com',
-  },
-]
+<Playground template="react">
 
-function App() {
-  const [selected, setSelected] = React.useState()
+```js name=App.js active
+import { useState } from "react";
+import { persons } from "./persons.js";
 
-  const close = () => setSelected(undefined)
+export default function App() {
+  const [selected, setSelected] = useState();
+
+  const close = () => setSelected(undefined);
 
   return (
     <div>
@@ -161,38 +151,38 @@ function App() {
       {selected && (
         <div
           style={{
-            position: 'fixed',
-            top: '0',
-            left: '0',
-            paddingTop: '100px',
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0,0,0,0.4)',
+            position: "fixed",
+            top: "0",
+            left: "0",
+            paddingTop: "100px",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.4)",
           }}
         >
           <div
             style={{
-              display: 'flex',
-              justifyContent: 'center',
-              width: '80%',
-              height: '50vh',
-              margin: 'auto',
-              backgroundColor: 'white',
+              display: "flex",
+              justifyContent: "center",
+              width: "80%",
+              height: "50vh",
+              margin: "auto",
+              backgroundColor: "white",
             }}
           >
             <DetailView initialEmail={selected.email} close={close} />
-            <span style={{ cursor: 'pointer' }} onClick={close}>
+            <span style={{ cursor: "pointer" }} onClick={close}>
               &times;
             </span>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }
 
 function DetailView({ initialEmail, close }) {
-  const [email, setEmail] = React.useState(initialEmail)
+  const [email, setEmail] = useState(initialEmail);
 
   return (
     <div>
@@ -204,18 +194,33 @@ function DetailView({ initialEmail, close }) {
       <button
         type="button"
         onClick={() => {
-          alert(email)
-          close()
+          alert(email);
+          close();
         }}
       >
         Apply
       </button>
     </div>
-  )
+  );
 }
-
-render(<App />)
 ```
+
+```js name=persons.js readOnly
+export const persons = [
+  {
+    id: 1,
+    name: "Dominik",
+    email: "dominik@dorfmeister.cc",
+  },
+  {
+    id: 2,
+    name: "John",
+    email: "john@doe.com",
+  },
+];
+```
+
+</Playground>
 
 Excuse my css, I suck at this part of web development 😅
 
@@ -233,23 +238,15 @@ For this example, it basically just means to take the draft state and move it fu
 thus making our DetailView a fully controlled component.
 Since the DetailView then doesn't need any local state at all, we won't have the problem of putting props into state.
 
-```js react-live
-const persons = [
-  {
-    id: 1,
-    name: 'Dominik',
-    email: 'dominik@dorfmeister.cc',
-  },
-  {
-    id: 2,
-    name: 'John',
-    email: 'john@doe.com',
-  },
-]
+<Playground template="react">
 
-function App() {
-  const [selected, setSelected] = React.useState(persons[0])
-  const [email, setEmail] = React.useState(selected.email)
+```js name=App.js active
+import { useState } from "react";
+import { persons } from "./persons.js";
+
+export default function App() {
+  const [selected, setSelected] = useState(persons[0]);
+  const [email, setEmail] = useState(selected.email);
 
   return (
     <div>
@@ -258,18 +255,16 @@ function App() {
           type="button"
           key={person.id}
           onClick={() => {
-            setSelected(person)
-            setEmail(person.email)
+            setSelected(person);
+            setEmail(person.email);
           }}
         >
-          {person.id === selected.id
-            ? person.name.toUpperCase()
-            : person.name}
+          {person.id === selected.id ? person.name.toUpperCase() : person.name}
         </button>
       ))}
       <DetailView email={email} setEmail={setEmail} />
     </div>
-  )
+  );
 }
 
 function DetailView({ email, setEmail }) {
@@ -284,11 +279,26 @@ function DetailView({ email, setEmail }) {
         Apply
       </button>
     </div>
-  )
+  );
 }
-
-render(<App />)
 ```
+
+```js name=persons.js readOnly
+export const persons = [
+  {
+    id: 1,
+    name: "Dominik",
+    email: "dominik@dorfmeister.cc",
+  },
+  {
+    id: 2,
+    name: "John",
+    email: "john@doe.com",
+  },
+];
+```
+
+</Playground>
 
 Now, the App has full control over all the state, and the DetailView is just a so-called "dumb component".
 This approach is feasible for many use-cases, but it's not without drawbacks.
@@ -305,22 +315,26 @@ Keep the same ux and the scope of the draft state small, but still re-mount your
 
 ## 3. Fully uncontrolled with a key
 
-```js react-live
+<Playground template="react">
+
+```js name=App.js active
+import * as React from "react";
+
 const persons = [
   {
     id: 1,
-    name: 'Dominik',
-    email: 'dominik@dorfmeister.cc',
+    name: "Dominik",
+    email: "dominik@dorfmeister.cc",
   },
   {
     id: 2,
-    name: 'John',
-    email: 'john@doe.com',
+    name: "John",
+    email: "john@doe.com",
   },
-]
+];
 
-function App() {
-  const [selected, setSelected] = React.useState(persons[0])
+export default function App() {
+  const [selected, setSelected] = React.useState(persons[0]);
 
   return (
     <div>
@@ -330,18 +344,16 @@ function App() {
           key={person.id}
           onClick={() => setSelected(person)}
         >
-          {person.id === selected.id
-            ? person.name.toUpperCase()
-            : person.name}
+          {person.id === selected.id ? person.name.toUpperCase() : person.name}
         </button>
       ))}
       <DetailView key={selected.id} initialEmail={selected.email} />
     </div>
-  )
+  );
 }
 
 function DetailView({ initialEmail }) {
-  const [email, setEmail] = React.useState(initialEmail)
+  const [email, setEmail] = React.useState(initialEmail);
 
   return (
     <div>
@@ -354,11 +366,11 @@ function DetailView({ initialEmail }) {
         Apply
       </button>
     </div>
-  )
+  );
 }
-
-render(<App />)
 ```
+
+</Playground>
 
 This is exactly the same code as in the first example, with just one small change:
 
@@ -385,7 +397,7 @@ If you want to know more, please read this [explanation about reconciliation](ht
 
 You might be tempted to solve the problem with an effect that "syncs" props to state:
 
-```ts:title=syncing-props-and-state
+```tsx:title=syncing-props-and-state
 function DetailView({ initialEmail }) {
     const [email, setEmail] = React.useState(initialEmail)
 
@@ -395,7 +407,6 @@ function DetailView({ initialEmail }) {
 
     return (...)
 }
-
 ```
 
 I would consider effects like these generally an anti-pattern.

@@ -10,20 +10,14 @@ tags:
   - TypeScript
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { TsrToc } from 'components/tsr-toc'
-import Emph from 'components/Emph'
-import Aside from 'components/Aside'
-import { QueryGG } from 'components/QueryGG'
-import Highlight from 'components/Highlight'
-import { Alert } from '@theme-ui/components'
-
-<img
-  src="./beauty.jpg"
-  alt="Water droplets on white-petaled flower, TanStack router logo in the middle"
-/>
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import { TsrToc } from "components/tsr-toc";
+import Emph from "components/Emph";
+import Aside from "components/Aside";
+import { QueryGG } from "components/QueryGG";
+import Highlight from "components/Highlight";
 
 <Attribution
   name="Vivek Doshi"
@@ -32,22 +26,22 @@ import { Alert } from '@theme-ui/components'
 
 <TsrToc id="the-beauty-of-tan-stack-router" />
 
-<Translations>
-  {[
+<Translations
+  translations={[
     {
-      language: '한국어',
-      url: 'https://chapdo.vercel.app/posts/%EB%B2%88%EC%97%AD-The-Beauty-of-TanStack-Router/',
+      language: "한국어",
+      url: "https://chapdo.vercel.app/posts/%EB%B2%88%EC%97%AD-The-Beauty-of-TanStack-Router/",
     },
     {
-      language: 'Русский',
-      url: 'https://world.hey.com/naysayer/tanstack-router-42bdf625',
+      language: "Русский",
+      url: "https://world.hey.com/naysayer/tanstack-router-42bdf625",
     },
     {
-      language: 'Tiếng Việt',
-      url: 'https://www.kirugi.pro/posts/the-beauty-of-tan-stack-router/',
+      language: "Tiếng Việt",
+      url: "https://www.kirugi.pro/posts/the-beauty-of-tan-stack-router/",
     },
   ]}
-</Translations>
+/>
 
 ---
 
@@ -240,7 +234,7 @@ This means I can fully focus my components on displaying the happy path, without
 <Aside
   title="React Transitions"
   icon="shield-alert"
-  color="var(--theme-ui-colors-warning)"
+  color="warning"
 >
 
 While TanStack Router fully supports Suspense, it doesn't have great support for [React Transitions](https://react.dev/reference/react/startTransition). Navigations are wrapped in `startTransition`, but it stores the state outside of React and uses [useSyncExternalStore](https://react.dev/reference/react/useSyncExternalStore) to enable fine-grained subscriptions. This comes at a cost, since `useSyncExternalStore` bails out from concurrent features.

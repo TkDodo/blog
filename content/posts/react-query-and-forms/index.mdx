@@ -10,35 +10,30 @@ tags:
   - JavaScript
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
-import Aside from 'components/Aside'
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import { RqToc } from "components/rq-toc";
+import Aside from "components/Aside";
 
-<img src="./forms.jpeg" />
-
-<Attribution
-  name="Kelly Sikkema"
-  url="https://unsplash.com/@kellysikkema"
-/>
+<Attribution name="Kelly Sikkema" url="https://unsplash.com/@kellysikkema" />
 
 <RqToc id="react-query-and-forms" />
 
-<Translations>
-  {[
+<Translations
+  translations={[
     {
-      language: '한국어',
-      url: 'https://highjoon-dev.vercel.app/blogs/14-react-query-and-forms',
+      language: "한국어",
+      url: "https://highjoon-dev.vercel.app/blogs/14-react-query-and-forms",
     },
     {
-      language: 'Español',
-      url: 'https://rubenvara.io/react-query/formularios-react-query',
+      language: "Español",
+      url: "https://rubenvara.io/react-query/formularios-react-query",
     },
   ]}
-</Translations>
+/>
 
-<Aside title="Disclaimer" icon="shield-alert" color="var(--theme-ui-colors-warning)">
+<Aside title="Disclaimer" icon="shield-alert" color="warning">
 
 Please note that I will be using [react-hook-form](https://react-hook-form.com/) throughout this article, merely because I think it's a great library. That doesn't mean that the shown patterns will only work with react-hook-form - the concepts are applicable to any form library, and also if you are not using a form library at all.
 

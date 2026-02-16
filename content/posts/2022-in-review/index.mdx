@@ -9,21 +9,19 @@ tags:
   - Year in Review
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
 import Tweet, {
   AvatarTkDodo,
   AvatarTannerlinsley,
   TannerAndMe,
   TweetImage,
-} from 'components/Tweet'
-
-<img alt="2022" src="./2022.jpeg" />
+} from "components/Tweet";
 
 <Attribution name="zero take" url="https://unsplash.com/@zerotake" />
 
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 2022 has been quite a wild ride for me, so let me share the high (and low) points of the year with you:
 
@@ -38,15 +36,9 @@ My personal highlight of the conference has to be that I got to meet [Tanner Lin
   handle="TkDodo"
   tweetId="1537874053989552130"
   avatar={<AvatarTkDodo />}
-  date={new Date('2022-06-17')}
+  date={new Date("2022-06-17")}
 >
-  <p>
-    And finally, I met up with the one and only{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      @tannerlinsley
-    </Text>{' '}
-    🎉
-  </p>
+  <p>And finally, I met up with the one and only @tannerlinsley 🎉</p>
   <p>
     <TweetImage>
       <TannerAndMe />
@@ -92,10 +84,7 @@ Just before we were ready to release v4, and about one week before ReactSummit, 
 
 I dug up the original Discord conversation:
 
-<img
-  alt="TkDodo:we can also just do @tanstack/react-query? v4 is breaking anyways :) Tanner: That's true"
-  src="./tanstack-query.png"
-/>
+![TkDodo:we can also just do @tanstack/react-query? v4 is breaking anyways :) Tanner: That's true](./tanstack-query.png)
 
 We wanted to get it ready before ReactSummit so that Tanner could announce v4 on stage, but it just wasn't enough time. We announced it anyway, and said that it would be ready within 30 days.
 
@@ -108,35 +97,18 @@ We managed to stick to that timeline, and v4.0.0 was released on [July 18th](htt
   handle="tannerlinsley"
   tweetId="1549785943837515776"
   avatar={<AvatarTannerlinsley />}
-  date={new Date('2022-07-20')}
+  date={new Date("2022-07-20")}
 >
   <p>🎉🥳 Announcing TanStack Query v4!</p>
-  <p>
-    🪪 Name Change!
-    <br />
-    🌎 Framework Agnostic!
-    <br />✅ <Text color="var(--theme-ui-colors-twitterBlue)">
-      @reactjs
-    </Text> 🚧 <Text color="var(--theme-ui-colors-twitterBlue)">
-      @vuejs
-    </Text> 🔜 <Text color="var(--theme-ui-colors-twitterBlue)">
-      @solid_js
-    </Text> <Text color="var(--theme-ui-colors-twitterBlue)">
-      @sveltejs
-    </Text>
-    <br />
-    🔀 Concurrent React Support
-    <br />
-    🏕 Offline + Network Mode
-    <br />
-    💾 Stable Persisters
-    <br />
-    ⚡️ Tracked Queries Default / Perf+
-    <br />
-    📚 New Docs!
-    <br />
-    🙏 <Text color="var(--theme-ui-colors-twitterBlue)">@TkDodo</Text>
-  </p>
+  <p>🪪 Name Change!</p>
+  <p>🌎 Framework Agnostic!</p>
+  <p>✅ @reactjs 🚧 @vuejs 🔜 @solid_js @sveltejs</p>
+  <p>🔀 Concurrent React Support</p>
+  <p>🏕 Offline + Network Mode</p>
+  <p>💾 Stable Persisters</p>
+  <p>⚡️ Tracked Queries Default / Perf+</p>
+  <p>📚 New Docs!</p>
+  <p>🙏 @TkDodo</p>
 </Tweet>
 
 But to be honest, the release wasn't very stable. To be quite frank, everything below 4.3.0 is nigh unusable. The monorepo and bundling changes that went with it introduced many things I didn't anticipate. Devtools were included in prod builds for some bundlers, and all the ESM changes were basically lost during the move. Version 4.0.0 didn't even have types published. 🙈
@@ -184,10 +156,7 @@ Yeah, that didn't happen, and it's also not going to happen. 😂 I've got bette
 
 Looking at the numbers for 2022 ([stats are public](https://plausible.io/tkdodo.eu?period=year&date=2022-12-31)), my articles have been read over 1 million times, which is just crazy:
 
-<img
-  alt="Unique visitors: 569k(+558%), Total page views: 1.1M(+700%)"
-  src="./blog-2022.png"
-/>
+![Unique visitors: 569k(+558%), Total page views: 1.1M(+700%)](./blog-2022.png)
 
 Again, this shows that people are interested in the content I'm producing, and I'm really happy about that. 😊
 

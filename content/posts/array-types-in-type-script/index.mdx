@@ -9,21 +9,19 @@ tags:
   - Generics
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Tweet, { AvatarMattpocockuk } from 'components/Tweet'
-import { TweetPoll } from 'components/TweetPoll'
-import { Alert } from '@theme-ui/components'
-
-<img src="./array-vs-generic.jpg" alt="two fighting polar bears" />
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import Tweet, { AvatarMattpocockuk } from "components/Tweet";
+import { TweetPoll } from "components/TweetPoll";
+import { TsError } from "components/TsError";
 
 <Attribution
   name="sterlinglanier Lanier"
   url="https://unsplash.com/@sterlinglanier"
 />
 
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 Earlier this year, [Matt Pocock](https://twitter.com/mattpocockuk) ran a poll about the usage of `Array<string>` (generic syntax) vs `string[]` (array syntax), and the result of that poll was quite baffling to me:
 
@@ -32,7 +30,7 @@ Earlier this year, [Matt Pocock](https://twitter.com/mattpocockuk) ran a poll ab
   handle="mattpocockuk"
   tweetId="1544083145833717767"
   avatar={<AvatarMattpocockuk />}
-  date={new Date('2022-07-05')}
+  date={new Date("2022-07-05")}
 >
   <p>What do you use more often in TS?</p>
   <p>
@@ -40,20 +38,20 @@ Earlier this year, [Matt Pocock](https://twitter.com/mattpocockuk) ran a poll ab
       votes="3,179"
       options={[
         {
-          id: 'generic',
-          name: 'Array<string>',
-          percentage: '14.7%',
+          id: "generic",
+          name: "Array<string>",
+          percentage: "14.7%",
         },
         {
-          id: 'array',
-          name: 'string[]',
-          percentage: '78.7%',
+          id: "array",
+          name: "string[]",
+          percentage: "78.7%",
           winner: true,
         },
         {
-          id: 'popcorn',
-          name: '🍿',
-          percentage: '6.6%',
+          id: "popcorn",
+          name: "🍿",
+          percentage: "6.6%",
         },
       ]}
     />
@@ -147,10 +145,10 @@ function add(items: string | number[], newItem: string | number) {
 
 shows the following error:
 
-<Alert sx={{ fontFamily: 'ml, monospace', fontSize: [0, 1] }}>
-  Type 'string' is not assignable to type 'ConcatArray&lt;number&gt;
-  &amp; string' (2769)
-</Alert>
+<TsError>
+  Type 'string' is not assignable to type 'ConcatArray&lt;number&gt; &amp;
+  string' (2769)
+</TsError>
 
 [TypeScript playground](https://www.typescriptlang.org/play?#code/GYVwdgxgLglg9mABAQwCaoBQygUwLYDOAXIgVAE4xgDmiAPomCHgEY7kDaAugDSM4B3AJK48JMpRr1GzNuQCUiAN4BYAFCJE2fAQB0EBBGRQMYQSPzz1AX3VA)
 
@@ -195,15 +193,15 @@ function pick<TObject extends Record<string, unknown>>(
 Surprisingly, there is no error, so this should be good. No error is even worse, because there is an error here - it just doesn't show up at the function declaration - it shows up when we try to invoke it:
 
 ```ts
-pick(myObject, ['foo', 'bar'])
+pick(myObject, ["foo", "bar"]);
 ```
 
 now yields:
 
-<Alert sx={{ fontFamily: 'ml, monospace', fontSize: [0, 1] }}>
-  Argument of type 'string[]' is not assignable to parameter of type
-  'keyof TObject[]'.(2345)
-</Alert>
+<TsError>
+  Argument of type 'string[]' is not assignable to parameter of type 'keyof
+  TObject[]'.(2345)
+</TsError>
 
 [TypeScript playground](https://www.typescriptlang.org/play?#code/GYVwdgxgLglg9mABABxhA1gHgCoHkBGAVgKbSLEAeUxYAJgM6IBKpcATrZvVGzGAOYAaROHRg4AdzAA+aQAo4RUlABciPEujD0xAJ701O3XGDqCJaAG0AugEpEAbwC+AWABQ7iAm6IAtrvNlRABeR3dERGA4ODUeEGJBcMR8AEM2NQBGRLcI1IAvNQByAAtiABsyuEQJdjLaQuzXDzdUDDl-QK1ES0KouAbEQtS2QutEW3cgA)
 
@@ -228,10 +226,7 @@ So, I think these were all the issues I ran into when working with the array not
 
 It's also sad that IDEs and the TypeScript Playground show types in that notation, even if they are clearly defined differently:
 
-<img
-  src="./array-of-object.png"
-  alt="type ArrayOfObject = Array<typeof myObject> is shown as type ArrayOfObject = { foo: boolean; bar: number; baz: string; }[]"
-/>
+![](./array-of-object.png)
 
 Maybe this article can help to convince the community that the generic notation is better, and maybe there is a way to collectively move to it as the default we're using and that we want to see. Then maybe, just maybe, tools will follow.
 

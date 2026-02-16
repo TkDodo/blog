@@ -11,13 +11,11 @@ tags:
   - TypeScript
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
-import Tweet, { AvatarTkDodo } from 'components/Tweet'
-
-<img src="./context.jpeg" />
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import { RqToc } from "components/rq-toc";
+import Tweet, { AvatarTkDodo } from "components/Tweet";
 
 <Attribution
   name="Jacob Aguilar-Friend"
@@ -26,14 +24,12 @@ import Tweet, { AvatarTkDodo } from 'components/Tweet'
 
 <RqToc id="react-query-and-react-context" />
 
-<Translations>
-  {[
+<Translations translations={[
     {
-      language: '한국어',
-      url: 'https://velog.io/@cnsrn1874/react-query-and-react-context',
+      language: "한국어",
+      url: "https://velog.io/@cnsrn1874/react-query-and-react-context",
     },
-  ]}
-</Translations>
+  ]} />
 
 One of the best traits of React Query is that you can use a query wherever you want in your component tree: Your `<ProductTable>` component can fetch its own data, co-located, right where you need it to be:
 
@@ -119,22 +115,18 @@ There's quite the myth about React Context, so let's get this straight: No, Reac
   handle="TkDodo"
   tweetId="1495072479118864398"
   avatar={<AvatarTkDodo />}
-  date={new Date('2022-02-19')}
+  date={new Date("2022-02-19")}
 >
   <p>
-    🕵️ We've fixed a huge performance problem this week by moving
-    useState + context over to zustand. It was the same amount of
-    code. The lib is &lt; 1kb.
+    🕵️ We've fixed a huge performance problem this week by moving useState +
+    context over to zustand. It was the same amount of code. The lib is &lt;
+    1kb.
   </p>
   <p>
-    ⚛️ Don't use context for state management. Use it for dependency
-    injection only. The right tool for the job!
+    ⚛️ Don't use context for state management. Use it for dependency injection
+    only. The right tool for the job!
   </p>
-  <p>
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      zustand.surge.sh
-    </Text>
-  </p>
+  <p>zustand.surge.sh</p>
 </Tweet>
 
 So you'll likely be better off just using a dedicated tool. [Mark Erikson](https://twitter.com/acemarke), maintainer of Redux and writer of very long blog posts, has a good article on that topic: [Blogged Answers: Why React Context is Not a "State Management" Tool (and Why It Doesn't Replace Redux)](https://blog.isquaredsoftware.com/2021/01/context-redux-differences/).
@@ -143,10 +135,7 @@ My tweet mentions it already: React Context is a _dependency injection_ tool. It
 
 This is conceptually the same as prop-drilling, which is the process of passing props down via multiple layers. Context allows you to do the same: Take some values and pass them as props to children, except that you can leave out a couple of layers:
 
-<img
-  alt="Component tree show props passing over two components vs. context passing where the grand-child can read it directly"
-  src="./props-vs-context.png"
-/>
+![Component tree show props passing over two components vs. context passing where the grand-child can read it directly](./props-vs-context.png)
 
 With context, you just skip the middle man. In our `useCurrentUserQuery` example, it can help us make that dependency explicit: Instead of reading the `useCurrentUserQuery` directly in all components where we want to skip the data-availability check, we read it from React Context. And that context will be filled by the parent that actually does the first check:
 

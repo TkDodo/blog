@@ -9,34 +9,27 @@ tags:
   - TypeScript
 ---
 
-import Aside from 'components/Aside'
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Highlight from 'components/Highlight'
+import Aside from "components/Aside";
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import Highlight from "components/Highlight";
 
-<img src="./callback.jpeg" />
-
-<Attribution
-  name="Annie Spratt"
-  url="https://unsplash.com/@anniespratt"
-/>
+<Attribution name="Annie Spratt" url="https://unsplash.com/@anniespratt" />
 
 - <b>#1: Avoiding useEffect with callback refs</b>
 - [#2: Ref Callbacks, React 19 and the Compiler](ref-callbacks-react-19-and-the-compiler)
 
-<Translations>
-  {[
+<Translations translations={[
     {
-      language: '한국어',
-      url: 'https://velog.io/@cnsrn1874/%EB%B2%88%EC%97%AD-callback-refs-%EC%82%AC%EC%9A%A9%EC%9C%BC%EB%A1%9C-useEffect-%EB%B0%A9%EC%A7%80%ED%95%98%EA%B8%B0',
+      language: "한국어",
+      url: "https://velog.io/@cnsrn1874/%EB%B2%88%EC%97%AD-callback-refs-%EC%82%AC%EC%9A%A9%EC%9C%BC%EB%A1%9C-useEffect-%EB%B0%A9%EC%A7%80%ED%95%98%EA%B8%B0",
     },
     {
-      language: '日本語',
-      url: 'https://qiita.com/70ki8suda/items/831727af51c572e10ba8',
+      language: "日本語",
+      url: "https://qiita.com/70ki8suda/items/831727af51c572e10ba8",
     },
-  ]}
-</Translations>
+  ]} />
 
 **Last Update: 2024-12-08**
 
@@ -124,7 +117,7 @@ The problem is that the effect is "bound" to the render function of the Form, wh
 This is where callback refs come into play. If you've ever looked at the [type declarations for refs](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/fc9b16957473f81a1d708e6948b8d61e292aeb58/types/react/v17/index.d.ts#L85), we can see that we can not only pass a ref object into it, but also a function:
 
 ```ts
-type Ref<T> = RefCallback<T> | RefObject<T> | null
+type Ref<T> = RefCallback<T> | RefObject<T> | null;
 ```
 
 Conceptually, I like to think about refs on React elements as functions that are called after the component has rendered. This function gets the rendered DOM node passed as argument. If the React element unmounts, it will be called once more with _null_.

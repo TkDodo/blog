@@ -10,43 +10,35 @@ tags:
   - useEffect
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
-import Emph from 'components/Emph'
-import Aside from 'components/Aside'
-import { QueryGG } from 'components/QueryGG'
-import { FixTitle } from 'components/FixTitle'
-import { VerticalRuler } from 'components/VerticalRuler'
-import Highlight from 'components/Highlight'
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import { RqToc } from "components/rq-toc";
+import Emph from "components/Emph";
+import Aside from "components/Aside";
+import { QueryGG } from "components/QueryGG";
+import { FixTitle } from "components/FixTitle";
+import { VerticalRuler } from "components/VerticalRuler";
+import Highlight from "components/Highlight";
 
-<img
-  src="./want.jpg"
-  alt="white letters on brown wooden table, 'WANT' with reflection on shop window"
-/>
-
-<Attribution
-  name="Christian Lue"
-  url="https://unsplash.com/@christianlue"
-/>
+<Attribution name="Christian Lue" url="https://unsplash.com/@christianlue" />
 
 <FixTitle />
 
 <RqToc id="why-you-want-react-query" />
 
-<Translations>
-  {[
+<Translations
+  translations={[
     {
-      language: '한국어',
-      url: 'https://velog.io/@cnsrn1874/why-you-need-react-query',
+      language: "한국어",
+      url: "https://velog.io/@cnsrn1874/why-you-need-react-query",
     },
     {
-      language: 'Español',
-      url: 'https://dev.to/ccaracach/por-que-necesitas-react-query-3a1n',
+      language: "Español",
+      url: "https://dev.to/ccaracach/por-que-necesitas-react-query-3a1n",
     },
   ]}
-</Translations>
+/>
 
 It's no secret that I ❤️ React Query for how it simplifies the way we're interacting with asynchronous state in our React applications. And I know a lot of fellow devs feel the same.
 
@@ -80,9 +72,9 @@ function Bookmarks({ category }) {
 }
 ```
 
-If you think this code is fine for simple use cases where you don't need additional features, let me tell you that I immediately spotted 🐛 <Emph color="var(--red)">5 bugs</Emph> 🪲 hiding in these 10 lines of code.
+If you think this code is fine for simple use cases where you don't need additional features, let me tell you that I immediately spotted 🐛 <Emph color="danger">5 bugs</Emph> 🪲 hiding in these 10 lines of code.
 
-<img src="./this_is_fine.jpg" alt="This is fine meme" />
+![This is fine meme](./this_is_fine.jpg)
 
 Maybe take a minute or two and see if you can find them all. I'll wait...
 
@@ -98,10 +90,7 @@ There are reasons why the [official React docs](https://react.dev/reference/reac
 
 The effect is set up in a way that it re-fetches whenever `category` changes, which is certainly correct. However, network responses can arrive in a different order than you sent them. So if you change the category from `books` to `movies` and the response for `movies` arrives before the response for `books`, you'll end up with the wrong data in your component.
 
-<img
-  src="./race.png"
-  alt="Timeline that starts to fetch books, then fetches movies. Movies resolves faster so we setData(movies) before we setData(books)"
-/>
+![Timeline that starts to fetch books, then fetches movies. Movies resolves faster so we setData(movies) before we setData(books)](./race.png)
 
 At the end, you'll be left with an <Emph>inconsistent</Emph> state: Your local state will say that you have `movies` selected, but the data you're rendering is actually `books`.
 
@@ -388,7 +377,7 @@ So, if you're still thinking that you don't want React Query, I'd like to challe
 
 I've been working on a new, official course on React Query together with [ui.dev](https://ui.dev/). This course will give you a first principles understanding of both how React Query works under the hood as well as how to write React Query code that scales. If you enjoy the content I've been creating so far, you'll love [query.gg](https://query.gg/?s=dom).
 
-<QueryGG />{' '}
+<QueryGG />
 
 </Aside>
 

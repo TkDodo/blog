@@ -9,11 +9,9 @@ tags:
   - Zustand
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-
-<img src="./bear.jpeg" alt="The Zustand bear logo" />
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
 
 <Attribution
   prefix="Source:"
@@ -24,18 +22,16 @@ import Translations from 'components/Translations'
 - <b>#1: Working with Zustand</b>
 - [#2: Zustand and React Context](zustand-and-react-context)
 
-<Translations>
-  {[
+<Translations translations={[
     {
-      language: '한국어',
-      url: 'https://hyunjinee.notion.site/Working-with-Zustand-73c2d6bbb53d4c6e9944ddc5e23706a1',
+      language: "한국어",
+      url: "https://hyunjinee.notion.site/Working-with-Zustand-73c2d6bbb53d4c6e9944ddc5e23706a1",
     },
     {
-      language: '简体中文',
-      url: 'https://manon.icu/blog/translate/react/working-with-zustand',
+      language: "简体中文",
+      url: "https://manon.icu/blog/translate/react/working-with-zustand",
     },
-  ]}
-</Translations>
+  ]} />
 
 Global (client) state management wasn't always like it is today. I distinctly remember a time when our best option was Redux with higher order components using [connect](https://react-redux.js.org/api/connect) plus `mapStateToProps` and `mapDispatchToProps`.
 

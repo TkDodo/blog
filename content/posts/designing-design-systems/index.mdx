@@ -10,34 +10,24 @@ tags:
   - React
 ---
 
-import Aside from 'components/Aside'
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { DsToc } from 'components/ds-toc'
-import Emph from 'components/Emph'
-import Highlight from 'components/Highlight'
+import Aside from "components/Aside";
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import { DsToc } from "components/ds-toc";
+import Emph from "components/Emph";
+import Highlight from "components/Highlight";
 
-<img
-  src="./design.jpg"
-  alt="brown wooden scrabble pieces laid out to spell the word design"
-/>
-
-<Attribution
-  name="Brett Jordan"
-  url="https://unsplash.com/@brett_jordan"
-/>
+<Attribution name="Brett Jordan" url="https://unsplash.com/@brett_jordan" />
 
 <DsToc id="designing-design-systems" />
 
-<Translations>
-  {[
+<Translations translations={[
     {
-      language: '한국어',
-      url: 'https://chapdo.vercel.app/posts/%EB%B2%88%EC%97%AD-Designing-Design-Systems/',
+      language: "한국어",
+      url: "https://chapdo.vercel.app/posts/%EB%B2%88%EC%97%AD-Designing-Design-Systems/",
     },
-  ]}
-</Translations>
+  ]} />
 
 I'm not a Designer. Honestly, pixel-perfect work and anything involving CSS are not exactly my strong suit. I can barely open Figma, and when I do, I'm mainly clicking things and hoping for the best.😅
 

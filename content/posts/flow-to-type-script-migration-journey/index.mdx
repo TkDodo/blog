@@ -10,15 +10,13 @@ tags:
   - ReactJs
 ---
 
-import Attribution from 'components/Attribution'
-import Comments from 'components/Comments'
-import Translations from 'components/Translations'
-
-<img src="./race.jpg" />
+import Attribution from "components/Attribution";
+import Comments from "components/Comments";
+import Translations from "components/Translations";
 
 <Attribution name="Jan Starek" url="https://unsplash.com/@janstarek" />
 
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 It's the end of 2020, and it's hard to imagine frontend development without static types. It is very convenient to start a project without types, because you can allegedly move much faster. For personal projects, or for trying out new things, it also makes perfect sense: Probably, no one else will need to read it or work with it.
 
@@ -64,7 +62,7 @@ Nevertheless, things were working well, and we were not unhappy with our choice 
 ```js
 if (foo?.bar) {
   // nope, not with flow 🚫
-  doSomething(foo.bar)
+  doSomething(foo.bar);
 }
 ```
 
@@ -90,7 +88,7 @@ As we saw some light at the end of the tunnel, we decided to have new features b
 
 A draft PR was opened on June 3rd, and we finally merged it almost 3 months later:
 
-<img src="merged.png" />
+![](merged.png)
 
 ## Case closed?
 

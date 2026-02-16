@@ -1,0 +1,171 @@
+---
+import { SITE } from "@constants";
+import { ClientRouter } from "astro:transitions";
+import SkipNavLink from "@components/a11y/skip-nav-link.astro";
+import Header from "@components/header.astro";
+import Footer from "@components/footer.astro";
+import ThemeProvider from "@components/theme-provider.astro";
+import "@styles/global.css";
+
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+const plausibleDomain = new URL(SITE.url).hostname;
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link
+      rel="preload"
+      href={`${basePath}/fonts/Inter.woff2`}
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href={`${basePath}/fonts/MonoLisaVariableNormal.woff2`}
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link rel="icon" type="image/svg+xml" href={`${basePath}/favicon.svg`} />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href={`${basePath}/favicon.ico`}
+      sizes="any"
+    />
+    <link rel="shortcut icon" href={`${basePath}/favicon.ico`} />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href={`${basePath}/favicon-32x32.png`}
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href={`${basePath}/favicon-16x16.png`}
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href={`${basePath}/apple-touch-icon.png`}
+    />
+    <meta name="generator" content={Astro.generator} />
+    <ClientRouter />
+    {
+      import.meta.env.PROD && (
+        <script
+          defer
+          async
+          data-domain={plausibleDomain}
+          data-api="/api/event"
+          src="/js/script.js"
+        />
+      )
+    }
+    <ThemeProvider />
+    <slot name="seo" />
+  </head>
+  <body class="min-h-svh bg-bg text-text font-sans">
+    <SkipNavLink />
+    <Header />
+    <slot />
+    <Footer />
+    <script is:inline>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.getRegistrations().then((regs) => {
+          regs.forEach((r) => r.unregister());
+        });
+        if (window.caches) {
+          caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
+        }
+      }
+    </script>
+    <script is:inline>
+      (() => {
+        if (window.__tkdodoNavFeedbackInit) return;
+        window.__tkdodoNavFeedbackInit = true;
+
+        let pendingLink = null;
+        let safetyTimer = null;
+
+        const clearPending = () => {
+          document.body?.removeAttribute("data-nav-pending");
+          if (pendingLink) pendingLink.removeAttribute("data-nav-pending");
+          pendingLink = null;
+          if (safetyTimer) {
+            clearTimeout(safetyTimer);
+            safetyTimer = null;
+          }
+        };
+
+        const setPending = (link) => {
+          document.body?.setAttribute("data-nav-pending", "true");
+          if (pendingLink && pendingLink !== link) {
+            pendingLink.removeAttribute("data-nav-pending");
+          }
+          if (link instanceof HTMLAnchorElement) {
+            pendingLink = link;
+            pendingLink.setAttribute("data-nav-pending", "true");
+          }
+          if (safetyTimer) clearTimeout(safetyTimer);
+          safetyTimer = setTimeout(clearPending, 5000);
+        };
+
+        const isInternalNavigationLink = (link) => {
+          const href = link.getAttribute("href");
+          if (!href) return false;
+          if (href.startsWith("#")) return false;
+          if (
+            href.startsWith("mailto:") ||
+            href.startsWith("tel:") ||
+            href.startsWith("javascript:")
+          ) {
+            return false;
+          }
+
+          const url = new URL(link.href, window.location.href);
+          if (url.origin !== window.location.origin) return false;
+          if (link.target === "_blank" || link.hasAttribute("download")) {
+            return false;
+          }
+          return true;
+        };
+
+        document.addEventListener(
+          "click",
+          (event) => {
+            if (event.defaultPrevented || event.button !== 0) return;
+            if (
+              event.metaKey ||
+              event.ctrlKey ||
+              event.shiftKey ||
+              event.altKey
+            )
+              return;
+            if (!(event.target instanceof Element)) return;
+
+            const link = event.target.closest("a");
+            if (!(link instanceof HTMLAnchorElement)) return;
+            if (!isInternalNavigationLink(link)) return;
+
+            setPending(link);
+          },
+          { capture: true },
+        );
+
+        document.addEventListener("astro:before-preparation", () => {
+          setPending(null);
+        });
+
+        document.addEventListener("astro:page-load", clearPending);
+        window.addEventListener("pageshow", clearPending);
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+---
+import Link from "./link.astro";
+import Spacer from "./spacer.astro";
+import { SITE } from "@constants";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="container">
+  <Spacer axis="vertical" size={32} />
+  <div class="pt-6 border-t border-border text-subtle">
+    <div
+      class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-2 text-sm md:text-base leading-normal"
+    >
+      <div>&copy; {year} by {SITE.title}. All rights reserved.</div>
+      <div class="flex flex-col lg:flex-row lg:items-center lg:gap-3">
+        <div>
+          <Link
+            href="https://github.com/LekoArts/gatsby-themes/tree/main/themes/gatsby-theme-minimal-blog"
+            >Theme</Link
+          > by
+          {" "}
+          <Link
+            href="https://www.lekoarts.de?utm_source=minimal-blog&utm_medium=Theme"
+            >LekoArts</Link
+          >.
+        </div>
+        <div>
+          This site is powered by <Link href="https://www.netlify.com"
+            >Netlify</Link
+          >.
+        </div>
+      </div>
+    </div>
+  </div>
+  <Spacer axis="vertical" size={8} />
+</footer>

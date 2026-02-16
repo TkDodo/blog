@@ -10,30 +10,25 @@ tags:
   - hydration
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Emph from 'components/Emph'
-import Highlight from 'components/Highlight'
-import { Alert } from '@theme-ui/components'
-import Aside from 'components/Aside'
-import GifPlayer from 'components/GifPlayer'
-import Tweet, { AvatarAcdlite } from 'components/Tweet'
-
-<img
-  src="./mismatch.jpg"
-  alt="A person with two shoes, one is green, one is orange"
-/>
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import Emph from "components/Emph";
+import Highlight from "components/Highlight";
+import { TsError } from "components/TsError";
+import Aside from "components/Aside";
+import GifPlayer from "components/GifPlayer.astro";
+import Tweet, { AvatarAcdlite } from "components/Tweet";
 
 <Attribution name="Chanhee Lee" url="https://unsplash.com/@jjik_da" />
 
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 Hydration mismatches are among the most dreaded errors a React developer could potentially face:
 
-<Alert sx={{ fontFamily: 'ml, monospace', fontSize: [0, 1] }}>
+<TsError>
   Uncaught Error: Text content does not match server-rendered HTML.
-</Alert>
+</TsError>
 
 How can this even be? We were promised isomorphic rendering - first on the server, then on the client. Write your code once, execute twice.
 
@@ -117,11 +112,11 @@ What we are looking for is a solution that knows about server rendering, and mor
 Even though the primary use-case for `useSyncExternalStore` is to subscribe to external stores, it has an interesting second trait: It allows us to distinguish between a `serverSnapshot` and a `clientSnapshot`. Let's see what [the docs](https://react.dev/reference/react/useSyncExternalStore) have to say about `getServerSnapshot`:
 
 <Aside title="getServerSnapshot">
-  A function that returns the initial snapshot of the data in the
-  store. It will be used only during server rendering and during
-  hydration of server-rendered content on the client. The server
-  snapshot must be the same between the client and the server, and is
-  usually serialized and passed from the server to the client.
+  A function that returns the initial snapshot of the data in the store. It will
+  be used only during server rendering and during hydration of server-rendered
+  content on the client. The server snapshot must be the same between the client
+  and the server, and is usually serialized and passed from the server to the
+  client.
 </Aside>
 
 This is exactly what we need to avoid hydration errors, and moreover, if we transition to a page with `useSyncExternalStore` on the client, the `clientSnapshot` will immediately be taken.
@@ -151,12 +146,12 @@ function LastUpdated() {
   handle="acdlite"
   tweetId="1741161736936558721"
   avatar={<AvatarAcdlite />}
-  date={new Date('2023-12-30')}
+  date={new Date("2023-12-30")}
 >
   <p>
-    I’m glad you like this pattern but which part of this feels like a
-    hack to you? Preventing hydration mismatches is exactly what the
-    getServerSnapshot argument is designed for
+    I’m glad you like this pattern but which part of this feels like a hack to
+    you? Preventing hydration mismatches is exactly what the getServerSnapshot
+    argument is designed for
   </p>
 </Tweet>
 

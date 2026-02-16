@@ -10,19 +10,14 @@ tags:
   - React Query
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Tweet, { AvatarTkDodo } from 'components/Tweet'
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import Tweet, { AvatarTkDodo } from "components/Tweet";
 
-<img alt="2021" src="./2021.jpeg" />
+<Attribution name="engin akyurt" url="https://unsplash.com/@enginakyurt" />
 
-<Attribution
-  name="engin akyurt"
-  url="https://unsplash.com/@enginakyurt"
-/>
-
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 Since I'm currently sitting at home on my couch, resting after my 3rd Covid-19 vaccine shot with not a lot else to do, I thought I'd reflect a bit on the year I've had and give a bit of an outlook of what's ahead.
 
@@ -47,14 +42,13 @@ Being self-employed and catering to three different clients as a contractor, I m
   handle="TkDodo"
   tweetId="1414569849448194049"
   avatar={<AvatarTkDodo />}
-  date={new Date('2021-07-12')}
+  date={new Date("2021-07-12")}
 >
   <p>Introducing: open-source-friday 🎉</p>
   <p>
-    Open source work has taken up a good part of my daily routine now,
-    which can be quite distracting. I will now try to bundle it with a
-    fixed block each Friday. This will likely reduce my
-    responsiveness, so please bear with me
+    Open source work has taken up a good part of my daily routine now, which can
+    be quite distracting. I will now try to bundle it with a fixed block each
+    Friday. This will likely reduce my responsiveness, so please bear with me
   </p>
 </Tweet>
 
@@ -71,21 +65,15 @@ Later that summer, my blog even became a part of the official React Query docs. 
   handle="TkDodo"
   tweetId="1432083106593480714"
   avatar={<AvatarTkDodo />}
-  date={new Date('2021-08-29')}
+  date={new Date("2021-08-29")}
 >
   <p>
-    I'm super proud to announce that my blog has made it as a
-    community resource into the official react-query docs 🎊 You can
-    now read an excerpt of all my RQ related articles here:{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      https://react-query.tanstack.com/community/tkdo...
-    </Text>
+    I'm super proud to announce that my blog has made it as a community resource
+    into the official react-query docs 🎊 You can now read an excerpt of all my
+    RQ related articles here: https://react-query.tanstack.com/community/tkdo...
   </p>
   <p>
-    and the docs also link to them from other places. Thank you{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      @tannerlinsley
-    </Text>
+    and the docs also link to them from other places. Thank you @tannerlinsley
   </p>
 </Tweet>
 
@@ -103,9 +91,9 @@ For the second half of the year, I kept an eye on React 18, the Working group, a
   <p>
     Hmm, why are the zustand docs recommending to memoize selectors
     with useCallback
-    <Text color="var(--theme-ui-colors-twitterBlue)">
+    
       @dai_shi
-    </Text> ? Especially with the example:
+     ? Especially with the example:
   </p>
   <p>
     const fruit = useStore(useCallback(state => state.fruits[id],
@@ -186,7 +174,7 @@ For that time period, I can see a steady stream of about **20k** visitors and **
 
 From what I can tell, most people come to my blog from Google (about 50% traffic!) and from the React Query docs (another 20%). The top 6 articles in terms of page views are also all from the React Query series:
 
-<img alt="Metrics" src="./metrics.png" />
+![Metrics](./metrics.png)
 
 I also tried to blog regularly - about once every two to three weeks. I've written a total of 21 articles, and November was the only month without a blog post (mainly because I was working on React Query v4 instead).
 
@@ -201,13 +189,13 @@ The tweet that got the most impressions this year (**74k**) was one I've quickly
   handle="TkDodo"
   tweetId="1426902315429212162"
   avatar={<AvatarTkDodo />}
-  date={new Date('2021-08-15')}
+  date={new Date("2021-08-15")}
 >
   <p>
-    Okay apparently it’s not obvious to everybody that you DO NOT need
-    to copy data from react-query anywhere else (context, redux,…) to
-    access it everywhere. I will have to write a blog post about it I
-    guess (and maybe update the docs?)…
+    Okay apparently it’s not obvious to everybody that you DO NOT need to copy
+    data from react-query anywhere else (context, redux,…) to access it
+    everywhere. I will have to write a blog post about it I guess (and maybe
+    update the docs?)…
   </p>
 </Tweet>
 

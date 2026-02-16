@@ -1,0 +1,346 @@
+@import "tailwindcss";
+@import "./expressive-code.css";
+@plugin '@tailwindcss/typography';
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100;
+  font-display: block;
+  src: url("/blog/fonts/Inter.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 200;
+  font-display: block;
+  src: url("/blog/fonts/Inter.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 300;
+  font-display: block;
+  src: url("/blog/fonts/Inter.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("/blog/fonts/Inter.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: block;
+  src: url("/blog/fonts/Inter.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: block;
+  src: url("/blog/fonts/Inter.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url("/blog/fonts/Inter.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 800;
+  font-display: block;
+  src: url("/blog/fonts/Inter.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src: url("/blog/fonts/Inter.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "MonoLisa";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/blog/fonts/MonoLisaVariableNormal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "MonoLisa";
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/blog/fonts/MonoLisaVariableItalic.woff2") format("woff2");
+}
+
+@theme {
+  --font-sans:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono:
+    "MonoLisa", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+
+  /* App color tokens (Tailwind-style naming) */
+  --color-bg: #f5f5f5;
+  --color-text: #1f2937;
+  --color-highlight: #1f2937;
+  --color-primary: #387d6c;
+  --color-subtle: #4b5563;
+  --color-faded: #6b7280;
+  --color-border: #e5e7eb;
+  --color-ic-bg: #e5e7eb;
+  --color-ic-border: #d1d5db;
+  --color-twitter-blue: #1d9bf0;
+  --color-twitter-poll-bg: rgb(207, 217, 222);
+  --color-twitter-poll-bg-winner: rgba(29, 155, 240, 0.58);
+  --color-danger: #dc2626;
+  --color-warning: #a16207;
+}
+
+@layer theme {
+  :root {
+    @variant dark {
+      --color-bg: #1a202c;
+      --color-text: #cbd5e0;
+      --color-highlight: #cbd5e0;
+      --color-primary: #76c2af;
+      --color-subtle: #a0aec0;
+      --color-faded: #a0aec0;
+      --color-border: #2d3748;
+      --color-ic-bg: #2d3748;
+      --color-ic-border: #4a5568;
+      --color-twitter-poll-bg: rgb(51, 54, 57);
+      --color-danger: #b91c1c;
+      --color-warning: #ca8a04;
+    }
+  }
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1rem;
+
+  @media (width >= --theme(--breakpoint-sm)) {
+    padding-inline: 2rem;
+  }
+
+  @media (width >= --theme(--breakpoint-md)) {
+    padding-inline: 2rem;
+  }
+
+  @media (width >= --theme(--breakpoint-lg)) {
+    max-width: var(--container-5xl);
+  }
+
+  @media (width >= --theme(--breakpoint-xl)) {
+  }
+
+  @media (width >= --theme(--breakpoint-2xl)) {
+  }
+}
+
+@custom-variant prose-inline-code {
+  &.prose :where(:not(pre) > code):not(:where([class~="not-prose"] *)) {
+    @slot;
+  }
+}
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* Custom styles */
+
+a {
+  transition: 0.3s ease-in-out;
+}
+
+a.active {
+  color: var(--color-highlight);
+}
+
+/* Immediate feedback while view transitions prepare/fetch */
+body[data-nav-pending="true"] {
+  cursor: progress;
+}
+
+body[data-nav-pending="true"]::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: clamp(120px, 28vw, 240px);
+  height: 2px;
+  z-index: 9999;
+  background: var(--color-primary);
+  box-shadow: 0 0 0.5rem
+    color-mix(in srgb, var(--color-primary) 45%, transparent);
+  animation: nav-pending-slide 1450ms ease-in-out infinite;
+}
+
+a[data-nav-pending="true"] {
+  opacity: 0.72;
+}
+
+@keyframes nav-pending-slide {
+  0% {
+    transform: translateX(-130%);
+  }
+  100% {
+    transform: translateX(calc(100vw + 130%));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-nav-pending="true"]::before {
+    animation: none;
+    width: 100%;
+    transform: none;
+  }
+}
+
+/* Improve light-mode prose contrast for bullets, blockquote borders and separators */
+:root[data-theme="light"] .prose,
+:root:not([data-theme]) .prose {
+  --tw-prose-bullets: var(--color-ic-border);
+  --tw-prose-quote-borders: var(--color-ic-border);
+  --tw-prose-hr: var(--color-ic-border);
+}
+
+/* Global keyboard focus ring */
+:where(
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  summary,
+  [role="button"],
+  [tabindex]:not([tabindex="-1"])
+):focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px
+    color-mix(in srgb, var(--color-primary) 24%, transparent);
+  border-radius: 0.375rem;
+}
+
+@media (width >= --theme(--breakpoint-sm)) {
+  #search {
+    --search-cancel-space: 0px;
+  }
+}
+
+.markdown-heading {
+  position: relative;
+}
+
+.markdown-heading:hover .anchor {
+  visibility: visible;
+}
+
+.markdown-heading .anchor {
+  position: absolute;
+  display: flex;
+  margin: auto;
+  opacity: 1;
+  justify-content: center;
+  align-items: center;
+  width: calc(var(--spacing) * 10);
+  height: calc(var(--spacing) * 7);
+  top: 50%;
+  padding-right: calc(var(--spacing) * 4);
+  left: calc(-9 * var(--spacing));
+  transform: translateY(calc(-50% + 0.1rem));
+  transition: opacity 0.2s ease-in-out;
+  visibility: hidden;
+}
+
+.markdown-heading .anchor .anchor-icon {
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+  height: calc(var(--spacing) * 5);
+  width: calc(var(--spacing) * 5);
+}
+
+/* Theme select styling */
+select {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+select option {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--font-mono);
+}
+
+.expressive-code {
+  --ec-codeFontFamily: var(--font-mono);
+  --ec-codeFontSize: 1em;
+  --ec-frm-edActTabIndTopCol: var(--color-primary);
+}
+
+.prose .expressive-code {
+  font-size: 1em !important;
+}
+
+.prose .expressive-code pre,
+.prose .expressive-code code {
+  font-size: inherit !important;
+}
+
+.tweet-poll-progress {
+  appearance: none;
+  border: none;
+  border-radius: 4px;
+  background-color: transparent;
+  overflow: hidden;
+}
+
+.tweet-poll-progress::-webkit-progress-bar {
+  background-color: transparent;
+}
+
+.tweet-poll-progress::-webkit-progress-value {
+  background-color: var(--color-twitter-poll-bg);
+  border-radius: 4px;
+}
+
+.tweet-poll-progress.is-winner::-webkit-progress-value {
+  background-color: var(--color-twitter-poll-bg-winner);
+}
+
+.tweet-poll-progress::-moz-progress-bar {
+  background-color: var(--color-twitter-poll-bg);
+  border-radius: 4px;
+}
+
+.tweet-poll-progress.is-winner::-moz-progress-bar {
+  background-color: var(--color-twitter-poll-bg-winner);
+}

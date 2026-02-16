@@ -1,0 +1,66 @@
+---
+import { HEADER, SITE } from "@constants";
+import Spacer from "./spacer.astro";
+import Link from "./link.astro";
+import Search from "./search.astro";
+import ThemeSelect from "./theme-select.astro";
+
+const { pathname } = Astro.url;
+const normalizedPath =
+  (pathname.replace(/^\/blog/, "") || "/").replace(/\/$/, "") || "/";
+---
+
+<header class="container">
+  <Spacer axis="vertical" size={8} />
+  <div class="flex flex-row justify-between items-center">
+    <div class="flex items-center gap-3">
+      <div>
+        <Link
+          variant="highlight"
+          underlineOnHover={false}
+          class="font-semibold text-xl md:text-2xl lg:text-3xl text-text"
+          href="/"
+          aria-label={`${SITE.title} - Back to home`}>{SITE.title}</Link
+        >
+      </div>
+      <Search />
+    </div>
+    <ThemeSelect />
+  </div>
+  <Spacer axis="vertical" size={6} />
+  <div
+    class="flex flex-row justify-between items-center border-b border-border pb-4 text-base md:text-lg"
+  >
+    <nav aria-label="Primary navigation" class="flex gap-4">
+      {
+        HEADER.internal.map((link) => (
+          <Link
+            href={link.url}
+            class={
+              (link.url.replace(/\/$/, "") || "/") === normalizedPath
+                ? "active"
+                : ""
+            }
+            aria-current={
+              (link.url.replace(/\/$/, "") || "/") === normalizedPath
+                ? "page"
+                : "false"
+            }
+          >
+            {link.title}
+          </Link>
+        ))
+      }
+    </nav>
+    <div class="flex items-center gap-4">
+      {
+        HEADER.external.map((link) => (
+          <Link href={link.url} {...link.props}>
+            {link.title}
+          </Link>
+        ))
+      }
+    </div>
+  </div>
+  <Spacer axis="vertical" size={16} />
+</header>

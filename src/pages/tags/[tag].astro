@@ -1,0 +1,68 @@
+---
+import SkipNavContent from "@components/a11y/skip-nav-content.astro";
+import Link from "@components/link.astro";
+import Seo from "@components/seo.astro";
+import Spacer from "@components/spacer.astro";
+import PostCard from "@components/post-card.astro";
+import Layout from "@layouts/layout.astro";
+import { getPostsByTag, getTags } from "@utils";
+import { getCollection } from "astro:content";
+import type { ImageMetadata } from "astro";
+
+/**
+ * 1. Generate static pages for all tags.
+ * 2. Each tag page will have a list of entries associated with that tag.
+ */
+export async function getStaticPaths() {
+  const entries = await getCollection("blog");
+  return getTags(entries).map(({ tag, slug }) => ({
+    params: { tag: slug },
+    props: {
+      tagName: tag,
+      postsWithTag: getPostsByTag(entries, tag),
+    },
+  }));
+}
+
+const { tagName, postsWithTag } = Astro.props;
+const banners = import.meta.glob(
+  "/content/posts/**/*.{jpg,jpeg,png,webp,avif,gif,svg}",
+  { eager: true, import: "default" },
+) as Record<string, ImageMetadata>;
+
+const getBanner = (entry: (typeof postsWithTag)[number]) => {
+  if (!entry.data.banner || !entry.filePath) {
+    return null;
+  }
+
+  const bannerPath = entry.data.banner.replace(/^\.?\//, "");
+  const basePath = entry.filePath.replace(/\/index\.mdx$/, "/");
+  const key = `/${basePath}${bannerPath}`;
+  return banners[key] ?? null;
+};
+
+const taggedPosts = postsWithTag.map((entry) => ({
+  entry,
+  banner: getBanner(entry),
+}));
+---
+
+<Layout>
+  <Seo slot="seo" title={`Tag: ${tagName}`} />
+  <SkipNavContent>
+    <div class="border-b border-border pb-4 flex justify-between items-center">
+      <h1 class="font-medium text-xl md:text-2xl lg:text-3xl text-highlight">
+        Tag: {tagName}
+      </h1>
+      <div><Link href="/tags">See all tags</Link></div>
+    </div>
+    <Spacer axis="vertical" size={8} />
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+      {
+        taggedPosts.map(({ entry, banner }) => (
+          <PostCard entry={entry} banner={banner} showTags />
+        ))
+      }
+    </div>
+  </SkipNavContent>
+</Layout>

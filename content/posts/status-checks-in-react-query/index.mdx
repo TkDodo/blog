@@ -10,13 +10,11 @@ tags:
   - TypeScript
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
-import Aside from 'components/Aside'
-
-<img src="./status-checks.jpeg" />
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import { RqToc } from "components/rq-toc";
+import Aside from "components/Aside";
 
 <Attribution
   name="Kyndall Ramirez"
@@ -27,26 +25,24 @@ import Aside from 'components/Aside'
 
 <RqToc id="status-checks-in-react-query" />
 
-<Translations>
-  {[
+<Translations translations={[
     {
-      language: '한국어',
-      url: 'https://highjoon-dev.vercel.app/blogs/4-status-checks-in-react-query/',
+      language: "한국어",
+      url: "https://highjoon-dev.vercel.app/blogs/4-status-checks-in-react-query/",
     },
     {
-      language: 'Español',
-      url: 'https://rubenvara.io/react-query/comprobar-estado-react-query/',
+      language: "Español",
+      url: "https://rubenvara.io/react-query/comprobar-estado-react-query/",
     },
     {
-      language: '简体中文',
-      url: 'https://juejin.cn/post/7170939711991742477',
+      language: "简体中文",
+      url: "https://juejin.cn/post/7170939711991742477",
     },
     {
-      language: '日本語',
-      url: 'https://makotot.dev/posts/status-checks-in-react-query-translation-ja',
+      language: "日本語",
+      url: "https://makotot.dev/posts/status-checks-in-react-query-translation-ja",
     },
-  ]}
-</Translations>
+  ]} />
 
 One advantage of React Query is the easy access to status fields of the query. You instantly know if your query is loading or if it's erroneous. For this, the library exposes a bunch of boolean flags, which are mostly derived from the internal state machine. Looking at [the types](https://github.com/TanStack/query/blob/87358d73582b369f06cc81d0dfa135323df7d43d/packages/query-core/src/types.ts#L441), your query can be in one of the following states:
 

@@ -11,16 +11,11 @@ tags:
   - JavaScript
 ---
 
-import Comments from 'components/Comments'
-import Translations from 'components/Translations'
-import Attribution from 'components/Attribution'
-import { TheBadPartsPresentation } from 'components/react-query-the-bad-parts'
-import { RqToc } from 'components/rq-toc'
-
-<img
-  src="./bad-parts.jpg"
-  alt="focus photography of gray and black DSLR camera"
-/>
+import Comments from "components/Comments";
+import Translations from "components/Translations";
+import Attribution from "components/Attribution";
+import { TheBadPartsPresentation } from "components/react-query-the-bad-parts";
+import { RqToc } from "components/rq-toc";
 
 <Attribution
   name="Alexander Andrews"
@@ -29,13 +24,13 @@ import { RqToc } from 'components/rq-toc'
 
 <RqToc id="react-query-the-bad-parts" />
 
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 Here are the slides + transcript from the talk I recently gave at the [React Day Berlin](https://reactday.berlin/) conference. You can swipe left or right or use the arrow buttons / arrow keys to switch between the slides. You can also find the recording on [the GitNation site](https://gitnation.com/contents/react-query-the-bad-parts). Enjoy!
 
 <br />
 
-<TheBadPartsPresentation />
+<TheBadPartsPresentation client:only="react" />
 
 ---
 

@@ -10,33 +10,27 @@ tags:
   - JavaScript
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
-import Emph from 'components/Emph'
-import Aside from 'components/Aside'
-import { QueryGG } from 'components/QueryGG'
-import Highlight from 'components/Highlight'
-import { Alert } from '@theme-ui/components'
-
-<img
-  src="./infinite-queries.jpg"
-  alt="steel wool photography during nighttime"
-/>
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import { RqToc } from "components/rq-toc";
+import Emph from "components/Emph";
+import Aside from "components/Aside";
+import { QueryGG } from "components/QueryGG";
+import Highlight from "components/Highlight";
 
 <Attribution name="Reuben" url="https://unsplash.com/@re" />
 
 <RqToc id="how-infinite-queries-work" />
 
-<Translations>
-  {[
+<Translations
+  translations={[
     {
       language: "한국어",
       url: "https://velog.io/@cnsrn1874/how-infinite-queries-work",
     },
   ]}
-</Translations>
+/>
 
 This week, a very interesting [bug report](https://github.com/TanStack/query/issues/8046) was filed for [Infinite Queries](https://tanstack.com/query/v5/docs/framework/react/guides/infinite-queries) in React Query. It was interesting because up to this point, I firmly believed that React Query doesn't have any bugs.
 

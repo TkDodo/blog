@@ -8,15 +8,13 @@ tags:
   - asking questions
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-
-<img src="./how.jpeg" />
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
 
 <Attribution name="Emily Morter" url="https://unsplash.com/@emilymorter" />
 
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 I love answering questions. Most of the time at least 😅. It's quite fun, rewarding and educational. People are very grateful when you help them figure out a problem - you get instant feedback and it's mostly a positive experience.
 
@@ -105,6 +103,6 @@ Both approaches should get you to the "thing" in question that is causing your i
 
 I'm happy to take your questions now. On [bluesky](https://bsky.app/profile/tkdodo.eu), [github](https://github.com/tkdodo), [stackoverflow](https://stackoverflow.com/users/8405310/tkdodo) or right here in the comments below. And if you ever see me respond like this, you know you've just asked an XY question 😉
 
-<img src="./use-case.png" />
+![](./use-case.png)
 
 <Comments />

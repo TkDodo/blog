@@ -10,16 +10,14 @@ tags:
   - React
 ---
 
-import Aside from 'components/Aside'
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { DsToc } from 'components/ds-toc'
-import Emph from 'components/Emph'
-import Highlight from 'components/Highlight'
-import { VerticalRuler } from 'components/VerticalRuler'
-
-<img src="./stack.jpg" alt="stack rock on seashore" />
+import Aside from "components/Aside";
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import { DsToc } from "components/ds-toc";
+import Emph from "components/Emph";
+import Highlight from "components/Highlight";
+import { VerticalRuler } from "components/VerticalRuler";
 
 <Attribution
   name="Jeremy Thomas"
@@ -28,14 +26,12 @@ import { VerticalRuler } from 'components/VerticalRuler'
 
 <DsToc id="building-type-safe-compound-components" />
 
-<Translations>
-  {[
+<Translations translations={[
     {
-      language: '한국어',
-      url: 'https://rosetta.page/post/번역-타입-세이프한-합성-컴포넌트-만들기',
+      language: "한국어",
+      url: "https://rosetta.page/post/번역-타입-세이프한-합성-컴포넌트-만들기",
     },
-  ]}
-</Translations>
+  ]} />
 
 I think compound components are a really good design-pattern when building component libraries. They give consumers flexibility in how components are composed, without forcing every variation into a single, prop-heavy API. Additionally, they make relationships between components explicit in the markup.
 

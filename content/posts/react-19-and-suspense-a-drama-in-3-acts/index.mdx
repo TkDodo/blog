@@ -10,16 +10,15 @@ tags:
   - JavaScript
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
-import Emph from 'components/Emph'
-import Aside from 'components/Aside'
-import { QueryGG } from 'components/QueryGG'
-import Highlight from 'components/Highlight'
-import { Alert } from '@theme-ui/components'
-import { VerticalRuler } from 'components/VerticalRuler'
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import { RqToc } from "components/rq-toc";
+import Emph from "components/Emph";
+import Aside from "components/Aside";
+import { QueryGG } from "components/QueryGG";
+import Highlight from "components/Highlight";
+import { VerticalRuler } from "components/VerticalRuler";
 import Tweet, {
   AvatarTkDodo,
   AvatarSophiebits,
@@ -27,23 +26,18 @@ import Tweet, {
   TweetImage,
   SathyaAndMe,
   V5390,
-} from 'components/Tweet'
-
-<img
-  src="./suspense.jpeg"
-  alt="Silhouette of person under gray sky"
-/>
+} from "components/Tweet";
 
 <Attribution name="Jr Korpa" url="https://unsplash.com/@jrkorpa" />
 
-<Translations>
-  {[
+<Translations
+  translations={[
     {
-      language: '한국어',
-      url: 'https://velog.io/@cnsrn1874/react-19-and-suspense-a-drama-in-3-acts',
+      language: "한국어",
+      url: "https://velog.io/@cnsrn1874/react-19-and-suspense-a-drama-in-3-acts",
     },
   ]}
-</Translations>
+/>
 
 That was quite a roller-coaster last week 🎢. Some things unravelled, some things went down, and in the middle of it: [React Summit](https://reactsummit.com/), the biggest React conference in the world.
 
@@ -62,19 +56,14 @@ This release is packed with goodies, and I was excited to upgrade React Query to
   handle="TkDodo"
   tweetId="1794442417195594233"
   avatar={<AvatarTkDodo />}
-  date={new Date('2024-05-25')}
+  date={new Date("2024-05-25")}
 >
   <p>React Query 🤝 React 19</p>
+  <p>github.com/TanStack/query...</p>
   <p>
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      github.com/TanStack/query...
-    </Text>
-  </p>
-  <p>
-    Someone please try out the react compiler on an example and report
-    back. I've enabled the eslint-plugin-react-compiler and it didn't
-    report anything suspicious. I hope that means we play by the rules
-    😂
+    Someone please try out the react compiler on an example and report back.
+    I've enabled the eslint-plugin-react-compiler and it didn't report anything
+    suspicious. I hope that means we play by the rules 😂
   </p>
   <p>
     <TweetImage>
@@ -94,28 +83,17 @@ Full disclosure upfront: I wasn't the first to discover this. Shout out to [Gabr
   handle="GabbeV_"
   tweetId="1783623489351553366"
   avatar={<AvatarGabbeV_ />}
-  date={new Date('2024-04-26')}
+  date={new Date("2024-04-26")}
 >
   <p>A ton of great changes! 🥳</p>
+  <p>However this change probably deserve a bigger disclaimer.</p>
+  <p>https://github.com/facebook/react...</p>
   <p>
-    However this change probably deserve a bigger disclaimer.
-    <br />
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      https://github.com/facebook/react...
-    </Text>
+    Code using suspense with libraries like react-query will get waterfalls
+    where loading previously happened in parallel.
   </p>
-  <p>
-    Code using suspense with libraries like react-query will get
-    waterfalls where loading previously happened in parallel.
-    <br />
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      https://codesandbox.io/p/devbox/react...
-    </Text>
-    <br />
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      https://codesandbox.io/p/devbox/react...
-    </Text>
-  </p>
+  <p>https://codesandbox.io/p/devbox/react...</p>
+  <p>https://codesandbox.io/p/devbox/react...</p>
 </Tweet>
 
 It's funny because I saw the tweet, and even commented on it, but didn't think too much of it at the time. As I said, I was quite busy and planned to look into React 19 later.
@@ -188,14 +166,13 @@ I was so surprised by this behaviour that I did the only thing I could think of 
   handle="TkDodo"
   tweetId="1800501040766144676"
   avatar={<AvatarTkDodo />}
-  date={new Date('2024-06-11')}
+  date={new Date("2024-06-11")}
 >
   <p>
-    Am I imagining things or is there a difference between React 18
-    and 19 in terms of how Suspense handles parallel fetching? In 18,
-    there is a "per component" split, so putting two components into
-    the same Suspense Boundary, where each was doing a fetch, was
-    still firing them in parallel:
+    Am I imagining things or is there a difference between React 18 and 19 in
+    terms of how Suspense handles parallel fetching? In 18, there is a "per
+    component" split, so putting two components into the same Suspense Boundary,
+    where each was doing a fetch, was still firing them in parallel:
   </p>
   <p>
     <Suspense fallback={<p>...</p>}>
@@ -204,24 +181,15 @@ I was so surprised by this behaviour that I did the only thing I could think of 
     </Suspense>
   </p>
   <p>
-    This fires two queries, in parallel, waits until both are resolved
-    and then shows the whole sub-tree.
+    This fires two queries, in parallel, waits until both are resolved and then
+    shows the whole sub-tree.
   </p>
   <p>
-    In React 19, as far as I can see, the queries run in a waterfall
-    now. I think I remember{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      @rickhanlonii
-    </Text>{' '}
-    mentioning something like this but I can't find any evidence now.
+    In React 19, as far as I can see, the queries run in a waterfall now. I
+    think I remember @rickhanlonii mentioning something like this but I can't
+    find any evidence now.
   </p>
-  <p>
-    /cc{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">@acdlite</Text>{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      @dan_abramov2
-    </Text>
-  </p>
+  <p>/cc @acdlite @dan_abramov2</p>
 </Tweet>
 
 Needless to say, this tweet took off and started a somewhat heated twitter discussion. We soon found out that this was not a bug, but an intentional change, which led to quite some outrage.
@@ -315,14 +283,12 @@ Later that evening, I had the chance to talk to [Sathya Gunasekaran](https://bsk
   handle="TkDodo"
   tweetId="1801364944111153388"
   avatar={<AvatarTkDodo />}
-  date={new Date('2024-06-13')}
+  date={new Date("2024-06-13")}
 >
   <p>
-    Had a great discussion with{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">@_gsathya</Text>{' '}
-    about React19, the suspense changes and the react compiler. I felt
-    like my concerns were truly heard and the feedback appreciated, so
-    thank you for that 🙏
+    Had a great discussion with @_gsathya about React19, the suspense changes
+    and the react compiler. I felt like my concerns were truly heard and the
+    feedback appreciated, so thank you for that 🙏
   </p>
   <p>
     <TweetImage>
@@ -340,29 +306,15 @@ On the next day, the react team met and decided to hold the release:
   handle="AvatarSophiebits"
   tweetId="1801663976973209620"
   avatar={<AvatarSophiebits />}
-  date={new Date('2024-06-14')}
+  date={new Date("2024-06-14")}
 >
+  <p>good news re Suspense, just met w/ @rickhanlonii @en_JS @acdlite</p>
   <p>
-    good news re Suspense, just met w/{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      @rickhanlonii
-    </Text>{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">@en_JS</Text>{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">@acdlite</Text>
-    <br />
-    <Text>
-      * we care a lot about SPAs, team misjudged how many people rely
-      on this today
-    </Text>
-    <br />
-    <Text>
-      * still recommend preloading but recognize not always practical
-    </Text>
-    <br />
-    <Text>
-      * we plan to hold the 19.0 release until we find a good fix
-    </Text>
+    * we care a lot about SPAs, team misjudged how many people rely on this
+    today
   </p>
+  <p>* still recommend preloading but recognize not always practical</p>
+  <p>* we plan to hold the 19.0 release until we find a good fix</p>
 </Tweet>
 
 It's very reassuring that the react team is open to feedback at this stage. Postponing a release that was already announced and presented at a conference is a big move - one that everyone involved really appreciated. I'll gladly work with the react team as best I can to find good compromise in that matter.

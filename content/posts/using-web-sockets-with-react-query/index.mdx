@@ -10,33 +10,29 @@ tags:
   - TypeScript
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
-
-<img src="./react-query-websockets.jpeg" />
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import { RqToc } from "components/rq-toc";
 
 <Attribution name="Maxim Hopman" url="https://unsplash.com/@nampoh" />
 
 <RqToc id="using-web-sockets-with-react-query" />
 
-<Translations>
-  {[
+<Translations translations={[
     {
-      language: '한국어',
-      url: 'https://highjoon-dev.vercel.app/blogs/7-using-websockets-with-react-query/',
+      language: "한국어",
+      url: "https://highjoon-dev.vercel.app/blogs/7-using-websockets-with-react-query/",
     },
     {
-      language: 'Español',
-      url: 'https://rubenvara.io/react-query/websockets-react-query',
+      language: "Español",
+      url: "https://rubenvara.io/react-query/websockets-react-query",
     },
     {
-      language: '简体中文',
-      url: 'https://xfsnowind.github.io/zh-cn/blogs/react-query/using-web-sockets-with-react-query/',
+      language: "简体中文",
+      url: "https://xfsnowind.github.io/zh-cn/blogs/react-query/using-web-sockets-with-react-query/",
     },
-  ]}
-</Translations>
+  ]} />
 
 How to handle live data using WebSockets together with React Query has been one of the most asked questions lately, so I thought I'd give it a try, play around with it a bit and report my findings. That's what this post is about :)
 

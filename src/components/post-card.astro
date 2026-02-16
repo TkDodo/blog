@@ -1,0 +1,67 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+import { defaultDateFormat, getPostSlug, slugifyTag } from "@utils";
+import Link from "./link.astro";
+
+interface Props {
+  entry: CollectionEntry<"blog">;
+  banner?: ImageMetadata | null;
+  showTags?: boolean;
+}
+
+const { entry, banner = null, showTags = false } = Astro.props;
+
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const getTimeToRead = (body: string | undefined) => {
+  const words = body?.match(/\b[\w'-]+\b/g)?.length ?? 0;
+  return Math.max(1, Math.ceil(words / 265));
+};
+
+const tags = (entry.data.tags ?? []).map((tag) => tag.trim()).filter(Boolean);
+---
+
+<div class="max-w-80 mx-auto lg:max-w-none w-full border-2 border-transparent rounded-xl p-2 hover:border-primary active:border-primary focus-within:border-primary transition-all duration-200 ease-in motion-safe:hover:-translate-y-2 motion-safe:active:-translate-y-1">
+  {banner && (
+    <a href={`${basePath}/${getPostSlug(entry)}`} tabindex="-1">
+      <Image
+        src={banner}
+        width={300}
+        height={200}
+        alt={entry.data.title}
+        class="rounded-md w-full h-auto"
+      />
+    </a>
+  )}
+  <p class="mt-2 mb-1 text-subtle text-base lg:text-lg leading-normal">
+    <time>{defaultDateFormat(entry.data.date)}</time>, {getTimeToRead(entry.body)
+    } min read
+  </p>
+  <div class="mt-2 font-semibold text-base md:text-lg lg:text-xl leading-normal">
+    <Link
+      variant="subtle"
+      underlineOnHover={false}
+      class="text-text"
+      href={`/${getPostSlug(entry)}`}
+    >
+      {entry.data.title}
+    </Link>
+  </div>
+  {
+    showTags && tags.length > 0 && (
+      <p class="mt-2 text-subtle text-sm leading-relaxed">
+        {tags.map((tag, i) => (
+          <span>
+            <a
+              data-pagefind-filter="tag"
+              class="font-normal text-subtle hover:text-subtle hover:underline"
+              href={`${basePath}/tags/${slugifyTag(tag)}`}
+            >{tag + (i < entry.data.tags.length - 1 ? ',' : '')}</a>
+          </span>
+        ))}
+      </p>
+    )
+  }
+</div>

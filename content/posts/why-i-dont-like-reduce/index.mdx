@@ -10,12 +10,10 @@ tags:
   - reduce
 ---
 
-import Comments from 'components/Comments'
-import Translations from 'components/Translations'
+import Comments from "components/Comments";
+import Translations from "components/Translations";
 
-<img src="./swiss-knife.png" />
-
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 The popular [eslint-plugin-unicorn](https://github.com/sindresorhus/eslint-plugin-unicorn) recently added a
 [no-array-reduce](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-array-reduce.md) rule, and it is set to _error_ per default.

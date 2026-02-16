@@ -8,25 +8,20 @@ tags:
   - road to refactoring
 ---
 
-import Comments from 'components/Comments'
-import Highlight from 'components/Highlight'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Tweet, { AvatarTkDodo } from 'components/Tweet'
+import Comments from "components/Comments";
+import Highlight from "components/Highlight";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import Tweet, { AvatarTkDodo } from "components/Tweet";
 
-<img alt="Road to Refactoring" src="./road.jpeg" />
-
-<Attribution
-  name="Jesse Bowser"
-  url="https://unsplash.com/@jessebowser"
-/>
+<Attribution name="Jesse Bowser" url="https://unsplash.com/@jessebowser" />
 
 - <b>#1: Don't mix refactorings with hotfixes</b>
 - [#2: Always provide customer value](always-provide-customer-value)
 - [#3: Use urgency](use-urgency)
 - [#4: Refactor impactfully](refactor-impactfully)
 
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 Over the years, I've come to work on many medium to large scale code bases. Most of these have organically grown over time, some of them being full of [Lava Layers](https://mikehadlow.blogspot.com/2014/12/the-lava-layer-anti-pattern.html). Doing a [refactoring](https://en.wikipedia.org/wiki/Code_refactoring) in those code bases is often not trivial. Incidental complexity is high, test coverage is low. There are more features than you can count.
 
@@ -70,24 +65,16 @@ This is the flow I usually take when getting a bug report:
   handle="TkDodo"
   tweetId="1462821229841338381"
   avatar={<AvatarTkDodo />}
-  date={new Date('2021-11-22')}
+  date={new Date("2021-11-22")}
 >
-  <p>
-    This is the best flow:
-    <br />
-    🐞 find a bug
-    <br />
-    🕵️‍♂️ investigate it
-    <br />⇆ reproduce it
-    <br />
-    🧪 write a failing test for it
-    <br />
-    💻 fix it
-    <br />
-    🟢 see the green test
-    <br />
-    🚀 ship it
-  </p>
+  <p>This is the best flow:</p>
+  <p>🐞 find a bug</p>
+  <p>🕵️‍♂️ investigate it</p>
+  <p>⇆ reproduce it</p>
+  <p>🧪 write a failing test for it</p>
+  <p>💻 fix it</p>
+  <p>🟢 see the green test</p>
+  <p>🚀 ship it</p>
 </Tweet>
 
 Writing a failing test case _before_ you start fixing the issue is something I can really recommend, as it will ensure that:

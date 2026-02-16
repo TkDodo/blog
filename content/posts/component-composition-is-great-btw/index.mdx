@@ -9,33 +9,26 @@ tags:
   - React
 ---
 
-import Aside from 'components/Aside'
-import Comments from 'components/Comments'
-import Highlight from 'components/Highlight'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Emph from 'components/Emph'
+import Aside from "components/Aside";
+import Comments from "components/Comments";
+import Highlight from "components/Highlight";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import Emph from "components/Emph";
 import Tweet, {
   TweetImage,
   AvatarMxstbr,
   SeparationOfConcerns,
-} from 'components/Tweet'
+} from "components/Tweet";
 
-<img src="./lego.jpg" alt="blue and yellow lego blocks" />
+<Attribution name="Glen Carrie" url="https://unsplash.com/@glencarrie" />
 
-<Attribution
-  name="Glen Carrie"
-  url="https://unsplash.com/@glencarrie"
-/>
-
-<Translations>
-  {[
+<Translations translations={[
     {
-      language: '한국어',
-      url: 'https://wonderwalls.tistory.com/entry/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%ED%95%A9%EC%84%B1%EC%9D%80-%ED%9B%8C%EB%A3%A1%ED%95%A9%EB%8B%88%EB%8B%A4-%EA%B7%B8%EB%9F%B0%EB%8D%B0',
+      language: "한국어",
+      url: "https://wonderwalls.tistory.com/entry/%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%ED%95%A9%EC%84%B1%EC%9D%80-%ED%9B%8C%EB%A3%A1%ED%95%A9%EB%8B%88%EB%8B%A4-%EA%B7%B8%EB%9F%B0%EB%8D%B0",
     },
-  ]}
-</Translations>
+  ]} />
 
 When I first learned about React, I heard about all of its advantages: Virtual DOM is super fast, one-way data flow is very predictable, and JSX is ... an interesting way to put markup into JavaScript.
 
@@ -56,17 +49,14 @@ Well yes, we still separate concerns, just differently (and arguably better) tha
   handle="mxstbr"
   tweetId="993455977008594944"
   avatar={<AvatarMxstbr />}
-  date={new Date('2018-05-07')}
+  date={new Date("2018-05-07")}
 >
   <p>
-    Separation of concerns still exists, the question is just: where
-    do you separate? Should the boundary really be the programming
-    language we write in?
+    Separation of concerns still exists, the question is just: where do you
+    separate? Should the boundary really be the programming language we write
+    in?
   </p>
-  <p>
-    (attached graphic courtesy of{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">@areaweb</Text>)
-  </p>
+  <p>(attached graphic courtesy of @areaweb)</p>
   <p>
     <TweetImage>
       <SeparationOfConcerns />
@@ -193,10 +183,7 @@ I'm not even talking about adding another state here, because it should be clear
 
 At this point, I would suggest to listen to the React docs and break down what the user actually sees on the screen into boxes. It might give us a clue about what is related enough to become it's own component:
 
-<img
-  src="./three-states.png"
-  alt="a pending, a data and an empty state, each sharing a common layout (red) with different content (blue)"
-/>
+![a pending, a data and an empty state, each sharing a common layout (red) with different content (blue)](./three-states.png)
 
 In all three states, we want to render a shared "layout" - the red part. That's why we made our component in the first place - because we have some common parts to render. The blue stuff is what's different between the three states. So how would a refactoring look like if we'd extract the red parts to their own layout component that accepts dynamic `children`:
 

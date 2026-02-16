@@ -1,0 +1,57 @@
+---
+import DocSearchReact from "./docsearch-react";
+---
+
+<div class="contents">
+  <DocSearchReact client:only="react" />
+</div>
+
+<style is:global>
+  .DocSearch-Button {
+    margin: 0;
+    height: calc(var(--spacing) * 9);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  .DocSearch-Button:hover {
+    border-color: #9ca3af;
+  }
+
+  .DocSearch-Button-Placeholder {
+    color: var(--color-faded);
+  }
+
+  .DocSearch-Button-Keys {
+    min-width: auto;
+  }
+
+  :root {
+    --docsearch-primary-color: var(--color-primary);
+    --docsearch-text-color: var(--color-text);
+    --docsearch-muted-color: var(--color-faded);
+    --docsearch-container-background: color-mix(
+      in oklab,
+      var(--color-bg) 75%,
+      black
+    );
+    --docsearch-modal-background: var(--color-bg);
+    --docsearch-searchbox-background: var(--color-bg);
+    --docsearch-searchbox-focus-background: var(--color-bg);
+    --docsearch-hit-background: var(--color-bg);
+    --docsearch-key-gradient: var(--color-border);
+    --docsearch-key-shadow:
+      inset 0 -1px 0 var(--color-ic-border),
+      0 1px 2px 0 color-mix(in oklab, var(--color-text) 8%, transparent);
+  }
+
+  [data-theme="dark"] {
+    --docsearch-container-background: color-mix(
+      in oklab,
+      var(--color-bg) 65%,
+      black
+    );
+  }
+</style>

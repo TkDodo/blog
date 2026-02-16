@@ -10,32 +10,25 @@ tags:
   - TypeScript
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import { RqToc } from "components/rq-toc";
 
-<img src="./placeholder-and-initial-data.jpeg" />
-
-<Attribution
-  name="Marco Bianchetti"
-  url="https://unsplash.com/@marcobian"
-/>
+<Attribution name="Marco Bianchetti" url="https://unsplash.com/@marcobian" />
 
 <RqToc id="placeholder-and-initial-data-in-react-query" />
 
-<Translations>
-  {[
+<Translations translations={[
     {
-      language: '한국어',
-      url: 'https://highjoon-dev.vercel.app/blogs/9-placeholder-and-initial-data-in-react-query',
+      language: "한국어",
+      url: "https://highjoon-dev.vercel.app/blogs/9-placeholder-and-initial-data-in-react-query",
     },
     {
-      language: 'Español',
-      url: 'https://rubenvara.io/react-query/data-inicial-placeholder/',
+      language: "Español",
+      url: "https://rubenvara.io/react-query/data-inicial-placeholder/",
     },
-  ]}
-</Translations>
+  ]} />
 
 Today's article is all about improving the user experience when working with React Query. Most of the time, we (and our users) dislike pesky loading spinners. They are a necessity sometimes, but we still want to avoid them if possible.
 
@@ -83,7 +76,7 @@ The basic way to create an observer is to call `useQuery`. Every time we do that
 
 By the way, you can see how many observers a query has by the number on the left of the Query Key in the React Query Devtools (3 in this example):
 
-<img src="./observers.png" />
+![](./observers.png)
 
 Some options that work on observer level would be `select` or `refetchInterval`. In fact, what makes `select` so great for [data transformations](./react-query-data-transformations#3-using-the-select-option) is the ability to watch the same cache entry, but subscribe to different slices of its data in different components.
 
@@ -140,20 +133,17 @@ Suppose you provide `initialData` or `placeholderData`, and a background refetch
 <p>
   <details>
     <summary>InitialData</summary>
-    Since <i>initialData</i> is persisted in the cache, the refetch error
-    is treated like any other background error. Our query will be in <i>
-      error
-    </i> state, but your <i>data</i> will still be there.
+    Since <i>initialData</i> is persisted in the cache, the refetch error is
+    treated like any other background error. Our query will be in <i>error</i>{" "}
+    state, but your <i>data</i> will still be there.
   </details>
 </p>
 <p>
   <details>
     <summary>PlaceholderData</summary>
-    Since <i>placeholderData</i> is "fake-it-till-you-make-it" data, and
-    we didn't make it, we won't see that data anymore. Our query will be
-    in <i>error</i> state, and our <i>data</i> will be <i>
-      undefined
-    </i>.
+    Since <i>placeholderData</i> is "fake-it-till-you-make-it" data, and we
+    didn't make it, we won't see that data anymore. Our query will be in{" "}
+    <i>error</i> state, and our <i>data</i> will be <i>undefined</i>.
   </details>
 </p>
 

@@ -1,0 +1,74 @@
+---
+interface Props {
+  gif: string;
+  still?: string;
+  alt?: string;
+}
+
+const { gif, still, alt = "" } = Astro.props;
+
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const normalizeSrc = (raw: string) => {
+  if (/^(?:[a-z]+:|data:|#)/i.test(raw)) return raw;
+  if (raw.startsWith("/")) return `${basePath}${raw}`;
+  return raw;
+};
+
+const gifSrc = normalizeSrc(gif);
+const stillSrc = normalizeSrc(still ?? gif);
+---
+
+<figure class="not-prose my-4 gif-player" data-gif={gifSrc} data-still={stillSrc}>
+  <button
+    type="button"
+    class="block rounded-lg p-0 overflow-hidden cursor-pointer bg-transparent"
+    aria-label="Play animation"
+    data-gif-button
+  >
+    <img
+      src={stillSrc}
+      alt={alt}
+      loading="lazy"
+      class="m-0"
+      data-gif-image
+    />
+  </button>
+  <figcaption class="opacity-80 text-[0.9em] border-0 shadow-none" data-gif-caption
+    >Click image to play animation</figcaption
+  >
+</figure>
+
+<script is:inline>
+  document.querySelectorAll(".gif-player").forEach((root) => {
+    if (!(root instanceof HTMLElement) || root.dataset.bound === "true") return;
+    root.dataset.bound = "true";
+
+    const gif = root.dataset.gif;
+    const still = root.dataset.still;
+    const button = root.querySelector("[data-gif-button]");
+    const image = root.querySelector("[data-gif-image]");
+    const caption = root.querySelector("[data-gif-caption]");
+
+    if (!gif || !still || !(button instanceof HTMLButtonElement)) return;
+    if (!(image instanceof HTMLImageElement) || !(caption instanceof HTMLElement))
+      return;
+
+    let playing = false;
+    const update = () => {
+      image.src = playing ? gif : still;
+      button.setAttribute(
+        "aria-label",
+        playing ? "Pause animation" : "Play animation",
+      );
+      caption.textContent = playing
+        ? "Playing animation"
+        : "Click image to play animation";
+    };
+
+    button.addEventListener("click", () => {
+      playing = !playing;
+      update();
+    });
+  });
+</script>

@@ -9,38 +9,31 @@ tags:
   - API Design
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { DsToc } from 'components/ds-toc'
-import Emph from 'components/Emph'
-import Highlight from 'components/Highlight'
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import { DsToc } from "components/ds-toc";
+import Emph from "components/Emph";
+import Highlight from "components/Highlight";
 
-<img src="./nope.jpg" alt="Nope Hand Lettering On Wood and Glass" />
-
-<Attribution
-  name="Daniel Herron"
-  url="https://unsplash.com/@herrond"
-/>
+<Attribution name="Daniel Herron" url="https://unsplash.com/@herrond" />
 
 <DsToc id="tooltip-components-should-not-exist" />
 
-<Translations>
-  {[
+<Translations translations={[
     {
-      language: '한국어',
-      url: 'https://chapdo.vercel.app/posts/%EB%B2%88%EC%97%AD-Tooltip-Components-Should-Not-Exist/',
+      language: "한국어",
+      url: "https://chapdo.vercel.app/posts/%EB%B2%88%EC%97%AD-Tooltip-Components-Should-Not-Exist/",
     },
     {
-      language: 'Français',
-      url: 'https://developpeur-web.tech/posts/les-composants-tooltip-ne-devraient-pas-exister',
+      language: "Français",
+      url: "https://developpeur-web.tech/posts/les-composants-tooltip-ne-devraient-pas-exister",
     },
     {
       language: "日本語",
-      url: 'https://makotot.dev/posts/tooltip-components-should-not-exist-translation-ja',
-    }
-  ]}
-</Translations>
+      url: "https://makotot.dev/posts/tooltip-components-should-not-exist-translation-ja",
+    },
+  ]} />
 
 I have to admit: bad tooltips in web apps are one of my pet peeves. And to be fair, it's quite easy to get tooltips wrong. There are lots of concerns that need to be thought of:
 

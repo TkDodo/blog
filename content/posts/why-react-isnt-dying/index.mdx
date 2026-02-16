@@ -8,30 +8,28 @@ tags:
   - State of React
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Tweet, { AvatarLeeerob } from 'components/Tweet'
-
-<img src="./dying.jpeg" alt="The Zustand bear logo" />
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import Tweet, { AvatarLeeerob } from "components/Tweet";
 
 <Attribution
   name="Silvestri Matteo"
   url="https://unsplash.com/@silvestrimatteo"
 />
 
-<Translations>
-  {[
+<Translations
+  translations={[
     {
-      language: '한국어',
-      url: 'https://hyunjinee.tistory.com/237',
+      language: "한국어",
+      url: "https://hyunjinee.tistory.com/237",
     },
     {
-      language: 'Español',
-      url: 'https://medium.com/@christiancaracach/por-qu%C3%A9-react-no-est%C3%A1-muriendo-ba9728d653b1',
+      language: "Español",
+      url: "https://medium.com/@christiancaracach/por-qu%C3%A9-react-no-est%C3%A1-muriendo-ba9728d653b1",
     },
   ]}
-</Translations>
+/>
 
 Last Thursday, I took part in the [State of React Ecosystem](https://www.youtube.com/watch?v=_nGuk2Gs2oc) panel discussion, where we mainly talked about one question: "Is React dying" ? I couldn't finish my train of thought due to a StreamYard outage, so I thought I'd follow this up with a blogpost. So, why would React be dying?
 
@@ -63,10 +61,7 @@ Every day, there are so many people just starting out with web development. They
 
 On the other hand, companies choose React because that's where all the developers are. If you want to build something that can be maintained years from now, you better not choose the next hype train that goes straight to nowhere (remember [CoffeeScript](https://coffeescript.org/) ?). You want something battle tested that has stood the test of time, where you won't have trouble finding developers to scale once you need to. And nobody ever got fired for choosing React.
 
-<img
-  alt="A closing circle with two arrows: Companies choose React because that's where the devs are; Devs choose React because that's where the jobs are"
-  src="./growth-loop.png"
-/>
+![A closing circle with two arrows: Companies choose React because that's where the devs are; Devs choose React because that's where the jobs are](./growth-loop.png)
 
 ### Ecosystem
 
@@ -95,18 +90,16 @@ Actually, both might happen. It's not a given that you have one tech ruling them
   handle="leeerob"
   tweetId="1465702417513680897"
   avatar={<AvatarLeeerob />}
-  date={new Date('2021-11-30')}
+  date={new Date("2021-11-30")}
 >
   <p>When there's competition in DevTools, developers win:</p>
-  <p>
-    ◆ Svelte is pushing React
-    <br />◆ Remix is pushing Next.js
-    <br />◆ Prisma is pushing ORMs
-    <br />◆ Deno is pushing Node.js
-    <br />◆ Supabase is pushing Firebase
-    <br />◆ esbuild / SWC are pushing JS tooling
-    <br />◆ Bun is pushing SWC
-  </p>
+  <p>◆ Svelte is pushing React</p>
+  <p>◆ Remix is pushing Next.js</p>
+  <p>◆ Prisma is pushing ORMs</p>
+  <p>◆ Deno is pushing Node.js</p>
+  <p>◆ Supabase is pushing Firebase</p>
+  <p>◆ esbuild / SWC are pushing JS tooling</p>
+  <p>◆ Bun is pushing SWC</p>
   <p>What else?</p>
 </Tweet>
 

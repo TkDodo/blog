@@ -10,23 +10,20 @@ tags:
   - TypeScript
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import SpacingBox from 'components/SpacingBox'
-import Translations from 'components/Translations'
-
-<img src="./naming.jpg" />
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
 
 <Attribution name="Steve Johnson" url="https://unsplash.com/@steve_j" />
 
-<Translations>
-  {[
+<Translations
+  translations={[
     {
-      language: '한국어',
-      url: 'https://www.philly.im/blog/on-naming-things',
+      language: "한국어",
+      url: "https://www.philly.im/blog/on-naming-things",
     },
   ]}
-</Translations>
+/>
 
 > There are only two hard things in Computer Science: cache invalidation, naming things, and off-by-one errors.
 
@@ -142,8 +139,6 @@ And no, inline functions are _not_ bad for performance.
 ```
 
 ## Name things for what they represent
-
-<SpacingBox />
 
 ```js:title=twenty
 export const TWENTY = 20

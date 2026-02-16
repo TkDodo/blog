@@ -1,0 +1,25 @@
+---
+import { slugifyTag } from "@utils";
+
+interface Props {
+  tags: string[];
+}
+
+const { tags } = Astro.props;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+{
+  tags.map((tag, i) => (
+    <>
+      <a
+        data-pagefind-filter="tag"
+        class="font-normal text-subtle hover:text-subtle hover:underline"
+        href={`${basePath}/tags/${slugifyTag(tag)}`}
+      >
+        {tag}
+      </a>
+      {i < tags.length - 1 && ", "}
+    </>
+  ))
+}

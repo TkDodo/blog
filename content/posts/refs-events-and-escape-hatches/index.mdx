@@ -10,26 +10,20 @@ tags:
   - Hooks
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Tweet, {
-  AvatarDiegohaz,
-  TweetImage,
-  UseEvent,
-} from 'components/Tweet'
-
-<img src="./silhouette-of-people-during-concert.jpeg" />
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import Tweet, { AvatarDiegohaz, TweetImage, UseEvent } from "components/Tweet";
+import { HsToc } from "components/hs-toc";
 
 <Attribution
   name="Lee Blanchflower"
   url="https://unsplash.com/@blanccreative"
 />
 
-- [#1: Hooks, Dependencies and Stale Closures](hooks-dependencies-and-stale-closures)
-- <b>#2: Refs, Events and Escape Hatches</b>
+<HsToc id="refs-events-and-escape-hatches" />
 
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 I hope that after reading part one about [stale closures in React](hooks-dependencies-and-stale-closures), you now have a good understanding of why they can occur and how to avoid them.
 
@@ -47,45 +41,42 @@ In React, we almost always think in immutability. _Props_ cannot be changed (fro
 
 We always see the things from the time they were created, but if they are _mutated_ in place, we would still see the latest value. Let's take the basic example from part 1 and store the value in a mutable variable outside the React component:
 
-```js react-live
-let count = 1
-function App() {
-  const rerender = React.useReducer(() => ({}))[1]
+<Playground template="react">
+
+```js name=App.js active
+import * as React from "react";
+
+let count = 1;
+
+export default function App() {
+  const rerender = React.useReducer(() => ({}))[1];
+  const [logged, setLogged] = React.useState(count);
 
   // 😱 logCount is stable, but it still sees
   // the latest value of count
   const logCount = React.useCallback(() => {
-    log(count)
-  }, [])
+    setLogged(count);
+  }, []);
 
   return (
     <div>
       <div>count is {count}</div>
+      <div>log: {logged}</div>
       <button
         onClick={() => {
-          count++
-          rerender()
+          count++;
+          rerender();
         }}
       >
         increment
       </button>
       <button onClick={logCount}>log</button>
     </div>
-  )
-}
-
-render(
-  <div style={{ color: 'black ' }}>
-    <App />
-    <div id="result">log:</div>
-  </div>
-)
-
-// just a way to make logging work in this interactive example
-function log(value) {
-  document.getElementById('result').innerHTML = 'log: ' + String(value)
+  );
 }
 ```
+
+</Playground>
 
 Now it's hopefully obvious that this is _not_ how you would work with React. Having a variable outside the component means it's shared between component instances, and React doesn't know about it, which is why we have to manually force our component to re-render.
 
@@ -204,17 +195,10 @@ This looks pretty clean to me, and if you want to have a user-land implementatio
   handle="diegohaz"
   tweetId="1522868292301606912"
   avatar={<AvatarDiegohaz />}
-  date={new Date('2022-05-07')}
+  date={new Date("2022-05-07")}
 >
-  <p>
-    Do you want to use the proposed `useEvent` hook now with TypeScript?
-  </p>
-  <p>
-    Here you go:{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      gist.github.com/diegohaz/69509...
-    </Text>
-  </p>
+  <p>Do you want to use the proposed `useEvent` hook now with TypeScript?</p>
+  <p>Here you go: gist.github.com/diegohaz/69509...</p>
   <p>
     <TweetImage>
       <UseEvent />

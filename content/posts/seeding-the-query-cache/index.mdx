@@ -11,31 +11,24 @@ tags:
   - Suspense
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
-import Aside from 'components/Aside'
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import { RqToc } from "components/rq-toc";
+import Aside from "components/Aside";
 
-<img src="./seeding.jpeg" />
-
-<Attribution
-  name="Markus Spiske"
-  url="https://unsplash.com/@markusspiske"
-/>
+<Attribution name="Markus Spiske" url="https://unsplash.com/@markusspiske" />
 
 **Last Update: 2023-10-21**
 
 <RqToc id="seeding-the-query-cache" />
 
-<Translations>
-  {[
+<Translations translations={[
     {
-      language: '한국어',
-      url: 'https://velog.io/@eunbinn/seeding-the-query-cache',
+      language: "한국어",
+      url: "https://velog.io/@eunbinn/seeding-the-query-cache",
     },
-  ]}
-</Translations>
+  ]} />
 
 A new RFC about [first class support for Promises](https://github.com/reactjs/rfcs/pull/229) has been released last week, and it got some talk going about how this would introduce fetch waterfalls if used incorrectly. So what are fetch waterfalls exactly?
 
@@ -45,17 +38,11 @@ A waterfall describes a situation where one request is made, and we wait for it 
 
 Sometimes, this is unavoidable, because the first request contains information that is needed to make the second request. We also refer to these as [dependent queries](https://tanstack.com/query/v4/docs/guides/dependent-queries):
 
-<img
-  src="./dependent-queries.png"
-  alt="component mounts, /user endpoint is being fetched, and after that, we fire off two requests for the user's projects and todos"
-/>
+![component mounts, /user endpoint is being fetched, and after that, we fire off two requests for the user's projects and todos](./dependent-queries.png)
 
 In many cases though, we can actually fetch all the data we need in parallel, because it is independent data:
 
-<img
-  src="./parallel-queries.png"
-  alt="component mounts, both /issues and /labels are fetched at the same time"
-/>
+![component mounts, both /issues and /labels are fetched at the same time](./parallel-queries.png)
 
 In React Query, we can do that in two different ways:
 
@@ -119,10 +106,7 @@ function App() {
 
 So this is nice and all, but it can backfire when you use multiple queries in the same component that have suspense turned on. Here is what happens:
 
-<img
-  src="./fetch-waterfall.png"
-  alt="component mounts, /issues are fetched and component suspends. After the request is finished, component mounts and suspends again, triggering a fetch for /labels"
-/>
+![component mounts, /issues are fetched and component suspends. After the request is finished, component mounts and suspends again, triggering a fetch for /labels](./fetch-waterfall.png)
 
 - Component renders, tries to read the first query
 - Sees that there is no data in the cache yet, so it suspends
@@ -162,10 +146,7 @@ The call to `prefetchQuery` is executed as soon as your JavaScript bundle is eva
 
 This means it will still be kicked off before the component renders. If you do this for both queries in our example, you will get those parallel queries back even when using suspense.
 
-<img
-  src="./prefetching.png"
-  alt="prefetch for both queries triggers before the component mounts. component suspends for a short time until both queries re finished."
-/>
+![prefetch for both queries triggers before the component mounts. component suspends for a short time until both queries re finished.](./prefetching.png)
 
 As we can see, the query will still suspend until both are done fetching, but because we've triggered them in parallel, the waiting time is now drastically reduced.
 

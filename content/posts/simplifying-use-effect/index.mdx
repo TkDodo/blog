@@ -10,25 +10,21 @@ tags:
   - TypeScript
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-
-<img src="./effect.jpg" />
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
 
 <Attribution
   name="Christopher Burns"
   url="https://unsplash.com/@christopher__burns"
 />
 
-<Translations>
-  {[
+<Translations translations={[
     {
-      language: '한국어',
-      url: 'https://onlydev.tistory.com/156',
+      language: "한국어",
+      url: "https://onlydev.tistory.com/156",
     },
-  ]}
-</Translations>
+  ]} />
 
 [useEffect](https://reactjs.org/docs/hooks-reference.html#useeffect). The hook everybody needs, but nobody wants. According to the official react docs, it's "_an escape hatch from React’s purely functional world into the imperative world_". The [complete guide to useEffect](https://overreacted.io/a-complete-guide-to-useeffect/) by Redux author and React core team member [Dan Abramov](https://bsky.app/profile/danabra.mov) is a 49 minute read - and it takes at least twice the time to _really_ comprehend it.
 

@@ -1,0 +1,18 @@
+---
+import Layout from "@layouts/layout.astro";
+import Seo from "@components/seo.astro";
+import SkipNavContent from "@components/a11y/skip-nav-content.astro";
+import Spacer from "@components/spacer.astro";
+import SponsorsPage from "../../content/pages/sponsors/index.mdx";
+---
+
+<Layout>
+  <Seo slot="seo" title="Sponsors" />
+  <SkipNavContent>
+    <h1 class="font-medium text-xl md:text-2xl lg:text-3xl text-highlight">
+      Sponsors
+    </h1>
+    <Spacer axis="vertical" size={8} />
+    <SponsorsPage />
+  </SkipNavContent>
+</Layout>

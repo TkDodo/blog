@@ -10,14 +10,12 @@ tags:
   - Performance
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Emph from 'components/Emph'
-import Highlight from 'components/Highlight'
-import Tweet, { AvatarHousecor } from 'components/Tweet'
-
-<img src="./uphill.png" alt="a steep way to the top of a mountain" />
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import Emph from "components/Emph";
+import Highlight from "components/Highlight";
+import Tweet, { AvatarHousecor } from "components/Tweet";
 
 <Attribution
   name="Michiel Annaert"
@@ -27,18 +25,18 @@ import Tweet, { AvatarHousecor } from 'components/Tweet'
 - <b>#1: The Uphill Battle of Memoization</b>
 - [#2: The Useless useCallback](the-useless-use-callback)
 
-<Translations>
-  {[
+<Translations
+  translations={[
     {
-      language: '한국어',
-      url: 'https://velog.io/@cnsrn1874/the-uphill-battle-of-memoization',
+      language: "한국어",
+      url: "https://velog.io/@cnsrn1874/the-uphill-battle-of-memoization",
     },
-     {
-      language: 'Português (Brasil)',
-      url: 'https://dev.to/oaraujocesar/a-ardua-batalha-da-memoizacao-3nja',
+    {
+      language: "Português (Brasil)",
+      url: "https://dev.to/oaraujocesar/a-ardua-batalha-da-memoizacao-3nja",
     },
   ]}
-</Translations>
+/>
 
 ---
 
@@ -165,7 +163,7 @@ function App({ style }) {
 
 This memoization doesn't really achieve anything. We don't know if `style` will be passed as an inline object to `App`, so memoizing it here is pointless. We'd need to create a stable reference at the call-side of `App`.
 
-## {children}
+## children
 
 What's worse - this isn't the only way how our perf improvement can break. Another gotcha is that memoized components won't work as you might expect if they accept `children`:
 
@@ -175,7 +173,7 @@ function App() {
     <ExpensiveTree>
       <p>Hello, world!</p>
     </ExpensiveTree>
-  )
+  );
 }
 
 function ExpensiveComponent({ children }) {
@@ -184,10 +182,10 @@ function ExpensiveComponent({ children }) {
       I'm expensive!
       {children}
     </div>
-  )
+  );
 }
 
-const ExpensiveTree = React.memo(ExpensiveComponent)
+const ExpensiveTree = React.memo(ExpensiveComponent);
 ```
 
 Oof, I have to admit - I didn't know for a long time that this will break memoization. Why would it? I'm always passing the same, stable `<p>` tag as children, right? Well, not really. JSX is just syntactic sugar for `React.createElement`, which will create a new object on every render. So, even though the `<p>` tag looks like it's the same to us, it won't be the same reference.
@@ -208,19 +206,16 @@ So using `React.memo` is a bit of a minefield, and choosing one of the proposed 
   handle="housecor"
   tweetId="1707358107532210193"
   avatar={<AvatarHousecor />}
-  date={new Date('2023-09-28')}
+  date={new Date("2023-09-28")}
 >
   <p>I rarely need to do React performance optimizations.</p>
   <p>
-    But we have a page with 5 big tables and a summary bar. When one
-    table changes, everything renders. It's slow.
+    But we have a page with 5 big tables and a summary bar. When one table
+    changes, everything renders. It's slow.
   </p>
   <p>Solution:</p>
-  <p>
-    1. I wrapped each table in memo.
-    <br />
-    2. I wrapped the functions passed down in useCallback.
-  </p>
+  <p>1. I wrapped each table in memo.</p>
+  <p>2. I wrapped the functions passed down in useCallback.</p>
   <p>MUCH faster.</p>
 </Tweet>
 

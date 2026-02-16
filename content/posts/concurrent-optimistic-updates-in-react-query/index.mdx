@@ -11,36 +11,27 @@ tags:
   - JavaScript
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
-import Emph from 'components/Emph'
-import Aside from 'components/Aside'
-import { QueryGG } from 'components/QueryGG'
-import Highlight from 'components/Highlight'
-import { Alert } from '@theme-ui/components'
+import Comments from "components/Comments";
+import Attribution from "components/Attribution";
+import Translations from "components/Translations";
+import { RqToc } from "components/rq-toc";
+import Emph from "components/Emph";
+import Aside from "components/Aside";
+import { QueryGG } from "components/QueryGG";
+import Highlight from "components/Highlight";
 
-<img
-  src="./concurrent-optimistic-updates.jpg"
-  alt="A blurry photo of a city at night"
-/>
-
-<Attribution
-  name="Mariola Grobelska"
-  url="https://unsplash.com/@mariolagr"
-/>
+<Attribution name="Mariola Grobelska" url="https://unsplash.com/@mariolagr" />
 
 <RqToc id="concurrent-optimistic-updates-in-react-query" />
 
-<Translations>
-  {[
+<Translations
+  translations={[
     {
-      language: '한국어',
-      url: 'https://velog.io/@cnsrn1874/concurrent-optimistic-updates-in-react-query',
+      language: "한국어",
+      url: "https://velog.io/@cnsrn1874/concurrent-optimistic-updates-in-react-query",
     },
   ]}
-</Translations>
+/>
 
 [Optimistic Updates](https://tanstack.com/query/v5/docs/framework/react/guides/optimistic-updates) are one of those techniques that are great to [make your app feel faster than it really is](https://www.youtube.com/watch?v=nxzVZ7FYdwE&t=651s), but it's also one of the things that's easiest in todo-app style demos.
 
@@ -141,10 +132,7 @@ This is a minimal example where we write to the cache before the mutation starts
 
 One thing I didn't leave out is the manual Query Cancellation, because it's pretty relevant to avoid the window of inconsistency. Without it, here is what could happen:
 
-<img
-  src="./window-of-inconsistency.png"
-  alt="A query starts because of an invalidation event, and a mutation happens shortly afterwards. When the query settles, the UI overwrites the optimistic update and creates a window of inconsistency."
-/>
+![A query starts because of an invalidation event, and a mutation happens shortly afterwards. When the query settles, the UI overwrites the optimistic update and creates a window of inconsistency.](./window-of-inconsistency.png)
 
 If our mutation starts while we already have a request in-flight, our optimistic update would get overwritten when that request finishes. Since we start another invalidation at the end, it would be fine eventually, but it can create a jarring user experience where state toggles back and forth. This behaviour can most commonly happen when users focus a screen to perform an update, and that focus event will trigger an invalidation thanks to `refetchOnWindowFocus`.
 
@@ -152,17 +140,11 @@ If our mutation starts while we already have a request in-flight, our optimistic
 
 Query cancellation fixes this because it essentially aborts all currently running queries that could interfere with our optimistic update when the mutation starts:
 
-<img
-  src="./with-query-cancellation.png"
-  alt="A query starts because of an invalidation event, and a mutation happens shortly afterwards. The start of the mutation cancels the query, so there is on inconsistency anymore."
-/>
+![A query starts because of an invalidation event, and a mutation happens shortly afterwards. The start of the mutation cancels the query, so there is on inconsistency anymore.](./with-query-cancellation.png)
 
 It even works fine if we have multiple mutations that write to the same entity, given that the invalidation is already running when the second mutation starts. But that's not a given. Let's look at this scenario where query cancellation doesn't help:
 
-<img
-  src="./concurrent-mutations.png"
-  alt="A mutation starts, and before it finishes, a second mutation starts. When the first mutation settles, it triggers an invalidation, which can revert the optimistic update of the second mutations (if it's fast enough), which again causes inconsistencies"
-/>
+![A mutation starts, and before it finishes, a second mutation starts. When the first mutation settles, it triggers an invalidation, which can revert the optimistic update of the second mutations (if it's fast enough), which again causes inconsistencies](./concurrent-mutations.png)
 
 Here, the second mutation starts while the first mutation is still running, so when it begins, there is nothing it could cancel. But then, the first mutation settles and we call `queryClient.invalidateQueries`. If that refetch is faster than our second mutation, our UI will revert and we'll see the dreaded window of inconsistency again.
 
@@ -238,10 +220,7 @@ const useToggleIsActive = (id: number) =>
 
 With this code, this is how our final flow looks like:
 
-<img
-  src="./limited-invalidations.png"
-  alt="A query starts because of an invalidation event, and a mutation happens shortly afterwards. The start of the mutation cancels the query. Then, a second mutation starts. When the first mutation finishes, it doesn't invalidate, because it sees another mutation being active."
-/>
+![A query starts because of an invalidation event, and a mutation happens shortly afterwards. The start of the mutation cancels the query. Then, a second mutation starts. When the first mutation finishes, it doesn't invalidate, because it sees another mutation being active.](./limited-invalidations.png)
 
 It's pretty resilient. Thanks' to query cancellation and limited invalidations, we should never see a flickering UI that shows an inconsistent state. 🙌
 
