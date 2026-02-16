@@ -26,11 +26,15 @@ export default defineConfig({
   trailingSlash: "never",
   site: SITE.url,
   integrations: [
-    sentry({
-      org: process.env.SENTRY_ORG,
-      project: process.env.SENTRY_PROJECT,
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-    }),
+    ...(process.env.NODE_ENV === "production"
+      ? [
+          sentry({
+            org: process.env.SENTRY_ORG,
+            project: process.env.SENTRY_PROJECT,
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+          }),
+        ]
+      : []),
     expressiveCode(),
     mdx(),
     sitemap(),

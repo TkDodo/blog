@@ -1,7 +1,15 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import ballingtImage from "@assets/sponsors/ballingt.jpg";
+import monoLisaImage from "@assets/sponsors/monolisa.jpeg";
+import reactBricksImage from "@assets/sponsors/reactbricks.svg";
+import workflowGenImage from "@assets/sponsors/workflowgen.png";
+
 type Sponsor = {
   name: string;
   url: string;
-  image: string;
+  image: string | ImageMetadata;
   tier: string;
   imageAlt?: string;
 };
@@ -28,13 +36,13 @@ const sponsors: Sponsor[] = [
   {
     name: "React Bricks",
     url: "https://reactbricks.com/",
-    image: "/images/reactbricks.svg",
+    image: reactBricksImage,
     tier: "🥉 Bronze",
   },
   {
     name: "WorkflowGen",
     url: "https://www.workflowgen.com/",
-    image: "/images/workflowgen.png",
+    image: workflowGenImage,
     tier: "🥳 Sponsor",
   },
   {
@@ -46,7 +54,7 @@ const sponsors: Sponsor[] = [
   {
     name: "MonoLisa",
     url: "https://www.monolisa.dev/?ref=dominik",
-    image: "/images/monolisa.jpeg",
+    image: monoLisaImage,
     tier: "🥳 Sponsor",
   },
   {
@@ -76,7 +84,7 @@ const sponsors: Sponsor[] = [
   {
     name: "Thomas Ballinger",
     url: "https://ballingt.com",
-    image: "/images/ballingt.jpg",
+    image: ballingtImage,
     tier: "🎗 Supporter",
   },
   {
@@ -99,51 +107,53 @@ const sponsors: Sponsor[] = [
     tier: "🪙 Custom",
   },
 ];
+---
 
-const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+<div>
+  <a
+    href="https://github.com/sponsors/TkDodo"
+    target="_blank"
+    rel="noreferrer noopener"
+    class="text-primary hover:underline"
+  >
+    <h3 class="text-2xl font-semibold">🎗 Sponsor me on Github 🎗</h3>
+  </a>
 
-const withBasePath = (url: string) =>
-  url.startsWith("/") ? `${basePath}${url}` : url;
-
-export default function Sponsors() {
-  return (
-    <div>
-      <a
-        href="https://github.com/sponsors/TkDodo"
-        target="_blank"
-        rel="noreferrer noopener"
-        className="text-primary hover:underline"
-      >
-        <h3 className="text-2xl font-semibold">🎗 Sponsor me on Github 🎗</h3>
-      </a>
-
-      <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-5">
-        {sponsors.map((sponsor) => (
-          <article
-            key={sponsor.name}
-            className="w-full max-w-[28rem] lg:max-w-none mx-auto rounded-lg border border-border bg-bg p-4"
+  <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-5">
+    {
+      sponsors.map((sponsor) => (
+        <article
+          class="w-full max-w-[28rem] lg:max-w-none mx-auto rounded-lg border border-border bg-bg p-4"
+        >
+          <a
+            href={sponsor.url}
+            target="_blank"
+            rel="noreferrer noopener"
+            class="block hover:no-underline"
           >
-            <a
-              href={sponsor.url}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="block hover:no-underline"
-            >
-              <h2 className="text-xl md:text-2xl font-semibold text-text">
-                {sponsor.name}
-              </h2>
+            <h2 class="text-xl md:text-2xl font-semibold text-text">
+              {sponsor.name}
+            </h2>
+            {typeof sponsor.image === "string" ? (
               <img
-                src={withBasePath(sponsor.image)}
+                src={sponsor.image}
                 alt={sponsor.imageAlt ?? sponsor.name}
                 height={300}
                 loading="lazy"
-                className="mt-3 w-full h-auto rounded-md bg-white"
+                class="mt-3 w-full h-auto rounded-md bg-white"
               />
-            </a>
-            <p className="mt-3 text-subtle">{sponsor.tier}</p>
-          </article>
-        ))}
-      </div>
-    </div>
-  );
-}
+            ) : (
+              <Image
+                src={sponsor.image}
+                alt={sponsor.imageAlt ?? sponsor.name}
+                loading="lazy"
+                class="mt-3 w-full h-auto rounded-md bg-white"
+              />
+            )}
+          </a>
+          <p class="mt-3 text-subtle">{sponsor.tier}</p>
+        </article>
+      ))
+    }
+  </div>
+</div>
