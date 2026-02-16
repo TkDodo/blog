@@ -1,0 +1,162 @@
+:root {
+  color-scheme: dark;
+  --g-bg: #1a202c;
+  --g-panel: #2d3748;
+  --g-border: rgba(160, 174, 192, 0.26);
+  --g-text: #cbd5e0;
+  --g-muted: #a0aec0;
+  --g-primary: #76c2af;
+  --g-code-bg: #0f172a;
+  --g-code-border: rgba(160, 174, 192, 0.22);
+  --color-canvas-default: var(--g-bg);
+  --color-canvas-subtle: var(--g-panel);
+  --color-bg-default: var(--g-bg);
+  --color-bg-primary: var(--g-panel);
+  --color-border-default: var(--g-border);
+  --color-border-muted: var(--g-border);
+  --color-border-primary: var(--g-border);
+  --color-fg-default: var(--g-text);
+  --color-fg-muted: var(--g-muted);
+  --color-accent-fg: var(--g-primary);
+}
+
+html,
+body,
+main {
+  background: var(--g-bg) !important;
+  color: var(--g-text) !important;
+}
+
+.gsc-main,
+.gsc-comment-box,
+.gsc-timeline,
+.gsc-comment,
+.gsc-replies,
+.gsc-reply-box,
+.gsc-homepage-bg,
+.gsc-header {
+  background: transparent !important;
+  color: var(--g-text) !important;
+}
+
+.gsc-comment,
+.gsc-reply-box,
+.gsc-comment-box,
+.gsc-replies {
+  border-color: var(--g-border) !important;
+}
+
+.gsc-comment-box,
+.gsc-comment-box-tabs,
+.gsc-reply-box,
+.gsc-comment .gsc-comment-box,
+.gsc-comment .gsc-reply-box,
+textarea,
+input {
+  background: var(--g-panel) !important;
+  color: var(--g-text) !important;
+  border-color: var(--g-border) !important;
+}
+
+::placeholder {
+  color: var(--g-muted) !important;
+}
+
+a,
+.gsc-comment-content a,
+.gsc-comment-author a,
+.gsc-social-reaction-summary-item-count {
+  color: var(--g-primary) !important;
+}
+
+a:hover,
+.gsc-comment-content a:hover,
+.gsc-comment-author a:hover {
+  text-decoration: underline;
+}
+
+.gsc-comment-content,
+.gsc-comment-author,
+.gsc-comment-time,
+.gsc-reply-author,
+.gsc-homepage,
+.gsc-social-reaction-summary-item {
+  color: var(--g-text) !important;
+}
+
+.gsc-comment-time,
+.gsc-reply-author,
+.gsc-homepage {
+  color: var(--g-muted) !important;
+}
+
+.btn,
+.gsc-comment-box-button,
+.gsc-reply-button,
+.gsc-quote-button,
+.gsc-social-reaction-summary-item {
+  border-color: var(--g-border) !important;
+  color: var(--g-text) !important;
+  background: var(--g-bg) !important;
+}
+
+.btn.btn-primary,
+.gsc-comment-box-button.btn-primary {
+  background: var(--g-primary) !important;
+  border-color: var(--g-primary) !important;
+  color: #0d141f !important;
+}
+
+.btn:hover,
+.gsc-comment-box-button:hover,
+.gsc-reply-button:hover,
+.gsc-quote-button:hover {
+  border-color: var(--g-primary) !important;
+}
+
+.gsc-loading-image,
+.gsc-loading-image-placeholder {
+  background: var(--g-panel) !important;
+}
+
+hr {
+  border-color: var(--g-border) !important;
+}
+
+.gsc-comment-content pre,
+.gsc-comment-content code {
+  background: var(--g-code-bg) !important;
+  border-color: var(--g-code-border) !important;
+}
+
+.gsc-comment-content code:not(pre code) {
+  color: #cbd5e0 !important;
+}
+
+/* GitHub syntax tokens */
+.gsc-comment-content .pl-c,
+.gsc-comment-content .pl-c span {
+  color: #8b949e !important;
+}
+.gsc-comment-content .pl-k,
+.gsc-comment-content .pl-k span {
+  color: #c792ea !important;
+}
+.gsc-comment-content .pl-en,
+.gsc-comment-content .pl-ent,
+.gsc-comment-content .pl-e,
+.gsc-comment-content .pl-c1,
+.gsc-comment-content .pl-s1,
+.gsc-comment-content .pl-s2 {
+  color: #82aaff !important;
+}
+.gsc-comment-content .pl-s,
+.gsc-comment-content .pl-pds,
+.gsc-comment-content .pl-v {
+  color: #ecc48d !important;
+}
+.gsc-comment-content .pl-mi,
+.gsc-comment-content .pl-mf,
+.gsc-comment-content .pl-mh {
+  color: #f78c6c !important;
+}

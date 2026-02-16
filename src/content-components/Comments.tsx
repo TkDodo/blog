@@ -80,6 +80,13 @@ export default function Comments({ withSeparator = true }: CommentsProps) {
 
             const getTheme = () =>
               document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+            const getThemeUrl = () => {
+              const origin = window.location.origin;
+              const giscusBasePath = ${JSON.stringify(basePath)};
+              const mode = getTheme();
+              const file = mode === "dark" ? "giscus-dark.css?v=4" : "giscus-light.css?v=4";
+              return origin + giscusBasePath + "/" + file;
+            };
 
             const updateReferral = () => {
               const path = window.location.pathname;
@@ -112,7 +119,7 @@ export default function Comments({ withSeparator = true }: CommentsProps) {
               script.setAttribute("data-reactions-enabled", "1");
               script.setAttribute("data-emit-metadata", "0");
               script.setAttribute("data-input-position", "top");
-              script.setAttribute("data-theme", getTheme());
+              script.setAttribute("data-theme", getThemeUrl());
               script.setAttribute("data-lang", "en");
               giscusRoot.appendChild(script);
             };
@@ -121,7 +128,7 @@ export default function Comments({ withSeparator = true }: CommentsProps) {
               const iframe = document.querySelector("iframe.giscus-frame");
               if (!iframe || !iframe.contentWindow) return;
               iframe.contentWindow.postMessage(
-                { giscus: { setConfig: { theme: getTheme() } } },
+                { giscus: { setConfig: { theme: getThemeUrl() } } },
                 "https://giscus.app"
               );
             };
