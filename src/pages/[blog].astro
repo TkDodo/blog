@@ -48,6 +48,13 @@ const postBanner = (() => {
 
   return banners[key] ?? null;
 })();
+const POST_BANNER_MAX_WIDTH = 760;
+const postBannerRenderWidth = postBanner
+  ? Math.min(postBanner.width, POST_BANNER_MAX_WIDTH)
+  : POST_BANNER_MAX_WIDTH;
+const postBannerRenderHeight = postBanner
+  ? Math.round((postBanner.height / postBanner.width) * postBannerRenderWidth)
+  : Math.round((2 / 3) * POST_BANNER_MAX_WIDTH);
 const ogImagePath = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/og-images/${postSlug}.png`;
 ---
 
@@ -96,6 +103,11 @@ const ogImagePath = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/og-images/${
             <Image
               src={postBanner}
               alt={post.title}
+              width={postBannerRenderWidth}
+              height={postBannerRenderHeight}
+              sizes="(max-width: 768px) calc(100vw - 2rem), 760px"
+              loading="eager"
+              fetchpriority="high"
               class="rounded-lg mx-auto"
             />
             <Spacer axis="vertical" size={8} />

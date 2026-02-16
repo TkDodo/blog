@@ -121,6 +121,9 @@ const premiumSponsors: PremiumSponsor[] = [
       <div aria-hidden="true" class="pointer-events-none absolute inset-0">
         <Image
           src={wallpaperImage}
+          width={479}
+          height={276}
+          sizes="(max-width: 767px) calc(100vw - 2.5rem), 479px"
           alt="TkDodo on stage at the React Advanced Conference 2024"
           class="h-full w-full object-cover opacity-40 dark:opacity-20"
           loading="eager"
@@ -149,6 +152,9 @@ const premiumSponsors: PremiumSponsor[] = [
             <div class="shrink-0 md:hidden">
               <Image
                 src={profileImage}
+                width={56}
+                height={56}
+                sizes="56px"
                 alt="Portrait of Dominik (TkDodo)"
                 class="h-14 w-14 rounded-full object-cover ring-1 ring-border"
                 loading="eager"
@@ -193,6 +199,9 @@ const premiumSponsors: PremiumSponsor[] = [
         <div class="mx-auto hidden w-full max-w-[17rem] md:block md:max-w-none">
           <Image
             src={profileImage}
+            width={304}
+            height={304}
+            sizes="304px"
             alt="Portrait of Dominik (TkDodo)"
             class="aspect-square w-full rounded-3xl object-cover ring-1 ring-border"
             loading="eager"
