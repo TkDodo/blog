@@ -1,0 +1,13 @@
+---
+import { Image } from "astro:assets";
+import queryGGImage from "@assets/query-gg.jpg";
+---
+
+<a href="https://query.gg/?s=dom" target="_blank" rel="noopener noreferrer">
+  <Image
+    src={queryGGImage}
+    alt="Query.gg - The official React Query course"
+    loading="lazy"
+    class="w-full rounded-lg"
+  />
+</a>

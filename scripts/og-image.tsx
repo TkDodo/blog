@@ -56,7 +56,7 @@ async function generateOgImage(
   const format = getImageFormat(frontmatter.banner);
   const base64Banner = resizedBanner.toString("base64");
   const avatar = await fs.readFile(
-    path.join(process.cwd(), "public", "images", "profile.jpg"),
+    path.join(process.cwd(), "src", "assets", "profile-og.jpg"),
   );
   const avatarDataUri = `data:image/jpeg;base64,${avatar.toString("base64")}`;
 
