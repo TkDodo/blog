@@ -95,5 +95,7 @@ onThemeChange('auto')
       });
     }
   }
-  customElements.define("atmb-theme-select", AtmbThemeSelect);
+  if (!customElements.get("atmb-theme-select")) {
+    customElements.define("atmb-theme-select", AtmbThemeSelect);
+  }
 </script>
