@@ -64,6 +64,7 @@ input {
 
 a,
 .gsc-comment-content a,
+.gsc-reply-content a,
 .gsc-comment-author a,
 .gsc-social-reaction-summary-item-count {
   color: var(--g-primary) !important;
@@ -71,11 +72,13 @@ a,
 
 a:hover,
 .gsc-comment-content a:hover,
+.gsc-reply-content a:hover,
 .gsc-comment-author a:hover {
   text-decoration: underline;
 }
 
 .gsc-comment-content,
+.gsc-reply-content,
 .gsc-comment-author,
 .gsc-comment-time,
 .gsc-reply-author,
@@ -183,22 +186,29 @@ hr {
 }
 
 .gsc-comment-content pre,
-.gsc-comment-content code {
+.gsc-comment-content code,
+.gsc-reply-content pre,
+.gsc-reply-content code {
   background: var(--g-code-bg) !important;
   border-color: var(--g-code-border) !important;
 }
 
-.gsc-comment-content code:not(pre code) {
+.gsc-comment-content code:not(pre code),
+.gsc-reply-content code:not(pre code) {
   color: #cbd5e0 !important;
 }
 
 /* GitHub syntax tokens */
 .gsc-comment-content .pl-c,
-.gsc-comment-content .pl-c span {
+.gsc-comment-content .pl-c span,
+.gsc-reply-content .pl-c,
+.gsc-reply-content .pl-c span {
   color: #8b949e !important;
 }
 .gsc-comment-content .pl-k,
-.gsc-comment-content .pl-k span {
+.gsc-comment-content .pl-k span,
+.gsc-reply-content .pl-k,
+.gsc-reply-content .pl-k span {
   color: #c792ea !important;
 }
 .gsc-comment-content .pl-en,
@@ -206,16 +216,28 @@ hr {
 .gsc-comment-content .pl-e,
 .gsc-comment-content .pl-c1,
 .gsc-comment-content .pl-s1,
-.gsc-comment-content .pl-s2 {
+.gsc-comment-content .pl-s2,
+.gsc-reply-content .pl-en,
+.gsc-reply-content .pl-ent,
+.gsc-reply-content .pl-e,
+.gsc-reply-content .pl-c1,
+.gsc-reply-content .pl-s1,
+.gsc-reply-content .pl-s2 {
   color: #82aaff !important;
 }
 .gsc-comment-content .pl-s,
 .gsc-comment-content .pl-pds,
-.gsc-comment-content .pl-v {
+.gsc-comment-content .pl-v,
+.gsc-reply-content .pl-s,
+.gsc-reply-content .pl-pds,
+.gsc-reply-content .pl-v {
   color: #ecc48d !important;
 }
 .gsc-comment-content .pl-mi,
 .gsc-comment-content .pl-mf,
-.gsc-comment-content .pl-mh {
+.gsc-comment-content .pl-mh,
+.gsc-reply-content .pl-mi,
+.gsc-reply-content .pl-mf,
+.gsc-reply-content .pl-mh {
   color: #f78c6c !important;
 }
