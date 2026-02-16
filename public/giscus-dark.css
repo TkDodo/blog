@@ -166,7 +166,16 @@ a:hover,
 
 .gsc-loading-image,
 .gsc-loading-image-placeholder {
-  background: var(--g-panel) !important;
+  background: color-mix(in srgb, var(--g-panel) 88%, var(--g-bg)) !important;
+  border: 1px solid var(--g-border) !important;
+}
+
+.gsc-loading-image {
+  border-radius: 9999px !important;
+}
+
+.gsc-loading-image-placeholder {
+  border-radius: 0.5rem !important;
 }
 
 hr {
