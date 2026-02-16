@@ -29,7 +29,7 @@ export const HEADER: Header = {
     { title: "Blog", url: "/all" },
     { title: "Tags", url: "/tags" },
     { title: "Sponsors", url: "/sponsors" },
-    { title: "RSS Feed", url: "/rss.xml" },
+    { title: "Rss", url: "/rss.xml" },
   ],
   external: [
     {
