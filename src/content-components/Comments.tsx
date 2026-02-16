@@ -82,7 +82,7 @@ export default function Comments({ withSeparator = true }: CommentsProps) {
               document.documentElement.dataset.theme === "dark" ? "dark" : "light";
             const getThemeUrl = () => {
               const origin = window.location.origin;
-              const giscusBasePath = ${JSON.stringify(basePath)};
+              const giscusBasePath = "${basePath}";
               const mode = getTheme();
               const file = mode === "dark" ? "giscus-dark.css?v=10" : "giscus-light.css?v=10";
               return origin + giscusBasePath + "/" + file;
