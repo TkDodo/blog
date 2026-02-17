@@ -166,12 +166,24 @@ export const hsSeriesItems = [
   },
 ] as const satisfies ReadonlyArray<SeriesItem>;
 
+export const rcSeriesItems = [
+  {
+    id: "avoiding-use-effect-with-callback-refs",
+    title: "#1: Avoiding useEffect with callback refs",
+  },
+  {
+    id: "ref-callbacks-react-19-and-the-compiler",
+    title: "#2: Ref Callbacks, React 19 and the Compiler",
+  },
+] as const satisfies ReadonlyArray<SeriesItem>;
+
 export const seriesByToc = {
   RqToc: rqSeriesItems,
   DsToc: dsSeriesItems,
   UsToc: usSeriesItems,
   TsrToc: tsrSeriesItems,
   HsToc: hsSeriesItems,
+  RcToc: rcSeriesItems,
 } as const;
 
 export type TocName = keyof typeof seriesByToc;
