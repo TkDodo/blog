@@ -74,9 +74,18 @@ const config = {
   </div>
 
   <div class="giscus" />
-  <script define:vars={{ config, baseUrl: import.meta.env.BASE_URL }}>
+  <script
+    is:inline
+    data-astro-rerun
+    define:vars={{ config, baseUrl: import.meta.env.BASE_URL }}
+  >
     (() => {
-      const giscusRoot = document.querySelector(".giscus");
+      const scriptEl = document.currentScript;
+      const section =
+        scriptEl instanceof HTMLScriptElement
+          ? scriptEl.closest("section")
+          : null;
+      const giscusRoot = section?.querySelector(".giscus");
       if (!giscusRoot) return;
 
       const getTheme = () =>
