@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import Emph from "./Emph";
 import type { ColorVariant } from "./color-variant";
 
 type Props = {
@@ -80,7 +79,7 @@ export default function Aside({
       className={`text-text border-l-[6px] rounded-lg p-4 my-5 overflow-hidden bg-border ${borderClass}`}
     >
       <div className={`flex items-center justify-between ${headerClass}`}>
-        {title ? <Emph color={color}>{title}</Emph> : null}
+        {title ? <span className="tracking-[0.05em] font-bold">{title}</span> : null}
         <Icon />
       </div>
       <div>{children}</div>
