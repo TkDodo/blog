@@ -7,15 +7,17 @@ type Props = {
 };
 
 export default function Emph({ color = "primary", children }: Props) {
-  const colorClass =
+  const styleClass =
     color === "danger"
-      ? "text-danger"
+      ? "text-danger bg-danger/12"
       : color === "warning"
-        ? "text-warning"
-        : "text-primary";
+        ? "text-warning bg-warning/12"
+        : "text-primary bg-primary/12";
 
   return (
-    <span className={`tracking-[0.05em] font-bold ${colorClass}`}>
+    <span
+      className={`inline rounded-[0.28em] px-[0.28em] py-[0.08em] font-semibold not-italic tracking-normal ${styleClass}`}
+    >
       {children}
     </span>
   );
