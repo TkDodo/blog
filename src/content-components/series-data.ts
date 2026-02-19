@@ -177,6 +177,25 @@ export const rcSeriesItems = [
   },
 ] as const satisfies ReadonlyArray<SeriesItem>;
 
+export const rtrSeriesItems = [
+  {
+    id: "road-to-refactoring",
+    title: "#1: Don't mix refactorings with hotfixes",
+  },
+  {
+    id: "always-provide-customer-value",
+    title: "#2: Always provide customer value",
+  },
+  {
+    id: "use-urgency",
+    title: "#3: Use urgency",
+  },
+  {
+    id: "refactor-impactfully",
+    title: "#4: Refactor impactfully",
+  },
+] as const satisfies ReadonlyArray<SeriesItem>;
+
 export const seriesByToc = {
   RqToc: rqSeriesItems,
   DsToc: dsSeriesItems,
@@ -184,6 +203,7 @@ export const seriesByToc = {
   TsrToc: tsrSeriesItems,
   HsToc: hsSeriesItems,
   RcToc: rcSeriesItems,
+  RtrToc: rtrSeriesItems,
 } as const;
 
 export type TocName = keyof typeof seriesByToc;
