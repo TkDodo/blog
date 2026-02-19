@@ -8,6 +8,7 @@ import OgImageTemplate from "./og-image-template";
 type Frontmatter = {
   title?: string;
   banner?: string;
+  tags?: string[];
 };
 
 function getImageFormat(bannerPath: string): "png" | "jpeg" {
@@ -36,14 +37,28 @@ async function generateOgImage(
     return;
   }
 
+  const tags = Array.isArray(frontmatter.tags)
+    ? frontmatter.tags.filter((tag): tag is string => typeof tag === "string")
+    : [];
+  const tagsLine =
+    tags.length > 0
+      ? tags
+          .map((tag) => tag.trim())
+          .filter(Boolean)
+          .slice(0, 3)
+          .join(" • ")
+      : "React • TypeScript • TanStack";
+
   const bannerPath = path.join(postsRoot, slug, frontmatter.banner);
   const banner = await fs.readFile(bannerPath);
   const metadata = await sharp(banner).metadata();
+  const orientation =
+    metadata.width && metadata.height && metadata.width >= metadata.height
+      ? "landscape"
+      : "portrait";
 
   const resizeProps =
-    metadata.width && metadata.height && metadata.width > metadata.height
-      ? { width: 700 }
-      : { height: 500 };
+    orientation === "landscape" ? { width: 760 } : { height: 420 };
 
   const resizedBanner = await sharp(banner)
     .resize({
@@ -64,6 +79,8 @@ async function generateOgImage(
     <OgImageTemplate
       title={frontmatter.title}
       avatarSrc={avatarDataUri}
+      orientation={orientation}
+      tagsLine={tagsLine}
       img={{
         src: `data:image/${format};base64,${base64Banner}`,
         width: resizedMetadata.width ?? 700,
