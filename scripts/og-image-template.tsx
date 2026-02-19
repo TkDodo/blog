@@ -5,6 +5,7 @@ type Props = {
   avatarSrc: string;
   orientation: "landscape" | "portrait";
   tagsLine: string;
+  dateLabel: string;
   img: {
     src: string;
     width: number;
@@ -17,6 +18,7 @@ export default function OgImageTemplate({
   avatarSrc,
   orientation,
   tagsLine,
+  dateLabel,
   img,
 }: Props) {
   const isPortrait = orientation === "portrait";
@@ -98,12 +100,11 @@ export default function OgImageTemplate({
               display: "flex",
               fontSize: 24,
               color: "#76c2af",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
+              letterSpacing: "0.04em",
               fontWeight: 600,
             }}
           >
-            New Post
+            {dateLabel}
           </div>
         </div>
 
