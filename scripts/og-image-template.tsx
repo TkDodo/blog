@@ -190,7 +190,7 @@ export default function OgImageTemplate({
               fontWeight: 500,
               display: "flex",
               alignItems: "center",
-              color: "#e6edf6",
+              color: "#76c2af",
             }}
           >
             <img
@@ -207,7 +207,7 @@ export default function OgImageTemplate({
             by
             <span
               style={{
-                color: "#e6edf6",
+                color: "#76c2af",
                 fontWeight: 600,
                 marginLeft: 8,
               }}
