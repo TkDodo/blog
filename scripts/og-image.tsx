@@ -8,7 +8,49 @@ import OgImageTemplate from "./og-image-template";
 type Frontmatter = {
   title?: string;
   banner?: string;
+  tags?: string[];
+  date?: string | Date;
 };
+
+function toDateLabel(date: string | Date | undefined): string {
+  if (!date) return "";
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ] as const;
+
+  if (date instanceof Date && !Number.isNaN(date.getTime())) {
+    return `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
+  }
+
+  const raw = String(date).trim();
+  const isoPrefixMatch = raw.match(/^(\d{4}-\d{2}-\d{2})/);
+  if (isoPrefixMatch) {
+    const [yearString, monthString] = isoPrefixMatch[1].split("-");
+    const year = Number.parseInt(yearString, 10);
+    const month = Number.parseInt(monthString, 10);
+    if (month >= 1 && month <= 12) {
+      return `${monthNames[month - 1]} ${year}`;
+    }
+  }
+
+  const parsed = new Date(raw);
+  if (!Number.isNaN(parsed.getTime())) {
+    return `${monthNames[parsed.getUTCMonth()]} ${parsed.getUTCFullYear()}`;
+  }
+
+  return "";
+}
 
 function getImageFormat(bannerPath: string): "png" | "jpeg" {
   const ext = path.extname(bannerPath).toLowerCase();
@@ -36,14 +78,29 @@ async function generateOgImage(
     return;
   }
 
+  const tags = Array.isArray(frontmatter.tags)
+    ? frontmatter.tags.filter((tag): tag is string => typeof tag === "string")
+    : [];
+  const tagsLine =
+    tags.length > 0
+      ? tags
+          .map((tag) => tag.trim())
+          .filter(Boolean)
+          .slice(0, 3)
+          .join(" • ")
+      : "React • TypeScript • TanStack";
+  const dateLabel = toDateLabel(frontmatter.date);
+
   const bannerPath = path.join(postsRoot, slug, frontmatter.banner);
   const banner = await fs.readFile(bannerPath);
   const metadata = await sharp(banner).metadata();
+  const orientation =
+    metadata.width && metadata.height && metadata.width >= metadata.height
+      ? "landscape"
+      : "portrait";
 
   const resizeProps =
-    metadata.width && metadata.height && metadata.width > metadata.height
-      ? { width: 700 }
-      : { height: 500 };
+    orientation === "landscape" ? { width: 760 } : { height: 420 };
 
   const resizedBanner = await sharp(banner)
     .resize({
@@ -64,6 +121,9 @@ async function generateOgImage(
     <OgImageTemplate
       title={frontmatter.title}
       avatarSrc={avatarDataUri}
+      orientation={orientation}
+      tagsLine={tagsLine}
+      dateLabel={dateLabel}
       img={{
         src: `data:image/${format};base64,${base64Banner}`,
         width: resizedMetadata.width ?? 700,

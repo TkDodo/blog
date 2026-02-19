@@ -4,8 +4,8 @@ description: A blogpost series about patterns that have helped me succeed with r
 date: 2022-01-22
 banner: ./road.jpeg
 tags:
-  - principles
-  - road to refactoring
+  - Principles
+  - Road to Refactoring
 ---
 
 import Comments from "components/Comments.astro";
@@ -13,13 +13,11 @@ import Highlight from "components/Highlight";
 import Attribution from "components/Attribution";
 import Translations from "components/Translations";
 import Tweet, { AvatarTkDodo } from "components/Tweet";
+import { RtrToc } from "components/rtr-toc";
 
 <Attribution name="Jesse Bowser" url="https://unsplash.com/@jessebowser" />
 
-- <b>#1: Don't mix refactorings with hotfixes</b>
-- [#2: Always provide customer value](always-provide-customer-value)
-- [#3: Use urgency](use-urgency)
-- [#4: Refactor impactfully](refactor-impactfully)
+<RtrToc id="road-to-refactoring" />
 
 <Translations translations={[]} />
 
