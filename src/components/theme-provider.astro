@@ -33,13 +33,26 @@ select.value = theme
           const newIcon = tmpl && tmpl.content.querySelector(`.${theme}`);
           if (newIcon) {
             const oldIcon = picker.querySelector("svg.label-icon");
-            if (oldIcon) {
+            // Ensure oldIcon is a proper Element node before attempting to update it
+            if (oldIcon && oldIcon.nodeType === 1) {
               // Filter to only element nodes to avoid inserting text nodes into SVG
               const clonedIcon = newIcon.cloneNode(true);
               const elementChildren = Array.from(clonedIcon.childNodes).filter(
                 (node) => node.nodeType === 1
               );
-              oldIcon.replaceChildren(...elementChildren);
+              
+              // Use replaceChildren if available, otherwise fallback to manual DOM manipulation
+              if (typeof oldIcon.replaceChildren === 'function') {
+                oldIcon.replaceChildren(...elementChildren);
+              } else {
+                // Fallback for browsers/edge cases where replaceChildren is not available
+                while (oldIcon.firstChild) {
+                  oldIcon.removeChild(oldIcon.firstChild);
+                }
+                elementChildren.forEach((child) => {
+                  oldIcon.appendChild(child);
+                });
+              }
             }
           }
         });
