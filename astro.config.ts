@@ -2,9 +2,9 @@ import type { Options as AutolinkHeadingsOptions } from "rehype-autolink-heading
 import type { Options as ExternalLinkOptions } from "rehype-external-links";
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
-import sentry from "@sentry/astro";
 import sitemap from "@astrojs/sitemap";
 import remarkSandpack from "@lekoarts/remark-sandpack";
+import sentry from "@sentry/astro";
 import tailwindcss from "@tailwindcss/vite";
 import { imageService } from "@unpic/astro/service";
 import expressiveCode from "astro-expressive-code";
