@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 import SmallCentered from "./SmallCentered";
 
-type Props = {
+interface Props {
   name?: string;
   url?: string;
   prefix?: string;
   children?: ReactNode;
-};
+}
 
 export default function Attribution({
   name,

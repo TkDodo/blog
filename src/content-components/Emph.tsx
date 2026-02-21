@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
 import type { ColorVariant } from "./color-variant";
 
-type Props = {
+interface Props {
   color?: ColorVariant;
   children?: ReactNode;
-};
+}
 
 export default function Emph({ color = "primary", children }: Props) {
   const styleClass =

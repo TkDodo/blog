@@ -9,4 +9,8 @@ export default antfu({
     rules: {
       "node/prefer-global/process": "off",
     },
-  }).append(eslintConfigPrettier);
+  })
+  .append(eslintConfigPrettier)
+  .append({
+    ignores: ["public/sw.js"],
+  });

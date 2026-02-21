@@ -1,6 +1,6 @@
 import * as React from "react";
 
-type Props = {
+interface Props {
   title: string;
   avatarSrc: string;
   orientation: "landscape" | "portrait";
@@ -11,7 +11,7 @@ type Props = {
     width: number;
     height: number;
   };
-};
+}
 
 export default function OgImageTemplate({
   title,

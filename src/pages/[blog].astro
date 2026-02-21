@@ -1,26 +1,27 @@
 ---
-import { getCollection, render } from "astro:content";
-import Seo from "@components/seo.astro";
-import Layout from "@layouts/layout.astro";
+import type {TocName} from "components/series-data";
+import SkipNavContent from "@components/a11y/skip-nav-content.astro";
+import Aside from "@components/aside.astro";
+import Link from "@components/link.astro";
+import Playground from "@components/playground.astro";
+import ProgressiveImage from "@components/progressive-image.astro";
 import Prose from "@components/prose.astro";
+import Seo from "@components/seo.astro";
+import Spacer from "@components/spacer.astro";
+import TagLinks from "@components/tag-links.astro";
 import { SITE } from "@constants";
+import Layout from "@layouts/layout.astro";
 import {
   defaultDateFormat,
   getPostSlug,
   isoDateFormat,
   sortAsc,
 } from "@utils";
-import SkipNavContent from "@components/a11y/skip-nav-content.astro";
-import Spacer from "@components/spacer.astro";
-import Aside from "@components/aside.astro";
-import TagLinks from "@components/tag-links.astro";
-import Playground from "@components/playground.astro";
-import ProgressiveImage from "@components/progressive-image.astro";
-import Link from "@components/link.astro";
-import { seriesByToc, type TocName } from "components/series-data";
-import RepoData from "components/RepoData";
-import Suspense from "components/Suspense";
+import { getCollection, render } from "astro:content";
 import ErrorBoundary from "components/ErrorBoundary";
+import RepoData from "components/RepoData";
+import { seriesByToc  } from "components/series-data";
+import Suspense from "components/Suspense";
 
 export async function getStaticPaths() {
   const entries = await getCollection("blog");
@@ -42,7 +43,7 @@ const { Content } = await render(entry);
 
 const allPosts = sortAsc(await getCollection("blog"));
 const detectedToc = entry.body
-  ?.match(/\<(RqToc|DsToc|UsToc|TsrToc|HsToc|RcToc|RtrToc)\b/)?.[1] as
+  ?.match(/<(RqToc|DsToc|UsToc|TsrToc|HsToc|RcToc|RtrToc)\b/)?.[1] as
   | TocName
   | undefined;
 const seriesItems = detectedToc ? seriesByToc[detectedToc] : null;

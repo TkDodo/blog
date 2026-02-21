@@ -1,6 +1,6 @@
-type Props = {
+interface Props {
   height?: string;
-};
+}
 
 export function VerticalRuler({ height = "4rem" }: Props) {
   const heightClass =

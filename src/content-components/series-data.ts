@@ -1,7 +1,7 @@
-type SeriesItem = {
+interface SeriesItem {
   id: string;
   title: string;
-};
+}
 
 export const rqSeriesItems = [
   { id: "practical-react-query", title: "#1: Practical React Query" },

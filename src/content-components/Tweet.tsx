@@ -1,5 +1,5 @@
-import { isValidElement, type ReactNode } from "react";
-import tkdodoAvatar from "../assets/profile.jpg";
+import type {ReactNode} from "react";
+import { isValidElement  } from "react";
 import acdliteAvatar from "../assets/avatars/acdlite.jpg";
 import acemarkeAvatar from "../assets/avatars/acemarke.jpeg";
 import alexdotjsAvatar from "../assets/avatars/alexdotjs.jpg";
@@ -16,24 +16,25 @@ import ryanflorenceAvatar from "../assets/avatars/ryanflorence.jpeg";
 import sathyaAvatar from "../assets/avatars/sathya.jpg";
 import sophiebitsAvatar from "../assets/avatars/sophiebits.jpeg";
 import swyxAvatar from "../assets/avatars/swyx.jpeg";
-import t3dotggAvatar from "../assets/avatars/theo_twitter.jpg";
 import tannerlinsleyAvatar from "../assets/avatars/tannerlinsley.jpeg";
+import t3dotggAvatar from "../assets/avatars/theo_twitter.jpg";
 import willmcguganAvatar from "../assets/avatars/willmcgugan.jpeg";
-import EXx9RHYVAAUgegZImage from "../assets/tweets/EXx9RHYVAAUgegZ.jpeg";
-import FSJNvbJWUAIVEGBImage from "../assets/tweets/FSJNvbJWUAIVEGB.jpeg";
-import FVegS4nXwAQHskNImage from "../assets/tweets/FVegS4nXwAQHskN.jpeg";
-import Fcnj9l0XEAMnLdVImage from "../assets/tweets/Fcnj9l0XEAMnLdV.jpeg";
-import FxnXEGVX0AEeYAfImage from "../assets/tweets/FxnXEGVX0AEeYAf.jpeg";
-import GP724X0AANNKImage from "../assets/tweets/GP-724-X0AAN_NK.jpeg";
-import TanStackQueryV5Image from "../assets/tweets/TanStackQueryV5.png";
+import tkdodoAvatar from "../assets/profile.jpg";
 import bafkreiaImage from "../assets/tweets/bafkreiazq5owsx6neqzgvjquwenob6su4kgd7zzl3z5ytfq4oywwjwbis4.jpg";
 import eCqCxd4Image from "../assets/tweets/eC_qCxd4.jpeg";
+import EXx9RHYVAAUgegZImage from "../assets/tweets/EXx9RHYVAAUgegZ.jpeg";
+import Fcnj9l0XEAMnLdVImage from "../assets/tweets/Fcnj9l0XEAMnLdV.jpeg";
+import FSJNvbJWUAIVEGBImage from "../assets/tweets/FSJNvbJWUAIVEGB.jpeg";
+import FVegS4nXwAQHskNImage from "../assets/tweets/FVegS4nXwAQHskN.jpeg";
+import FxnXEGVX0AEeYAfImage from "../assets/tweets/FxnXEGVX0AEeYAf.jpeg";
+import GP724X0AANNKImage from "../assets/tweets/GP-724-X0AAN_NK.jpeg";
 import separationOfConcernsImage from "../assets/tweets/separation_of_concerns.jpeg";
+import TanStackQueryV5Image from "../assets/tweets/TanStackQueryV5.png";
 import v5390Image from "../assets/tweets/v5390.jpeg";
 
 type TweetType = "x" | "twitter" | "bsky";
 
-type Props = {
+interface Props {
   tweetId: string;
   handle: string;
   name: string;
@@ -41,7 +42,7 @@ type Props = {
   children?: ReactNode;
   date: Date | string;
   type?: TweetType;
-};
+}
 
 type ImportedImage = { src: string } | string;
 const imageSrc = (asset: ImportedImage): string =>

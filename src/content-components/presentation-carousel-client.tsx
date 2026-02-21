@@ -1,6 +1,6 @@
+import type { PresentationCarouselProps } from "./presentation-carousel-types";
 import * as React from "react";
 import { useSpringCarousel } from "react-spring-carousel";
-import type { PresentationCarouselProps } from "./presentation-carousel-types";
 
 export function PresentationCarouselClient({
   slides,

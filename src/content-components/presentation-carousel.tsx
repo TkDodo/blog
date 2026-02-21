@@ -1,5 +1,5 @@
-import * as React from "react";
 import type { PresentationCarouselProps } from "./presentation-carousel-types";
+import * as React from "react";
 
 export function PresentationCarousel(props: PresentationCarouselProps) {
   const [ClientCarousel, setClientCarousel] =

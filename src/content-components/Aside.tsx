@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 import type { ColorVariant } from "./color-variant";
 
-type Props = {
+interface Props {
   icon?: "bell" | "info" | "shield-alert" | "lightbulb";
   color?: ColorVariant;
   title?: string;
   children?: ReactNode;
-};
+}
 
 const Svg = ({ children }: { children: ReactNode }) => (
   <svg

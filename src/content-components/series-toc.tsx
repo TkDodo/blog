@@ -1,12 +1,12 @@
-type SeriesItem = {
+interface SeriesItem {
   id: string;
   title: string;
-};
+}
 
-type Props = {
+interface Props {
   id?: string;
   items: ReadonlyArray<SeriesItem>;
-};
+}
 
 export default function SeriesToc({ id, items }: Props) {
   if (!id) return null;

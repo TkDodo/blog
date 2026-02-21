@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 
-type SlideProps = {
+interface SlideProps {
   children: ReactNode;
   index: number;
-};
+}
 
 export function Slide({ children, index }: SlideProps) {
   const baseUrl = import.meta.env.BASE_URL.endsWith("/")
