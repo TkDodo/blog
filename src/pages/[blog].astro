@@ -12,6 +12,7 @@ import TagLinks from "@components/tag-links.astro";
 import { SITE } from "@constants";
 import Layout from "@layouts/layout.astro";
 import { defaultDateFormat, getPostSlug, isoDateFormat, sortAsc } from "@utils";
+import type { ImageMetadata } from "astro";
 import { getCollection, render } from "astro:content";
 import ErrorBoundary from "components/ErrorBoundary";
 import RepoData from "components/RepoData";
@@ -60,7 +61,7 @@ const nextSeriesPost = nextSeriesSlug
   : null;
 const hasTableOfContents = Boolean(detectedToc);
 
-const banners = import.meta.glob(
+const banners = import.meta.glob<ImageMetadata>(
   "/content/posts/**/*.{avif,gif,jpeg,jpg,png,webp}",
   {
     eager: true,
@@ -70,7 +71,7 @@ const banners = import.meta.glob(
 
 const getBannerForEntry = (
   blogEntry: (typeof allPosts)[number] | null | undefined,
-) => {
+): ImageMetadata | null => {
   if (!blogEntry?.filePath || !blogEntry.data.banner) return null;
 
   const basePath = blogEntry.filePath.replace(/\/index\.mdx$/, "/");
