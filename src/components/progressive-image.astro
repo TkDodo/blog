@@ -41,7 +41,10 @@ const placeholder = await getImage({
 });
 ---
 
-<div class:list={["relative overflow-hidden", wrapperClass]} style={wrapperStyle}>
+<div
+  class:list={["relative overflow-hidden", wrapperClass]}
+  style={wrapperStyle}
+>
   <img
     src={placeholder.src}
     alt={alt}

@@ -79,7 +79,9 @@ export default function Aside({
       className={`text-text border-l-[6px] rounded-lg p-4 my-5 overflow-hidden bg-border ${borderClass}`}
     >
       <div className={`flex items-center justify-between ${headerClass}`}>
-        {title ? <span className="tracking-[0.05em] font-bold">{title}</span> : null}
+        {title ? (
+          <span className="tracking-[0.05em] font-bold">{title}</span>
+        ) : null}
         <Icon />
       </div>
       <div>{children}</div>

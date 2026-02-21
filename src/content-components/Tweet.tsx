@@ -1,5 +1,5 @@
-import type {ReactNode} from "react";
-import { isValidElement  } from "react";
+import type { ReactNode } from "react";
+import { isValidElement } from "react";
 import acdliteAvatar from "../assets/avatars/acdlite.jpg";
 import acemarkeAvatar from "../assets/avatars/acemarke.jpeg";
 import alexdotjsAvatar from "../assets/avatars/alexdotjs.jpg";
@@ -234,10 +234,7 @@ export const QueryGGImage = () => (
   />
 );
 export const ADayOnTheOrangeSite = () => (
-  <TweetIllustration
-    src={bafkreiaImage}
-    alt="Unique visitor stats outlier"
-  />
+  <TweetIllustration src={bafkreiaImage} alt="Unique visitor stats outlier" />
 );
 export const CynicsVsBuilders = () => (
   <TweetIllustration src={EXx9RHYVAAUgegZImage} alt="Cynics vs Builders" />
@@ -249,7 +246,10 @@ export const SeparationOfConcerns = () => (
   />
 );
 export const UseEvent = () => (
-  <TweetIllustration src={FSJNvbJWUAIVEGBImage} alt="useEvent code screenshot" />
+  <TweetIllustration
+    src={FSJNvbJWUAIVEGBImage}
+    alt="useEvent code screenshot"
+  />
 );
 
 function normalizeType(type: TweetType): "x" | "bsky" {

@@ -1,5 +1,5 @@
 ---
-import type {TocName} from "components/series-data";
+import type { TocName } from "components/series-data";
 import SkipNavContent from "@components/a11y/skip-nav-content.astro";
 import Aside from "@components/aside.astro";
 import Link from "@components/link.astro";
@@ -11,16 +11,11 @@ import Spacer from "@components/spacer.astro";
 import TagLinks from "@components/tag-links.astro";
 import { SITE } from "@constants";
 import Layout from "@layouts/layout.astro";
-import {
-  defaultDateFormat,
-  getPostSlug,
-  isoDateFormat,
-  sortAsc,
-} from "@utils";
+import { defaultDateFormat, getPostSlug, isoDateFormat, sortAsc } from "@utils";
 import { getCollection, render } from "astro:content";
 import ErrorBoundary from "components/ErrorBoundary";
 import RepoData from "components/RepoData";
-import { seriesByToc  } from "components/series-data";
+import { seriesByToc } from "components/series-data";
 import Suspense from "components/Suspense";
 
 export async function getStaticPaths() {
@@ -42,25 +37,26 @@ const postSlug = getPostSlug(entry);
 const { Content } = await render(entry);
 
 const allPosts = sortAsc(await getCollection("blog"));
-const detectedToc = entry.body
-  ?.match(/<(RqToc|DsToc|UsToc|TsrToc|HsToc|RcToc|RtrToc)\b/)?.[1] as
-  | TocName
-  | undefined;
+const detectedToc = entry.body?.match(
+  /<(RqToc|DsToc|UsToc|TsrToc|HsToc|RcToc|RtrToc)\b/,
+)?.[1] as TocName | undefined;
 const seriesItems = detectedToc ? seriesByToc[detectedToc] : null;
 const currentSeriesIndex =
   seriesItems?.findIndex((item) => item.id === postSlug) ?? -1;
 const previousSeriesSlug =
-  currentSeriesIndex > 0 ? seriesItems?.[currentSeriesIndex - 1]?.id ?? null : null;
+  currentSeriesIndex > 0
+    ? (seriesItems?.[currentSeriesIndex - 1]?.id ?? null)
+    : null;
 const nextSeriesSlug =
   currentSeriesIndex >= 0
-    ? seriesItems?.[currentSeriesIndex + 1]?.id ?? null
+    ? (seriesItems?.[currentSeriesIndex + 1]?.id ?? null)
     : null;
 
 const previousSeriesPost = previousSeriesSlug
-  ? allPosts.find((p) => getPostSlug(p) === previousSeriesSlug) ?? null
+  ? (allPosts.find((p) => getPostSlug(p) === previousSeriesSlug) ?? null)
   : null;
 const nextSeriesPost = nextSeriesSlug
-  ? allPosts.find((p) => getPostSlug(p) === nextSeriesSlug) ?? null
+  ? (allPosts.find((p) => getPostSlug(p) === nextSeriesSlug) ?? null)
   : null;
 const hasTableOfContents = Boolean(detectedToc);
 
@@ -182,105 +178,97 @@ const ogImagePath = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/og-images/${
                     : "grid-cols-1",
                 ]}
               >
-                {
-                  previousSeriesPost && (
-                    <Link
-                      href={`/${getPostSlug(previousSeriesPost)}`}
-                      variant="subtle"
-                      underlineOnHover={false}
-                      class="group block rounded-xl border border-border bg-ic-bg/45 p-2 md:p-3 transition-colors duration-200 hover:border-primary"
-                    >
-                      <p class="text-[0.625rem] font-semibold tracking-[0.06em] uppercase text-subtle">
-                        Previous
-                      </p>
-                      <div class="mt-1 flex items-center gap-2 md:gap-3">
-                        {
-                          previousPostBanner && (
-                            <div class="h-12 w-12 shrink-0 overflow-hidden rounded-md md:h-16 md:w-16">
-                              <ProgressiveImage
-                                src={previousPostBanner}
-                                alt={previousSeriesPost.data.title}
-                                width={96}
-                                height={96}
-                                sizes="(max-width: 768px) 48px, 64px"
-                                wrapperClass="h-full w-full"
-                              />
-                            </div>
-                          )
-                        }
-                        <div class="min-w-0">
-                          <p class="text-sm font-semibold leading-tight text-text group-hover:text-text md:text-base">
-                            {previousSeriesPost.data.title}
-                          </p>
+                {previousSeriesPost && (
+                  <Link
+                    href={`/${getPostSlug(previousSeriesPost)}`}
+                    variant="subtle"
+                    underlineOnHover={false}
+                    class="group block rounded-xl border border-border bg-ic-bg/45 p-2 md:p-3 transition-colors duration-200 hover:border-primary"
+                  >
+                    <p class="text-[0.625rem] font-semibold tracking-[0.06em] uppercase text-subtle">
+                      Previous
+                    </p>
+                    <div class="mt-1 flex items-center gap-2 md:gap-3">
+                      {previousPostBanner && (
+                        <div class="h-12 w-12 shrink-0 overflow-hidden rounded-md md:h-16 md:w-16">
+                          <ProgressiveImage
+                            src={previousPostBanner}
+                            alt={previousSeriesPost.data.title}
+                            width={96}
+                            height={96}
+                            sizes="(max-width: 768px) 48px, 64px"
+                            wrapperClass="h-full w-full"
+                          />
                         </div>
+                      )}
+                      <div class="min-w-0">
+                        <p class="text-sm font-semibold leading-tight text-text group-hover:text-text md:text-base">
+                          {previousSeriesPost.data.title}
+                        </p>
                       </div>
-                    </Link>
-                  )
-                }
-                {
-                  nextSeriesPost && (
-                    <Link
-                      href={`/${getPostSlug(nextSeriesPost)}`}
-                      variant="subtle"
-                      underlineOnHover={false}
-                      class="group block rounded-xl border border-border bg-ic-bg/45 p-2 md:p-3 transition-colors duration-200 hover:border-primary"
-                    >
-                      <p class="text-[0.625rem] font-semibold tracking-[0.06em] uppercase text-subtle">
-                        Next
-                      </p>
-                      <div class="mt-1 flex items-center gap-2 md:gap-3">
-                        {
-                          nextPostBanner && (
-                            <div class="h-12 w-12 shrink-0 overflow-hidden rounded-md md:h-16 md:w-16">
-                              <ProgressiveImage
-                                src={nextPostBanner}
-                                alt={nextSeriesPost.data.title}
-                                width={96}
-                                height={96}
-                                sizes="(max-width: 768px) 48px, 64px"
-                                wrapperClass="h-full w-full"
-                              />
-                            </div>
-                          )
-                        }
-                        <div class="min-w-0">
-                          <p class="text-sm font-semibold leading-tight text-text group-hover:text-text md:text-base">
-                            {nextSeriesPost.data.title}
-                          </p>
+                    </div>
+                  </Link>
+                )}
+                {nextSeriesPost && (
+                  <Link
+                    href={`/${getPostSlug(nextSeriesPost)}`}
+                    variant="subtle"
+                    underlineOnHover={false}
+                    class="group block rounded-xl border border-border bg-ic-bg/45 p-2 md:p-3 transition-colors duration-200 hover:border-primary"
+                  >
+                    <p class="text-[0.625rem] font-semibold tracking-[0.06em] uppercase text-subtle">
+                      Next
+                    </p>
+                    <div class="mt-1 flex items-center gap-2 md:gap-3">
+                      {nextPostBanner && (
+                        <div class="h-12 w-12 shrink-0 overflow-hidden rounded-md md:h-16 md:w-16">
+                          <ProgressiveImage
+                            src={nextPostBanner}
+                            alt={nextSeriesPost.data.title}
+                            width={96}
+                            height={96}
+                            sizes="(max-width: 768px) 48px, 64px"
+                            wrapperClass="h-full w-full"
+                          />
                         </div>
+                      )}
+                      <div class="min-w-0">
+                        <p class="text-sm font-semibold leading-tight text-text group-hover:text-text md:text-base">
+                          {nextSeriesPost.data.title}
+                        </p>
                       </div>
-                    </Link>
-                  )
-                }
+                    </div>
+                  </Link>
+                )}
               </div>
             </section>
-            <script is:inline>
-              (() => {
-                const placeCalloutBeforeComments = () => {
-                  const callout = document.getElementById("read-next-callout");
-                  if (!callout) return;
-
-                  const giscusRoot = document.querySelector(".giscus");
-                  const commentsSection = giscusRoot?.closest("section");
-                  if (!commentsSection?.parentElement) return;
-                  if (callout.nextElementSibling === commentsSection) return;
-
-                  commentsSection.parentElement.insertBefore(
-                    callout,
-                    commentsSection,
-                  );
-                };
-
-                document.addEventListener(
-                  "astro:page-load",
-                  placeCalloutBeforeComments,
-                );
-                placeCalloutBeforeComments();
-              })();
-            </script>
           </>
         )
       }
+      <script is:inline>
+        (() => {
+          const placeCalloutBeforeComments = () => {
+            const callout = document.getElementById("read-next-callout");
+            if (!callout) return;
+
+            const giscusRoot = document.querySelector(".giscus");
+            const commentsSection = giscusRoot?.closest("section");
+            if (!commentsSection?.parentElement) return;
+            if (callout.nextElementSibling === commentsSection) return;
+
+            commentsSection.parentElement.insertBefore(
+              callout,
+              commentsSection,
+            );
+          };
+
+          document.addEventListener(
+            "astro:page-load",
+            placeCalloutBeforeComments,
+          );
+          placeCalloutBeforeComments();
+        })();
+      </script>
     </Prose>
   </SkipNavContent>
 </Layout>

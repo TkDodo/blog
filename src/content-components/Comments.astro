@@ -36,7 +36,9 @@ const config = {
   ]}
 >
   <div class="flex flex-col gap-3">
-    <div class="rounded-lg bg-[var(--color-ic-bg)] p-4 text-center md:p-[1.125rem]">
+    <div
+      class="rounded-lg bg-[var(--color-ic-bg)] p-4 text-center md:p-[1.125rem]"
+    >
       <p class="font-mono leading-relaxed text-sm md:text-base">
         Like the monospace font in the code blocks?
       </p>
@@ -73,7 +75,7 @@ const config = {
     </a>
   </div>
 
-  <div class="giscus" />
+  <div class="giscus"></div>
   <script
     is:inline
     data-astro-rerun
@@ -96,7 +98,7 @@ const config = {
         const mode = getTheme();
         const file =
           mode === "dark" ? "giscus-dark.css?v=10" : "giscus-light.css?v=10";
-        return `${origin + giscusBasePath  }/${  file}`;
+        return `${origin + giscusBasePath}/${file}`;
       };
 
       const updateReferral = () => {
