@@ -1,4 +1,4 @@
-export type SeriesItem = {
+type SeriesItem = {
   id: string;
   title: string;
 };

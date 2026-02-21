@@ -1,0 +1,23 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "src/pages/**/*.astro",
+    "content/pages/**/*.mdx",
+    "content/posts/**/index.mdx",
+    "scripts/**/*.tsx"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx,astro}",
+    "content/**/*.{md,mdx}",
+    "scripts/**/*.{ts,tsx}",
+    "*.config.{ts,mjs}"
+  ],
+  "compilers": {
+    "mdx": true
+  },
+  "ignoreDependencies": [
+    "@tailwindcss/typography",
+    "shiki",
+    "tailwindcss"
+  ]
+}
