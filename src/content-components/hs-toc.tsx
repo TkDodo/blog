@@ -1,9 +1,9 @@
-import SeriesToc from "./series-toc";
 import { hsSeriesItems } from "./series-data";
+import SeriesToc from "./series-toc";
 
-type Props = {
+interface Props {
   id?: string;
-};
+}
 
 export function HsToc({ id }: Props) {
   return <SeriesToc id={id} items={hsSeriesItems} />;

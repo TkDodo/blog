@@ -10,7 +10,7 @@ const { gif, still, alt = "" } = Astro.props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 const normalizeSrc = (raw: string) => {
-  if (/^(?:[a-z]+:|data:|#)/i.test(raw)) return raw;
+  if (/^(?:[a-z]+:|#)/i.test(raw)) return raw;
   if (raw.startsWith("/")) return `${basePath}${raw}`;
   return raw;
 };

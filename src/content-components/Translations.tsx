@@ -1,13 +1,13 @@
 import EthicalAds from "components/EthicalAds";
 
-type Translation = {
+interface Translation {
   language?: string;
   url?: string;
-};
+}
 
-type Props = {
+interface Props {
   translations?: Translation[];
-};
+}
 
 function isTranslation(input: unknown): input is Translation {
   if (!input || typeof input !== "object") return false;

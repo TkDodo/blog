@@ -1,21 +1,21 @@
 ---
-import Layout from "@layouts/layout.astro";
-import Seo from "@components/seo.astro";
-import { Image } from "astro:assets";
-import { getCollection } from "astro:content";
-import SkipNavContent from "@components/a11y/skip-nav-content.astro";
-import { sortAsc } from "@utils";
-import Link from "@components/link.astro";
-import Spacer from "@components/spacer.astro";
-import PostCard from "@components/post-card.astro";
-import ProgressiveImage from "@components/progressive-image.astro";
-import { SITE } from "@constants";
+import type { ImageMetadata } from "astro";
 import profileImage from "@assets/profile.jpg";
-import wallpaperImage from "@assets/wallpaper.jpg";
+import monoLisaImage from "@assets/sponsors/monolisa.jpeg";
 import reactBricksImage from "@assets/sponsors/reactbricks.svg";
 import workflowGenImage from "@assets/sponsors/workflowgen.png";
-import monoLisaImage from "@assets/sponsors/monolisa.jpeg";
-import type { ImageMetadata } from "astro";
+import wallpaperImage from "@assets/wallpaper.jpg";
+import SkipNavContent from "@components/a11y/skip-nav-content.astro";
+import Link from "@components/link.astro";
+import PostCard from "@components/post-card.astro";
+import ProgressiveImage from "@components/progressive-image.astro";
+import Seo from "@components/seo.astro";
+import Spacer from "@components/spacer.astro";
+import { SITE } from "@constants";
+import Layout from "@layouts/layout.astro";
+import { sortAsc } from "@utils";
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
 
 const POSTS_TO_SHOW = 6;
 

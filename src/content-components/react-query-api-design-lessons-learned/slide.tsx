@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
 
-type SlideProps = {
+interface SlideProps {
   children: ReactNode;
   index: number;
   colorMode: "light" | "dark";
-};
+}
 
 export function Slide({ children, index, colorMode }: SlideProps) {
   const baseUrl = import.meta.env.BASE_URL.endsWith("/")

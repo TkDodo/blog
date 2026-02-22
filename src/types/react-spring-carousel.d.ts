@@ -1,17 +1,17 @@
 declare module "react-spring-carousel" {
   import type * as React from "react";
 
-  export type SpringCarouselItem = {
+  export interface SpringCarouselItem {
     id: string;
     renderItem: React.ReactNode;
-  };
+  }
 
-  export type SpringCarouselEvent = {
+  export interface SpringCarouselEvent {
     eventName: string;
     currentItem: {
       index: number;
     };
-  };
+  }
 
   export function useSpringCarousel(options: {
     items: SpringCarouselItem[];

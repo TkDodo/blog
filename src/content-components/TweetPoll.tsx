@@ -1,14 +1,14 @@
-type Option = {
+interface Option {
   id: string;
   name: string;
   percentage: string;
   winner?: boolean;
-};
+}
 
-type Props = {
+interface Props {
   options: Option[];
   votes: string;
-};
+}
 
 export function TweetPoll({ options, votes }: Props) {
   return (

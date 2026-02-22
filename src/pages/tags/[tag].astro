@@ -1,13 +1,13 @@
 ---
+import type { ImageMetadata } from "astro";
 import SkipNavContent from "@components/a11y/skip-nav-content.astro";
 import Link from "@components/link.astro";
+import PostCard from "@components/post-card.astro";
 import Seo from "@components/seo.astro";
 import Spacer from "@components/spacer.astro";
-import PostCard from "@components/post-card.astro";
 import Layout from "@layouts/layout.astro";
 import { getPostsByTag, getTags } from "@utils";
 import { getCollection } from "astro:content";
-import type { ImageMetadata } from "astro";
 
 /**
  * 1. Generate static pages for all tags.

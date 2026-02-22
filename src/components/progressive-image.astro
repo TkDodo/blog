@@ -1,6 +1,6 @@
 ---
 import type { ImageMetadata } from "astro";
-import { Image, getImage } from "astro:assets";
+import { getImage, Image } from "astro:assets";
 
 interface Props {
   src: ImageMetadata;
@@ -32,21 +32,24 @@ const {
   decoding = "async",
 } = Astro.props;
 
-const placeholderWidth = Math.max(16, Math.min(32, Math.round(width / 24)));
 const placeholder = await getImage({
   src,
-  width: placeholderWidth,
+  width,
+  height,
   quality: 35,
   format: "webp",
 });
 ---
 
-<div class:list={["relative overflow-hidden", wrapperClass]} style={wrapperStyle}>
+<div
+  class:list={["relative overflow-hidden", wrapperClass]}
+  style={wrapperStyle}
+>
   <img
     src={placeholder.src}
     alt={alt}
     aria-hidden="true"
-    class="pointer-events-none absolute inset-0 z-0 h-full w-full scale-[1.04] object-cover blur-xl transition-opacity duration-500 ease-out"
+    class="pointer-events-none absolute inset-0 z-0 !m-0 h-full w-full scale-[1.04] object-cover blur-xl transition-opacity duration-500 ease-out"
     loading="eager"
     decoding="async"
   />
@@ -60,11 +63,10 @@ const placeholder = await getImage({
     fetchpriority={fetchpriority}
     decoding={decoding}
     class:list={[
-      "relative z-10 transition-opacity duration-500 ease-out",
+      "relative z-10 block !m-0 transition-opacity duration-500 ease-out",
       fill && "h-full w-full object-cover",
       imageClass,
-      "opacity-0",
     ]}
-    onload="this.classList.remove('opacity-0'); const placeholder = this.previousElementSibling; if (placeholder instanceof HTMLImageElement) { placeholder.style.opacity = '0'; }"
+    onload="const placeholder = this.previousElementSibling; if (placeholder instanceof HTMLImageElement) { placeholder.style.opacity = '0'; }"
   />
 </div>

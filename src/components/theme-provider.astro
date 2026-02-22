@@ -37,7 +37,7 @@ select.value = theme
               // Filter to only element nodes to avoid inserting text nodes into SVG
               const clonedIcon = newIcon.cloneNode(true);
               const elementChildren = Array.from(clonedIcon.childNodes).filter(
-                (node) => node.nodeType === 1
+                (node) => node.nodeType === 1,
               );
               oldIcon.replaceChildren(...elementChildren);
             }

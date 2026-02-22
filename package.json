@@ -8,8 +8,9 @@
     "build:astro": "astro build",
     "build": "pnpm run build:astro",
     "preview": "astro preview",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "astro check",
     "astro": "astro",
+    "lint:knip": "knip --treat-config-hints-as-errors",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "format:check": "prettier --check .",
@@ -41,18 +42,20 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.2.0",
-    "@clack/prompts": "^0.11.0",
+    "@astrojs/check": "^0.9.6",
     "@tailwindcss/typography": "^0.5.19",
     "@types/mdast": "^4.0.4",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "astro-eslint-parser": "^1.2.2",
     "eslint": "^9.39.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-astro": "^1.4.0",
     "eslint-plugin-format": "^1.0.2",
     "gray-matter": "^4.0.3",
     "hast-util-to-string": "^3.0.1",
     "hastscript": "^9.0.1",
+    "knip": "^5.85.0",
     "mdast-util-mdx-jsx": "^3.2.0",
     "mdast-util-to-string": "^4.0.0",
     "prettier": "^3.8.1",
@@ -67,7 +70,6 @@
     "sirv": "^3.0.2",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
-    "unist-util-visit": "^5.0.0",
-    "valid-filename": "^4.0.0"
+    "unist-util-visit": "^5.0.0"
   }
 }

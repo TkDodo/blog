@@ -1,9 +1,9 @@
-import SeriesToc from "./series-toc";
 import { rtrSeriesItems } from "./series-data";
+import SeriesToc from "./series-toc";
 
-type Props = {
+interface Props {
   id?: string;
-};
+}
 
 export function RtrToc({ id }: Props) {
   return <SeriesToc id={id} items={rtrSeriesItems} />;

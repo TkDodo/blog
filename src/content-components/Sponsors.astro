@@ -1,10 +1,10 @@
 ---
-import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import ballingtImage from "@assets/sponsors/ballingt.jpg";
 import monoLisaImage from "@assets/sponsors/monolisa.jpeg";
 import reactBricksImage from "@assets/sponsors/reactbricks.svg";
 import workflowGenImage from "@assets/sponsors/workflowgen.png";
+import { Image } from "astro:assets";
 
 type Sponsor = {
   name: string;
@@ -122,9 +122,7 @@ const sponsors: Sponsor[] = [
   <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-5">
     {
       sponsors.map((sponsor) => (
-        <article
-          class="w-full max-w-[28rem] lg:max-w-none mx-auto rounded-lg border border-border bg-bg p-4"
-        >
+        <article class="w-full max-w-[28rem] lg:max-w-none mx-auto rounded-lg border border-border bg-bg p-4">
           <a
             href={sponsor.url}
             target="_blank"

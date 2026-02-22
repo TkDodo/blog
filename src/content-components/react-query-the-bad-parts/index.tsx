@@ -1,6 +1,6 @@
-import * as React from "react";
-
 import { PresentationCarousel } from "components/presentation-carousel";
+
+import * as React from "react";
 import { Slide } from "./slide";
 
 const slides: ReadonlyArray<React.ReactNode> = [

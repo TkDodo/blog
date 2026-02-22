@@ -1,3 +1,4 @@
+import { Buffer } from "node:buffer";
 import fs from "node:fs/promises";
 import path from "node:path";
 import matter from "gray-matter";
@@ -5,12 +6,12 @@ import satori from "satori";
 import sharp from "sharp";
 import OgImageTemplate from "./og-image-template";
 
-type Frontmatter = {
+interface Frontmatter {
   title?: string;
   banner?: string;
   tags?: string[];
   date?: string | Date;
-};
+}
 
 function toDateLabel(date: string | Date | undefined): string {
   if (!date) return "";
