@@ -66,8 +66,7 @@ const placeholder = await getImage({
       "relative z-10 transition-opacity duration-500 ease-out",
       fill && "h-full w-full object-cover",
       imageClass,
-      "opacity-0",
     ]}
-    onload="this.classList.remove('opacity-0'); const placeholder = this.previousElementSibling; if (placeholder instanceof HTMLImageElement) { placeholder.style.opacity = '0'; }"
+    onload="const placeholder = this.previousElementSibling; if (placeholder instanceof HTMLImageElement) { placeholder.style.opacity = '0'; }"
   />
 </div>
