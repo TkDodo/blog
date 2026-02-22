@@ -2,14 +2,17 @@
 import DocSearchReact from "./docsearch-react";
 ---
 
-<div class="contents">
+<div class="inline-flex h-9 shrink-0 items-center">
   <DocSearchReact client:only="react" />
 </div>
 
 <style is:global>
   .DocSearch-Button {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
     margin: 0;
-    height: calc(var(--spacing) * 9);
+    height: 100%;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
     background: var(--color-bg);
