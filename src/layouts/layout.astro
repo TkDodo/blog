@@ -59,6 +59,7 @@ const plausibleDomain = new URL(SITE.url).hostname;
     {
       import.meta.env.PROD && (
         <script
+          is:inline
           defer
           async
           data-domain={plausibleDomain}
