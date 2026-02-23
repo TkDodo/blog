@@ -1,7 +1,7 @@
 ---
 title: Creating Query Abstractions
-description: tbd
-date: 2026-02-21
+description: Building reusable abstractions on top of libraries that rely on type inference can be deceptively difficult, which is why we need better ways to build those abstractions ...
+date: 2026-02-23
 banner: ./creating.jpg
 tags:
   - ReactJs
@@ -128,15 +128,14 @@ import {
 } from '@tanstack/react-query';
 type Invoice = { id: number };
 declare function fetchInvoice(id: number): Promise<Invoice>;
-// ---cut---
 function useInvoice(id: number, options?: Partial<UseQueryOptions>) {
-  //                                      ^^^^^^^^^^^^^^^^^^^^^^^^
   return useQuery({
     queryKey: ['invoice', id],
     queryFn: () => fetchInvoice(id),
     ...options,
   });
 }
+// ---cut---
 const { data } = useInvoice(1, { throwOnError: true });
 //      ^?
 ```
@@ -255,7 +254,7 @@ That API solves all mentioned problems and more. We can use it between different
 
 ```js title="queryOptions.js"
 function queryOptions(options) {
-  return <div>options</div>;
+  return options;
 }
 ```
 
@@ -310,7 +309,7 @@ console.log(invoiceQuery.data);
 //                       ^?
 ```
 
-And this just works! With all options, full type inference, looks like JavaScript, absolutely straight-forward. Simplicity is king, and it doesn't get any simpler than this. 👑
+And this just works! With all options, full type inference, looks like JavaScript, absolutely straight-forward. You can of course still create custom hooks if you want to, but they should likely be built on top of `queryOptions`, as that's the first abstraction building block you should be reaching for. Simplicity is king, and it doesn't get any simpler than this. 👑
 
 ---
 
