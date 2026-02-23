@@ -324,6 +324,28 @@ samp {
   font-size: inherit !important;
 }
 
+/* Keep copy-button interactions from causing code block layout shifts. */
+.expressive-code .copy {
+  gap: 0 !important;
+}
+
+.expressive-code .copy button {
+  width: 2rem !important;
+  height: 2rem !important;
+}
+
+.expressive-code .copy .feedback {
+  position: absolute !important;
+  inset-inline-end: calc(100% + 0.35rem) !important;
+  inset-block-start: 50% !important;
+  margin-inline-end: 0 !important;
+  transform: translate3d(0, calc(-50% + 0.25rem), 0) !important;
+}
+
+.expressive-code .copy .feedback.show {
+  transform: translate3d(0, -50%, 0) !important;
+}
+
 .tweet-poll-progress {
   appearance: none;
   border: none;
