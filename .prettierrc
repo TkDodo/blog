@@ -6,6 +6,14 @@
       "options": {
         "parser": "astro"
       }
+    },
+    {
+      "files": "*.mdx",
+      "options": {
+        "printWidth": 70,
+        "singleQuote": true,
+        "semi": false
+      }
     }
   ]
 }

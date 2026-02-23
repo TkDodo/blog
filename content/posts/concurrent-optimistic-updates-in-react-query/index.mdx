@@ -11,24 +11,27 @@ tags:
   - JavaScript
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import { RqToc } from "components/rq-toc";
-import Emph from "components/Emph";
-import Aside from "components/Aside";
-import QueryGG from "components/QueryGG.astro";
-import Highlight from "components/Highlight";
+import Comments from 'components/Comments.astro'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import { RqToc } from 'components/rq-toc'
+import Emph from 'components/Emph'
+import Aside from 'components/Aside'
+import QueryGG from 'components/QueryGG.astro'
+import Highlight from 'components/Highlight'
 
-<Attribution name="Mariola Grobelska" url="https://unsplash.com/@mariolagr" />
+<Attribution
+  name="Mariola Grobelska"
+  url="https://unsplash.com/@mariolagr"
+/>
 
 <RqToc id="concurrent-optimistic-updates-in-react-query" />
 
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://velog.io/@cnsrn1874/concurrent-optimistic-updates-in-react-query",
+      language: '한국어',
+      url: 'https://velog.io/@cnsrn1874/concurrent-optimistic-updates-in-react-query',
     },
   ]}
 />
@@ -41,7 +44,7 @@ Look, I can instantly append a task to a list when I press `Enter` on the input 
 
 I have already written a bit about this in [#12: Mastering Mutation in React Query](mastering-mutations-in-react-query#optimistic-updates), but it's an important point to re-iterate on. With optimistic UI, you're essentially trying to foresee what the server will do, and implement that on the client beforehand.
 
-This can be quite straight-forward, for example, if the user is interacting with a toggle button. Usually, all we need to do is take the current boolean state and invert it:
+This can be quite straightforward, for example, if the user is interacting with a toggle button. Usually, all we need to do is take the current boolean state and invert it:
 
 ```ts:title=toggle-isActive
 queryClient.setQueryData(['items', 'detail', item.id], (prevItem) =>

@@ -9,17 +9,17 @@ tags:
   - Props to State
 ---
 
-import Comments from "components/Comments.astro";
-import Translations from "components/Translations";
-import { UsToc } from "components/us-toc";
+import Comments from 'components/Comments.astro'
+import Translations from 'components/Translations'
+import { UsToc } from 'components/us-toc'
 
 <UsToc id="putting-props-to-use-state" />
 
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://www.philly.im/blog/putting-props-to-use-state",
+      language: '한국어',
+      url: 'https://www.philly.im/blog/putting-props-to-use-state',
     },
   ]}
 />
@@ -41,11 +41,11 @@ It's an interactive example, so feel free to click around (the code is also edit
 <Playground template="react">
 
 ```js name=App.js active
-import { useState } from "react";
-import { persons } from "./persons.js";
+import { useState } from 'react'
+import { persons } from './persons.js'
 
 export default function App() {
-  const [selected, setSelected] = useState(persons[0]);
+  const [selected, setSelected] = useState(persons[0])
 
   return (
     <div>
@@ -55,16 +55,18 @@ export default function App() {
           key={person.id}
           onClick={() => setSelected(person)}
         >
-          {person.id === selected.id ? person.name.toUpperCase() : person.name}
+          {person.id === selected.id
+            ? person.name.toUpperCase()
+            : person.name}
         </button>
       ))}
       <DetailView initialEmail={selected.email} />
     </div>
-  );
+  )
 }
 
 function DetailView({ initialEmail }) {
-  const [email, setEmail] = useState(initialEmail);
+  const [email, setEmail] = useState(initialEmail)
 
   return (
     <div>
@@ -77,7 +79,7 @@ function DetailView({ initialEmail }) {
         Apply
       </button>
     </div>
-  );
+  )
 }
 ```
 
@@ -85,15 +87,15 @@ function DetailView({ initialEmail }) {
 export const persons = [
   {
     id: 1,
-    name: "Dominik",
-    email: "dominik@dorfmeister.cc",
+    name: 'Dominik',
+    email: 'dominik@dorfmeister.cc',
   },
   {
     id: 2,
-    name: "John",
-    email: "john@doe.com",
+    name: 'John',
+    email: 'john@doe.com',
   },
-];
+]
 ```
 
 </Playground>
@@ -129,13 +131,13 @@ Here is how that might look:
 <Playground template="react">
 
 ```js name=App.js active
-import { useState } from "react";
-import { persons } from "./persons.js";
+import { useState } from 'react'
+import { persons } from './persons.js'
 
 export default function App() {
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState()
 
-  const close = () => setSelected(undefined);
+  const close = () => setSelected(undefined)
 
   return (
     <div>
@@ -151,38 +153,38 @@ export default function App() {
       {selected && (
         <div
           style={{
-            position: "fixed",
-            top: "0",
-            left: "0",
-            paddingTop: "100px",
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0,0,0,0.4)",
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            paddingTop: '100px',
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0,0,0,0.4)',
           }}
         >
           <div
             style={{
-              display: "flex",
-              justifyContent: "center",
-              width: "80%",
-              height: "50vh",
-              margin: "auto",
-              backgroundColor: "white",
+              display: 'flex',
+              justifyContent: 'center',
+              width: '80%',
+              height: '50vh',
+              margin: 'auto',
+              backgroundColor: 'white',
             }}
           >
             <DetailView initialEmail={selected.email} close={close} />
-            <span style={{ cursor: "pointer" }} onClick={close}>
+            <span style={{ cursor: 'pointer' }} onClick={close}>
               &times;
             </span>
           </div>
         </div>
       )}
     </div>
-  );
+  )
 }
 
 function DetailView({ initialEmail, close }) {
-  const [email, setEmail] = useState(initialEmail);
+  const [email, setEmail] = useState(initialEmail)
 
   return (
     <div>
@@ -194,14 +196,14 @@ function DetailView({ initialEmail, close }) {
       <button
         type="button"
         onClick={() => {
-          alert(email);
-          close();
+          alert(email)
+          close()
         }}
       >
         Apply
       </button>
     </div>
-  );
+  )
 }
 ```
 
@@ -209,15 +211,15 @@ function DetailView({ initialEmail, close }) {
 export const persons = [
   {
     id: 1,
-    name: "Dominik",
-    email: "dominik@dorfmeister.cc",
+    name: 'Dominik',
+    email: 'dominik@dorfmeister.cc',
   },
   {
     id: 2,
-    name: "John",
-    email: "john@doe.com",
+    name: 'John',
+    email: 'john@doe.com',
   },
-];
+]
 ```
 
 </Playground>
@@ -241,12 +243,12 @@ Since the DetailView then doesn't need any local state at all, we won't have the
 <Playground template="react">
 
 ```js name=App.js active
-import { useState } from "react";
-import { persons } from "./persons.js";
+import { useState } from 'react'
+import { persons } from './persons.js'
 
 export default function App() {
-  const [selected, setSelected] = useState(persons[0]);
-  const [email, setEmail] = useState(selected.email);
+  const [selected, setSelected] = useState(persons[0])
+  const [email, setEmail] = useState(selected.email)
 
   return (
     <div>
@@ -255,16 +257,18 @@ export default function App() {
           type="button"
           key={person.id}
           onClick={() => {
-            setSelected(person);
-            setEmail(person.email);
+            setSelected(person)
+            setEmail(person.email)
           }}
         >
-          {person.id === selected.id ? person.name.toUpperCase() : person.name}
+          {person.id === selected.id
+            ? person.name.toUpperCase()
+            : person.name}
         </button>
       ))}
       <DetailView email={email} setEmail={setEmail} />
     </div>
-  );
+  )
 }
 
 function DetailView({ email, setEmail }) {
@@ -279,7 +283,7 @@ function DetailView({ email, setEmail }) {
         Apply
       </button>
     </div>
-  );
+  )
 }
 ```
 
@@ -287,15 +291,15 @@ function DetailView({ email, setEmail }) {
 export const persons = [
   {
     id: 1,
-    name: "Dominik",
-    email: "dominik@dorfmeister.cc",
+    name: 'Dominik',
+    email: 'dominik@dorfmeister.cc',
   },
   {
     id: 2,
-    name: "John",
-    email: "john@doe.com",
+    name: 'John',
+    email: 'john@doe.com',
   },
-];
+]
 ```
 
 </Playground>
@@ -318,23 +322,23 @@ Keep the same ux and the scope of the draft state small, but still re-mount your
 <Playground template="react">
 
 ```js name=App.js active
-import * as React from "react";
+import * as React from 'react'
 
 const persons = [
   {
     id: 1,
-    name: "Dominik",
-    email: "dominik@dorfmeister.cc",
+    name: 'Dominik',
+    email: 'dominik@dorfmeister.cc',
   },
   {
     id: 2,
-    name: "John",
-    email: "john@doe.com",
+    name: 'John',
+    email: 'john@doe.com',
   },
-];
+]
 
 export default function App() {
-  const [selected, setSelected] = React.useState(persons[0]);
+  const [selected, setSelected] = React.useState(persons[0])
 
   return (
     <div>
@@ -344,16 +348,18 @@ export default function App() {
           key={person.id}
           onClick={() => setSelected(person)}
         >
-          {person.id === selected.id ? person.name.toUpperCase() : person.name}
+          {person.id === selected.id
+            ? person.name.toUpperCase()
+            : person.name}
         </button>
       ))}
       <DetailView key={selected.id} initialEmail={selected.email} />
     </div>
-  );
+  )
 }
 
 function DetailView({ initialEmail }) {
-  const [email, setEmail] = React.useState(initialEmail);
+  const [email, setEmail] = React.useState(initialEmail)
 
   return (
     <div>
@@ -366,7 +372,7 @@ function DetailView({ initialEmail }) {
         Apply
       </button>
     </div>
-  );
+  )
 }
 ```
 

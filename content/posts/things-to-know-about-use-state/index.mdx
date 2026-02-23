@@ -10,17 +10,17 @@ tags:
   - TypeScript
 ---
 
-import Comments from "components/Comments.astro";
-import Translations from "components/Translations";
-import { UsToc } from "components/us-toc";
+import Comments from 'components/Comments.astro'
+import Translations from 'components/Translations'
+import { UsToc } from 'components/us-toc'
 
 <UsToc id="things-to-know-about-use-state" />
 
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://www.philly.im/blog/things-to-know-about-use-state",
+      language: '한국어',
+      url: 'https://www.philly.im/blog/things-to-know-about-use-state',
     },
   ]}
 />
@@ -50,21 +50,21 @@ Live example:
 <Playground template="react">
 
 ```js name=App.js active
-import { useState } from "react";
+import { useState } from 'react'
 
 export default function App() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0)
 
   return (
     <button
       onClick={() => {
-        setCount(count + 1);
-        setCount(count + 1);
+        setCount(count + 1)
+        setCount(count + 1)
       }}
     >
       🚨 This will not work, count is: {count}
     </button>
-  );
+  )
 }
 ```
 
@@ -89,21 +89,21 @@ The functional updater form ensures this:
 <Playground template="react">
 
 ```js name=App.js active
-import { useState } from "react";
+import { useState } from 'react'
 
 export default function App() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0)
 
   return (
     <button
       onClick={() => {
-        setCount((prev) => prev + 1);
-        setCount((prev) => prev + 1);
+        setCount((prev) => prev + 1)
+        setCount((prev) => prev + 1)
       }}
     >
       ✅ Increment by 2, count is: {count}
     </button>
-  );
+  )
 }
 ```
 
@@ -188,18 +188,18 @@ When you call the updater function, React will not always re-render your compone
 <Playground template="react">
 
 ```js name=App.js active
-import { useState } from "react";
+import { useState } from 'react'
 
 export default function App() {
-  const [name, setName] = useState("Elias");
+  const [name, setName] = useState('Elias')
 
   // 🤯 clicking this button will
   // not re-render the component
   return (
-    <button onClick={() => setName("Elias")}>
+    <button onClick={() => setName('Elias')}>
       Name is: {name}, Date is: {new Date().getTime()}
     </button>
-  );
+  )
 }
 ```
 

@@ -10,12 +10,12 @@ tags:
   - TypeScript
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import { RqToc } from "components/rq-toc";
-import Emph from "components/Emph";
-import Highlight from "components/Highlight";
+import Comments from 'components/Comments.astro'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import { RqToc } from 'components/rq-toc'
+import Emph from 'components/Emph'
+import Highlight from 'components/Highlight'
 
 <Attribution name="Chunli Ju" url="https://unsplash.com/@chunlea" />
 
@@ -26,20 +26,20 @@ import Highlight from "components/Highlight";
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://highjoon-dev.vercel.app/blogs/8-effective-react-query-keys/",
+      language: '한국어',
+      url: 'https://highjoon-dev.vercel.app/blogs/8-effective-react-query-keys/',
     },
     {
-      language: "日本語",
-      url: "https://makotot.dev/posts/effective-react-query-keys-translation-ja",
+      language: '日本語',
+      url: 'https://makotot.dev/posts/effective-react-query-keys-translation-ja',
     },
     {
-      language: "简体中文",
-      url: "https://juejin.cn/post/7262745726966939706",
+      language: '简体中文',
+      url: 'https://juejin.cn/post/7262745726966939706',
     },
     {
-      language: "Español",
-      url: "https://rubenvara.io/react-query/claves-eficaces-react-query/",
+      language: 'Español',
+      url: 'https://rubenvara.io/react-query/claves-eficaces-react-query/',
     },
   ]}
 />
@@ -56,21 +56,21 @@ The most important part is that keys need to be _unique_ for your queries. If Re
 
 ```ts
 useQuery({
-  queryKey: ["todos"],
+  queryKey: ['todos'],
   queryFn: fetchTodos,
-});
+})
 
 // 🚨 this won't work
 useInfiniteQuery({
-  queryKey: ["todos"],
+  queryKey: ['todos'],
   queryFn: fetchInfiniteTodos,
-});
+})
 
 // ✅ choose something else instead
 useInfiniteQuery({
-  queryKey: ["infiniteTodos"],
+  queryKey: ['infiniteTodos'],
   queryFn: fetchInfiniteTodos,
-});
+})
 ```
 
 ## Automatic Refetching

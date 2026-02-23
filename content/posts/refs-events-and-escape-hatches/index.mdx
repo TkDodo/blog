@@ -10,11 +10,16 @@ tags:
   - Hooks
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import Tweet, { AvatarDiegohaz, TweetImage, UseEvent } from "components/Tweet";
-import { HsToc } from "components/hs-toc";
+import Comments from 'components/Comments.astro'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import Tweet, {
+  AvatarDiegohaz,
+  TweetImage,
+  TwitterBlueText,
+  UseEvent,
+} from 'components/Tweet'
+import { HsToc } from 'components/hs-toc'
 
 <Attribution
   name="Lee Blanchflower"
@@ -44,19 +49,19 @@ We always see the things from the time they were created, but if they are _mutat
 <Playground template="react">
 
 ```js name=App.js active
-import * as React from "react";
+import * as React from 'react'
 
-let count = 1;
+let count = 1
 
 export default function App() {
-  const rerender = React.useReducer(() => ({}))[1];
-  const [logged, setLogged] = React.useState(count);
+  const rerender = React.useReducer(() => ({}))[1]
+  const [logged, setLogged] = React.useState(count)
 
   // 😱 logCount is stable, but it still sees
   // the latest value of count
   const logCount = React.useCallback(() => {
-    setLogged(count);
-  }, []);
+    setLogged(count)
+  }, [])
 
   return (
     <div>
@@ -64,15 +69,15 @@ export default function App() {
       <div>log: {logged}</div>
       <button
         onClick={() => {
-          count++;
-          rerender();
+          count++
+          rerender()
         }}
       >
         increment
       </button>
       <button onClick={logCount}>log</button>
     </div>
-  );
+  )
 }
 ```
 
@@ -195,10 +200,18 @@ This looks pretty clean to me, and if you want to have a user-land implementatio
   handle="diegohaz"
   tweetId="1522868292301606912"
   avatar={<AvatarDiegohaz />}
-  date={new Date("2022-05-07")}
+  date={new Date('2022-05-07')}
 >
-  <p>Do you want to use the proposed `useEvent` hook now with TypeScript?</p>
-  <p>Here you go: gist.github.com/diegohaz/69509...</p>
+  <p>
+    Do you want to use the proposed `useEvent` hook now with
+    TypeScript?
+  </p>
+  <p>
+    Here you go:{' '}
+    <TwitterBlueText>
+      gist.github.com/diegohaz/69509...
+    </TwitterBlueText>
+  </p>
   <p>
     <TweetImage>
       <UseEvent />

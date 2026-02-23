@@ -10,24 +10,27 @@ tags:
   - TypeScript
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import { RqToc } from "components/rq-toc";
+import Comments from 'components/Comments.astro'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import { RqToc } from 'components/rq-toc'
 
-<Attribution name="Marco Bianchetti" url="https://unsplash.com/@marcobian" />
+<Attribution
+  name="Marco Bianchetti"
+  url="https://unsplash.com/@marcobian"
+/>
 
 <RqToc id="placeholder-and-initial-data-in-react-query" />
 
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://highjoon-dev.vercel.app/blogs/9-placeholder-and-initial-data-in-react-query",
+      language: '한국어',
+      url: 'https://highjoon-dev.vercel.app/blogs/9-placeholder-and-initial-data-in-react-query',
     },
     {
-      language: "Español",
-      url: "https://rubenvara.io/react-query/data-inicial-placeholder/",
+      language: 'Español',
+      url: 'https://rubenvara.io/react-query/data-inicial-placeholder/',
     },
   ]}
 />
@@ -135,17 +138,19 @@ Suppose you provide `initialData` or `placeholderData`, and a background refetch
 <p>
   <details>
     <summary>InitialData</summary>
-    Since <i>initialData</i> is persisted in the cache, the refetch error is
-    treated like any other background error. Our query will be in <i>error</i>{" "}
-    state, but your <i>data</i> will still be there.
+    Since <i>initialData</i> is persisted in the cache, the refetch
+    error is treated like any other background error. Our query will
+    be in <i>error</i> state, but your <i>data</i> will still be
+    there.
   </details>
 </p>
 <p>
   <details>
     <summary>PlaceholderData</summary>
-    Since <i>placeholderData</i> is "fake-it-till-you-make-it" data, and we
-    didn't make it, we won't see that data anymore. Our query will be in{" "}
-    <i>error</i> state, and our <i>data</i> will be <i>undefined</i>.
+    Since <i>placeholderData</i> is "fake-it-till-you-make-it" data,
+    and we didn't make it, we won't see that data anymore. Our query
+    will be in <i>error</i> state, and our <i>data</i> will be{' '}
+    <i>undefined</i>.
   </details>
 </p>
 

@@ -8,21 +8,24 @@ tags:
   - Road to Refactoring
 ---
 
-import Comments from "components/Comments.astro";
-import Highlight from "components/Highlight";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import { RtrToc } from "components/rtr-toc";
+import Comments from 'components/Comments.astro'
+import Highlight from 'components/Highlight'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import { RtrToc } from 'components/rtr-toc'
 
-<Attribution name="Francisco Suarez" url="https://unsplash.com/@fsuarez" />
+<Attribution
+  name="Francisco Suarez"
+  url="https://unsplash.com/@fsuarez"
+/>
 
 <RtrToc id="refactor-impactfully" />
 
 <Translations
   translations={[
     {
-      language: "日本語",
-      url: "https://makotot.dev/posts/refactor-impactfully-translation-ja",
+      language: '日本語',
+      url: 'https://makotot.dev/posts/refactor-impactfully-translation-ja',
     },
   ]}
 />
@@ -43,7 +46,9 @@ However, a tidy kitchen is useless if there are no customers in the restaurant. 
 
 As we can't refactor everything, my tip is:
 
-<Highlight>Choose the most impactful things for refactoring</Highlight>
+<Highlight>
+  Choose the most impactful things for refactoring
+</Highlight>
 
 To stay with the kitchen example: Should we replace the broken dishwasher or get new plates because they are shinier? I hope it's clear that the dishwasher has a much bigger impact.
 

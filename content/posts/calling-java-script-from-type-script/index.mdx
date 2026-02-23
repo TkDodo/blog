@@ -9,10 +9,10 @@ tags:
   - JsDoc
 ---
 
-import Attribution from "components/Attribution";
-import Comments from "components/Comments.astro";
-import Translations from "components/Translations";
-import { TsError } from "components/TsError";
+import Attribution from 'components/Attribution'
+import Comments from 'components/Comments.astro'
+import Translations from 'components/Translations'
+import { TsError } from 'components/TsError'
 
 <Attribution
   name="Antoine Barr&egrave;s"
@@ -50,8 +50,8 @@ You're gonna have to set `allowJs: true` in your tsconfig if you want to be able
 Otherwise, your import will error with:
 
 <TsError>
-  TS7016: Could not find a declaration file for module './utils'. 'src/utils.js'
-  implicitly has an 'any' type.
+  TS7016: Could not find a declaration file for module './utils'.
+  'src/utils.js' implicitly has an 'any' type.
 </TsError>
 
 Of course, I am assuming here that you have `noImplicitAny` turned on as well 😊.

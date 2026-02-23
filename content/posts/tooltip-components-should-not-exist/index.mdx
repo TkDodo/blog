@@ -9,26 +9,29 @@ tags:
   - API Design
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import { DsToc } from "components/ds-toc";
-import Emph from "components/Emph";
-import Highlight from "components/Highlight";
+import Comments from 'components/Comments.astro'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import { DsToc } from 'components/ds-toc'
+import Emph from 'components/Emph'
+import Highlight from 'components/Highlight'
 
-<Attribution name="Daniel Herron" url="https://unsplash.com/@herrond" />
+<Attribution
+  name="Daniel Herron"
+  url="https://unsplash.com/@herrond"
+/>
 
 <DsToc id="tooltip-components-should-not-exist" />
 
 <Translations
   translations={[
     {
-      language: "Français",
-      url: "https://developpeur-web.tech/posts/les-composants-tooltip-ne-devraient-pas-exister",
+      language: 'Français',
+      url: 'https://developpeur-web.tech/posts/les-composants-tooltip-ne-devraient-pas-exister',
     },
     {
-      language: "日本語",
-      url: "https://makotot.dev/posts/tooltip-components-should-not-exist-translation-ja",
+      language: '日本語',
+      url: 'https://makotot.dev/posts/tooltip-components-should-not-exist-translation-ja',
     },
   ]}
 />

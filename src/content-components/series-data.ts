@@ -113,6 +113,10 @@ export const rqSeriesItems = [
     id: "react-query-selectors-supercharged",
     title: "#30: React Query Selectors, Supercharged",
   },
+  {
+    id: "creating-query-abstractions",
+    title: "#31: Creating Query Abstractions",
+  },
 ] as const satisfies ReadonlyArray<SeriesItem>;
 
 export const dsSeriesItems = [

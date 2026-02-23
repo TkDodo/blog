@@ -10,17 +10,20 @@ tags:
   - TypeScript
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
+import Comments from 'components/Comments.astro'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
 
-<Attribution name="Steve Johnson" url="https://unsplash.com/@steve_j" />
+<Attribution
+  name="Steve Johnson"
+  url="https://unsplash.com/@steve_j"
+/>
 
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://www.philly.im/blog/on-naming-things",
+      language: '한국어',
+      url: 'https://www.philly.im/blog/on-naming-things',
     },
   ]}
 />
@@ -41,7 +44,9 @@ the tougher it will be to keep naming consistent.
 > Any fool can write code that a computer can understand.
 > Good programmers write code that humans can understand.
 
-<p style="padding-left: 3rem; margin-top: -1rem">— Martin Fowler, 2008</p>
+<p style="padding-left: 3rem; margin-top: -1rem">
+  — Martin Fowler, 2008
+</p>
 
 Names are a vital part of your programs documentation.
 You assign a name to constants, functions or parameters

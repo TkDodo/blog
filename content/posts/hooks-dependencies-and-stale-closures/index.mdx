@@ -10,12 +10,15 @@ tags:
   - Hooks
 ---
 
-import Comments from "components/Comments.astro";
-import Highlight from "components/Highlight";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import Tweet, { AvatarAcemarke } from "components/Tweet";
-import { HsToc } from "components/hs-toc";
+import Comments from 'components/Comments.astro'
+import Highlight from 'components/Highlight'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import Tweet, {
+  AvatarAcemarke,
+  TwitterBlueText,
+} from 'components/Tweet'
+import { HsToc } from 'components/hs-toc'
 
 <Attribution
   name="David Sarkisov"
@@ -35,15 +38,18 @@ I love this question from Mark Erikson:
   handle="acemarke"
   tweetId="1291196140965302272"
   avatar={<AvatarAcemarke />}
-  date={new Date("2020-08-06")}
+  date={new Date('2020-08-06')}
 >
   <p>Question for the React community:</p>
   <p>
-    Has the shift from "how does `this`/binding work?"-type questions to "why is
-    my state stale due to closures?"-type questions made things better, worse,
-    or just "same thing but different" ?
+    Has the shift from "how does `this`/binding work?"-type questions
+    to "why is my state stale due to closures?"-type questions made
+    things better, worse, or just "same thing but different" ?
   </p>
-  <p>(Inspired by the questions we see in @reactiflux daily)</p>
+  <p>
+    (Inspired by the questions we see in
+    <TwitterBlueText>@reactiflux</TwitterBlueText> daily)
+  </p>
 </Tweet>
 
 To me, it has gotten subjectively better. Working with _this_ in class components was a pain, and errors did mostly show up at runtime. However, the behaviour you get due to stale closures are more subtle, and come up in more edge cases. The big advantage though is that they can be statically analyzed - and that's exactly what the [react-hooks/exhaustive-deps](https://reactjs.org/docs/hooks-rules.html#eslint-plugin) eslint rule does.
@@ -86,15 +92,15 @@ The nice part about closures in React is that it will "just work" if your compon
 <Playground template="react">
 
 ```js name=App.js active
-import * as React from "react";
+import * as React from 'react'
 
 export default function App() {
-  const [count, increment] = React.useReducer((prev) => prev + 1, 1);
-  const [logged, setLogged] = React.useState(count);
+  const [count, increment] = React.useReducer((prev) => prev + 1, 1)
+  const [logged, setLogged] = React.useState(count)
 
   const logCount = () => {
-    setLogged(count);
-  };
+    setLogged(count)
+  }
 
   return (
     <div>
@@ -103,7 +109,7 @@ export default function App() {
       <button onClick={increment}>increment</button>
       <button onClick={logCount}>log</button>
     </div>
-  );
+  )
 }
 ```
 
@@ -118,8 +124,8 @@ But why is that, and is that always true?
 The last sentence of the MDN definition is the most important one, so let's have another look (emphasis mine):
 
 <Highlight>
-  In JavaScript, closures are created every time a function is created,{" "}
-  <i>at function creation time.</i>
+  In JavaScript, closures are created every time a function is
+  created, <i>at function creation time.</i>
 </Highlight>
 
 Let me try to explain this with an analogy that has made closures "click" for me:
@@ -157,17 +163,17 @@ We can see how ignoring the linter in our example will lead to non working code:
 <Playground template="react">
 
 ```js name=App.js active
-import * as React from "react";
+import * as React from 'react'
 
 export default function App() {
-  const [count, increment] = React.useReducer((prev) => prev + 1, 1);
-  const [logged, setLogged] = React.useState(count);
+  const [count, increment] = React.useReducer((prev) => prev + 1, 1)
+  const [logged, setLogged] = React.useState(count)
 
   // 🚨 the linter says we should include count
   // as a dependency, but we don't
   const logCount = React.useCallback(() => {
-    setLogged(count);
-  }, []);
+    setLogged(count)
+  }, [])
 
   return (
     <div>
@@ -176,7 +182,7 @@ export default function App() {
       <button onClick={increment}>increment</button>
       <button onClick={logCount}>log</button>
     </div>
-  );
+  )
 }
 ```
 

@@ -9,15 +9,16 @@ tags:
   - Year in Review
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import Emph from "components/Emph";
+import Comments from 'components/Comments.astro'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import Emph from 'components/Emph'
 import Tweet, {
   AvatarTkDodo,
   TweetImage,
   QueryGGImage,
-} from "components/Tweet";
+  TwitterBlueText,
+} from 'components/Tweet'
 
 <Attribution
   name="BoliviaInteligente"
@@ -63,12 +64,12 @@ In the meantime, I was still working with [ui.dev](https://ui.dev) on the releas
   handle="TkDodo"
   tweetId="1795748489026314604"
   avatar={<AvatarTkDodo />}
-  date={new Date("2024-05-29")}
+  date={new Date('2024-05-29')}
 >
   <p>
-    📢 I'm so stoked to announce that today, 🔮 query.gg - the brand new,
-    official @tan_stack React Query course - is live and available for everyone
-    🎉
+    📢 I'm so stoked to announce that today, 🔮 query.gg - the brand
+    new, official <TwitterBlueText>@tan_stack</TwitterBlueText> React
+    Query course - is live and available for everyone 🎉
   </p>
   <p>
     <TweetImage>

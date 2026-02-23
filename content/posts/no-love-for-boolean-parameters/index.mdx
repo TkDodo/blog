@@ -9,17 +9,20 @@ tags:
   - ReactJs
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
+import Comments from 'components/Comments.astro'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
 
-<Attribution name="Alexander Sinn" url="https://unsplash.com/@swimstaralex" />
+<Attribution
+  name="Alexander Sinn"
+  url="https://unsplash.com/@swimstaralex"
+/>
 
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://www.datoybi.com/no-love-for-boolean-parameters",
+      language: '한국어',
+      url: 'https://www.datoybi.com/no-love-for-boolean-parameters',
     },
   ]}
 />
@@ -132,7 +135,7 @@ Except it isn't.
 Adding one boolean doesn't add _one more state_ - the amount of states grow exponentially. Two booleans means four states, three booleans means eight possible states etc. What happens if we call our above function with:
 
 ```ts
-formatMetric(100, true, true);
+formatMetric(100, true, true)
 ```
 
 The answer is: you can't know. It's an implementation detail which flag is checked first. It's also an _impossible state_: A metric cannot be _percent_ and _currency_ at the same time. Such impossible states are frequently introduced with boolean parameters. I recently encountered a function with 8 booleans as input - turns out, it only had 3 actual states, the rest were variations thereof.

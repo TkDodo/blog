@@ -51,7 +51,7 @@ const tags = (entry.data.tags ?? []).map((tag) => tag.trim()).filter(Boolean);
     <Link
       variant="subtle"
       underlineOnHover={false}
-      class="text-text"
+      class="text-text focus-visible:!outline-none focus-visible:!shadow-none"
       href={`/${getPostSlug(entry)}`}
     >
       {entry.data.title}

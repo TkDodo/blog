@@ -10,13 +10,16 @@ tags:
   - JavaScript
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import { RqToc } from "components/rq-toc";
-import Emph from "components/Emph";
-import Aside from "components/Aside";
-import Tweet, { AvatarAlexDotJs } from "components/Tweet";
+import Comments from 'components/Comments.astro'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import { RqToc } from 'components/rq-toc'
+import Emph from 'components/Emph'
+import Aside from 'components/Aside'
+import Tweet, {
+  AvatarAlexDotJs,
+  TwitterBlueText,
+} from 'components/Tweet'
 
 <Attribution
   name="Rock'n Roll Monkey"
@@ -30,16 +33,16 @@ import Tweet, { AvatarAlexDotJs } from "components/Tweet";
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://www.sxungchxn.dev/blog/189f225c-7bc4-49f2-b08d-f5b11e4fd48e",
+      language: '한국어',
+      url: 'https://www.sxungchxn.dev/blog/189f225c-7bc4-49f2-b08d-f5b11e4fd48e',
     },
     {
-      language: "简体中文",
-      url: "https://juejin.cn/post/7388033492569325622",
+      language: '简体中文',
+      url: 'https://juejin.cn/post/7388033492569325622',
     },
     {
-      language: "日本語",
-      url: "https://makotot.dev/posts/automatic-query-invalidation-after-mutations-translation-ja",
+      language: '日本語',
+      url: 'https://makotot.dev/posts/automatic-query-invalidation-after-mutations-translation-ja',
     },
   ]}
 />
@@ -96,10 +99,14 @@ With just 5 lines of code, we get a similar behaviour to what frameworks like Re
   handle="alexdotjs"
   tweetId="1744467890277921095"
   avatar={<AvatarAlexDotJs />}
-  date={new Date("2024-01-08")}
+  date={new Date('2024-01-08')}
 >
-  <p>I just invalidate everything on every mutation</p>
-  <p>https://trpc.io/docs/client/re...</p>
+  <p>
+    I just invalidate everything on every mutation
+    <TwitterBlueText>
+      {'https://\u200btrpc.io/docs/client/re...'}
+    </TwitterBlueText>
+  </p>
 </Tweet>
 
 ### But isn't that excessive ?
@@ -222,11 +229,11 @@ This pattern is probably only slightly better than just having `onSuccess` callb
 Generally, `meta` is typed as `Record<string, unknown>`, but we can tweak this with module augmentation:
 
 ```ts
-declare module "@tanstack/react-query" {
+declare module '@tanstack/react-query' {
   interface Register {
     mutationMeta: {
-      invalidates?: Array<QueryKey>;
-    };
+      invalidates?: Array<QueryKey>
+    }
   }
 }
 ```

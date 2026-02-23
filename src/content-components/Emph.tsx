@@ -16,7 +16,7 @@ export default function Emph({ color = "primary", children }: Props) {
 
   return (
     <span
-      className={`inline rounded-[0.28em] px-[0.28em] py-[0.08em] font-semibold not-italic tracking-normal ${styleClass}`}
+      className={`emph inline rounded-[0.28em] px-[0.28em] py-[0.08em] font-semibold not-italic tracking-normal ${styleClass} [&_code]:px-0 [&_code]:py-0 [&_code]:text-inherit [&_code]:font-semibold`}
     >
       {children}
     </span>

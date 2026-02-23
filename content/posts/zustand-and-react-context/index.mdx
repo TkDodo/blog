@@ -10,14 +10,14 @@ tags:
   - Zustand
 ---
 
-import Aside from "components/Aside";
-import Comments from "components/Comments.astro";
-import Emph from "components/Emph";
-import Highlight from "components/Highlight";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import Tweet, { AvatarTkDodo } from "components/Tweet";
-import { VerticalRuler } from "components/VerticalRuler";
+import Aside from 'components/Aside'
+import Comments from 'components/Comments.astro'
+import Emph from 'components/Emph'
+import Highlight from 'components/Highlight'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import Tweet, { AvatarTkDodo } from 'components/Tweet'
+import { VerticalRuler } from 'components/VerticalRuler'
 
 <Attribution name="Ivan Aleksic" url="https://unsplash.com/@ivalex" />
 
@@ -27,12 +27,12 @@ import { VerticalRuler } from "components/VerticalRuler";
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://velog.io/@ojj1123/zustand-and-react-context",
+      language: '한국어',
+      url: 'https://velog.io/@ojj1123/zustand-and-react-context',
     },
     {
-      language: "简体中文",
-      url: "https://blog.jimmieluo.com/zustand-and-react-context",
+      language: '简体中文',
+      url: 'https://blog.jimmieluo.com/zustand-and-react-context',
     },
   ]}
 />
@@ -93,16 +93,16 @@ Not all stores are singletons that we can use once in our App or once in a speci
   handle="TkDodo"
   tweetId="1495072479118864398"
   avatar={<AvatarTkDodo />}
-  date={new Date("2022-02-19")}
+  date={new Date('2022-02-19')}
 >
   <p>
-    🕵️We've fixed a huge performance problem this week by moving useState +
-    context over to zustand. It was the same amount of code. The lib is &lt;
-    1kb.
+    🕵️We've fixed a huge performance problem this week by moving
+    useState + context over to zustand. It was the same amount of
+    code. The lib is &lt; 1kb.
   </p>
   <p>
-    ⚛️Don't use context for state management. Use it for dependency injection
-    only. The right tool for the job!
+    ⚛️Don't use context for state management. Use it for dependency
+    injection only. The right tool for the job!
   </p>
   <p>zustand.surge.sh</p>
 </Tweet>
