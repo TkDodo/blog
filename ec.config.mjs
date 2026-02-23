@@ -1,5 +1,6 @@
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
+import { pluginFileIcons } from "@xt0rted/expressive-code-file-icons";
 import { defineEcConfig } from "astro-expressive-code";
 import ecTwoSlash from "expressive-code-twoslash";
 
@@ -23,6 +24,31 @@ const twoslashTrimTrailingEmptyLine = {
   },
 };
 
+const defaultFileIconByLanguage = {
+  ts: "typescript",
+  tsx: "reactts",
+  jsx: "reactjs",
+};
+
+const mapLanguageToFileIcon = {
+  name: "map-language-to-file-icon",
+  hooks: {
+    preprocessMetadata({ codeBlock }) {
+      const explicitIcon = codeBlock.metaOptions.getString("icon");
+      if (explicitIcon || codeBlock.props.icon) {
+        return;
+      }
+
+      const mappedIcon =
+        defaultFileIconByLanguage[codeBlock.language.toLowerCase()];
+
+      if (mappedIcon) {
+        codeBlock.props.icon = mappedIcon;
+      }
+    },
+  },
+};
+
 export default defineEcConfig({
   themes: ["night-owl", "night-owl-light"],
   useDarkModeMediaQuery: false,
@@ -30,6 +56,11 @@ export default defineEcConfig({
   plugins: [
     pluginCollapsibleSections(),
     pluginLineNumbers(),
+    mapLanguageToFileIcon,
+    pluginFileIcons({
+      iconClass: "inline-block size-5 shrink-0 mr-2 -mt-[2px]",
+      titleClass: "inline-flex flex-row items-center gap-1",
+    }),
     ecTwoSlash({
       includeJsDoc: false,
       twoslashOptions: {
