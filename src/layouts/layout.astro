@@ -168,5 +168,68 @@ const plausibleDomain = new URL(SITE.url).hostname;
         window.addEventListener("pageshow", clearPending);
       })();
     </script>
+    <script is:inline>
+      (() => {
+        // Fix for expressive-code-twoslash timing issue with View Transitions
+        // Prevents TypeError when .twoslash-popup-container is queried before being ready
+        if (window.__tkdodoTwoslashFixInit) return;
+        window.__tkdodoTwoslashFixInit = true;
+
+        // Store original querySelector to restore it later
+        const originalQuerySelector = Element.prototype.querySelector;
+
+        // Flag to track if we're in a critical initialization phase
+        let isInitializing = false;
+
+        // Patch querySelector to add null safety during initialization
+        Element.prototype.querySelector = function (selector) {
+          const result = originalQuerySelector.call(this, selector);
+
+          // If looking for twoslash-popup-container during initialization and it's null,
+          // we'll create a temporary placeholder to prevent the error
+          if (
+            isInitializing &&
+            selector === ".twoslash-popup-container" &&
+            result === null &&
+            this.classList?.contains("twoslash-hover")
+          ) {
+            // Return a minimal mock object that has a closest method
+            // This prevents the TypeError while allowing the code to continue
+            return {
+              closest: () => null,
+              nodeType: 1,
+              classList: { contains: () => false },
+            };
+          }
+
+          return result;
+        };
+
+        // On page load, mark the critical initialization period
+        document.addEventListener("astro:page-load", () => {
+          isInitializing = true;
+
+          // Use requestAnimationFrame to wait for DOM to settle
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              // After two animation frames, the DOM should be fully ready
+              isInitializing = false;
+            });
+          });
+        });
+
+        // Also handle initial page load
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", () => {
+            isInitializing = true;
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                isInitializing = false;
+              });
+            });
+          });
+        }
+      })();
+    </script>
   </body>
 </html>
