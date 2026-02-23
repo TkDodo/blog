@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { isValidElement } from "react";
+import { createElement, isValidElement } from "react";
 import acdliteAvatar from "../assets/avatars/acdlite.jpg";
 import acemarkeAvatar from "../assets/avatars/acemarke.jpeg";
 import alexdotjsAvatar from "../assets/avatars/alexdotjs.jpg";
@@ -39,7 +39,7 @@ interface Props {
   tweetId: string;
   handle: string;
   name: string;
-  avatar?: ReactNode;
+  avatar: ReactNode;
   children?: ReactNode;
   date: Date | string;
   type?: TweetType;
@@ -77,57 +77,33 @@ const BskyIcon = () => (
   </svg>
 );
 
-function avatarSrc(handle: string): string | null {
-  const key = handle.toLowerCase();
-  const normalized = key.replace(/^avatar[_-]?/, "");
-  const map: Record<string, ImportedImage> = {
-    tkdodo: tkdodoAvatar,
-    "tkdodo.eu": tkdodoAvatar,
-    "bsky.app/profile/tkdodo.eu": tkdodoAvatar,
-    "gsathya.bsky.social": sathyaAvatar,
-    gsathya: sathyaAvatar,
-    avatar_sophiebits: sophiebitsAvatar,
-    sophiebits: sophiebitsAvatar,
-    gabbe_v_: gabbeVAvatar,
-    acdlite: acdliteAvatar,
-    ralex1993: ralex1993Avatar,
-    t3dotgg: t3dotggAvatar,
-    michaelc_1991: michaelCAvatar,
-    mattpocockuk: mattpocockukAvatar,
-    tannerlinsley: tannerlinsleyAvatar,
-    diegohaz: diegohazAvatar,
-    ryanflorence: ryanflorenceAvatar,
-    willmcgugan: willmcguganAvatar,
-    danvdk: danvdkAvatar,
-    acemarke: acemarkeAvatar,
-    alexdotjs: alexdotjsAvatar,
-    leeerob: leeerobAvatar,
-    swyx: swyxAvatar,
-    housecor: housecorAvatar,
-    mxstbr: mxstbrAvatar,
-  };
-  const asset = map[key] ?? map[normalized];
-  return asset ? imageSrc(asset) : null;
-}
-
 const avatarImageClass = "h-full w-full rounded-full object-cover";
 
 const Avatar = ({ children }: { children?: ReactNode }) => (
   <div className="mr-4 h-14 w-14">{children}</div>
 );
 
-const AvatarImage = ({ handle, name }: { handle: string; name: string }) => {
-  const src = avatarSrc(handle);
-  if (!src) return <div className="h-full w-full" aria-hidden="true" />;
-  return (
-    <img
-      className={avatarImageClass}
-      src={src}
-      alt={`Avatar for ${name}`}
-      loading="lazy"
-    />
-  );
-};
+interface AstroJsxLike {
+  "astro:jsx"?: unknown;
+  type?: unknown;
+  props?: Record<string, unknown>;
+}
+
+function normalizeAvatarNode(avatar: ReactNode): ReactNode {
+  if (isValidElement(avatar)) {
+    return avatar;
+  }
+
+  const astroNode = avatar as AstroJsxLike;
+  if (astroNode && typeof astroNode === "object" && astroNode.type) {
+    return createElement(
+      astroNode.type as React.ElementType,
+      astroNode.props ?? {},
+    );
+  }
+
+  return <div className="h-full w-full" aria-hidden="true" />;
+}
 
 const AvatarAsset = ({ src, alt }: { src: ImportedImage; alt: string }) => (
   <img
@@ -279,7 +255,7 @@ export default function Tweet({
       ? `https://bsky.app/profile/${handle}/post/${tweetId}`
       : `https://x.com/${handle}/status/${tweetId}`;
   const dateValue = date instanceof Date ? date : new Date(date);
-  const avatarElement = isValidElement(avatar) ? avatar : null;
+  const avatarNode = normalizeAvatarNode(avatar);
 
   return (
     <a
@@ -292,9 +268,7 @@ export default function Tweet({
         {normalizedType === "bsky" ? <BskyIcon /> : <TwitterIcon />}
       </div>
       <div className="flex">
-        <Avatar>
-          {avatarElement ?? <AvatarImage handle={handle} name={name} />}
-        </Avatar>
+        <Avatar>{avatarNode}</Avatar>
         <div>
           <div className="font-semibold">{name}</div>
           <div className="text-xs md:text-base leading-3 md:leading-4 text-faded">

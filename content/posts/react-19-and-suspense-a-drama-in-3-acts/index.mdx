@@ -26,6 +26,7 @@ import Tweet, {
   TweetImage,
   SathyaAndMe,
   V5390,
+  TwitterBlueText,
 } from 'components/Tweet'
 
 <Attribution name="Jr Korpa" url="https://unsplash.com/@jrkorpa" />
@@ -59,7 +60,11 @@ This release is packed with goodies, and I was excited to upgrade React Query to
   date={new Date('2024-05-25')}
 >
   <p>React Query 🤝 React 19</p>
-  <p>github.com/TanStack/query...</p>
+  <p>
+    <TwitterBlueText>
+      {'github.com\u200b/TanStack/query...'}
+    </TwitterBlueText>
+  </p>
   <p>
     Someone please try out the react compiler on an example and report
     back. I've enabled the eslint-plugin-react-compiler and it didn't
@@ -87,14 +92,24 @@ Full disclosure upfront: I wasn't the first to discover this. Shout out to [Gabr
   date={new Date('2024-04-26')}
 >
   <p>A ton of great changes! 🥳</p>
-  <p>However this change probably deserve a bigger disclaimer.</p>
-  <p>https://github.com/facebook/react...</p>
+  <p>
+    However this change probably deserve a bigger disclaimer.
+    <TwitterBlueText>
+      {'https://\u200bgithub.com/facebook/react...'}
+    </TwitterBlueText>
+  </p>
   <p>
     Code using suspense with libraries like react-query will get
     waterfalls where loading previously happened in parallel.
   </p>
-  <p>https://codesandbox.io/p/devbox/react...</p>
-  <p>https://codesandbox.io/p/devbox/react...</p>
+  <p>
+    <TwitterBlueText>
+      {'https://\u200bcodesandbox.io/p/devbox/react...'}
+    </TwitterBlueText>
+    <TwitterBlueText>
+      {'https://\u200bcodesandbox.io/p/devbox/react...'}
+    </TwitterBlueText>
+  </p>
 </Tweet>
 
 It's funny because I saw the tweet, and even commented on it, but didn't think too much of it at the time. As I said, I was quite busy and planned to look into React 19 later.
@@ -176,22 +191,26 @@ I was so surprised by this behaviour that I did the only thing I could think of 
     the same Suspense Boundary, where each was doing a fetch, was
     still firing them in parallel:
   </p>
-  <p>
-    <Suspense fallback={<p>...</p>}>
-      <RepoData name="tanstack/query" />
-      <RepoData name="tanstack/table" />
-    </Suspense>
-  </p>
+  ```
+  <Suspense fallback={<p>...</p>}>
+    <RepoData name="tanstack/query" />
+    <RepoData name="tanstack/table" />
+  </Suspense>
+  ```
   <p>
     This fires two queries, in parallel, waits until both are resolved
     and then shows the whole sub-tree.
   </p>
   <p>
     In React 19, as far as I can see, the queries run in a waterfall
-    now. I think I remember @rickhanlonii mentioning something like
-    this but I can't find any evidence now.
+    now. I think I remember
+    <TwitterBlueText>@rickhanlonii</TwitterBlueText>
+    mentioning something like this but I can't find any evidence now.
   </p>
-  <p>/cc @acdlite @dan_abramov2</p>
+  <p>
+    /cc <TwitterBlueText>@acdlite</TwitterBlueText>{' '}
+    <TwitterBlueText>@dan_abramov2</TwitterBlueText>
+  </p>
 </Tweet>
 
 Needless to say, this tweet took off and started a somewhat heated twitter discussion. We soon found out that this was not a bug, but an intentional change, which led to quite some outrage.
@@ -288,9 +307,11 @@ Later that evening, I had the chance to talk to [Sathya Gunasekaran](https://bsk
   date={new Date('2024-06-13')}
 >
   <p>
-    Had a great discussion with @_gsathya about React19, the suspense
-    changes and the react compiler. I felt like my concerns were truly
-    heard and the feedback appreciated, so thank you for that 🙏
+    Had a great discussion with
+    <TwitterBlueText>@_gsathya</TwitterBlueText>
+    about React19, the suspense changes and the react compiler. I felt
+    like my concerns were truly heard and the feedback appreciated, so
+    thank you for that 🙏
   </p>
   <p>
     <TweetImage>
@@ -311,7 +332,10 @@ On the next day, the react team met and decided to hold the release:
   date={new Date('2024-06-14')}
 >
   <p>
-    good news re Suspense, just met w/ @rickhanlonii @en_JS @acdlite
+    good news re Suspense, just met w/
+    <TwitterBlueText>@rickhanlonii</TwitterBlueText>{' '}
+    <TwitterBlueText>@en_JS</TwitterBlueText>{' '}
+    <TwitterBlueText>@acdlite</TwitterBlueText>
   </p>
   <p>
     * we care a lot about SPAs, team misjudged how many people rely on

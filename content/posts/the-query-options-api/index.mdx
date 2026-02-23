@@ -23,6 +23,7 @@ import Tweet, {
   AvatarRalex1993,
   TweetImage,
   ContactDetailQuery,
+  TwitterBlueText,
 } from 'components/Tweet'
 
 <Attribution
@@ -81,11 +82,14 @@ But also, it turns out that one object to rule them all is simply a very good ab
   date={new Date('2022-09-14')}
 >
   <p>
-    First time I saw this React Query pattern was @TkDodo's React
-    Router blog post
+    First time I saw this React Query pattern was
+    <TwitterBlueText>@TkDodo</TwitterBlueText>'s React Router blog
+    post
   </p>
   <p>Brilliant 👏</p>
-  <p>dev.to/tkdodo/react-q...</p>
+  <p>
+    <TwitterBlueText>{"dev.to/tkdodo/react-q..."}</TwitterBlueText>
+  </p>
   <p>
     <TweetImage>
       <ContactDetailQuery />

@@ -19,6 +19,7 @@ import Tweet, {
   TanStackQueryV5,
   SelfieInception,
   TweetImage,
+  TwitterBlueText,
 } from 'components/Tweet'
 
 <Attribution
@@ -94,7 +95,10 @@ I went to React Summit again, this time as a speaker, and I had a blast. My talk
   avatar={<AvatarTkDodo />}
   date={new Date('2023-06-02')}
 >
-  <p>The selfie inception 🤳 #ReactSummit</p>
+  <p>
+    The selfie inception 🤳{' '}
+    <TwitterBlueText>#ReactSummit</TwitterBlueText>
+  </p>
   <p>
     <TweetImage>
       <SelfieInception />

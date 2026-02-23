@@ -17,6 +17,7 @@ import Tweet, {
   AvatarTannerlinsley,
   TannerAndMe,
   TweetImage,
+  TwitterBlueText,
 } from 'components/Tweet'
 
 <Attribution name="zero take" url="https://unsplash.com/@zerotake" />
@@ -38,7 +39,10 @@ My personal highlight of the conference has to be that I got to meet [Tanner Lin
   avatar={<AvatarTkDodo />}
   date={new Date('2022-06-17')}
 >
-  <p>And finally, I met up with the one and only @tannerlinsley 🎉</p>
+  <p>
+    And finally, I met up with the one and only
+    <TwitterBlueText>@tannerlinsley</TwitterBlueText> 🎉
+  </p>
   <p>
     <TweetImage>
       <TannerAndMe />
@@ -99,16 +103,25 @@ We managed to stick to that timeline, and v4.0.0 was released on [July 18th](htt
   avatar={<AvatarTannerlinsley />}
   date={new Date('2022-07-20')}
 >
-  <p>🎉🥳 Announcing TanStack Query v4!</p>
-  <p>🪪 Name Change!</p>
-  <p>🌎 Framework Agnostic!</p>
-  <p>✅ @reactjs 🚧 @vuejs 🔜 @solid_js @sveltejs</p>
-  <p>🔀 Concurrent React Support</p>
-  <p>🏕 Offline + Network Mode</p>
-  <p>💾 Stable Persisters</p>
-  <p>⚡️ Tracked Queries Default / Perf+</p>
-  <p>📚 New Docs!</p>
-  <p>🙏 @TkDodo</p>
+  <p>
+    <div>🎉🥳 Announcing TanStack Query v4!</div>
+    <div>🪪 Name Change!</div>
+    <div>🌎 Framework Agnostic!</div>
+    <div>
+      ✅ <TwitterBlueText>@reactjs</TwitterBlueText> 🚧{' '}
+      <TwitterBlueText>@vuejs</TwitterBlueText> 🔜{' '}
+      <TwitterBlueText>@solid_js</TwitterBlueText>{' '}
+      <TwitterBlueText>@sveltejs</TwitterBlueText>
+    </div>
+    <div>🔀 Concurrent React Support</div>
+    <div>🏕 Offline + Network Mode</div>
+    <div>💾 Stable Persisters</div>
+    <div>⚡️ Tracked Queries Default / Perf+</div>
+    <div>📚 New Docs!</div>
+    <div>
+      🙏 <TwitterBlueText>@TkDodo</TwitterBlueText>
+    </div>
+  </p>
 </Tweet>
 
 But to be honest, the release wasn't very stable. To be quite frank, everything below 4.3.0 is nigh unusable. The monorepo and bundling changes that went with it introduced many things I didn't anticipate. Devtools were included in prod builds for some bundlers, and all the ESM changes were basically lost during the move. Version 4.0.0 didn't even have types published. 🙈

@@ -12,7 +12,7 @@ tags:
 import Comments from 'components/Comments.astro'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
-import Tweet, { AvatarDanvdk } from 'components/Tweet'
+import Tweet, { AvatarDanvdk, TwitterBlueText } from 'components/Tweet'
 import { RqToc } from 'components/rq-toc'
 import Emph from 'components/Emph'
 import Aside from 'components/Aside'
@@ -283,11 +283,11 @@ This has nothing to do with React Query, it is just how TypeScript works. [@danv
   date={new Date('2021-02-21')}
 >
   <p>
-    The comment from @TkDodo is exactly right, TypeScript does
-    refinement on the types of individual symbols. Once you split them
-    apart, it can't keep track of the relationship any more. Doing
-    this in general would be computationally hard. It can also be hard
-    for people.
+    The comment from <TwitterBlueText>@TkDodo</TwitterBlueText> is
+    exactly right, TypeScript does refinement on the types of
+    individual symbols. Once you split them apart, it can't keep track
+    of the relationship any more. Doing this in general would be
+    computationally hard. It can also be hard for people.
   </p>
 </Tweet>
 

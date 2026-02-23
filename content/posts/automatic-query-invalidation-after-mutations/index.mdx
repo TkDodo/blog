@@ -16,7 +16,10 @@ import Translations from 'components/Translations'
 import { RqToc } from 'components/rq-toc'
 import Emph from 'components/Emph'
 import Aside from 'components/Aside'
-import Tweet, { AvatarAlexDotJs } from 'components/Tweet'
+import Tweet, {
+  AvatarAlexDotJs,
+  TwitterBlueText,
+} from 'components/Tweet'
 
 <Attribution
   name="Rock'n Roll Monkey"
@@ -98,8 +101,12 @@ With just 5 lines of code, we get a similar behaviour to what frameworks like Re
   avatar={<AvatarAlexDotJs />}
   date={new Date('2024-01-08')}
 >
-  <p>I just invalidate everything on every mutation</p>
-  <p>https://trpc.io/docs/client/re...</p>
+  <p>
+    I just invalidate everything on every mutation
+    <TwitterBlueText>
+      {"https://\u200btrpc.io/docs/client/re..."}
+    </TwitterBlueText>
+  </p>
 </Tweet>
 
 ### But isn't that excessive ?

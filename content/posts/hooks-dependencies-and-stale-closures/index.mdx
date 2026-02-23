@@ -14,7 +14,7 @@ import Comments from 'components/Comments.astro'
 import Highlight from 'components/Highlight'
 import Attribution from 'components/Attribution'
 import Translations from 'components/Translations'
-import Tweet, { AvatarAcemarke } from 'components/Tweet'
+import Tweet, { AvatarAcemarke, TwitterBlueText } from 'components/Tweet'
 import { HsToc } from 'components/hs-toc'
 
 <Attribution
@@ -43,7 +43,10 @@ I love this question from Mark Erikson:
     to "why is my state stale due to closures?"-type questions made
     things better, worse, or just "same thing but different" ?
   </p>
-  <p>(Inspired by the questions we see in @reactiflux daily)</p>
+  <p>
+    (Inspired by the questions we see in
+    <TwitterBlueText>@reactiflux</TwitterBlueText> daily)
+  </p>
 </Tweet>
 
 To me, it has gotten subjectively better. Working with _this_ in class components was a pain, and errors did mostly show up at runtime. However, the behaviour you get due to stale closures are more subtle, and come up in more edge cases. The big advantage though is that they can be statically analyzed - and that's exactly what the [react-hooks/exhaustive-deps](https://reactjs.org/docs/hooks-rules.html#eslint-plugin) eslint rule does.
