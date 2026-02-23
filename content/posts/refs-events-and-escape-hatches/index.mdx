@@ -10,11 +10,15 @@ tags:
   - Hooks
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import Tweet, { AvatarDiegohaz, TweetImage, UseEvent } from "components/Tweet";
-import { HsToc } from "components/hs-toc";
+import Comments from 'components/Comments.astro';
+import Attribution from 'components/Attribution';
+import Translations from 'components/Translations';
+import Tweet, {
+  AvatarDiegohaz,
+  TweetImage,
+  UseEvent,
+} from 'components/Tweet';
+import { HsToc } from 'components/hs-toc';
 
 <Attribution
   name="Lee Blanchflower"
@@ -44,7 +48,7 @@ We always see the things from the time they were created, but if they are _mutat
 <Playground template="react">
 
 ```js name=App.js active
-import * as React from "react";
+import * as React from 'react';
 
 let count = 1;
 
@@ -195,9 +199,12 @@ This looks pretty clean to me, and if you want to have a user-land implementatio
   handle="diegohaz"
   tweetId="1522868292301606912"
   avatar={<AvatarDiegohaz />}
-  date={new Date("2022-05-07")}
+  date={new Date('2022-05-07')}
 >
-  <p>Do you want to use the proposed `useEvent` hook now with TypeScript?</p>
+  <p>
+    Do you want to use the proposed `useEvent` hook now with
+    TypeScript?
+  </p>
   <p>Here you go: gist.github.com/diegohaz/69509...</p>
   <p>
     <TweetImage>

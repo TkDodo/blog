@@ -10,37 +10,40 @@ tags:
   - TypeScript
 ---
 
-import Comments from "components/Comments.astro";
-import Highlight from "components/Highlight";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import { RqToc } from "components/rq-toc";
+import Comments from 'components/Comments.astro';
+import Highlight from 'components/Highlight';
+import Attribution from 'components/Attribution';
+import Translations from 'components/Translations';
+import { RqToc } from 'components/rq-toc';
 
-<Attribution name="OpticalNomad" url="https://unsplash.com/@opticalnomad" />
+<Attribution
+  name="OpticalNomad"
+  url="https://unsplash.com/@opticalnomad"
+/>
 
 <RqToc id="react-query-as-a-state-manager" />
 
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://highjoon-dev.vercel.app/blogs/10-react-query-as-a-state-manager",
+      language: '한국어',
+      url: 'https://highjoon-dev.vercel.app/blogs/10-react-query-as-a-state-manager',
     },
     {
-      language: "Português",
-      url: "https://dbrno.vercel.app/pt-BR/blog/react-query-as-a-state-manager",
+      language: 'Português',
+      url: 'https://dbrno.vercel.app/pt-BR/blog/react-query-as-a-state-manager',
     },
     {
-      language: "日本語",
-      url: "https://makotot.dev/posts/react-query-as-a-state-manager-translation-ja",
+      language: '日本語',
+      url: 'https://makotot.dev/posts/react-query-as-a-state-manager-translation-ja',
     },
     {
-      language: "Español",
-      url: "https://rubenvara.io/react-query/react-query-gestor-estado/",
+      language: 'Español',
+      url: 'https://rubenvara.io/react-query/react-query-gestor-estado/',
     },
     {
-      language: "Russian",
-      url: "https://my-blogs-mdx.aniia.dev/blog/state-manager",
+      language: 'Russian',
+      url: 'https://my-blogs-mdx.aniia.dev/blog/state-manager',
     },
   ]}
 />
@@ -208,9 +211,9 @@ So how can we have our cake and eat it, too?
 Maybe you've already guessed the direction in which I want to go: The solution would be to set `staleTime` to a value you are comfortable with for your specific use-case. The key thing to know is:
 
 <Highlight>
-  As long as data is fresh, it will always come from the cache only. You will
-  not see a network request for fresh data, no matter how often you want to
-  retrieve it.
+  As long as data is fresh, it will always come from the cache only.
+  You will not see a network request for fresh data, no matter how
+  often you want to retrieve it.
 </Highlight>
 
 There is also no "correct" value for `staleTime`. In many situations, the defaults work really well. Personally, I like to set it to a minimum of 20 seconds to deduplicate requests in that time frame, but it's totally up to you.

@@ -10,15 +10,18 @@ tags:
   - TypeScript
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Highlight from "components/Highlight";
-import SmallCentered from "components/SmallCentered";
-import Translations from "components/Translations";
-import { RqToc } from "components/rq-toc";
-import Aside from "components/Aside";
+import Comments from 'components/Comments.astro';
+import Attribution from 'components/Attribution';
+import Highlight from 'components/Highlight';
+import SmallCentered from 'components/SmallCentered';
+import Translations from 'components/Translations';
+import { RqToc } from 'components/rq-toc';
+import Aside from 'components/Aside';
 
-<Attribution name="mohammad takhsh" url="https://unsplash.com/@mohammadtkh" />
+<Attribution
+  name="mohammad takhsh"
+  url="https://unsplash.com/@mohammadtkh"
+/>
 
 **Last Update: 2023-01-03**
 
@@ -27,8 +30,8 @@ import Aside from "components/Aside";
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://highjoon-dev.vercel.app/blogs/8a-leveraging-the-query-function-context",
+      language: '한국어',
+      url: 'https://highjoon-dev.vercel.app/blogs/8a-leveraging-the-query-function-context',
     },
   ]}
 />
@@ -42,8 +45,8 @@ That's why I've decided to write this addendum to my [Effective React Query Keys
 ## Hot take
 
 <Highlight>
-  Don't use inline functions - leverage the Query Function Context given to you,
-  and use a Query Key factory that produces object keys
+  Don't use inline functions - leverage the Query Function Context
+  given to you, and use a Query Key factory that produces object keys
 </Highlight>
 
 Inline functions are by far the easiest way to pass parameters to your `queryFn`, because they let you close over other variables available in your custom hook. Let's look at the evergreen todo example:

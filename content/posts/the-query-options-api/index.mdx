@@ -10,20 +10,20 @@ tags:
   - JavaScript
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import { RqToc } from "components/rq-toc";
-import Emph from "components/Emph";
-import Aside from "components/Aside";
-import QueryGG from "components/QueryGG.astro";
-import Highlight from "components/Highlight";
-import { TsError } from "components/TsError";
+import Comments from 'components/Comments.astro';
+import Attribution from 'components/Attribution';
+import Translations from 'components/Translations';
+import { RqToc } from 'components/rq-toc';
+import Emph from 'components/Emph';
+import Aside from 'components/Aside';
+import QueryGG from 'components/QueryGG.astro';
+import Highlight from 'components/Highlight';
+import { TsError } from 'components/TsError';
 import Tweet, {
   AvatarRalex1993,
   TweetImage,
   ContactDetailQuery,
-} from "components/Tweet";
+} from 'components/Tweet';
 
 <Attribution
   name="Dan Scott"
@@ -35,8 +35,8 @@ import Tweet, {
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://velog.io/@cnsrn1874/the-query-options-api",
+      language: '한국어',
+      url: 'https://velog.io/@cnsrn1874/the-query-options-api',
     },
   ]}
 />
@@ -78,11 +78,11 @@ But also, it turns out that one object to rule them all is simply a very good ab
   handle="ralex1993"
   tweetId="1570036707134676994"
   avatar={<AvatarRalex1993 />}
-  date={new Date("2022-09-14")}
+  date={new Date('2022-09-14')}
 >
   <p>
-    First time I saw this React Query pattern was @TkDodo's React Router blog
-    post
+    First time I saw this React Query pattern was @TkDodo's React
+    Router blog post
   </p>
   <p>Brilliant 👏</p>
   <p>dev.to/tkdodo/react-q...</p>
@@ -134,9 +134,9 @@ useQuery({
 [TypeScript playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgVwM4FMCKz1QJ5wC+cAZlBCHAOQACMAhgHaoMDGA1gPRTr2swBaAI458VAFDiYeMOjgAVCABMIcALyJxcbXGBKAXHEbIQAI1zjC4pelYAbej1LJG-YBEal0MVgAtFKqgAFACUhgAK5CDAGAA8AIJQUPR4sQEQAHwZkmhYonhBCFpwIrh4ANLoeIYA2lQwyhCoVAC6ADTFpfgAYoyGJN5+6agd2iz0dnbyoOiGAKwADEsdhCFAA)
 
 <TsError>
-  Object literal may only specify known properties, but 'stallTime' does not
-  exist in type 'UseQueryOptions&lt;Todo[], Error, Todo[], string[]&gt;'. Did
-  you mean to write 'staleTime'?(2769)
+  Object literal may only specify known properties, but 'stallTime'
+  does not exist in type 'UseQueryOptions&lt;Todo[], Error, Todo[],
+  string[]&gt;'. Did you mean to write 'staleTime'?(2769)
 </TsError>
 
 Which is cool, because it catches typos like the one above. But what if you abstract the whole object away into a constant, like our pattern suggests?
@@ -221,7 +221,9 @@ There's nothing wrong with calling `useQuery` in your component directly, especi
 
 Additionally, I'm seeing [Query Key Factories](effective-react-query-keys) in a bit of a different light now. I've come to learn that:
 
-<Highlight>Separating QueryKey from QueryFunction was a mistake</Highlight>
+<Highlight>
+  Separating QueryKey from QueryFunction was a mistake
+</Highlight>
 
 The `queryKey` defines the dependencies to our `queryFn` - everything we use inside it must go into the key. So why define keys in one central place while having the functions far a way from them in our custom hooks?
 

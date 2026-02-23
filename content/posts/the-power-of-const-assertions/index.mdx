@@ -7,10 +7,10 @@ tags:
   - TypeScript
 ---
 
-import Attribution from "components/Attribution";
-import Comments from "components/Comments.astro";
-import Translations from "components/Translations";
-import { TsError } from "components/TsError";
+import Attribution from 'components/Attribution';
+import Comments from 'components/Comments.astro';
+import Translations from 'components/Translations';
+import { TsError } from 'components/TsError';
 
 <Attribution name="Jack B" url="https://unsplash.com/@nervum" />
 
@@ -70,9 +70,10 @@ Component(props)
 Here, the compiler will complain with:
 
 <TsError>
-  Argument of type '&#123; variant: string; &#125; is not assignable to
-  parameter of type 'Props'. Types of property 'variant' are incompatible. Type
-  'string' is not assignable to type 'Variant'.(2345)
+  Argument of type '&#123; variant: string; &#125; is not assignable
+  to parameter of type 'Props'. Types of property 'variant' are
+  incompatible. Type 'string' is not assignable to type
+  'Variant'.(2345)
 </TsError>
 
 because variant will be inferred to string.

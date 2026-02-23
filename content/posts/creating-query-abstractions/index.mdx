@@ -1,6 +1,6 @@
 ---
 title: Creating Query Abstractions
-description:
+description: tbd
 date: 2026-02-21
 banner: ./creating.jpg
 tags:
@@ -10,14 +10,16 @@ tags:
   - API Design
 ---
 
-import Comments from "components/Comments";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import { RqToc } from "components/rq-toc";
-import Emph from "components/Emph";
-import Aside from "components/Aside";
+import Comments from 'components/Comments.astro';
+import Attribution from 'components/Attribution';
+import Translations from 'components/Translations';
+import Emph from 'components/Emph';
+import { RqToc } from 'components/rq-toc';
 
-<Attribution name="Earl Wilcox" url="https://unsplash.com/@earl_plannerzone" />
+<Attribution
+  name="Earl Wilcox"
+  url="https://unsplash.com/@earl_plannerzone"
+/>
 
 <RqToc id="creating-query-abstractions" />
 
@@ -26,6 +28,52 @@ import Aside from "components/Aside";
 Developers love creating abstractions. We see some code that we'll need in a different place - abstraction. Need this 3-liner, but slightly different - abstraction (with a flag). Need something that every `useQuery` should do - Create an aBsTrAcTiOn!
 
 There's nothing wrong with abstractions per se, but they have tradeoffs, like everything else. Dan's talk [The wet codebase](https://www.deconstructconf.com/2019/dan-abramov-the-wet-codebase) is among one of my favourite talks ever, and he explains this really well.
+
+## Custom Hooks
+
+In React, creating abstractions very often correlates with custom hooks. They are great for sharing logic between multiple components, or even just hiding that gnarly `useEffect` behind a good name. For the longest time, creating your own abstraction over `useQuery` meant writing a custom hook:
+
+```ts title="useInvoice"
+function useInvoice(id: string) {
+  return useQuery({
+    queryKey: ['invoice', id],
+    queryFn: () => fetchInvoice(id),
+  });
+}
+```
+
+This is straightforward, and I can now call `useInvoice()` wherever I want instead of having to repeat the `queryKey` and `queryFn` all the time. It ensures consistency for the `queryKey`, which could otherwise lead to duplicate cache entries. And because it just returns what `useQuery` returns, we have an interface that is aligned with TanStack Query's API surface, so there's no surprise naming where this hook is used.
+
+Types are also <Emph>fully inferred</Emph>, because we don't annotate any generics manually anywhere, which is great. The more our TypeScript code looks like plain JavaScript, the better.
+
+## Query Options
+
+But what about the input to this custom hook ? `useQuery` has 23 options, and we now can't pass any of those in. What if we want to pass a different `staleTime` for one of our screens where getting background updates isn't as important. Sure, I guess we'll just accept that as another parameter:
+
+```ts title="staleTime" {1,5}
+function useInvoice(id: string, staleTime: number, foo: '') {
+  return useQuery({
+    queryKey: ['invoice', id],
+    queryFn: () => fetchInvoice(id),
+    staleTime,
+  });
+}
+```
+
+This still looks okay I guess, but next thing you know, somebody wants to integrate the Query with Error Boundaries, so they want to pass `throwOnError`. Okay, but that many parameters isn't a good interface, I guess we should've just made it an object in the first place:
+
+```ts title="Another Option" {3,8}
+function useInvoice(
+  id: string,
+  options?: { staleTime?: number; throwOnError?: boolean },
+) {
+  return useQuery({
+    queryKey: ['invoice', id],
+    queryFn: () => fetchInvoice(id),
+    ...options,
+  });
+}
+```
 
 ---
 

@@ -11,27 +11,30 @@ tags:
   - Server Components
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import Highlight from "components/Highlight";
+import Comments from 'components/Comments.astro';
+import Attribution from 'components/Attribution';
+import Translations from 'components/Translations';
+import Highlight from 'components/Highlight';
 import Tweet, {
   AvatarTkDodo,
   AvatarSwyx,
   TweetImage,
   CynicsVsBuilders,
-} from "components/Tweet";
-import { RqToc } from "components/rq-toc";
+} from 'components/Tweet';
+import { RqToc } from 'components/rq-toc';
 
-<Attribution name="Randy Tarampi" url="https://unsplash.com/@randytarampi" />
+<Attribution
+  name="Randy Tarampi"
+  url="https://unsplash.com/@randytarampi"
+/>
 
 <RqToc id="you-might-not-need-react-query" />
 
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://velog.io/@cnsrn1874/you-might-not-need-react-query",
+      language: '한국어',
+      url: 'https://velog.io/@cnsrn1874/you-might-not-need-react-query',
     },
   ]}
 />
@@ -43,15 +46,17 @@ Will [React Server Components](https://react.dev/blog/2023/03/22/react-labs-what
   handle="TkDodo"
   tweetId="1585204181651988481"
   avatar={<AvatarTkDodo />}
-  date={new Date("2022-10-26")}
+  date={new Date('2022-10-26')}
 >
   <p>
-    Not gonna lie that (as a maintainer of a library in the data fetching space)
-    I'm feeling mostly afraid of server components and suspense.
+    Not gonna lie that (as a maintainer of a library in the data
+    fetching space) I'm feeling mostly afraid of server components and
+    suspense.
   </p>
   <p>
-    "How will this work with react-query" is a good question. It feels like I'm
-    supposed to have an answer but I don't. Huge imposter syndrome rn
+    "How will this work with react-query" is a good question. It feels
+    like I'm supposed to have an answer but I don't. Huge imposter
+    syndrome rn
   </p>
 </Tweet>
 
@@ -74,11 +79,12 @@ Times are evolving, things get better. Even though it might look like things are
   handle="swyx"
   tweetId="1260019961868677121"
   avatar={<AvatarSwyx />}
-  date={new Date("2023-05-12")}
+  date={new Date('2023-05-12')}
 >
   <p>
-    i'm sure @Mappletons can do better but this is what i see in my head every
-    time i see "devs just go back and forth in endless cycles" comments
+    i'm sure @Mappletons can do better but this is what i see in my
+    head every time i see "devs just go back and forth in endless
+    cycles" comments
   </p>
   <p>
     <TweetImage>
@@ -137,11 +143,12 @@ Further, you can use React Query for things _other than_ data fetching. Have a l
   handle="TkDodo"
   tweetId="1616490384305311745"
   avatar={<AvatarTkDodo />}
-  date={new Date("2023-01-20")}
+  date={new Date('2023-01-20')}
 >
   <p>
-    What are some things that you use TanStack Query for that is _not_ data
-    fetching? Curious to know what other use-cases you all have 😄
+    What are some things that you use TanStack Query for that is _not_
+    data fetching? Curious to know what other use-cases you all have
+    😄
   </p>
 </Tweet>
 
@@ -151,7 +158,9 @@ So, my prediction is that there will still be plenty of usages outside - and eve
 
 But it's still quite early, bleeding edge tech. In order to use them, you have to tightly integrate with a given framework, a router and a bundler. It also means you need to have the infrastructure to handle the additional server load. I kind of keep repeating myself, but:
 
-<Highlight>there is no free lunch; everything is a tradeoff.</Highlight>
+<Highlight>
+  there is no free lunch; everything is a tradeoff.
+</Highlight>
 
 ![Buzz Lightyear meme: tradeoffs, tradeoffs everywhere](./tradeoffs.jpeg)
 

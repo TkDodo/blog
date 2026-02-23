@@ -8,14 +8,17 @@ tags:
   - Road to Refactoring
 ---
 
-import Comments from "components/Comments.astro";
-import Highlight from "components/Highlight";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import Tweet, { AvatarTkDodo } from "components/Tweet";
-import { RtrToc } from "components/rtr-toc";
+import Comments from 'components/Comments.astro';
+import Highlight from 'components/Highlight';
+import Attribution from 'components/Attribution';
+import Translations from 'components/Translations';
+import Tweet, { AvatarTkDodo } from 'components/Tweet';
+import { RtrToc } from 'components/rtr-toc';
 
-<Attribution name="Jesse Bowser" url="https://unsplash.com/@jessebowser" />
+<Attribution
+  name="Jesse Bowser"
+  url="https://unsplash.com/@jessebowser"
+/>
 
 <RtrToc id="road-to-refactoring" />
 
@@ -63,7 +66,7 @@ This is the flow I usually take when getting a bug report:
   handle="TkDodo"
   tweetId="1462821229841338381"
   avatar={<AvatarTkDodo />}
-  date={new Date("2021-11-22")}
+  date={new Date('2021-11-22')}
 >
   <p>This is the best flow:</p>
   <p>🐞 find a bug</p>

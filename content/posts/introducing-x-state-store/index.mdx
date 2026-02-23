@@ -10,22 +10,25 @@ tags:
   - XState
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import Emph from "components/Emph";
+import Comments from 'components/Comments.astro';
+import Attribution from 'components/Attribution';
+import Translations from 'components/Translations';
+import Emph from 'components/Emph';
 
-<Attribution name="Artem Beliaikin" url="https://unsplash.com/@belart84" />
+<Attribution
+  name="Artem Beliaikin"
+  url="https://unsplash.com/@belart84"
+/>
 
 <Translations
   translations={[
     {
-      language: "简体中文",
-      url: "https://sorrycc.com/introducing-x-state-store/",
+      language: '简体中文',
+      url: 'https://sorrycc.com/introducing-x-state-store/',
     },
     {
-      language: "한국어",
-      url: "https://www.gwansik.dev/posts/introducing-x-state-store",
+      language: '한국어',
+      url: 'https://www.gwansik.dev/posts/introducing-x-state-store',
     },
   ]}
 />

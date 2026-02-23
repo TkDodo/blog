@@ -11,15 +11,18 @@ tags:
   - JavaScript
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import Highlight from "components/Highlight";
-import Tweet, { AvatarRyanflorence } from "components/Tweet";
-import { RqToc } from "components/rq-toc";
-import Emph from "components/Emph";
+import Comments from 'components/Comments.astro';
+import Attribution from 'components/Attribution';
+import Translations from 'components/Translations';
+import Highlight from 'components/Highlight';
+import Tweet, { AvatarRyanflorence } from 'components/Tweet';
+import { RqToc } from 'components/rq-toc';
+import Emph from 'components/Emph';
 
-<Attribution name="Ashkan Forouzani" url="https://unsplash.com/@ashkfor121" />
+<Attribution
+  name="Ashkan Forouzani"
+  url="https://unsplash.com/@ashkfor121"
+/>
 
 **Last Update: 2022-12-11**
 
@@ -51,14 +54,16 @@ To me, the answers to both questions are clearly: YES. As [Ryan Florence](https:
   handle="ryanflorence"
   tweetId="1561731634419773447"
   avatar={<AvatarRyanflorence />}
-  date={new Date("2022-08-22")}
+  date={new Date('2022-08-22')}
 >
   <p>Nah, React Router is not a cache.</p>
   <p>
-    Browsers have this built in with HTTP and libraries like React Query have
-    this job nailed down.
+    Browsers have this built in with HTTP and libraries like React
+    Query have this job nailed down.
   </p>
-  <p>React Router is about *when*, data caching libs are about *what*.</p>
+  <p>
+    React Router is about *when*, data caching libs are about *what*.
+  </p>
 </Tweet>
 
 Fetching "as early as possible" is an important concept to provide the best possible user experience. Full Stack frameworks like [NextJs](https://nextjs.org/) or Remix move this step to the server, because that is the earliest entry point. With client rendered applications, we have no such luxury.

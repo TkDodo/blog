@@ -8,13 +8,16 @@ tags:
   - TypeScript
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import Aside from "components/Aside";
-import Emph from "components/Emph";
+import Comments from 'components/Comments.astro';
+import Attribution from 'components/Attribution';
+import Translations from 'components/Translations';
+import Aside from 'components/Aside';
+import Emph from 'components/Emph';
 
-<Attribution name="WanderLabs" url="https://unsplash.com/@wanderlabs" />
+<Attribution
+  name="WanderLabs"
+  url="https://unsplash.com/@wanderlabs"
+/>
 
 <Translations translations={[]} />
 
@@ -30,7 +33,9 @@ When I first learned about async functions, the following sentence stuck with me
 
 > Async / await is "just" syntactic sugar for promise chaining
 
-<p style="padding-left: 3rem; margin-top: -1rem">— Someone, somewhen</p>
+<p style="padding-left: 3rem; margin-top: -1rem">
+  — Someone, somewhen
+</p>
 
 This is mostly true, and if that's your mental model about async functions, it will get you quite far. To re-iterate, let's take an example and refactor it from promise chaining to an async function:
 

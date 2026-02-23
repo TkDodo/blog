@@ -10,12 +10,12 @@ tags:
   - useReducer
 ---
 
-import Comments from "components/Comments.astro";
-import Highlight from "components/Highlight";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import Emph from "components/Emph";
-import { UsToc } from "components/us-toc";
+import Comments from 'components/Comments.astro';
+import Highlight from 'components/Highlight';
+import Attribution from 'components/Attribution';
+import Translations from 'components/Translations';
+import Emph from 'components/Emph';
+import { UsToc } from 'components/us-toc';
 
 <Attribution name="Piret Ilver" url="https://unsplash.com/@saltsup" />
 
@@ -26,8 +26,8 @@ import { UsToc } from "components/us-toc";
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://www.philly.im/blog/use-state-vs-use-reducer",
+      language: '한국어',
+      url: 'https://www.philly.im/blog/use-state-vs-use-reducer',
     },
   ]}
 />
@@ -142,7 +142,9 @@ const useForm = <State extends Record<string, unknown>>(
 
 So, for _useState_, to decide if I want to split state up or not, I go by the following rule:
 
-<Highlight>State that updates together should live together.</Highlight>
+<Highlight>
+  State that updates together should live together.
+</Highlight>
 
 ## Batching
 

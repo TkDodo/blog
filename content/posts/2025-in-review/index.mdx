@@ -9,17 +9,20 @@ tags:
   - Year in Review
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import Emph from "components/Emph";
+import Comments from 'components/Comments.astro';
+import Attribution from 'components/Attribution';
+import Translations from 'components/Translations';
+import Emph from 'components/Emph';
 import Tweet, {
   AvatarTkDodo,
   TweetImage,
   ADayOnTheOrangeSite,
-} from "components/Tweet";
+} from 'components/Tweet';
 
-<Attribution name="Kelly Sikkema" url="https://unsplash.com/@kellysikkema" />
+<Attribution
+  name="Kelly Sikkema"
+  url="https://unsplash.com/@kellysikkema"
+/>
 
 <Translations translations={[]} />
 
@@ -80,7 +83,7 @@ I even made it to the front page of Hacker News, as you can see in this beautifu
   handle="tkdodo.eu"
   tweetId="3m33upgcdjc2c"
   avatar={<AvatarTkDodo />}
-  date={new Date("2025-10-13")}
+  date={new Date('2025-10-13')}
   type="bsky"
 >
   <p>PoV: A day on the orange site in July 🟠</p>

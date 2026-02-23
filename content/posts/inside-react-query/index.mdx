@@ -10,24 +10,27 @@ tags:
   - JavaScript
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import { RqToc } from "components/rq-toc";
+import Comments from 'components/Comments.astro';
+import Attribution from 'components/Attribution';
+import Translations from 'components/Translations';
+import { RqToc } from 'components/rq-toc';
 
-<Attribution name="Tim Mossholder" url="https://unsplash.com/@timmossholder" />
+<Attribution
+  name="Tim Mossholder"
+  url="https://unsplash.com/@timmossholder"
+/>
 
 <RqToc id="inside-react-query" />
 
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://velog.io/@hyunjine/Inside-React-Query",
+      language: '한국어',
+      url: 'https://velog.io/@hyunjine/Inside-React-Query',
     },
     {
-      language: "日本語",
-      url: "https://makotot.dev/posts/inside-react-query-translation-ja",
+      language: '日本語',
+      url: 'https://makotot.dev/posts/inside-react-query-translation-ja',
     },
   ]}
 />

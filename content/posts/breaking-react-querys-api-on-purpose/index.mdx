@@ -11,23 +11,26 @@ tags:
   - API Design
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
+import Comments from 'components/Comments.astro';
+import Attribution from 'components/Attribution';
+import Translations from 'components/Translations';
 import Tweet, {
   AvatarWillMcGugan,
   AvatarTkDodo,
   AvatarT3dotgg,
   AvatarMichaelC,
-} from "components/Tweet";
+} from 'components/Tweet';
 
-<Attribution name="Denny Müller" url="https://unsplash.com/@redaquamedia" />
+<Attribution
+  name="Denny Müller"
+  url="https://unsplash.com/@redaquamedia"
+/>
 
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://velog.io/@cnsrn1874/breaking-react-querys-api-on-purpose",
+      language: '한국어',
+      url: 'https://velog.io/@cnsrn1874/breaking-react-querys-api-on-purpose',
     },
   ]}
 />
@@ -49,13 +52,13 @@ So if major versions aren't about new features, what are they about? [Will McGug
   handle="willmcgugan"
   tweetId="1423678688802058244"
   avatar={<AvatarWillMcGugan />}
-  date={new Date("2021-08-06")}
+  date={new Date('2021-08-06')}
 >
   <p>
-    Absolutely. The thing about semver major version numbers are that they don't
-    mean new stuff, they're a permanent reminder of how many times you got the
-    API wrong. Semver doesn't mean MAJOR.MINOR.PATCH, it means
-    FAILS.FEATURES.BUGS
+    Absolutely. The thing about semver major version numbers are that
+    they don't mean new stuff, they're a permanent reminder of how
+    many times you got the API wrong. Semver doesn't mean
+    MAJOR.MINOR.PATCH, it means FAILS.FEATURES.BUGS
   </p>
 </Tweet>
 
@@ -70,15 +73,16 @@ So React Query is nearing its 5th API fail, and we've taken a quite controversia
   handle="TkDodo"
   tweetId="1647341498227097600"
   avatar={<AvatarTkDodo />}
-  date={new Date("2023-04-15")}
+  date={new Date('2023-04-15')}
 >
   <p>
-    📢 We will very likely be removing the onSuccess / onError / onSettled
-    callbacks from `useQuery` in v5. I tried very hard to come up with a good
-    use-case, but imo there is none.
+    📢 We will very likely be removing the onSuccess / onError /
+    onSettled callbacks from `useQuery` in v5. I tried very hard to
+    come up with a good use-case, but imo there is none.
   </p>
   <p>
-    I'll write an RFC soon, but if you have a legit use-case, let me know now!
+    I'll write an RFC soon, but if you have a legit use-case, let me
+    know now!
   </p>
 </Tweet>
 
@@ -91,12 +95,12 @@ Before you jump on the bandwagon, please note that we're talking only about the 
   handle="michaelc_1991"
   tweetId="1647540073100091393"
   avatar={<AvatarMichaelC />}
-  date={new Date("2023-04-16")}
+  date={new Date('2023-04-16')}
 >
   <p>
-    I had an initial knee jerk reaction of thinking this was a bad move. But
-    after reading a lot of the reasons as to why keeping them is a bad move. I'm
-    on board with this now. It makes sense
+    I had an initial knee jerk reaction of thinking this was a bad
+    move. But after reading a lot of the reasons as to why keeping
+    them is a bad move. I'm on board with this now. It makes sense
   </p>
 </Tweet>
 
@@ -324,11 +328,11 @@ Almost all examples I've seen can and will break in some cases, and I've seen th
   handle="t3dotgg"
   tweetId="1647451137652686848"
   avatar={<AvatarT3dotgg />}
-  date={new Date("2023-04-15")}
+  date={new Date('2023-04-15')}
 >
   <p>
-    UPDATE: 27 instances of `onSuccess`, 4 are in queries, 3 are almost
-    certainly sources of bugs
+    UPDATE: 27 instances of `onSuccess`, 4 are in queries, 3 are
+    almost certainly sources of bugs
   </p>
   <p>Deprecate away 🙏</p>
 </Tweet>

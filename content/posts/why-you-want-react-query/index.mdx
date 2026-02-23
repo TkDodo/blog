@@ -10,18 +10,21 @@ tags:
   - useEffect
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import { RqToc } from "components/rq-toc";
-import Emph from "components/Emph";
-import Aside from "components/Aside";
-import QueryGG from "components/QueryGG.astro";
-import { FixTitle } from "components/FixTitle";
-import { VerticalRuler } from "components/VerticalRuler";
-import Highlight from "components/Highlight";
+import Comments from 'components/Comments.astro';
+import Attribution from 'components/Attribution';
+import Translations from 'components/Translations';
+import { RqToc } from 'components/rq-toc';
+import Emph from 'components/Emph';
+import Aside from 'components/Aside';
+import QueryGG from 'components/QueryGG.astro';
+import { FixTitle } from 'components/FixTitle';
+import { VerticalRuler } from 'components/VerticalRuler';
+import Highlight from 'components/Highlight';
 
-<Attribution name="Christian Lue" url="https://unsplash.com/@christianlue" />
+<Attribution
+  name="Christian Lue"
+  url="https://unsplash.com/@christianlue"
+/>
 
 <FixTitle />
 
@@ -30,12 +33,12 @@ import Highlight from "components/Highlight";
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://velog.io/@cnsrn1874/why-you-need-react-query",
+      language: '한국어',
+      url: 'https://velog.io/@cnsrn1874/why-you-need-react-query',
     },
     {
-      language: "Español",
-      url: "https://dev.to/ccaracach/por-que-necesitas-react-query-3a1n",
+      language: 'Español',
+      url: 'https://dev.to/ccaracach/por-que-necesitas-react-query-3a1n',
     },
   ]}
 />

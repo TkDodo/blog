@@ -10,12 +10,12 @@ tags:
   - Performance
 ---
 
-import Comments from "components/Comments.astro";
-import Attribution from "components/Attribution";
-import Translations from "components/Translations";
-import Emph from "components/Emph";
-import Highlight from "components/Highlight";
-import Tweet, { AvatarHousecor } from "components/Tweet";
+import Comments from 'components/Comments.astro';
+import Attribution from 'components/Attribution';
+import Translations from 'components/Translations';
+import Emph from 'components/Emph';
+import Highlight from 'components/Highlight';
+import Tweet, { AvatarHousecor } from 'components/Tweet';
 
 <Attribution
   name="Michiel Annaert"
@@ -28,12 +28,12 @@ import Tweet, { AvatarHousecor } from "components/Tweet";
 <Translations
   translations={[
     {
-      language: "한국어",
-      url: "https://velog.io/@cnsrn1874/the-uphill-battle-of-memoization",
+      language: '한국어',
+      url: 'https://velog.io/@cnsrn1874/the-uphill-battle-of-memoization',
     },
     {
-      language: "Português (Brasil)",
-      url: "https://dev.to/oaraujocesar/a-ardua-batalha-da-memoizacao-3nja",
+      language: 'Português (Brasil)',
+      url: 'https://dev.to/oaraujocesar/a-ardua-batalha-da-memoizacao-3nja',
     },
   ]}
 />
@@ -206,12 +206,12 @@ So using `React.memo` is a bit of a minefield, and choosing one of the proposed 
   handle="housecor"
   tweetId="1707358107532210193"
   avatar={<AvatarHousecor />}
-  date={new Date("2023-09-28")}
+  date={new Date('2023-09-28')}
 >
   <p>I rarely need to do React performance optimizations.</p>
   <p>
-    But we have a page with 5 big tables and a summary bar. When one table
-    changes, everything renders. It's slow.
+    But we have a page with 5 big tables and a summary bar. When one
+    table changes, everything renders. It's slow.
   </p>
   <p>Solution:</p>
   <p>1. I wrapped each table in memo.</p>
