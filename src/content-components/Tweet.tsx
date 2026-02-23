@@ -252,6 +252,10 @@ export const UseEvent = () => (
   />
 );
 
+export const TwitterBlueText = ({ children }: { children: ReactNode }) => (
+  <span style={{ color: "var(--color-twitter-blue)" }}>{children}</span>
+);
+
 function normalizeType(type: TweetType): "x" | "bsky" {
   return type === "bsky" ? "bsky" : "x";
 }
@@ -294,7 +298,7 @@ export default function Tweet({
           </div>
         </div>
       </div>
-      <div className="my-4 leading-normal [&_p]:m-0 [&_p]:leading-normal [&_p+p]:mt-0 [&_br]:leading-normal">
+      <div className="my-4 leading-normal [&_p]:m-0 [&_p]:leading-normal [&_p+p]:mt-4 [&_br]:leading-normal">
         {children}
       </div>
       <div className="text-xs md:text-base text-faded">
