@@ -12,7 +12,7 @@ interface Props {
 
 export function TweetPoll({ options, votes }: Props) {
   return (
-    <span className="tweet-poll flex flex-col gap-1 p-0">
+    <span className="flex flex-col gap-1 p-0">
       {options.map(({ id, name, percentage, winner = false }) => (
         <span
           key={id}
@@ -21,7 +21,11 @@ export function TweetPoll({ options, votes }: Props) {
           <progress
             max={100}
             value={Number.parseFloat(percentage)}
-            className={`tweet-poll-progress absolute inset-0 h-8 w-full ${winner ? "is-winner" : ""}`}
+            className={`absolute inset-0 h-8 w-full appearance-none overflow-hidden rounded-[4px] border-none bg-transparent [&::-webkit-progress-bar]:bg-transparent [&::-webkit-progress-value]:rounded-[4px] [&::-webkit-progress-value]:bg-[var(--color-twitter-poll-bg)] [&::-moz-progress-bar]:rounded-[4px] [&::-moz-progress-bar]:bg-[var(--color-twitter-poll-bg)] ${
+              winner
+                ? "[&::-webkit-progress-value]:bg-[var(--color-twitter-poll-bg-winner)] [&::-moz-progress-bar]:bg-[var(--color-twitter-poll-bg-winner)]"
+                : ""
+            }`}
           />
           <span className="z-10 shrink px-3">
             {winner ? <b>{name}</b> : name}
