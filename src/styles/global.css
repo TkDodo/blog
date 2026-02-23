@@ -308,17 +308,6 @@ a[data-nav-pending="true"] {
   box-shadow: none;
 }
 
-/* Theme select styling */
-select {
-  background-color: var(--color-bg);
-  color: var(--color-text);
-}
-
-select option {
-  background-color: var(--color-bg);
-  color: var(--color-text);
-}
-
 code,
 pre,
 kbd,
