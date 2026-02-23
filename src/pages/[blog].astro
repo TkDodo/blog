@@ -122,7 +122,7 @@ const ogImagePath = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/og-images/${
     />
   </Seo>
   <SkipNavContent searchIndex={post.searchIndex}>
-    <Prose>
+    <Prose as="article">
       <h1
         class="mb-0! font-bold! leading-[1.25]! md:leading-[1.25]! lg:leading-[1.25]!"
         data-pagefind-meta="title"
