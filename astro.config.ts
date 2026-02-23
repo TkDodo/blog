@@ -99,22 +99,28 @@ export default defineConfig({
         {
           behavior: "after",
           group() {
-            return h(".markdown-heading");
+            return h(".group/heading.relative");
           },
           headingProperties() {
-            return { tabIndex: -1 };
+            return {
+              tabIndex: -1,
+              className:
+                "focus:outline-none focus-visible:outline-none focus:shadow-none focus-visible:shadow-none",
+            };
           },
-          properties(node: any) {
+          properties(node) {
             return {
               ariaLabel: `Permalink: ${toString(node)}`,
-              className: "anchor",
+              className:
+                "absolute left-[calc(-9*var(--spacing))] top-1/2 flex h-[calc(var(--spacing)*7)] w-[calc(var(--spacing)*10)] -translate-y-[calc(50%-0.1rem)] items-center justify-center pr-[calc(var(--spacing)*4)] opacity-0 transition-opacity duration-200 ease-in-out pointer-events-none group-hover/heading:opacity-100 group-hover/heading:pointer-events-auto group-focus-within/heading:opacity-100 group-focus-within/heading:pointer-events-auto focus-visible:outline-none focus-visible:shadow-none focus-visible:rounded-none focus-visible:[&_.anchor-icon]:rounded-[0.375rem] focus-visible:[&_.anchor-icon]:shadow-[0_0_0_2px_var(--color-primary),0_0_0_4px_color-mix(in_srgb,var(--color-primary)_24%,transparent)]",
             };
           },
           content() {
             return h(
               "svg",
               {
-                className: "anchor-icon",
+                className:
+                  "anchor-icon inline-block !overflow-visible align-text-bottom fill-current h-[calc(var(--spacing)*5)] w-[calc(var(--spacing)*5)]",
                 viewBox: "0 0 16 16",
                 ariaHidden: true,
               },
