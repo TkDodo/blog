@@ -10,12 +10,12 @@ tags:
   - TypeScript
 ---
 
-import Comments from 'components/Comments.astro';
-import Attribution from 'components/Attribution';
-import Translations from 'components/Translations';
-import { RqToc } from 'components/rq-toc';
-import Emph from 'components/Emph';
-import Highlight from 'components/Highlight';
+import Comments from 'components/Comments.astro'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import { RqToc } from 'components/rq-toc'
+import Emph from 'components/Emph'
+import Highlight from 'components/Highlight'
 
 <Attribution name="Chunli Ju" url="https://unsplash.com/@chunlea" />
 
@@ -58,19 +58,19 @@ The most important part is that keys need to be _unique_ for your queries. If Re
 useQuery({
   queryKey: ['todos'],
   queryFn: fetchTodos,
-});
+})
 
 // 🚨 this won't work
 useInfiniteQuery({
   queryKey: ['todos'],
   queryFn: fetchInfiniteTodos,
-});
+})
 
 // ✅ choose something else instead
 useInfiniteQuery({
   queryKey: ['infiniteTodos'],
   queryFn: fetchInfiniteTodos,
-});
+})
 ```
 
 ## Automatic Refetching

@@ -10,20 +10,20 @@ tags:
   - JavaScript
 ---
 
-import Comments from 'components/Comments.astro';
-import Attribution from 'components/Attribution';
-import Translations from 'components/Translations';
-import { RqToc } from 'components/rq-toc';
-import Emph from 'components/Emph';
-import Aside from 'components/Aside';
-import QueryGG from 'components/QueryGG.astro';
-import Highlight from 'components/Highlight';
-import { TsError } from 'components/TsError';
+import Comments from 'components/Comments.astro'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import { RqToc } from 'components/rq-toc'
+import Emph from 'components/Emph'
+import Aside from 'components/Aside'
+import QueryGG from 'components/QueryGG.astro'
+import Highlight from 'components/Highlight'
+import { TsError } from 'components/TsError'
 import Tweet, {
   AvatarRalex1993,
   TweetImage,
   ContactDetailQuery,
-} from 'components/Tweet';
+} from 'components/Tweet'
 
 <Attribution
   name="Dan Scott"
@@ -43,7 +43,7 @@ import Tweet, {
 
 React Query version 5 was released about three months ago, and with it, we got one of the biggest "breaking" changes in the library's history. All of our functions now only get one object passed, instead of multiple arguments. We call this object the <Emph>Query Options</Emph>, because it contains all the options you need to create a query:
 
-```diff
+```diff title="useQuery"
 - useQuery(
 -   ['todos'],
 -   fetchTodos,
@@ -58,7 +58,7 @@ React Query version 5 was released about three months ago, and with it, we got o
 
 This isn't only true for `useQuery` calls, but also for imperative actions like invalidating a query:
 
-```diff
+```diff title="invalidateQueries"
 - queryClient.invalidateQueries(['todos'])
 + queryClient.invalidateQueries({ queryKey: ['todos'] })
 ```
@@ -95,7 +95,7 @@ But also, it turns out that one object to rule them all is simply a very good ab
 
 Turns out, if all your functions have the same interface - accepting a single object - it makes a lot of sense to abstract that object away into a query definition. Once you have that, you can pass it everywhere:
 
-```js:title=todos-query
+```js title="todos Query"
 const todosQuery = {
   queryKey: ['todos'],
   queryFn: fetchTodos,
@@ -123,7 +123,12 @@ In hindsight, this pattern just feels beautiful as the main abstraction for quer
 
 The way TypeScript handles excess properties is quite special. If you inline them, TypeScript will be like: Why are you doing this - it doesn't make any sense, I'll error out:
 
-```ts:title=inlined-objects
+```ts title="Inlined objects" twoslash
+// @errors: 2769
+import { useQuery } from '@tanstack/react-query'
+type Todo = { id: number; title: string }
+declare function fetchTodos(): Promise<Todo[]>
+// ---cut---
 useQuery({
   queryKey: ['todos'],
   queryFn: fetchTodos,
@@ -133,15 +138,13 @@ useQuery({
 
 [TypeScript playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgVwM4FMCKz1QJ5wC+cAZlBCHAOQACMAhgHaoMDGA1gPRTr2swBaAI458VAFDiYeMOjgAVCABMIcALyJxcbXGBKAXHEbIQAI1zjC4pelYAbej1LJG-YBEal0MVgAtFKqgAFACUhgAK5CDAGAA8AIJQUPR4sQEQAHwZkmhYonhBCFpwIrh4ANLoeIYA2lQwyhCoVAC6ADTFpfgAYoyGJN5+6agd2iz0dnbyoOiGAKwADEsdhCFAA)
 
-<TsError>
-  Object literal may only specify known properties, but 'stallTime'
-  does not exist in type 'UseQueryOptions&lt;Todo[], Error, Todo[],
-  string[]&gt;'. Did you mean to write 'staleTime'?(2769)
-</TsError>
-
 Which is cool, because it catches typos like the one above. But what if you abstract the whole object away into a constant, like our pattern suggests?
 
-```ts:title=no-error
+```ts title="No error" twoslash
+import { useQuery } from '@tanstack/react-query'
+type Todo = { id: number; title: string }
+declare function fetchTodos(): Promise<Todo[]>
+// ---cut---
 const todosQuery = {
   queryKey: ['todos'],
   queryFn: fetchTodos,
@@ -175,16 +178,26 @@ There's one thing about `queryClient.getQueryData` and similar functions that ha
 
 We are forced to help out ourselves by providing the type parameter to the function call:
 
-```ts:title=manual-type-parameter
+```ts title="Manual Type Parameter" twoslash
+import { QueryClient } from '@tanstack/react-query'
+type Todo = { id: number; title: string }
+declare function fetchTodos(): Promise<Todo[]>
+const queryClient = new QueryClient()
+// ---cut---
 const todos = queryClient.getQueryData<Array<Todo>>(['todos'])
-//    ^? const todos: Todo[] | undefined
+//    ^?
 ```
 
 To be clear, this isn't at all safer than just using type assertions, but at least `undefined` will be added to the union for us. If we refactor what our `fetchTodos` endpoint returns, we won't be notified here of the new type. 😔
 
 But now that we have a function that co-locates `queryKey` and `queryFn`, we can associate the type of the `queryFn` and "tag" our `queryKey` with it. Notice what happens when we pass the `queryKey` that was created via `queryOptions` to `getQueryData`:
 
-```ts:title=tagged-query-key
+```ts title="Tagged QueryKey" twoslash
+import { QueryClient, queryOptions } from '@tanstack/react-query'
+type Todo = { id: number; title: string }
+declare function fetchTodos(): Promise<Todo[]>
+const queryClient = new QueryClient()
+// ---cut---
 const todosQuery = queryOptions({
   queryKey: ['todos'],
   queryFn: fetchTodos,
@@ -192,7 +205,7 @@ const todosQuery = queryOptions({
 })
 
 const todos = queryClient.getQueryData(todosQuery.queryKey)
-//    ^? const todos: Todo[] | undefined
+//    ^?
 ```
 
 [TypeScript Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgVwM4FMCKz1QJ4A0cAjjvgPJgzAQB2qR2ueAwgDbDq3wC+cAZlAgg4AcgACMAIb1pAYwDWAeijopcmAFpSzUQCg9MPGHRwAKhAAmEOAF5EeuE7jBLALji1kIAEa49PHqW6HJsUqoCyLQaNLQC6DByABYW1qgAFACUHgAKQiDAGAA8AIJQUFJ4RakQAHy1BnJ0qPA6+Oyc3Hae6ADucEztHFwwWY3N8DBWEKiDeN1teJTUzekIjiRkeADS6HgeANqiU2miALoEG4sAYrQe-AnJNQwbLVJs6Gag6B4ArAAMgMuPEy41kcBOMwWWw6IwAdABzBJzAAiUmk6Uhsy2cMWuzwoKUSmccAAegB+IA)
@@ -201,10 +214,19 @@ const todos = queryClient.getQueryData(todosQuery.queryKey)
 
 This is pure TypeScript magic, contributed by the one and only [Mateusz Burzyński](https://twitter.com/AndaristRake). If we look at `todosQuery.queryKey`, we can see that it's not only a string array, but it also contains information about what the `queryFn` returns:
 
-```ts:title=dataTagSymbol
-(property) queryKey: string[] & {
-  [dataTagSymbol]: Todo[];
-}
+```ts title=dataTagSymbol twoslash
+import { QueryClient, queryOptions } from '@tanstack/react-query'
+type Todo = { id: number; title: string }
+declare function fetchTodos(): Promise<Todo[]>
+const queryClient = new QueryClient()
+const todosQuery = queryOptions({
+  queryKey: ['todos'],
+  queryFn: fetchTodos,
+  staleTime: 5000,
+})
+// ---cut---
+todosQuery.queryKey
+//         ^?
 ```
 
 That information will then be read out by `getQueryData` (and other functions like `setQueryData`, too), to infer the type for us. This brings a whole new level of type safety to React Query, while at the same time making it easier for us to re-use query options. A huge win in DX. 🚀
@@ -213,7 +235,16 @@ That information will then be read out by `getQueryData` (and other functions li
 
 So, if you're asking me, I want to use this pattern and the `queryOptions` helper everywhere. I would even take it to a point where custom hooks won't be my first choice for abstractions. They seem a bit pointless if all they do is:
 
-```ts:title=custom-hooks
+```ts title="Custom Hooks" twoslash
+import { useQuery, queryOptions } from '@tanstack/react-query'
+type Todo = { id: number; title: string }
+declare function fetchTodos(): Promise<Todo[]>
+const todosQuery = queryOptions({
+  queryKey: ['todos'],
+  queryFn: fetchTodos,
+  staleTime: 5000,
+})
+// ---cut---
 const useTodos = () => useQuery(todosQuery)
 ```
 
@@ -239,7 +270,12 @@ This is one of the patterns I'm teaching in the new, official React Query course
 
 An example query factory could look something like this:
 
-```ts:title=query-factory
+```ts title="Query Factory" twoslash
+import { queryOptions } from '@tanstack/react-query'
+type Todo = { id: number; title: string }
+declare function fetchTodos(filters?: string): Promise<Todo[]>
+declare function fetchTodo(id: number): Promise<Todo>
+// ---cut---
 const todoQueries = {
   all: () => ['todos'],
   lists: () => [...todoQueries.all(), 'list'],

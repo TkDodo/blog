@@ -10,12 +10,12 @@ tags:
   - Performance
 ---
 
-import Comments from 'components/Comments.astro';
-import Attribution from 'components/Attribution';
-import Translations from 'components/Translations';
-import Emph from 'components/Emph';
-import Highlight from 'components/Highlight';
-import Tweet, { AvatarHousecor } from 'components/Tweet';
+import Comments from 'components/Comments.astro'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import Emph from 'components/Emph'
+import Highlight from 'components/Highlight'
+import Tweet, { AvatarHousecor } from 'components/Tweet'
 
 <Attribution
   name="Michiel Annaert"
@@ -173,7 +173,7 @@ function App() {
     <ExpensiveTree>
       <p>Hello, world!</p>
     </ExpensiveTree>
-  );
+  )
 }
 
 function ExpensiveComponent({ children }) {
@@ -182,10 +182,10 @@ function ExpensiveComponent({ children }) {
       I'm expensive!
       {children}
     </div>
-  );
+  )
 }
 
-const ExpensiveTree = React.memo(ExpensiveComponent);
+const ExpensiveTree = React.memo(ExpensiveComponent)
 ```
 
 Oof, I have to admit - I didn't know for a long time that this will break memoization. Why would it? I'm always passing the same, stable `<p>` tag as children, right? Well, not really. JSX is just syntactic sugar for `React.createElement`, which will create a new object on every render. So, even though the `<p>` tag looks like it's the same to us, it won't be the same reference.

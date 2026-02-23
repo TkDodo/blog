@@ -9,12 +9,12 @@ tags:
   - TypeScript
 ---
 
-import Aside from 'components/Aside';
-import Comments from 'components/Comments.astro';
-import Attribution from 'components/Attribution';
-import Translations from 'components/Translations';
-import Highlight from 'components/Highlight';
-import { RcToc } from 'components/rc-toc';
+import Aside from 'components/Aside'
+import Comments from 'components/Comments.astro'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import Highlight from 'components/Highlight'
+import { RcToc } from 'components/rc-toc'
 
 <Attribution
   name="Annie Spratt"
@@ -122,7 +122,7 @@ The problem is that the effect is "bound" to the render function of the Form, wh
 This is where callback refs come into play. If you've ever looked at the [type declarations for refs](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/fc9b16957473f81a1d708e6948b8d61e292aeb58/types/react/v17/index.d.ts#L85), we can see that we can not only pass a ref object into it, but also a function:
 
 ```ts
-type Ref<T> = RefCallback<T> | RefObject<T> | null;
+type Ref<T> = RefCallback<T> | RefObject<T> | null
 ```
 
 Conceptually, I like to think about refs on React elements as functions that are called after the component has rendered. This function gets the rendered DOM node passed as argument. If the React element unmounts, it will be called once more with _null_.

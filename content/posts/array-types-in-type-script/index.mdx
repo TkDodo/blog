@@ -9,12 +9,12 @@ tags:
   - Generics
 ---
 
-import Comments from 'components/Comments.astro';
-import Attribution from 'components/Attribution';
-import Translations from 'components/Translations';
-import Tweet, { AvatarMattpocockuk } from 'components/Tweet';
-import { TweetPoll } from 'components/TweetPoll';
-import { TsError } from 'components/TsError';
+import Comments from 'components/Comments.astro'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import Tweet, { AvatarMattpocockuk } from 'components/Tweet'
+import { TweetPoll } from 'components/TweetPoll'
+import { TsError } from 'components/TsError'
 
 <Attribution
   name="sterlinglanier Lanier"
@@ -193,7 +193,7 @@ function pick<TObject extends Record<string, unknown>>(
 Surprisingly, there is no error, so this should be good. No error is even worse, because there is an error here - it just doesn't show up at the function declaration - it shows up when we try to invoke it:
 
 ```ts
-pick(myObject, ['foo', 'bar']);
+pick(myObject, ['foo', 'bar'])
 ```
 
 now yields:

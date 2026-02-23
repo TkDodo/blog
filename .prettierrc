@@ -11,7 +11,8 @@
       "files": "*.mdx",
       "options": {
         "printWidth": 70,
-        "singleQuote": true
+        "singleQuote": true,
+        "semi": false
       }
     }
   ]

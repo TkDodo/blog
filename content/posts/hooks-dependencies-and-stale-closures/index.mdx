@@ -10,12 +10,12 @@ tags:
   - Hooks
 ---
 
-import Comments from 'components/Comments.astro';
-import Highlight from 'components/Highlight';
-import Attribution from 'components/Attribution';
-import Translations from 'components/Translations';
-import Tweet, { AvatarAcemarke } from 'components/Tweet';
-import { HsToc } from 'components/hs-toc';
+import Comments from 'components/Comments.astro'
+import Highlight from 'components/Highlight'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import Tweet, { AvatarAcemarke } from 'components/Tweet'
+import { HsToc } from 'components/hs-toc'
 
 <Attribution
   name="David Sarkisov"
@@ -86,15 +86,15 @@ The nice part about closures in React is that it will "just work" if your compon
 <Playground template="react">
 
 ```js name=App.js active
-import * as React from 'react';
+import * as React from 'react'
 
 export default function App() {
-  const [count, increment] = React.useReducer((prev) => prev + 1, 1);
-  const [logged, setLogged] = React.useState(count);
+  const [count, increment] = React.useReducer((prev) => prev + 1, 1)
+  const [logged, setLogged] = React.useState(count)
 
   const logCount = () => {
-    setLogged(count);
-  };
+    setLogged(count)
+  }
 
   return (
     <div>
@@ -103,7 +103,7 @@ export default function App() {
       <button onClick={increment}>increment</button>
       <button onClick={logCount}>log</button>
     </div>
-  );
+  )
 }
 ```
 
@@ -157,17 +157,17 @@ We can see how ignoring the linter in our example will lead to non working code:
 <Playground template="react">
 
 ```js name=App.js active
-import * as React from 'react';
+import * as React from 'react'
 
 export default function App() {
-  const [count, increment] = React.useReducer((prev) => prev + 1, 1);
-  const [logged, setLogged] = React.useState(count);
+  const [count, increment] = React.useReducer((prev) => prev + 1, 1)
+  const [logged, setLogged] = React.useState(count)
 
   // 🚨 the linter says we should include count
   // as a dependency, but we don't
   const logCount = React.useCallback(() => {
-    setLogged(count);
-  }, []);
+    setLogged(count)
+  }, [])
 
   return (
     <div>
@@ -176,7 +176,7 @@ export default function App() {
       <button onClick={increment}>increment</button>
       <button onClick={logCount}>log</button>
     </div>
-  );
+  )
 }
 ```
 
