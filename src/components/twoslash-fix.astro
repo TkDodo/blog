@@ -1,0 +1,108 @@
+---
+// Fix for the expressive-code-twoslash plugin null reference error
+// during Astro View Transitions
+---
+
+<script is:inline>
+  (() => {
+    if (typeof window === "undefined") return;
+
+    // Store the original setupTooltip if it exists
+    let originalSetupTooltip = null;
+    let hasPatched = false;
+
+    const patchTwoslashFunctions = () => {
+      if (hasPatched) return;
+
+      // Try to find and patch the setupTooltip function
+      // We'll intercept the initTwoslashPopups call by patching it on window
+      const originalQuerySelectorAll =
+        Element.prototype.querySelectorAll ||
+        Document.prototype.querySelectorAll;
+
+      // Create a safe wrapper for twoslash initialization
+      const safeInitTwoslash = (container) => {
+        if (!container || typeof container.querySelectorAll !== "function")
+          return;
+
+        const hoverElements = container.querySelectorAll(".twoslash-hover");
+        if (!hoverElements || hoverElements.length === 0) return;
+
+        hoverElements.forEach((element) => {
+          if (!element) return;
+
+          try {
+            // Check if the popup container exists before trying to use it
+            const popupContainer = element.querySelector(
+              ".twoslash-popup-container",
+            );
+            if (!popupContainer) {
+              // Skip this element if it doesn't have a popup container
+              return;
+            }
+
+            // If we get here, the element structure is valid
+            // Let the original initialization proceed by calling setupTooltip if it exists
+            if (
+              typeof window.setupTooltip === "function" &&
+              typeof window.isMobileScreen !== "undefined"
+            ) {
+              window.setupTooltip(element, window.isMobileScreen);
+            }
+          } catch (error) {
+            // Silently catch and ignore errors for individual elements
+            console.debug(
+              "[Twoslash Fix] Skipped element due to error:",
+              error,
+            );
+          }
+        });
+      };
+
+      // Intercept any global initTwoslashPopups calls
+      if (typeof window.initTwoslashPopups === "function") {
+        originalSetupTooltip = window.initTwoslashPopups;
+        window.initTwoslashPopups = safeInitTwoslash;
+        hasPatched = true;
+      }
+
+      // Also set up a MutationObserver to handle dynamically added twoslash elements
+      if (typeof MutationObserver !== "undefined") {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node.nodeType === 1) {
+                // Element node
+                safeInitTwoslash(node);
+              }
+            });
+          });
+        });
+
+        // Don't observe immediately - let the page load first
+        setTimeout(() => {
+          observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+          });
+        }, 100);
+      }
+    };
+
+    // Patch on initial load
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", patchTwoslashFunctions);
+    } else {
+      patchTwoslashFunctions();
+    }
+
+    // Re-patch on View Transitions
+    document.addEventListener("astro:before-preparation", () => {
+      hasPatched = false;
+    });
+
+    document.addEventListener("astro:page-load", () => {
+      setTimeout(patchTwoslashFunctions, 0);
+    });
+  })();
+</script>
