@@ -241,7 +241,7 @@ There are other advantages of `queryOptions`, which I've already covered in [#24
 
 </Aside>
 
-That API solves all mentioned problems and more. We can use it between different hooks, and even share it with imperative functions. It's just a regular function, so it works anywhere. At runtime, it doesn't do anything. Here's the compiled output:
+That API solves all mentioned problems and more. We can use it between different hooks, and even share it with imperative functions. It's just a regular function, so it works anywhere. At runtime, it doesn't do anything. Here's the transpiled output:
 
 ```js title="queryOptions.js"
 function queryOptions(options) {
@@ -296,8 +296,8 @@ const invoiceQuery = useQuery({
   select: (invoice) => invoice.createdAt,
 })
 
-console.log(invoiceQuery.data)
-//                       ^?
+invoiceQuery.data
+//           ^?
 ```
 
 And this just works! With all options, full type inference, looks like JavaScript, absolutely straightforward. You can of course still create custom hooks if you want to, but they should likely be built on top of `queryOptions`, as that's the first abstraction building block you should be reaching for. Simplicity is king, and it doesn't get any simpler than this. 👑
