@@ -33,13 +33,20 @@ There's nothing wrong with abstractions per se, but they have tradeoffs, like ev
 
 In React, creating abstractions very often correlates with custom hooks. They are great for sharing logic between multiple components, or even just hiding that gnarly `useEffect` behind a good name. For the longest time, creating your own abstraction over `useQuery` meant writing a custom hook:
 
-```ts title="useInvoice"
-function useInvoice(id: string) {
+```ts title="useInvoice" twoslash
+import { useQuery } from '@tanstack/react-query';
+type Invoice = { id: number };
+declare function fetchInvoice(id: number): Promise<Invoice>;
+// ---cut---
+function useInvoice(id: number) {
   return useQuery({
     queryKey: ['invoice', id],
     queryFn: () => fetchInvoice(id),
   });
 }
+
+const { data } = useInvoice(1);
+//      ^?
 ```
 
 This is straightforward, and I can now call `useInvoice()` wherever I want instead of having to repeat the `queryKey` and `queryFn` all the time. It ensures consistency for the `queryKey`, which could otherwise lead to duplicate cache entries. And because it just returns what `useQuery` returns, we have an interface that is aligned with TanStack Query's API surface, so there's no surprise naming where this hook is used.
@@ -48,10 +55,14 @@ Types are also <Emph>fully inferred</Emph>, because we don't annotate any generi
 
 ## Query Options
 
-But what about the input to this custom hook ? `useQuery` has 23 options, and we now can't pass any of those in. What if we want to pass a different `staleTime` for one of our screens where getting background updates isn't as important. Sure, I guess we'll just accept that as another parameter:
+But what about the input to this custom hook ? `useQuery` has 24 options, and we with the current abstraction, we can't pass any of those in. What if we want to pass a different `staleTime` for one of our screens where getting background updates isn't as important? Sure, I guess we'll just accept that as another parameter:
 
-```ts title="staleTime" {1,5}
-function useInvoice(id: string, staleTime: number, foo: '') {
+```ts title="staleTime" {1,5} twoslash
+import { useQuery } from '@tanstack/react-query';
+type Invoice = { id: number };
+declare function fetchInvoice(id: number): Promise<Invoice>;
+// ---cut---
+function useInvoice(id: number, staleTime: number) {
   return useQuery({
     queryKey: ['invoice', id],
     queryFn: () => fetchInvoice(id),
@@ -62,9 +73,13 @@ function useInvoice(id: string, staleTime: number, foo: '') {
 
 This still looks okay I guess, but next thing you know, somebody wants to integrate the Query with Error Boundaries, so they want to pass `throwOnError`. Okay, but that many parameters isn't a good interface, I guess we should've just made it an object in the first place:
 
-```ts title="Another Option" {3,8}
+```ts title="Another Option" {3,8} twoslash
+import { useQuery } from '@tanstack/react-query';
+type Invoice = { id: number };
+declare function fetchInvoice(id: number): Promise<Invoice>;
+// ---cut---
 function useInvoice(
-  id: string,
+  id: number,
   options?: { staleTime?: number; throwOnError?: boolean },
 ) {
   return useQuery({
@@ -73,6 +88,50 @@ function useInvoice(
     ...options,
   });
 }
+```
+
+At this point, you're likely wondering if you're still on the right track. Always having to touch our small abstraction whenever there's a new use-case that React Query covers doesn't seem ideal. For the return value, we've chosen to stick to what the library returns - so can't we just do the same thing for the options we get passed in?
+
+### UseQueryOptions
+
+We dig a bit deeper and find out that React Query exposes a type called `UseQueryOptions` - sounds like what we want:
+
+```ts title="UseQueryOptions" {1, 3} twoslash
+import { useQuery } from '@tanstack/react-query';
+type Invoice = { id: number };
+declare function fetchInvoice(id: number): Promise<Invoice>;
+// ---cut---
+import type { UseQueryOptions } from '@tanstack/react-query';
+
+function useInvoice(id: number, options?: UseQueryOptions) {
+  return useQuery({
+    queryKey: ['invoice', id],
+    queryFn: () => fetchInvoice(id),
+    ...options,
+  });
+}
+```
+
+There are no type errors, so this works, right? Well, let's look at a usage again:
+
+```ts title="UseQueryOptions" twoslash
+import {
+  useQuery,
+  type UseQueryOptions,
+} from '@tanstack/react-query';
+type Invoice = { id: number };
+declare function fetchInvoice(id: number): Promise<Invoice>;
+// ---cut---
+function useInvoice(id: number, options?: UseQueryOptions) {
+  //                                      ^^^^^^^^^^^^^^^
+  return useQuery({
+    queryKey: ['invoice', id],
+    queryFn: () => fetchInvoice(id),
+    ...options,
+  });
+}
+const { data } = useInvoice(1);
+//      ^?
 ```
 
 ---
