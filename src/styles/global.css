@@ -336,6 +336,37 @@ samp {
   padding-inline: 1ch !important;
 }
 
+.expressive-code .title .code-anchor {
+  margin-inline-start: 0.45rem;
+  color: var(--color-primary);
+  opacity: 0;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  transform: translateY(2px);
+}
+
+.expressive-code .title .code-anchor .anchor-icon {
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: middle;
+  fill: currentColor;
+  width: calc(var(--spacing) * 5);
+  height: calc(var(--spacing) * 5);
+}
+
+.expressive-code .header:hover .title .code-anchor,
+.expressive-code .title .code-anchor:focus-visible {
+  opacity: 1;
+}
+
+.expressive-code .title .code-anchor:focus-visible {
+  outline: none;
+  border-radius: 0.25rem;
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
 /* Keep copy-button interactions from causing code block layout shifts. */
 .expressive-code .copy {
   gap: 0 !important;
@@ -346,6 +377,14 @@ samp {
 .expressive-code .copy button {
   width: 2rem !important;
   height: 2rem !important;
+  border-radius: 0.375rem !important;
+}
+
+.expressive-code .copy button:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-primary),
+    0 0 0 4px color-mix(in srgb, var(--color-primary) 22%, transparent);
 }
 
 @media (max-width: 640px) {
