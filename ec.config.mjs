@@ -9,7 +9,7 @@ export default defineEcConfig({
   plugins: [pluginCollapsibleSections(), pluginLineNumbers()],
   removeUnusedThemes: true,
   defaultProps: {
-    showLineNumbers: false,
+    showLineNumbers: true,
     collapseStyle: "collapsible-auto",
   },
   styleOverrides: {
