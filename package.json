@@ -74,5 +74,10 @@
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "unist-util-visit": "^5.0.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "expressive-code-twoslash@0.5.3": "patches/expressive-code-twoslash@0.5.3.patch"
+    }
   }
 }
