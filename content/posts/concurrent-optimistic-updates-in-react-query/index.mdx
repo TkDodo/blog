@@ -44,7 +44,7 @@ Look, I can instantly append a task to a list when I press `Enter` on the input 
 
 I have already written a bit about this in [#12: Mastering Mutation in React Query](mastering-mutations-in-react-query#optimistic-updates), but it's an important point to re-iterate on. With optimistic UI, you're essentially trying to foresee what the server will do, and implement that on the client beforehand.
 
-This can be quite straight-forward, for example, if the user is interacting with a toggle button. Usually, all we need to do is take the current boolean state and invert it:
+This can be quite straightforward, for example, if the user is interacting with a toggle button. Usually, all we need to do is take the current boolean state and invert it:
 
 ```ts:title=toggle-isActive
 queryClient.setQueryData(['items', 'detail', item.id], (prevItem) =>

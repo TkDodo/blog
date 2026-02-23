@@ -310,7 +310,7 @@ const slides: ReadonlyArray<React.ReactNode> = [
     </p>
     <p>
       If something is "easy to understand" for someone is always subjective -
-      Things that are straight-forward for you might be a total mystery to me.
+      Things that are straightforward for you might be a total mystery to me.
     </p>
     <p>
       But it's undeniable that React Query, like any concept worth applying, has

@@ -40,7 +40,7 @@ As an example, if you're only using `omitBy` from `remeda`, it will only cost yo
 
 This is different for a "holistic" library like React Query. Most code lives on the `queryClient`, which is a class, so it's not tree-shakable.
 
-Also, bundle size is not the only reason why a slim API surface matters more for holistic libraries. For `remeda`, it doesn't matter if the library exports 25 or 125 functions. You'll have to look at the docs to see what it supports anyway. Every function is conceptually its own thing that needs to be learned. They are also mostly straight-forward - you can quickly grok by their name and parameters what they're doing.
+Also, bundle size is not the only reason why a slim API surface matters more for holistic libraries. For `remeda`, it doesn't matter if the library exports 25 or 125 functions. You'll have to look at the docs to see what it supports anyway. Every function is conceptually its own thing that needs to be learned. They are also mostly straightforward - you can quickly grok by their name and parameters what they're doing.
 
 React Query on the other hand has effectively two "things" you want to do: queries (`useQuery`) and mutation (`useMutation`). You'll likely be doing them both, so you are consuming almost the whole lib every time. That means the API will get more complex over time if we add more features. Looking at `useQuery`, it accepts 28 options and returns an object with 24 fields. That's huge, and it might discourage newcomers because of perceived complexity.
 
@@ -98,7 +98,7 @@ So since this idea is not in-line with how we think React Query should ideally b
 
 ### How hard is it to implement in user-land?
 
-Some things are straight-forward to do in user-land. The above example shows that if you really want to sync your query data reliably somewhere else, you're three lines of code away from doing that. Yes, it contains a `useEffect`, and you might feel a bit _dirty_ when writing that code (as you should) but that's okay - at least it's very explicit instead of hidden behind a callback that would literally have to have the same implementation.
+Some things are straightforward to do in user-land. The above example shows that if you really want to sync your query data reliably somewhere else, you're three lines of code away from doing that. Yes, it contains a `useEffect`, and you might feel a bit _dirty_ when writing that code (as you should) but that's okay - at least it's very explicit instead of hidden behind a callback that would literally have to have the same implementation.
 
 So if something is simple to achieve in user-land, we're more inclined to teach that pattern with documentation rather than increase the API surface for it.
 
