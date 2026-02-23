@@ -30,6 +30,7 @@ import FxnXEGVX0AEeYAfImage from "../assets/tweets/FxnXEGVX0AEeYAf.jpeg";
 import GP724X0AANNKImage from "../assets/tweets/GP-724-X0AAN_NK.jpeg";
 import separationOfConcernsImage from "../assets/tweets/separation_of_concerns.jpeg";
 import TanStackQueryV5Image from "../assets/tweets/TanStackQueryV5.png";
+import UseApiImage from "../assets/tweets/UseApi.jpeg";
 import v5390Image from "../assets/tweets/v5390.jpeg";
 
 type TweetType = "x" | "twitter" | "bsky";
@@ -211,6 +212,9 @@ export const TannerAndMe = () => (
 );
 export const TanStackQueryV5 = () => (
   <TweetIllustration src={TanStackQueryV5Image} alt="TanStackQuery v5" />
+);
+export const UseApi = () => (
+  <TweetIllustration src={UseApiImage} alt="UseApi" />
 );
 export const V5390 = () => (
   <TweetIllustration src={v5390Image} alt="New Release v5.39.0" />

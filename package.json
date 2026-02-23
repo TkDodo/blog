@@ -32,6 +32,7 @@
     "@sentry/profiling-node": "^10.38.0",
     "@tailwindcss/vite": "^4.1.16",
     "@unpic/astro": "^1.0.1",
+    "@xt0rted/expressive-code-file-icons": "^1.0.0",
     "astro": "^5.15.3",
     "astro-expressive-code": "^0.41.3",
     "expressive-code-twoslash": "^0.5.3",

@@ -14,7 +14,14 @@ import Comments from 'components/Comments.astro';
 import Attribution from 'components/Attribution';
 import Translations from 'components/Translations';
 import Emph from 'components/Emph';
+import Aside from 'components/Aside';
 import { RqToc } from 'components/rq-toc';
+import Tweet, {
+  AvatarTkDodo,
+  TwitterBlueText,
+  UseApi,
+  TweetImage,
+} from 'components/Tweet';
 
 <Attribution
   name="Earl Wilcox"
@@ -103,7 +110,7 @@ declare function fetchInvoice(id: number): Promise<Invoice>;
 // ---cut---
 import type { UseQueryOptions } from '@tanstack/react-query';
 
-function useInvoice(id: number, options?: UseQueryOptions) {
+function useInvoice(id: number, options?: Partial<UseQueryOptions>) {
   return useQuery({
     queryKey: ['invoice', id],
     queryFn: () => fetchInvoice(id),
@@ -114,7 +121,7 @@ function useInvoice(id: number, options?: UseQueryOptions) {
 
 There are no type errors, so this works, right? Well, let's look at a usage again:
 
-```ts title="UseQueryOptions" twoslash
+```ts title="Unknown" twoslash
 import {
   useQuery,
   type UseQueryOptions,
@@ -122,17 +129,188 @@ import {
 type Invoice = { id: number };
 declare function fetchInvoice(id: number): Promise<Invoice>;
 // ---cut---
-function useInvoice(id: number, options?: UseQueryOptions) {
-  //                                      ^^^^^^^^^^^^^^^
+function useInvoice(id: number, options?: Partial<UseQueryOptions>) {
+  //                                      ^^^^^^^^^^^^^^^^^^^^^^^^
   return useQuery({
     queryKey: ['invoice', id],
     queryFn: () => fetchInvoice(id),
     ...options,
   });
 }
-const { data } = useInvoice(1);
+const { data } = useInvoice(1, { throwOnError: true });
 //      ^?
 ```
+
+Our `data` has become of type `unknown`. This might be unexpected, but it all goes back to how Query uses Generics for ideal type inference. I've written about this before in [#6: React Query and TypeScript](react-query-and-type-script#the-four-generics). The problem might become more obvious once we inspect what `options` actually infers to:
+
+```ts title="UseQueryOptions<unknown>" twoslash
+import { type UseQueryOptions } from '@tanstack/react-query';
+// ---cut---
+declare const options: UseQueryOptions;
+//             ^?
+```
+
+`UseQueryOptions` has the same four generics, and if we omit them, its default values are taken instead. The default for `data` happens to be `unknown`, so when we spread those options onto our `useQuery`, the types are widened to `unknown`.
+
+## TypeScript Libraries
+
+I've found this to be a common problem with libraries that try to give you a lot of type safety through type inference. They tend to work really, really well when used "directly", but as soon as you try to create low-level, generic abstractions over them, it becomes difficult to get right.
+
+TanStack Query only has four generics, so we might be able to just re-create them. TanStack Form has 23 type parameters on most of the types and TanStack Router - let's better not talk about that. 😂
+
+So clearly, this only works to some degree. I have a four-year-old tweet about how to get it going with TanStack Query, but honestly, it's a mess:
+
+<Tweet
+  name="Dominik 🔮"
+  handle="TkDodo"
+  tweetId="1491451513264574501"
+  avatar={<AvatarTkDodo />}
+  date={new Date('2022-02-09')}
+>
+  <p>
+    I have been asked a lot lately how to make your own low-level
+    abstraction over useQuery and have it work in{' '}
+    <TwitterBlueText>#TypeScript</TwitterBlueText>. My answer is
+    usually: You don't need it, as those abstractions are often too
+    wide. But there are use-cases for it, so here is my take. Let's
+    break it down ⬇️
+  </p>
+  <p>
+    <TweetImage>
+      <UseApi />
+    </TweetImage>
+  </p>
+</Tweet>
+
+### The Naive Solution
+
+And because it's so complicated, I'm seeing this done wrong all the time. The naive solution is to just declare the first type parameter on `UseQueryOptions`:
+
+```ts title="UseQueryOptions<Invoice>" twoslash {3}
+import {
+  useQuery,
+  type UseQueryOptions,
+} from '@tanstack/react-query';
+type Invoice = { id: number; createdAt: string };
+declare function fetchInvoice(id: number): Promise<Invoice>;
+// ---cut---
+function useInvoice(
+  id: number,
+  options?: Partial<UseQueryOptions<Invoice>>,
+) {
+  return useQuery({
+    queryKey: ['invoice', id],
+    queryFn: () => fetchInvoice(id),
+    ...options,
+  });
+}
+const { data } = useInvoice(1, { throwOnError: true });
+//      ^?
+```
+
+This "works" to infer `data` again, but falls apart if we need options that rely on other type parameters, like `select`:
+
+```ts title="select" twoslash
+// @errors: 2322
+import {
+  useQuery,
+  type UseQueryOptions,
+} from '@tanstack/react-query';
+type Invoice = { id: number; createdAt: string };
+declare function fetchInvoice(id: number): Promise<Invoice>;
+function useInvoice(id: number, options?: UseQueryOptions<Invoice>) {
+  return useQuery({
+    queryKey: ['invoice', id],
+    queryFn: () => fetchInvoice(id),
+    ...options,
+  });
+}
+// ---cut---
+const { data } = useInvoice(1, {
+  select: (invoice) => invoice.createdAt,
+});
+```
+
+As the tweet shows, we can add more type parameters to our own abstractions, but this is takes us further away from code that looks like <Emph>Just JavaScript™</Emph>. The promise was that those libraries do the ugly TypeScript stuff for us so we don't have to ...
+
+## Finding Better Abstractions
+
+I've come to the conclusion that custom hooks are just not the right abstraction here, and that has multiple reasons:
+
+- Custom hooks can only be used in components or other hooks. This might've been fine when React Query first launched, but we've since seen that we want to use it on the server. We want to use it in route loaders. We want to use it for prefetching in event handlers. These are all environments where we can't use hooks.
+- Custom hooks are a great way to share logic between components, which we aren't doing here. We are sharing <Emph>configurations</Emph>.
+- The custom hook ties us to a specific implementation (`useQuery`), but we might want to switch that out. If we want to use [Suspense](https://react.dev/reference/react/Suspense) for data fetching, we need a different hook (`useSuspenseQuery`). There's also `useQueries` for running multiple Queries in parallel - how can we combine that with `useInvoice` ? We can't ...
+
+## The Query Options API
+
+Since v5, my preferred way to create Query abstractions is not with custom hooks anymore but with <Emph>`queryOptions`</Emph>.
+
+<Aside title="Query Options are great!">
+
+There are other advantages of `queryOptions`, which I've already covered in [#24: The Query Options API](the-query-options-api). I highly recommend giving this a read first.
+
+</Aside>
+
+That API solves all mentioned problems and more. We can use it between different hooks, and even share it with imperative functions. It's just a regular function, so it works anywhere. At runtime, it doesn't do anything. Here's the compiled output:
+
+```js title="queryOptions.js"
+function queryOptions(options) {
+  return <div>options</div>;
+}
+```
+
+But on type level, it becomes a real powerhouse, making it the best way to share query configurations:
+
+```ts title="invoiceOptions" twoslash
+type Invoice = { id: number; createdAt: string };
+declare function fetchInvoice(id: number): Promise<Invoice>;
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+// ---cut---
+import { queryOptions } from '@tanstack/react-query';
+
+function invoiceOptions(id: number) {
+  return queryOptions({
+    queryKey: ['invoice', id],
+    queryFn: () => fetchInvoice(id),
+  });
+}
+const { data: invoice1 } = useQuery(invoiceOptions(1));
+//      ^?
+
+const { data: invoice2 } = useSuspenseQuery(invoiceOptions(2));
+//      ^?
+```
+
+Okay, this solves the interoperability problem, but how can I pass options now? If we're adding options as a param to `invoiceOptions`, we're back to square one.
+
+## Composing QueryOptions
+
+Well, that's the good news: We don't have to do that. The idea is that `invoiceOptions` only contains the options we want to share between every usage. The best abstractions are not configurable, so we just keep it like that. If we want to set other options, we just pass them on top of `invoiceOptions` directly at the usage sites:
+
+```ts title="Composing QueryOptions" twoslash {9-13}
+type Invoice = { id: number; createdAt: string };
+declare function fetchInvoice(id: number): Promise<Invoice>;
+import { useQuery } from '@tanstack/react-query';
+// ---cut---
+import { queryOptions } from '@tanstack/react-query';
+
+function invoiceOptions(id: number) {
+  return queryOptions({
+    queryKey: ['invoice', id],
+    queryFn: () => fetchInvoice(id),
+  });
+}
+const invoiceQuery = useQuery({
+  ...invoiceOptions(1),
+  throwOnError: true,
+  select: (invoice) => invoice.createdAt,
+});
+
+console.log(invoiceQuery.data);
+//                       ^?
+```
+
+And this just works! With all options, full type inference, looks like JavaScript, absolutely straight-forward. Simplicity is king, and it doesn't get any simpler than this. 👑
 
 ---
 

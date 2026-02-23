@@ -324,14 +324,40 @@ samp {
   font-size: inherit !important;
 }
 
+.prose .emph code {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.expressive-code .gutter .ln {
+  padding-inline: 1ch !important;
+}
+
 /* Keep copy-button interactions from causing code block layout shifts. */
 .expressive-code .copy {
   gap: 0 !important;
+  inset-inline-end: 0.4rem !important;
+  inset-block-start: 0.4rem !important;
 }
 
 .expressive-code .copy button {
   width: 2rem !important;
   height: 2rem !important;
+}
+
+@media (max-width: 640px) {
+  .expressive-code .copy {
+    inset-inline-end: 0.5rem !important;
+    inset-block-start: 0.5rem !important;
+  }
+
+  .expressive-code .copy button {
+    width: 1.75rem !important;
+    height: 1.75rem !important;
+  }
 }
 
 .expressive-code .copy .feedback {
