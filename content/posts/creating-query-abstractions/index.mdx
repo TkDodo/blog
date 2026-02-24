@@ -62,7 +62,7 @@ Types are also <Emph>fully inferred</Emph>, because we don't annotate any generi
 
 ## Query Options
 
-But what about the input to this custom hook ? `useQuery` has 24 options, and we with the current abstraction, we can't pass any of those in. What if we want to pass a different `staleTime` for one of our screens where getting background updates isn't as important? Sure, I guess we'll just accept that as another parameter:
+But what about the input to this custom hook ? `useQuery` has 24 options, and with the current abstraction, we can't pass any of those in. What if we want to pass a different `staleTime` for one of our screens where getting background updates isn't as important? Sure, I guess we'll just accept that as another parameter:
 
 ```ts title="staleTime" {1,5} twoslash
 import { useQuery } from '@tanstack/react-query'
