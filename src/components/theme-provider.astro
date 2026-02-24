@@ -34,7 +34,11 @@ select.value = theme
           if (newIcon) {
             const oldIcon = picker.querySelector("svg.label-icon");
             // Ensure oldIcon is an Element node and has the replaceChildren method
-            if (oldIcon && oldIcon.nodeType === 1 && typeof oldIcon.replaceChildren === 'function') {
+            if (
+              oldIcon &&
+              oldIcon.nodeType === 1 &&
+              typeof oldIcon.replaceChildren === "function"
+            ) {
               // Filter to only element nodes to avoid inserting text nodes into SVG
               const clonedIcon = newIcon.cloneNode(true);
               const elementChildren = Array.from(clonedIcon.childNodes).filter(
