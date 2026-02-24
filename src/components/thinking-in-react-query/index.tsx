@@ -1,4 +1,4 @@
-import { PresentationCarousel } from "components/presentation-carousel";
+import { PresentationCarousel } from "@components/presentation-carousel";
 
 import * as React from "react";
 import { Slide } from "./slide";
