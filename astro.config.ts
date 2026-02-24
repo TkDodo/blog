@@ -97,7 +97,8 @@ export default defineConfig({
           behavior: "after",
           group() {
             return h("div", {
-              className: "group/heading relative block w-fit max-w-full sm:w-auto",
+              className:
+                "group/heading relative block w-fit max-w-full after:absolute after:top-0 after:bottom-0 after:left-full after:w-[calc(var(--spacing)*9)] after:content-[''] sm:w-auto sm:after:hidden sm:before:absolute sm:before:top-0 sm:before:bottom-0 sm:before:right-full sm:before:w-[calc(var(--spacing)*9)] sm:before:content-['']",
             });
           },
           headingProperties() {
