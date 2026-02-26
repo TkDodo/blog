@@ -69,7 +69,7 @@ export default function SeriesToc({ id, items }: Props) {
 
       <div className="px-4 py-2">
         <List>
-          {itemsInWindow[0].edgeType !== "start" && (
+          {itemsInWindow[0]?.edgeType !== "start" && (
             <ListItemEllipsis srText="Earlier parts of the series are hidden" />
           )}
           {itemsInWindow.map(renderItem)}
