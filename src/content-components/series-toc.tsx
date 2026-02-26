@@ -83,7 +83,7 @@ export default function SeriesToc({ id, items }: Props) {
 interface ItemViewModel extends SeriesItem {
   /**
    * difference in the formula: `{this item's index} - {current item's index}`.
-   * 
+   *
    * - positive: later (especially, 1 means the next one)
    * - zero: current
    * - negative: earlier (especially, -1 means the previous one)
