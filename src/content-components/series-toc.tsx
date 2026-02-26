@@ -10,6 +10,11 @@ interface Props {
   items: ReadonlyArray<SeriesItem>;
 }
 
+/**
+ * If the series has *more items than* this, it will be truncated.
+ */
+const NO_TRUNCATE_MAX_ITEMS_LENGTH = 5;
+
 export default function SeriesToc({ id, items }: Props) {
   if (!id) return null;
 
@@ -24,14 +29,6 @@ export default function SeriesToc({ id, items }: Props) {
     };
   });
 
-  const currentEdgeType = itemsAsViewModel[currentIndex]!.edgeType;
-
-  // always pick up 3 items around current one.
-  const itemsInWindow = itemsAsViewModel.filter(({ diff }) => {
-    if (currentEdgeType) return Math.abs(diff) <= 2;
-    return Math.abs(diff) <= 1;
-  });
-
   // non-component function. how view-model in array should be rendered
   function renderItem(item: ItemViewModel) {
     const { id, title } = item;
@@ -44,6 +41,27 @@ export default function SeriesToc({ id, items }: Props) {
       <ListItemClickable key={id} title={title} href={href} latest={latest} />
     );
   }
+
+  // if the series is short enough, just render all items without truncation.
+  if (itemsAsViewModel.length <= NO_TRUNCATE_MAX_ITEMS_LENGTH) {
+    return (
+      <div className="rounded-lg bg-ic-bg/45 border border-border">
+        {/* Maybe you can give a title to the series and display it here */}
+
+        <div className="px-4 py-2">
+          <List>{itemsAsViewModel.map(renderItem)}</List>
+        </div>
+      </div>
+    );
+  }
+  // otherwise, truncate
+
+  // always pick up 3 items around current one.
+  const currentEdgeType = itemsAsViewModel[currentIndex]!.edgeType;
+  const itemsInWindow = itemsAsViewModel.filter(({ diff }) => {
+    if (currentEdgeType) return Math.abs(diff) <= 2;
+    return Math.abs(diff) <= 1;
+  });
 
   return (
     <div className="rounded-lg bg-ic-bg/45 border border-border">
