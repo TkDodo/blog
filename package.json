@@ -13,6 +13,7 @@
     "lint:knip": "knip --treat-config-hints-as-errors",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
+    "test": "vitest run",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
     "ogimages": "tsx ./scripts/og-image.tsx"
@@ -73,7 +74,8 @@
     "sirv": "^3.0.2",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
-    "unist-util-visit": "^5.0.0"
+    "unist-util-visit": "^5.0.0",
+    "vitest": "^4.0.18"
   },
   "pnpm": {
     "patchedDependencies": {
