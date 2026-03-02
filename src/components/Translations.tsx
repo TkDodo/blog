@@ -1,4 +1,4 @@
-import EthicalAds from "components/EthicalAds";
+import EthicalAds from "@components/EthicalAds";
 
 interface Translation {
   language?: string;

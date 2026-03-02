@@ -61,9 +61,6 @@ export default defineConfig({
     },
     resolve: {
       dedupe: ["react", "react-dom"],
-      alias: {
-        components: "/src/content-components",
-      },
     },
     plugins: [tailwindcss()],
   },
@@ -99,7 +96,10 @@ export default defineConfig({
         {
           behavior: "after",
           group() {
-            return h(".group/heading.relative");
+            return h("div", {
+              className:
+                "group/heading relative block w-fit max-w-full after:absolute after:top-0 after:bottom-0 after:left-full after:w-[calc(var(--spacing)*9)] after:content-[''] after:pointer-events-none sm:w-auto sm:after:hidden sm:before:absolute sm:before:top-0 sm:before:bottom-0 sm:before:right-full sm:before:w-[calc(var(--spacing)*9)] sm:before:content-[''] sm:before:pointer-events-none",
+            });
           },
           headingProperties() {
             return {
@@ -112,7 +112,7 @@ export default defineConfig({
             return {
               ariaLabel: `Permalink: ${toString(node)}`,
               className:
-                "absolute left-[calc(-9*var(--spacing))] top-1/2 flex h-[calc(var(--spacing)*7)] w-[calc(var(--spacing)*10)] -translate-y-[calc(50%-0.1rem)] items-center justify-center pr-[calc(var(--spacing)*4)] opacity-0 transition-opacity duration-200 ease-in-out pointer-events-none group-hover/heading:opacity-100 group-hover/heading:pointer-events-auto group-focus-within/heading:opacity-100 group-focus-within/heading:pointer-events-auto focus-visible:outline-none focus-visible:shadow-none focus-visible:rounded-none focus-visible:[&_.anchor-icon]:rounded-[0.375rem] focus-visible:[&_.anchor-icon]:shadow-[0_0_0_2px_var(--color-primary),0_0_0_4px_color-mix(in_srgb,var(--color-primary)_24%,transparent)]",
+                "absolute left-full ml-1 top-1/2 z-10 flex h-[calc(var(--spacing)*6)] w-[calc(var(--spacing)*8)] -translate-y-1/2 cursor-pointer items-center justify-center opacity-0 transition-opacity duration-200 ease-in-out pointer-events-auto md:h-[calc(var(--spacing)*7)] md:w-[calc(var(--spacing)*10)] lg:h-[calc(var(--spacing)*8)] lg:w-[calc(var(--spacing)*11)] sm:left-[calc(-9*var(--spacing))] sm:ml-0 sm:pl-0 sm:pr-[calc(var(--spacing)*4)] group-hover/heading:opacity-100 group-focus-within/heading:opacity-100 group-active/heading:opacity-100 focus-visible:outline-none focus-visible:shadow-none focus-visible:rounded-none focus-visible:[&_.anchor-icon]:rounded-[0.375rem] focus-visible:[&_.anchor-icon]:shadow-[0_0_0_2px_var(--color-primary),0_0_0_4px_color-mix(in_srgb,var(--color-primary)_24%,transparent)]",
             };
           },
           content() {
@@ -120,7 +120,7 @@ export default defineConfig({
               "svg",
               {
                 className:
-                  "anchor-icon inline-block !overflow-visible align-text-bottom fill-current h-[calc(var(--spacing)*5)] w-[calc(var(--spacing)*5)]",
+                  "anchor-icon inline-block !overflow-visible align-text-bottom fill-current h-[calc(var(--spacing)*4)] w-[calc(var(--spacing)*4)] md:h-[calc(var(--spacing)*5)] md:w-[calc(var(--spacing)*5)] lg:h-[calc(var(--spacing)*6)] lg:w-[calc(var(--spacing)*6)]",
                 viewBox: "0 0 16 16",
                 ariaHidden: true,
               },

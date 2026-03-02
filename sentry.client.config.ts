@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/astro";
+import { shouldDropSentryEvent } from "./src/lib/sentry-filter";
 
 const isLocalhost =
   typeof window !== "undefined" &&
@@ -11,5 +12,12 @@ if (import.meta.env.PROD && !isLocalhost) {
     enableLogs: true,
     integrations: [Sentry.browserTracingIntegration()],
     tracesSampleRate: 1.0,
+    beforeSend(event) {
+      if (shouldDropSentryEvent(event)) {
+        return null;
+      }
+
+      return event;
+    },
   });
 }
