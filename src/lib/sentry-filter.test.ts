@@ -10,7 +10,8 @@ describe("shouldDropSentryEvent", () => {
             stacktrace: {
               frames: [
                 {
-                  filename: "https://media.ethicalads.io/media/client/ethicalads.min.js",
+                  filename:
+                    "https://media.ethicalads.io/media/client/ethicalads.min.js",
                 },
               ],
             },

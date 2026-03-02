@@ -33,7 +33,7 @@ function hasEthicalAdsPattern(value: unknown): boolean {
     return false;
   }
 
-  return ETHICAL_ADS_PATTERNS.some(pattern => value.includes(pattern));
+  return ETHICAL_ADS_PATTERNS.some((pattern) => value.includes(pattern));
 }
 
 export function shouldDropSentryEvent(event: unknown): boolean {
