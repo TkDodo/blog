@@ -139,7 +139,7 @@ function ModalDialog({ header, body, footer }) {
 
 // usage:
 
-<ModalDialog header="Hello" body="World" />
+;<ModalDialog header="Hello" body="World" />
 ```
 
 They still allow some form of flexibility by injecting arbitrary React components into specific positions while making sure no one has to copy-paste that boilerplate everywhere. It is of course great to have these `Dialog` primitives inside a design-system, I would just not expose them for consumers.

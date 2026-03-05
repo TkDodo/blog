@@ -136,7 +136,9 @@ function PersonDetail({ id }) {
 }
 
 function PersonForm({ person, onSubmit }) {
-  const { register, handleSubmit } = useForm({ defaultValues: person })
+  const { register, handleSubmit } = useForm({
+    defaultValues: person,
+  })
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
@@ -291,7 +293,7 @@ function PersonDetail({ id }) {
       <form
         onSubmit={handleSubmit((values) =>
           // ✅ reset client state back to undefined
-          mutate(values, { onSuccess: () => reset() })
+          mutate(values, { onSuccess: () => reset() }),
         )}
       >
         <div>

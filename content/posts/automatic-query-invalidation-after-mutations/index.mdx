@@ -204,7 +204,7 @@ const queryClient = new QueryClient({
           // invalidate all matching tags at once
           // or everything if no meta is provided
           mutation.meta?.invalidates?.some((queryKey) =>
-            matchQuery({ queryKey }, query)
+            matchQuery({ queryKey }, query),
           ) ?? true,
       })
     },
@@ -275,7 +275,7 @@ useMutation({
     // returning the Promise to await it
     return queryClient.invalidateQueries(
       { queryKey: ['labels'] },
-      { cancelRefetch: false }
+      { cancelRefetch: false },
     )
   },
 })

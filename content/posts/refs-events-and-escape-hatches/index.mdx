@@ -151,7 +151,7 @@ export const useDebouncedState = (callback, delay) => {
     return () => {
       clearTimeout(timeoutId)
     }
-  // 👇 no need to include the callback
+    // 👇 no need to include the callback
   }, [value, delay])
 
   return [value, setValue]
@@ -173,21 +173,21 @@ export const useDebouncedState = (callback, delay) => {
   const [value, setValue] = React.useState('')
 
   // 👇 declare the event
-  const onTimeout = React.useEvent(callback);
+  const onTimeout = React.useEvent(callback)
 
   React.useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (value) {
         // 👇 use the event
-        onTimeout(value);
+        onTimeout(value)
       }
-    }, delay);
+    }, delay)
 
     return () => {
-      clearTimeout(timeoutId);
-    };
-  // 🎉 no need to include onTimeout
-  }, [value, delay]);
+      clearTimeout(timeoutId)
+    }
+    // 🎉 no need to include onTimeout
+  }, [value, delay])
 
   return [value, setValue]
 }

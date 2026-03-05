@@ -53,7 +53,7 @@ queryClient.setQueryData(['items', 'detail', item.id], (prevItem) =>
         ...prevItem,
         isActive: !prevItem.isActive,
       }
-    : undefined
+    : undefined,
 )
 ```
 
@@ -68,8 +68,8 @@ Finding the item in the list of items is not the problem, and merging the update
 ```ts title="update-item-in-list"
 queryClient.setQueryData(['items', 'list', filters], (prevItems) =>
   prevItems?.map((item) =>
-    item.id === newItem.id ? { ...item, ...newItem } : item
-  )
+    item.id === newItem.id ? { ...item, ...newItem } : item,
+  ),
 )
 ```
 
@@ -79,9 +79,9 @@ This, too, works great, until we realize the edge-case when a user updates a cat
 queryClient.setQueryData(['items', 'list', filters], (prevItems) =>
   prevItems
     ?.map((item) =>
-      item.id === newItem.id ? { ...item, ...newItem } : item
+      item.id === newItem.id ? { ...item, ...newItem } : item,
     )
-    .filter((item) => filters.categories.includes(item.category))
+    .filter((item) => filters.categories.includes(item.category)),
 )
 ```
 
@@ -118,7 +118,7 @@ const useToggleIsActive = (id: number) =>
               ...prevItem,
               isActive: !prevItem.isActive,
             }
-          : undefined
+          : undefined,
       )
     },
     onSettled: () => {
@@ -208,7 +208,7 @@ const useToggleIsActive = (id: number) =>
               ...prevItem,
               isActive: !prevItem.isActive,
             }
-          : undefined
+          : undefined,
       )
     },
     onSettled: () => {

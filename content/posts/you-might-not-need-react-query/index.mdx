@@ -99,7 +99,7 @@ React is still just a library to render components, but with Server Components, 
 ```jsx title="server-component"
 export default async function Page() {
   const data = await fetch(
-    `https://api.github.com/repos/tanstack/react-query`
+    `https://api.github.com/repos/tanstack/react-query`,
   )
 
   return (

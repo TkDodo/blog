@@ -100,8 +100,8 @@ const Form = React.forwardRef((props, ref) => {
       <button type="button" onClick={() => setShow(true)}>
         show
       </button>
-      // 🧐 ref is attached to the input, but it's conditionally rendered
-      // so it won't be filled when the above effect runs
+      // 🧐 ref is attached to the input, but it's conditionally
+      rendered // so it won't be filled when the above effect runs
       {show && <input ref={ref} />}
     </form>
   )
@@ -132,7 +132,7 @@ Passing a ref from _useRef_ (a RefObject) to a React element is therefore just s
 ```jsx title="callback-ref" {2-4}
 <input
   ref={(node) => {
-    ref.current = node;
+    ref.current = node
   }}
   defaultValue="Hello world"
 />
@@ -187,7 +187,7 @@ And as shown in this [hidden gem in the (old) React docs](https://reactjs.org/do
 function MeasureExample() {
   const [height, setHeight] = React.useState(0)
 
-  const measuredRef = React.useCallback(node => {
+  const measuredRef = React.useCallback((node) => {
     if (node !== null) {
       setHeight(node.getBoundingClientRect().height)
     }

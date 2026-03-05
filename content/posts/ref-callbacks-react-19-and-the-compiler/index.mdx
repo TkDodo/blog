@@ -90,7 +90,7 @@ But what if we can't move it out of the component, because we depend on somethin
 function MeasureExample() {
   const [height, setHeight] = React.useState(0)
 
-  const measuredRef = React.useCallback(node => {
+  const measuredRef = React.useCallback((node) => {
     if (node !== null) {
       setHeight(node.getBoundingClientRect().height)
     }

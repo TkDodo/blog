@@ -55,7 +55,7 @@ Let's see how most examples around displaying errors look like:
 function TodoList() {
   const todos = useQuery({
     queryKey: ['todos'],
-    queryFn: fetchTodos
+    queryFn: fetchTodos,
   })
 
   if (todos.isPending) {
@@ -182,7 +182,7 @@ Conceptually, you can imagine that the onError callback functions similar to a `
 const useTodos = () => {
   const todos = useQuery({
     queryKey: ['todos'],
-    queryFn: fetchTodos
+    queryFn: fetchTodos,
   })
 
   // 🚨 effects are executed for every component

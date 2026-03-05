@@ -101,7 +101,7 @@ function AddComment({ id }) {
         event.preventDefault()
         // ✅ mutation is invoked when the form is submitted
         addComment.mutate(
-          new FormData(event.currentTarget).get('comment')
+          new FormData(event.currentTarget).get('comment'),
         )
       }}
     >
@@ -140,7 +140,7 @@ const useAddComment = (id) => {
     onSuccess: () => {
       // ✅ refetch the comments list for our blog post
       queryClient.invalidateQueries({
-        queryKey: ['posts', id, 'comments']
+        queryKey: ['posts', id, 'comments'],
       })
     },
   })
@@ -231,7 +231,7 @@ Promises returned from the mutation callbacks are awaited by React Query, and as
   // 🚀 fire and forget - will not wait
   onSuccess: () => {
     queryClient.invalidateQueries({
-      queryKey: ['posts', id, 'comments']
+      queryKey: ['posts', id, 'comments'],
     })
   }
 }
@@ -312,7 +312,7 @@ const useUpdateTodo = () =>
     // ✅ always invalidate the todo list
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['todos', 'list']
+        queryKey: ['todos', 'list'],
       })
     },
   })
@@ -324,7 +324,7 @@ updateTodo.mutate(
   { title: 'newTitle' },
   // ✅ only redirect if we're still on the detail page
   // when the mutation finishes
-  { onSuccess: () => history.push('/todos') }
+  { onSuccess: () => history.push('/todos') },
 )
 ```
 

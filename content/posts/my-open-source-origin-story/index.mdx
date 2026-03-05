@@ -77,7 +77,7 @@ The way to opt-out of this behaviour was to manually pass `notifyOnChangeProps`:
 const { data } = useQuery({
   queryKey: ['todos'],
   queryFn: fetchTodos,
-  notifyOnChangeProps: ['data']
+  notifyOnChangeProps: ['data'],
 })
 ```
 

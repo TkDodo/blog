@@ -130,7 +130,7 @@ This is usually how components evolve over time - props get added. The thing is 
 
 If we now add an inline style prop when rendering our `ExpensiveTree` component:
 
-```jsx title="inline-style" {2}
+```jsx title="inline-style" {1}
 <ExpensiveTree style={{ backgroundColor: 'blue' }} />
 ```
 
@@ -138,11 +138,11 @@ we've inadvertently ruined the memoization, because the `style` prop will be a n
 
 Okay, sure, we can fix this by wrapping the `style` prop in `React.useMemo`:
 
-```jsx title="useMemo" {2-5,9}
+```jsx title="useMemo" {2-5,7}
 function App() {
   const memoizedStyle = React.useMemo(
     () => ({ backgroundColor: 'blue' }),
-    []
+    [],
   )
 
   return <ExpensiveTree style={memoizedStyle} />

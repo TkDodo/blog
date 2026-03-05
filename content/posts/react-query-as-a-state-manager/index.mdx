@@ -181,7 +181,7 @@ function ComponentOne() {
   const { data } = useTodos()
   const [showMore, toggleShowMore] = React.useReducer(
     (value) => !value,
-    false
+    false,
   )
 
   // yes, I leave out error handling, this is "just" an example
@@ -234,10 +234,7 @@ const queryClient = new QueryClient({
 
 // 🚀 everything todo-related will have
 // a 1 minute staleTime
-queryClient.setQueryDefaults(
-  todoKeys.all,
-  { staleTime: 1000 * 60 }
-)
+queryClient.setQueryDefaults(todoKeys.all, { staleTime: 1000 * 60 })
 ```
 
 ## A note on separation of concerns

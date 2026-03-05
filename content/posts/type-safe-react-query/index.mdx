@@ -134,7 +134,9 @@ I learned this rule from [@danvdk's](https://twitter.com/danvdk) great book [Eff
 The so called "return-only" generics are nothing more than a type assertion in disguise. The (slightly simplified) type signature for `axios.get` reads:
 
 ```ts title="axios-get-type-signature"
-function get<T = any>(url: string): Promise<{ data: T, status: number}>
+function get<T = any>(
+  url: string,
+): Promise<{ data: T; status: number }>
 ```
 
 The Type `T` only appears in one place - the return type. So it's a lie!

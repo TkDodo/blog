@@ -140,7 +140,7 @@ However, this only works if you let type inference do it's magic 🪄, which mea
 This is relatively easy to adhere to, but brings one question: How can I write a reusable abstraction in TypeScript that includes `select`? What type sorcery is needed to e.g. make `productOptions` that get `select` as an argument?
 
 ```ts title="how-do-I-type-select?" {5-6}
-const productOptions = (id:string, select) => {
+const productOptions = (id: string, select) => {
   return queryOptions({
     queryKey: ['product', id],
     queryFn: () => fetchProduct(id),
@@ -157,7 +157,7 @@ But TkDodo, what if I _really_ want it? Okay, fine, if you must do this, it's a 
 ```ts title="select-abstraction" {3}
 const productOptions = <TData = ProductData>(
   id: string,
-  select?: (data: ProductData) => TData
+  select?: (data: ProductData) => TData,
 ) => {
   return queryOptions({
     queryKey: ['product', id],
@@ -237,7 +237,7 @@ function ProductList({ filters, minRating }: Props) {
     ...productListOptions(filters),
     select: React.useCallback(
       (data) => expensiveSuperTransformation(data, minRating),
-      [minRating]
+      [minRating],
     ),
   })
 
@@ -291,7 +291,7 @@ We really just want to memoize our `expensiveSuperTransformation` by its inputs,
 import memoize from 'fast-memoize'
 
 const select = memoize((data: Array<Product>) =>
-  expensiveSuperTransformation(data)
+  expensiveSuperTransformation(data),
 )
 
 function ProductList({ filters }: Props) {

@@ -407,8 +407,7 @@ This is fixed in v5, because you now have to provide an explicit `initialPagePar
 const queryInfo = useInfiniteQuery({
   queryKey: ['groups'],
   // ✅ typed correctly as number
-  queryFn: ({ pageParam }) =>
-    fetchGroups(groups, pageParam),
+  queryFn: ({ pageParam }) => fetchGroups(groups, pageParam),
   getNextPageParam: (lastGroup) => lastGroup.next,
   initialPageParam: 0,
 })
@@ -444,7 +443,7 @@ const queryClient = new QueryClient({
         // so that we can work with it
         if (typeof url === 'string') {
           const { data } = await axios.get(
-            `${baseUrl}/${url.toLowerCase()}`
+            `${baseUrl}/${url.toLowerCase()}`,
           )
           return data
         }

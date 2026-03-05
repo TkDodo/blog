@@ -156,7 +156,9 @@ export const loader =
 export default function Contact() {
   const params = useParams()
   // ⬇️ useQuery as per usual
-  const { data: contact } = useQuery(contactDetailQuery(params.contactId))
+  const { data: contact } = useQuery(
+    contactDetailQuery(params.contactId),
+  )
   // render some jsx
 }
 ```
@@ -287,7 +289,7 @@ export const action =
     const formData = await request.formData()
     const updates = Object.fromEntries(formData)
     await updateContact(params.contactId, updates)
-    queryClient.invalidateQueries({ queryKey: ["contacts"] });
+    queryClient.invalidateQueries({ queryKey: ['contacts'] })
     return redirect(`/contacts/${params.contactId}`)
   }
 ```

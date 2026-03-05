@@ -116,7 +116,7 @@ Requirements change over time (as they tend to do), and now we have to support c
 function formatMetric(
   value: number,
   isPercent: boolean,
-  isCurrency: boolean
+  isCurrency: boolean,
 ): string {
   if (isPercent) {
     return `${value * 100}%`
@@ -169,7 +169,7 @@ Further advantages of a single variant property include:
 type MetricVariant = 'standard' | 'percent' | 'currency'
 function formatMetric(
   value: number,
-  variant: MetricVariant = 'standard'
+  variant: MetricVariant = 'standard',
 ): string {
   switch (variant) {
     case 'percent':

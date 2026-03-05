@@ -212,7 +212,7 @@ const options = [
   },
 ] as const
 
-type Variant = typeof options[number]['id']
+type Variant = (typeof options)[number]['id']
 ```
 
 [TypeScript playground](https://www.typescriptlang.org/play?#code/MYewdgzgLgBCAOUCW4IwLwwNoFgBQMhMA3vkeTEgCYBcMA5PAE5IC2AhkwJ70A0ZFQgBt2AIwCmQuvQAqAC3ExmbTlziIUYPgMIBffgSKlDg6tIjjQYKqu0mKIiVIbzFF8De7rk4O+X34ALow7GhW0Pj4UFzwigBqnEjsYLCY0bEgAGbemhBYYACurBJMgVj01PSBQA)
@@ -237,14 +237,15 @@ const options = [
   },
 ] as const
 
-type EnsureReadonlyArray<T> = T extends Array<any>
-  ? never
-  : T extends ReadonlyArray<any>
-  ? T
-  : never
+type EnsureReadonlyArray<T> =
+  T extends Array<any>
+    ? never
+    : T extends ReadonlyArray<any>
+      ? T
+      : never
 export type ExtractValue<
   T extends ReadonlyArray<any>,
-  K extends keyof T[number]
+  K extends keyof T[number],
 > = EnsureReadonlyArray<T>[number][K]
 
 type Variant = ExtractValue<typeof options, 'id'>

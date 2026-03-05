@@ -60,7 +60,8 @@ const store = createStore({
   // transitions
   on: {
     increasePopulation: {
-      bears: (context, event: { by: number }) => context.bears + event.by,
+      bears: (context, event: { by: number }) =>
+        context.bears + event.by,
     },
     eatFish: {
       fish: (context) => context.fish - 1,

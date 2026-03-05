@@ -213,7 +213,7 @@ We thought: "We actually only want to re-render our component when _value_ chang
 ```js title="fast-but-buggy-component"
 const FastComponent = React.memo(
   SlowComponent,
-  (prevProps, nextProps) => prevProps.value === nextProps.value
+  (prevProps, nextProps) => prevProps.value === nextProps.value,
 )
 ```
 

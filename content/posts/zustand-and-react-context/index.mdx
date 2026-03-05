@@ -139,7 +139,7 @@ const BearStoreProvider = ({ children, initialBears }) => {
           set((state) => ({ bears: state.bears + by })),
         removeAllBears: () => set({ bears: 0 }),
       },
-    }))
+    })),
   )
 
   return (

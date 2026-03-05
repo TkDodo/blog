@@ -126,7 +126,7 @@ As it stands, this will not only run every time your fetch function runs, but ac
 export const useTodosQuery = () => {
   const queryInfo = useQuery({
     queryKey: ['todos'],
-    queryFn: fetchTodos
+    queryFn: fetchTodos,
   })
 
   return {
@@ -134,13 +134,13 @@ export const useTodosQuery = () => {
     // 🚨 don't do this - the useMemo does nothing at all here!
     data: React.useMemo(
       () => queryInfo.data?.map((todo) => todo.name.toUpperCase()),
-      [queryInfo]
+      [queryInfo],
     ),
 
     // ✅ correctly memoizes by queryInfo.data
     data: React.useMemo(
       () => queryInfo.data?.map((todo) => todo.name.toUpperCase()),
-      [queryInfo.data]
+      [queryInfo.data],
     ),
   }
 }
@@ -194,7 +194,7 @@ export const useTodosQuery = () =>
     // ✅ memoizes with useCallback
     select: React.useCallback(
       (data: Todos) => data.map((todo) => todo.name.toUpperCase()),
-      []
+      [],
     ),
   })
 ```

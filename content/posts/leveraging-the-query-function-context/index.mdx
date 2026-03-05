@@ -86,9 +86,11 @@ Suppose we want to add sorting to our query. I like to approach these things fro
 type Sorting = 'dateCreated' | 'name'
 const fetchTodos = async (
   state: State,
-  sorting: Sorting
+  sorting: Sorting,
 ): Promise<Todos> => {
-  const response = await axios.get(`todos/${state}?sorting=${sorting}`)
+  const response = await axios.get(
+    `todos/${state}?sorting=${sorting}`,
+  )
   return response.data
 }
 ```
@@ -144,11 +146,13 @@ React Query uses that object to inject information about the _query_ to the `que
 
 However, the context also contains the `queryKey` that is used for this query (and we're about to add more cool things to the context), which means you actually don't have to close over things, as they will be provided for you by React Query:
 
-```js title="query-function-context" {1,3,12-15}
+```js title="query-function-context" {1,3,14-17}
 const fetchTodos = async ({ queryKey }) => {
   // 🚀 we can get all params from the queryKey
   const [, state, sorting] = queryKey
-  const response = await axios.get(`todos/${state}?sorting=${sorting}`)
+  const response = await axios.get(
+    `todos/${state}?sorting=${sorting}`,
+  )
   return response.data
 }
 
@@ -178,7 +182,7 @@ export const useTodos = () => {
     queryFn: async ({ queryKey }) => {
       const response = await axios.get(
         // ✅ this is safe because the queryKey is a tuple
-        `todos/${queryKey[1]}?sorting=${queryKey[2]}`
+        `todos/${queryKey[1]}?sorting=${queryKey[2]}`,
       )
       return response.data
     },
@@ -206,9 +210,11 @@ const todoKeys = {
 const fetchTodos = async ({
   queryKey,
 }: // 🤯 only accept keys that come from the factory
-QueryFunctionContext<ReturnType<typeof todoKeys['list']>>) => {
+QueryFunctionContext<ReturnType<(typeof todoKeys)['list']>>) => {
   const [, , state, sorting] = queryKey
-  const response = await axios.get(`todos/${state}?sorting=${sorting}`)
+  const response = await axios.get(
+    `todos/${state}?sorting=${sorting}`,
+  )
   return response.data
 }
 
@@ -218,7 +224,7 @@ export const useTodos = () => {
   // ✅ build the key via the factory
   return useQuery({
     queryKey: todoKeys.list(state, sorting),
-    queryFn: fetchTodos
+    queryFn: fetchTodos,
   })
 }
 ```
@@ -255,8 +261,10 @@ const todoKeys = {
 const fetchTodos = async ({
   // ✅ extract named properties from the queryKey
   queryKey: [{ state, sorting }],
-}: QueryFunctionContext<ReturnType<typeof todoKeys['list']>>) => {
-  const response = await axios.get(`todos/${state}?sorting=${sorting}`)
+}: QueryFunctionContext<ReturnType<(typeof todoKeys)['list']>>) => {
+  const response = await axios.get(
+    `todos/${state}?sorting=${sorting}`,
+  )
   return response.data
 }
 
@@ -265,7 +273,7 @@ export const useTodos = () => {
 
   return useQuery({
     queryKey: todoKeys.list(state, sorting),
-    queryFn: fetchTodos
+    queryFn: fetchTodos,
   })
 }
 ```
@@ -275,17 +283,17 @@ Object query keys even make your fuzzy matching capabilities more powerful, beca
 ```js title="fuzzy-matching-with-object-keys"
 // 🕺 remove everything related to the todos feature
 queryClient.removeQueries({
-  queryKey: [{ scope: 'todos' }]
+  queryKey: [{ scope: 'todos' }],
 })
 
 // 🚀 reset all todo lists
 queryClient.resetQueries({
-  queryKey: [{ scope: 'todos', entity: 'list' }]
+  queryKey: [{ scope: 'todos', entity: 'list' }],
 })
 
 // 🙌 invalidate all lists across all scopes
 queryClient.invalidateQueries({
-  queryKey: [{ entity: 'list' }]
+  queryKey: [{ entity: 'list' }],
 })
 ```
 

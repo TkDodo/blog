@@ -143,7 +143,7 @@ which let us tackle that specific problem:
 ```ts title="non-empty-array"
 type NonEmptyArray<T> = [T, ...Array<T>]
 const isNonEmpty = <T extends unknown>(
-  array: Array<T>
+  array: Array<T>,
 ): array is NonEmptyArray<T> => array.length > 0
 ```
 
@@ -156,12 +156,13 @@ just type your function with a _NonEmptyArray_:
 ```ts title="forced-empty-check" {7-15}
 type NonEmptyArray<T> = [T, ...Array<T>]
 const isNonEmpty = <T extends unknown>(
-  array: Array<T>
+  array: Array<T>,
 ): array is NonEmptyArray<T> => array.length > 0
 
 const strings: Array<string> = ['one', 'two', 'three']
 
-const firstToUpper = (list: NonEmptyArray<string>) => list[0].toUpperCase()
+const firstToUpper = (list: NonEmptyArray<string>) =>
+  list[0].toUpperCase()
 
 // this will type-err
 firstToUpper(strings)

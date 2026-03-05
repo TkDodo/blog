@@ -36,7 +36,9 @@ When it comes to object properties or function parameters that are potentially _
 
 ```ts title="optional-properties"
 declare function canFetch1(networkMode?: NetworkMode): boolean
-declare function canFetch2(networkMode: NetworkMode | undefined): boolean
+declare function canFetch2(
+  networkMode: NetworkMode | undefined,
+): boolean
 ```
 
 Again, most developers will choose the first way without thinking twice (because it's shorter). The difference to the previous example is that those two definitions are _not_ the same.
@@ -77,7 +79,9 @@ Optional parameters are often interpreted as: "oh, I can just leave that one out
 As pointed out to me [on twitter](https://twitter.com/Elkingtonne/status/1476916901121036289), we could also pass a required options object into our function with an optional _networkMode_ property:
 
 ```ts title="the-object-solution"
-declare function canFetch(options: { networkMode?: NetworkMode }): boolean
+declare function canFetch(options: {
+  networkMode?: NetworkMode
+}): boolean
 ```
 
 I like this solution a lot in this situation, because we can mostly just forward our whole options object. The problem is that you could inadvertently pass in a "wrong" options object that doesn't even have a _networkMode_, because any object, even an empty one, conforms to this interface.
@@ -86,7 +90,11 @@ It also doesn't work so well if we try to take this concept to React components,
 
 ```tsx title="react-props"
 function CanFetch1({ networkMode }: { networkMode?: NetworkMode })
-function CanFetch2({ networkMode }: { networkMode: NetworkMode | undefined })
+function CanFetch2({
+  networkMode,
+}: {
+  networkMode: NetworkMode | undefined
+})
 
 function App() {
   return (
@@ -125,7 +133,7 @@ This becomes especially dangerous when we want to use object spread to merge a p
 ```ts title="merge-partial"
 const merge = <T extends Record<string, unknown>>(
   obj1: T,
-  obj2: Partial<T>
+  obj2: Partial<T>,
 ): T => ({ ...obj1, ...obj2 })
 
 const user: User = {

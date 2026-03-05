@@ -42,8 +42,8 @@ This is mostly true, and if that's your mental model about async functions, it w
 ```ts title="promise-chaining"
 function fetchTodos() {
   return fetch('/todos')
-    .then(response => response.json())
-    .then(json => json.data)
+    .then((response) => response.json())
+    .then((json) => json.data)
 }
 ```
 
@@ -97,11 +97,11 @@ Now the same works if you are in a promise chain, but not if you are _outside_ o
 function fetchTodo(id: number | undefined) {
   if (!id) {
     // 🚨 this will NOT give you a failed promise
-    throw new Error("expected id")
+    throw new Error('expected id')
   }
   return fetch('/todos')
-    .then(response => response.json())
-    .then(json => json.data)
+    .then((response) => response.json())
+    .then((json) => json.data)
 }
 ```
 
@@ -111,11 +111,11 @@ If you make the same function _async_, it would give you a failed promise. These
 function fetchTodo(id: number | undefined) {
   if (!id) {
     // ✅ this will work as expected, no matter where
-    return Promise.reject(new Error("expected id"))
+    return Promise.reject(new Error('expected id'))
   }
   return fetch('/todos')
-    .then(response => response.json())
-    .then(json => json.data)
+    .then((response) => response.json())
+    .then((json) => json.data)
 }
 ```
 
@@ -157,7 +157,7 @@ const fetchTodos = async (): Promise<Todos | undefined> => {
     // 🚨 if transform fails, we will catch it and show a toast :(
     return transform(response.data)
   } catch (error) {
-    showToast("Fetch failed: " + error.message)
+    showToast('Fetch failed: ' + error.message)
     return undefined
   }
 }
@@ -169,9 +169,9 @@ So if you also think that async / await is cool, but try / catch is not, you can
 
 ```ts title="await-and-catch"
 const fetchTodos = async (): Promise<Todos | undefined> => {
-  const response = await axios.get('/todos').catch(error => {
+  const response = await axios.get('/todos').catch((error) => {
     // 🚀 showing the toast is scoped to catching the response error
-    showToast("Fetch failed: " + error.message)
+    showToast('Fetch failed: ' + error.message)
     return undefined
   })
   return transform(response?.data)
@@ -195,7 +195,7 @@ const fetchTodos = async () => {
 
 // 🙈 async/await mixed with .then
 const fetchTodos = async () =>
-  await axios.get('/todos').then(response => response.data)
+  await axios.get('/todos').then((response) => response.data)
 
 const fetchTodos = async () => {
   try {

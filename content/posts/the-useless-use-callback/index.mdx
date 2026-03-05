@@ -112,7 +112,7 @@ Can you spot the difference? Exactly - we are not passing `value` and `onChange`
 function MyButton() {
   const onClick = useCallback(
     (event) => console.log(event.currentTarget.value),
-    []
+    [],
   )
 
   return <button onClick={onClick} />
@@ -141,10 +141,13 @@ Adding non-primitive `props` you get passed into your component to internal depe
 
 ```tsx title="props-as-dependencies"
 function OhNo({ onChange }) {
-  const handleChange = useCallback((e: React.ChangeEvent) => {
-    trackAnalytics('changeEvent', e)
-    onChange?.(e)
-  }, [onChange])
+  const handleChange = useCallback(
+    (e: React.ChangeEvent) => {
+      trackAnalytics('changeEvent', e)
+      onChange?.(e)
+    },
+    [onChange],
+  )
 
   return <SomeMemoizedComponent onChange={handleChange} />
 }
@@ -199,7 +202,7 @@ useHotkeys(paginateHotkeys)
 
 ```tsx title="breaking-memoization"
 const screenshots = attachments.filter(({ name }) =>
-  name.includes('screenshot')
+  name.includes('screenshot'),
 )
 ```
 

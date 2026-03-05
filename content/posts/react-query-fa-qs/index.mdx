@@ -247,7 +247,7 @@ export default function App() {
           // ⬇️ but we need it here
           onError: (error) => toast.show({ type: 'error', error }),
         }),
-      })
+      }),
   )
 
   return (
@@ -270,9 +270,11 @@ const UseQueryClient = ({ children }) => children(useQueryClient())
 <UseQueryClient>
   {(queryClient) => (
     <button
-      onClick={() => queryClient.invalidateQueries({
-        queryKey: ['items']
-      })}
+      onClick={() =>
+        queryClient.invalidateQueries({
+          queryKey: ['items'],
+        })
+      }
     >
       invalidate items
     </button>

@@ -180,7 +180,11 @@ const useInitializePayload = () => {
   const payload = usePayload()
   React.useEffect(() => {
     if (payload === null) {
-      performSomeSideEffectThatInitializesPayload(value1, value2, ...valueN)
+      performSomeSideEffectThatInitializesPayload(
+        value1,
+        value2,
+        ...valueN,
+      )
     }
   })
 }

@@ -162,7 +162,7 @@ export function ShoppingList() {
 
 Of course you'll quickly spot the bug 🐞 we've just introduced: This will show the `<EmptyScreen />` when we are in `pending` state, too, because in that state, we also have no data. Easily fixable by adding another condition instead:
 
-```tsx title="\"fixed\"-condition" {10}
+```tsx title="fixed-condition" {10}
 export function ShoppingList() {
   const { data, isPending } = useQuery(/* ... */)
 

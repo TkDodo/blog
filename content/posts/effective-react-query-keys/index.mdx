@@ -176,14 +176,14 @@ function useUpdateTitle() {
       // ✅ update the todo detail
       queryClient.setQueryData(
         ['todos', 'detail', newTodo.id],
-        newTodo
+        newTodo,
       )
 
       // ✅ update all the lists that contain this todo
       queryClient.setQueriesData(['todos', 'list'], (previous) =>
         previous.map((todo) =>
-          todo.id === newTodo.id ? newTodo : todo
-        )
+          todo.id === newTodo.id ? newTodo : todo,
+        ),
       )
     },
   })
@@ -199,12 +199,12 @@ function useUpdateTitle() {
     onSuccess: (newTodo) => {
       queryClient.setQueryData(
         ['todos', 'detail', newTodo.id],
-        newTodo
+        newTodo,
       )
 
       // ✅ just invalidate all the lists
       queryClient.invalidateQueries({
-        queryKey: ['todos', 'list']
+        queryKey: ['todos', 'list'],
       })
     },
   })
@@ -224,7 +224,7 @@ function useUpdateTitle() {
     onSuccess: (newTodo) => {
       queryClient.setQueryData(
         ['todos', 'detail', newTodo.id],
-        newTodo
+        newTodo,
       )
 
       // ✅ update the list we are currently on
@@ -232,8 +232,8 @@ function useUpdateTitle() {
         ['todos', 'list', { filters }],
         (previous) =>
           previous.map((todo) =>
-            todo.id === newTodo.id ? newtodo : todo
-          )
+            todo.id === newTodo.id ? newtodo : todo,
+          ),
       )
 
       // 🥳 invalidate all the lists,
@@ -260,7 +260,8 @@ That's why I recommend one Query Key factory per feature. It's just a simple obj
 const todoKeys = {
   all: ['todos'] as const,
   lists: () => [...todoKeys.all, 'list'] as const,
-  list: (filters: string) => [...todoKeys.lists(), { filters }] as const,
+  list: (filters: string) =>
+    [...todoKeys.lists(), { filters }] as const,
   details: () => [...todoKeys.all, 'detail'] as const,
   detail: (id: number) => [...todoKeys.details(), id] as const,
 }
@@ -272,12 +273,12 @@ This gives me a lot of flexibility, as each level builds on top of another, but 
 // 🕺 remove everything related
 // to the todos feature
 queryClient.removeQueries({
-  queryKey: todoKeys.all
+  queryKey: todoKeys.all,
 })
 
 // 🚀 invalidate all the lists
 queryClient.invalidateQueries({
-  queryKey: todoKeys.lists()
+  queryKey: todoKeys.lists(),
 })
 
 // 🙌 prefetch a single todo

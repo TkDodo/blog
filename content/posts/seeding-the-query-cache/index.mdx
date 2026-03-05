@@ -53,8 +53,14 @@ In React Query, we can do that in two different ways:
 
 ```tsx title="parallel-queries"
 // 1. Use useQuery twice
-const issues = useQuery({ queryKey: ['issues'], queryFn: fetchIssues })
-const labels = useQuery({ queryKey: ['labels'], queryFn: fetchLabels })
+const issues = useQuery({
+  queryKey: ['issues'],
+  queryFn: fetchIssues,
+})
+const labels = useQuery({
+  queryKey: ['labels'],
+  queryFn: fetchLabels,
+})
 
 // 2. Use the useQueries hook
 const [issues, labels] = useQueries([
@@ -87,7 +93,7 @@ function Issues() {
 
   return (
     <div>
-      { /* TypeScript knows data can't be undefined */ }
+      {/* TypeScript knows data can't be undefined */}
       {data.map((issue) => (
         <div>{issue.title}</div>
       ))}

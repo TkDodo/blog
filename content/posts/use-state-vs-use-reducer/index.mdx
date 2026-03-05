@@ -130,11 +130,13 @@ I think a single useState object also works fine for a simple generic form, wher
 
 ```tsx title="use-form"
 const useForm = <State extends Record<string, unknown>>(
-  initialState: State
+  initialState: State,
 ) => {
   const [values, setValues] = React.useState(initialState)
-  const update = <Key extends keyof State>(name: Key, value: State[Key]) =>
-    setValues((form) => ({ ...form, [name]: value }))
+  const update = <Key extends keyof State>(
+    name: Key,
+    value: State[Key],
+  ) => setValues((form) => ({ ...form, [name]: value }))
 
   return [values, update] as const
 }
@@ -233,10 +235,14 @@ function App() {
   return (
     <div>
       Count: {count}
-      <button onClick={() => dispatch({ type: 'set', value: count + 1 })}>
+      <button
+        onClick={() => dispatch({ type: 'set', value: count + 1 })}
+      >
         Increment
       </button>
-      <button onClick={() => dispatch({ type: 'set', value: count - 1 })}>
+      <button
+        onClick={() => dispatch({ type: 'set', value: count - 1 })}
+      >
         Decrement
       </button>
     </div>
@@ -279,7 +285,10 @@ const reducer = (amount) => (state, action) => {
 }
 
 const useCounterState = () => {
-  const { data } = useQuery({ queryKey: ['amount'], queryFn: fetchAmount })
+  const { data } = useQuery({
+    queryKey: ['amount'],
+    queryFn: fetchAmount,
+  })
   return React.useReducer(reducer(data ?? 1), 0)
 }
 

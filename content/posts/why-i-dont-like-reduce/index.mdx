@@ -72,7 +72,7 @@ const joinWithReduce = (array, delimiter) =>
       accumulator +
       currentValue +
       (index === array.length - 1 ? '' : delimiter),
-    ''
+    '',
   )
 
 joinWithReduce(['foo', 'bar', 'baz'], ';') //foo;bar;baz
@@ -110,13 +110,20 @@ The implementation is something like this:
 ```ts title="to-object"
 export const toObject = <T, K extends string | number | symbol, V>(
   array: ReadonlyArray<T>,
-  iteratee: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
+  iteratee: (
+    element: T,
+    index: number,
+    array: ReadonlyArray<T>,
+  ) => [K, V],
 ): Record<K, V> =>
-  array.reduce((result, element, index) => {
-    const [key, value] = iteratee(element, index, array)
-    result[key] = value
-    return result
-  }, {} as Record<K, V>)
+  array.reduce(
+    (result, element, index) => {
+      const [key, value] = iteratee(element, index, array)
+      result[key] = value
+      return result
+    },
+    {} as Record<K, V>,
+  )
 
 toObject(['foo', 'bar', 'baz'], (element) => [
   'key-' + element,
@@ -153,15 +160,22 @@ Talking about performance and linear iterations, I've learned the hard way _not_
 ```ts title="immutability-🎉" {7-10}
 export const toObject = <T, K extends string | number | symbol, V>(
   array: ReadonlyArray<T>,
-  iteratee: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
+  iteratee: (
+    element: T,
+    index: number,
+    array: ReadonlyArray<T>,
+  ) => [K, V],
 ): Record<K, V> =>
-  array.reduce((result, element, index) => {
-    const [key, value] = iteratee(element, index, array)
-    return {
-      ...result,
-      [key]: value,
-    }
-  }, {} as Record<K, V>)
+  array.reduce(
+    (result, element, index) => {
+      const [key, value] = iteratee(element, index, array)
+      return {
+        ...result,
+        [key]: value,
+      }
+    },
+    {} as Record<K, V>,
+  )
 ```
 
 Why should I be _dirty_ and mutate the result, when I can be super fancy instead and create a new object every time. 🤔🤦‍

@@ -125,13 +125,14 @@ import create from 'zustand'
 
 const useStore = create((set) => ({
   bears: 0,
-  increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
+  increasePopulation: () =>
+    set((state) => ({ bears: state.bears + 1 })),
 }))
 
 // usage:
 const bears = useStore(React.useCallback((state) => state.bears, []))
 const increasePopulation = useStore(
-  React.useCallback((state) => state.increasePopulation, [])
+  React.useCallback((state) => state.increasePopulation, []),
 )
 ```
 

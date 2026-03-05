@@ -51,7 +51,7 @@ If we look at the child route (a widget on a dashboard), we can see that we get 
 
 ```tsx title="use-params" {8,9}
 export const Route = createFileRoute(
-  '/dashboard/$dashboardId/widget/$widgetId/'
+  '/dashboard/$dashboardId/widget/$widgetId/',
 )({
   component: Widget,
 })
@@ -142,7 +142,7 @@ If we add more search params in our tree, they will be merged on type-level to p
 
 ```tsx title="merged-search-params" {4,9,10}
 export const Route = createFileRoute(
-  '/dashboard/$dashboardId/widget/$widgetId/'
+  '/dashboard/$dashboardId/widget/$widgetId/',
 )({
   validateSearch: type({ 'range?': "'7d' | '30d' | '90d'" }).assert,
   component: Widget,
@@ -194,7 +194,7 @@ export const Route = createFileRoute('/dashboard/$dashboardId')({
   loader: async ({ context, params }) => {
     //             ^? { queryClient: QueryClient }
     await context.queryClient.ensureQueryData(
-      dashboardQueryOptions(params.dashboardId)
+      dashboardQueryOptions(params.dashboardId),
     )
   },
   component: Dashboard,
@@ -203,7 +203,7 @@ export const Route = createFileRoute('/dashboard/$dashboardId')({
 function Dashboard() {
   const params = Route.useParams()
   const { data } = useSuspenseQuery(
-    dashboardQueryOptions(params.dashboardId)
+    dashboardQueryOptions(params.dashboardId),
   )
 }
 ```
@@ -216,14 +216,14 @@ To modify the context for a specific route, we can define the `beforeLoad` funct
 
 ```tsx title="beforeLoad" {2,6}
 export const Route = createFileRoute('/dashboard/$dashboardId')({
-  beforeLoad: () => ({ hello: 'world' } as const),
+  beforeLoad: () => ({ hello: 'world' }) as const,
   loader: async ({ context, params }) => {
     //             ^? {
     //                  queryClient: QueryClient;
     //                  readonly hello: "world";
     //                }
     await context.queryClient.ensureQueryData(
-      dashboardQueryOptions(params.dashboardId)
+      dashboardQueryOptions(params.dashboardId),
     )
   },
   component: Dashboard,

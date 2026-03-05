@@ -177,7 +177,7 @@ We would only want to allow existing keys to be passed as the second argument, s
 ```ts title="pick-generic-notation"
 function pick<TObject extends Record<string, unknown>>(
   object: TObject,
-  keys: Array<keyof TObject>
+  keys: Array<keyof TObject>,
 )
 ```
 
@@ -186,7 +186,7 @@ Of course, all works well when we use the generic syntax for our Array. But what
 ```ts title="pick-array-notation" {3}
 function pick<TObject extends Record<string, unknown>>(
   object: TObject,
-  keys: keyof TObject[]
+  keys: keyof TObject[],
 )
 ```
 
@@ -214,7 +214,7 @@ Yes, it is. And that's sad. Because why do I even care about that? To this day, 
 ```ts title="fixed-array-notation" {3}
 function pick<TObject extends Record<string, unknown>>(
   object: TObject,
-  keys: (keyof TObject)[]
+  keys: (keyof TObject)[],
 )
 ```
 

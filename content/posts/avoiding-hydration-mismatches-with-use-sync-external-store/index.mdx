@@ -132,7 +132,7 @@ function LastUpdated() {
   const date = React.useSyncExternalStore(
     emptySubscribe,
     () => lastUpdated.toLocaleDateString(),
-    () => null
+    () => null,
   )
 
   return date ? <span>Last updated at: {date}</span> : null
@@ -166,7 +166,7 @@ function ClientGate({ children }) {
   const isServer = React.useSyncExternalStore(
     emptySubscribe,
     () => false,
-    () => true
+    () => true,
   )
 
   return isServer ? null : children()
@@ -195,7 +195,7 @@ function LastUpdated() {
   const date = React.useSyncExternalStore(
     emptySubscribe,
     () => lastUpdated.toLocaleDateString(),
-    () => lastUpdated.toLocaleDateString('en-US')
+    () => lastUpdated.toLocaleDateString('en-US'),
   )
 
   return <span>Last updated at: {date}</span>
