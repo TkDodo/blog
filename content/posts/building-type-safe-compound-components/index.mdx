@@ -43,10 +43,25 @@ This doesn't mean that compound components are _always_ a good fit. Sometimes, u
 
 A common example we'll see regarding compound components is a `Select` with `Options`, likely because that's also how it works in HTML.
 
-```tsx title="Compound Select"
-import { Select, Option } from '@/components/select'
+```tsx title="Compound Select" twoslash
+import React, { type ReactElement, type ReactNode } from 'react'
+declare function Select(props: {
+  value: ThemeValue
+  onChange: (value: ThemeValue) => void
+  children?: ReactNode
+}): ReactElement
+declare function Option(props: {
+  value: ThemeValue
+  children?: ReactNode
+}): ReactElement
+type ThemeValue = 'system' | 'light' | 'dark'
+type Props = {
+  value: ThemeValue
+  onChange: (value: ThemeValue) => void
+}
+// ---cut---
 
-function ThemeSwitcher({ value, onChange }) {
+function ThemeSwitcher({ value, onChange }: Props) {
   return (
     <Select value={value} onChange={onChange}>
       <Option value="system">🤖</Option>
@@ -73,10 +88,29 @@ In reality, we likely won't have `Selects` with just three options, as the conte
 
 In fact, at Adverity, we started out with a compound component `Select` and then had to write this mapping code for most of our usages:
 
-```tsx title="Select Usage"
-import { Select, Option } from '@/components/select'
-
-function UserSelect({ value, onChange }) {
+```tsx title="Select Usage" twoslash
+import React, { type ReactElement, type ReactNode } from 'react'
+import { useSuspenseQuery, queryOptions } from '@tanstack/react-query'
+declare function Select(props: {
+  value: string
+  onChange: (value: string) => void
+  children?: ReactNode
+}): ReactElement
+declare function Option(props: {
+  value: string
+  children?: ReactNode
+}): ReactElement
+type UserOption = { value: string; label: string }
+type Props = {
+  value: string
+  onChange: (value: string) => void
+}
+const userOptions = queryOptions({
+  queryKey: ['options'],
+  queryFn: () => [] as Array<UserOption>,
+})
+// ---cut---
+function UserSelect({ value, onChange }: Props) {
   const userQuery = useSuspenseQuery(userOptions)
 
   return (
@@ -91,10 +125,25 @@ function UserSelect({ value, onChange }) {
 
 At that point, we just switched to exposing a `Select` that used `props` instead of `children`:
 
-```tsx title="Select With Options"
-import { Select } from '@/components/select'
-
-function UserSelect({ value, onChange }) {
+```tsx title="Select With Options" twoslash
+import React, { type ReactElement } from 'react'
+import { useSuspenseQuery, queryOptions } from '@tanstack/react-query'
+declare function Select(props: {
+  value: string
+  onChange: (value: string) => void
+  options: ReadonlyArray<{ value: string; label: string }>
+}): ReactElement
+type UserOption = { value: string; label: string }
+type Props = {
+  value: string
+  onChange: (value: string) => void
+}
+const userOptions = queryOptions({
+  queryKey: ['options'],
+  queryFn: () => [] as Array<UserOption>,
+})
+// ---cut---
+function UserSelect({ value, onChange }: Props) {
   const userQuery = useSuspenseQuery(userOptions)
 
   return (
@@ -109,7 +158,7 @@ function UserSelect({ value, onChange }) {
 
 This not only allowed us to get rid of the tedious mapping we had to do everywhere, it also gave us the type safety we wanted, as there were no `children` that we needed to restrict. Also, `Select` can easily be made generic to make sure `value`, `onChange` and `options` all get the same type:
 
-```tsx title="SelectProps"
+```tsx title="SelectProps" twoslash
 type SelectValue = string | number
 type SelectOption<T> = { value: T; label: string }
 type SelectProps<T extends SelectValue> = {
@@ -123,8 +172,31 @@ type SelectProps<T extends SelectValue> = {
 
 A `ModalDialog` component is another example where we'd rather not give our users the full power of compound components. I mean, it doesn't make sense to render the `DialogFooter` above the `DialogHeader`. We also don't want anyone to accidentally leave out the `DialogBackdrop` or create different spacings between `DialogBody` and `DialogFooter`. In cases where consistency and order is important, <Emph>slots</Emph> are usually a better abstraction:
 
-```tsx title="ModalDialog"
-function ModalDialog({ header, body, footer }) {
+```tsx title="ModalDialog" twoslash
+import React, { type ReactNode } from 'react'
+declare function DialogRoot(props: {
+  children?: ReactNode
+}): ReactNode
+declare function DialogBackdrop(): ReactNode
+declare function DialogContent(props: {
+  children?: ReactNode
+}): ReactNode
+declare function DialogHeader(props: {
+  children?: ReactNode
+}): ReactNode
+declare function DialogBody(props: {
+  children?: ReactNode
+}): ReactNode
+declare function DialogFooter(props: {
+  children?: ReactNode
+}): ReactNode
+type Props = {
+  header: ReactNode
+  body: ReactNode
+  footer?: ReactNode
+}
+// ---cut---
+function ModalDialog({ header, body, footer }: Props) {
   return (
     <DialogRoot>
       <DialogBackdrop />
@@ -137,9 +209,9 @@ function ModalDialog({ header, body, footer }) {
   )
 }
 
-// usage:
-
-;<ModalDialog header="Hello" body="World" />
+function Usage() {
+  return <ModalDialog header="Hello" body="World" />
+}
 ```
 
 They still allow some form of flexibility by injecting arbitrary React components into specific positions while making sure no one has to copy-paste that boilerplate everywhere. It is of course great to have these `Dialog` primitives inside a design-system, I would just not expose them for consumers.
@@ -152,11 +224,29 @@ So those are two indicators - <Emph>fixed layout</Emph> and mostly <Emph>dynamic
 
 A good use-case that would likely benefit from dynamically layouted children with mostly fixed elements is a `<ButtonGroup>`, a `<TabBar>` or a `<RadioGroup>`:
 
-```tsx title="RadioGroup"
-import { RadioGroup, RadioGroupItem } from '@/components/radio'
-import { Flex } from '@/components/layout'
-
-function ThemeSwitcher({ value, onChange }) {
+```tsx title="RadioGroup" twoslash
+import React, { type ReactElement, type ReactNode } from 'react'
+declare function RadioGroup(props: {
+  value: ThemeValue
+  onChange: (value: ThemeValue) => void
+  children?: ReactNode
+}): ReactElement
+declare function RadioGroupItem(props: {
+  value: ThemeValue
+  children?: ReactNode
+}): ReactElement
+declare function Flex(props: {
+  direction: ReadonlyArray<'row' | 'column'>
+  gap: string
+  children?: ReactNode
+}): ReactElement
+type ThemeValue = 'system' | 'light' | 'dark'
+type Props = {
+  value: ThemeValue
+  onChange: (value: ThemeValue) => void
+}
+// ---cut---
+function ThemeSwitcher({ value, onChange }: Props) {
   return (
     <RadioGroup value={value} onChange={onChange}>
       <Flex direction={['row', 'column']} gap="sm">
@@ -173,7 +263,7 @@ The main difference to `Select` is that we explicitly want to have `children` th
 
 That still leaves the problem of type safety, as `value` passed to `ThemeSwitcher` hopefully isn't just a string - it's likely a string literal:
 
-```ts title="ThemeValue"
+```ts title="ThemeValue" twoslash
 type ThemeValue = 'system' | 'light' | 'dark'
 ```
 
@@ -183,18 +273,31 @@ The `value` and `onChange` props can be tied to `ThemeValue` simply by making `R
 
 We can of course also make `RadioGroupItem` generic. The problem with that approach is that types from the `RadioGroup` wouldn't be automatically available to the items, because JSX children don't "inherit" type parameters from the parent component. So even if `RadioGroup` is perfectly typed and infers `<ThemeValue>`, we would still need to parameterize each `RadioGroupItem`:
 
-```tsx title="Generic RadioGroupItem" {4,6-9,15-17}
-import { RadioGroup, RadioGroupItem } from '@/components/radio'
-import { Flex } from '@/components/layout'
-
+```tsx title="Generic RadioGroupItem" {1,3-6,12-14} twoslash
+import React, { type ReactElement, type ReactNode } from 'react'
+declare function RadioGroup<T extends string>(props: {
+  value: T
+  onChange: (value: T) => void
+  children?: ReactNode
+}): ReactElement
+declare function RadioGroupItem<T extends string>(props: {
+  value: T
+  children?: ReactNode
+}): ReactElement
+declare function Flex(props: {
+  direction: ReadonlyArray<'row' | 'column'>
+  gap: string
+  children?: ReactNode
+}): ReactElement
+// ---cut---
 type ThemeValue = 'system' | 'light' | 'dark'
 
-type ThemeSwitcherProps = {
+type Props = {
   value: ThemeValue
   onChange: (value: ThemeValue) => void
 }
 
-function ThemeSwitcher({ value, onChange }) {
+function ThemeSwitcher({ value, onChange }: Props) {
   return (
     <RadioGroup value={value} onChange={onChange}>
       <Flex direction={['row', 'column']} gap="sm">
@@ -213,37 +316,72 @@ That's not a great API, because every manual type annotation is easily forgotten
 
 Not sure if this is the correct name for this pattern, but I think it's good enough to get the concept across. Basically, we can't fully get rid of the manual type annotation, but we can try to hide it and make it explicit. Instead of exposing `RadioGroup` and `RadioGroupItem`, we only export a function called `createRadioGroup` that should be called once with a type parameter. This function will then return the statically typed `RadioGroup` and its `RadioGroupItem` with types that are tied together:
 
-```ts title="createRadioGroup"
-import { RadioGroup, RadioGroupItem } from './internal/radio'
+```ts title="createRadioGroup" twoslash
+import React, { type ReactElement } from 'react'
+type GroupValue = string | number
+type RadioGroupProps<T extends GroupValue> = {
+  value: T
+  onChange: (value: T) => void
+}
+type Item<T extends GroupValue> = {
+  value: T
+}
+declare const RadioGroup: <T extends GroupValue>(
+  props: RadioGroupProps<T>,
+) => ReactElement
+declare const RadioGroupItem: <T extends GroupValue>(
+  props: Item<T>,
+) => ReactElement
+// ---cut---
 
 export const createRadioGroup = <T extends GroupValue = never>(): {
-  RadioGroup: (props: RadioGroupProps<T>) => JSX.Element
-  RadioGroupItem: (props: Item<T>) => JSX.Element
+  RadioGroup: (props: RadioGroupProps<T>) => ReactElement
+  RadioGroupItem: (props: Item<T>) => ReactElement
 } => ({ RadioGroup, RadioGroupItem })
 ```
 
 This doesn't do anything at runtime, except wrapping our internal `RadioGroup` and `RadioGroupItem` into an object. But on type-level, it ties the type parameters together. And the fact that we default our generic to `never` means users will have to pass it in order to be able to do anything meaningful with the result, allowing us to use it like this:
 
-```tsx title="Typed RadioGroup" {11}
-import { createRadioGroup } from '@/components/radio'
-import { Flex } from '@/components/layout'
-
+```tsx title="Typed RadioGroup" {8} twoslash
+// @errors: 2322
+import React, { type ReactElement, type ReactNode } from 'react'
+type GroupValue = string | number
+type RadioGroupProps<T extends GroupValue> = {
+  value: T
+  onChange: (value: T) => void
+  children?: ReactNode
+}
+type Item<T extends GroupValue> = {
+  value: T
+  children?: ReactNode
+}
+declare const createRadioGroup: <T extends GroupValue>() => {
+  RadioGroup: (props: RadioGroupProps<T>) => ReactElement
+  RadioGroupItem: (props: Item<T>) => ReactElement
+}
+declare function Flex(props: {
+  direction: ReadonlyArray<'row' | 'column'>
+  gap: string
+  children?: ReactNode
+}): ReactElement
+// ---cut---
 type ThemeValue = 'system' | 'light' | 'dark'
 
-type ThemeSwitcherProps = {
+type Props = {
   value: ThemeValue
   onChange: (value: ThemeValue) => void
 }
 
 const Theme = createRadioGroup<ThemeValue>()
 
-function ThemeSwitcher({ value, onChange }) {
+function ThemeSwitcher({ value, onChange }: Props) {
   return (
     <Theme.RadioGroup value={value} onChange={onChange}>
       <Flex direction={['row', 'column']} gap="sm">
         <Theme.RadioGroupItem value="system">🤖</Theme.RadioGroupItem>
         <Theme.RadioGroupItem value="light">☀️</Theme.RadioGroupItem>
         <Theme.RadioGroupItem value="dark">🌑</Theme.RadioGroupItem>
+        <Theme.RadioGroupItem value="wrong">🚨</Theme.RadioGroupItem>
       </Flex>
     </Theme.RadioGroup>
   )
