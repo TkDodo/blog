@@ -202,7 +202,7 @@ We want the loader to wait for our data to be ready and return it to get a good 
 
 An alternative approach would be to set a `staleTime` for `fetchQuery`:
 
-```jsx title="alternative-loader" {6}
+```jsx title="alternative loader" {6}
 export const loader =
   (queryClient) =>
   ({ params }) =>
@@ -232,7 +232,7 @@ Thanks to [Matt Pocock](https://twitter.com/mattpocockuk) and his [contribution]
 
 And where would we get `initialData` from? `useLoaderData` of course! We can even infer the type from the loader function:
 
-```tsx title="initial-data" {2-3, 8}
+```tsx title="initial data" {2-3, 8}
 export default function Contact() {
   const initialData = useLoaderData() as Awaited<
     ReturnType<ReturnType<typeof loader>>

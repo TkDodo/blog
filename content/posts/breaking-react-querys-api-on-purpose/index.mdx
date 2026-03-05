@@ -110,7 +110,7 @@ So why would we remove an existing API, seemingly without alternatives? Simply p
 
 Let's quickly recap which API we're actually talking about. `useQuery` has three callback functions: `onSuccess`, `onError` and `onSettled`, which will be called when the Query ran either successfully or had an error (or in both cases). You can (apparently) use them to execute side effects, like showing error notifications:
 
-```js title="onError-callback" {5-7}
+```js title="onError callback" {5-7}
 export function useTodos() {
   return useQuery({
     queryKey: ['todos', 'list'],
@@ -124,7 +124,7 @@ export function useTodos() {
 
 Users like this API because it's **intuitive**. Without those callbacks, you would seemingly need the dreaded `useEffect` hook to perform such a side effect:
 
-```js title="error-effect" {7-11}
+```js title="error effect" {7-11}
 export function useTodos() {
   const query = useQuery({
     queryKey: ['todos', 'list'],
@@ -149,7 +149,7 @@ But no, we are not leaving you to write `useEffect` for this scenario. As I just
 
 The best way to address this problem is to use the global cache-level callbacks when setting up your `QueryClient`:
 
-```js title="query-cache-callbacks" {3-5}
+```js title="query cache callbacks" {3-5}
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error) =>
@@ -194,7 +194,7 @@ With this, you'll get a toast notification whenever a Query has `meta.errorMessa
 
 Having the callbacks getting potentially invoked multiple times is not the only drawback of this API. From my experience, many people use the callbacks to perform state syncing:
 
-```js title="state-syncing" {6-9}
+```js title="state syncing" {6-9}
 export function useTodos() {
   const [todoCount, setTodoCount] = React.useState(0)
   const { data: todos } = useQuery({
@@ -226,7 +226,7 @@ You can verify this in [this sandbox](https://codesandbox.io/p/sandbox/sad-licht
 
 Now of course, the simple fix is to _derive state_. I have an old article on that topic as well, - [Don't over useState](dont-over-use-state). For this example, it merely means:
 
-```js title="derive-state" {7}
+```js title="derive state" {7}
 export function useTodos() {
   const { data: todos } = useQuery({
     queryKey: ['todos', 'list'],
@@ -245,7 +245,7 @@ There is no way how this can get ever out of sync. Have a look at the [fixed san
 
 Now some people have mentioned that they are gradually adopting React Query, and that they have to sync state to e.g. redux, so that you have data available where you are not yet using React Query. I totally get that, and I had to do this myself lately:
 
-```js title="sync-to-redux" {7-9}
+```js title="sync to redux" {7-9}
 export function useTodos() {
   const { dispatch } = useDispatch()
 
@@ -293,7 +293,7 @@ But it also means that `onSuccess` will not be called, because the callbacks are
 Just add an `onDataChanged` callback then that will fire whenever `data` changes.💡
 I initially thought this to be a good idea, but then again, how would we implement that callback? The currently existing ones can be invoked after the `queryFn` runs, because we are already in a side effect scope. But if we render and read from the cache only, we can't just invoke a callback _during rendering_. We would have to spawn our own `useEffect`. And that is something you can do in userland, too, if there is really a case where state-syncing is unavoidable. At least this will work predictably, no matter why data changed:
 
-```js title="on-data-changed" {10-14}
+```js title="on data changed" {10-14}
 export function useTodos(filters) {
   const { dispatch } = useDispatch()
 

@@ -66,7 +66,7 @@ Mutations have callbacks - `onSuccess`, `onError` and `onSettled`, which you hav
 
 It's not quite obvious how to create a `MutationCache` with callbacks, because in most examples, the `MutationCache` is implicitly created for us when we create the `QueryClient`. However, we can also create the cache itself manually and provide callbacks to it:
 
-```ts title="create-MutationCache"
+```ts title="create MutationCache"
 import { QueryClient, MutationCache } from '@tanstack/react-query'
 
 const queryClient = new QueryClient({
@@ -82,7 +82,7 @@ The callbacks get the same arguments as the ones on `useMutation`, except that t
 
 So how can the global callback help us with automatic invalidation? Well - we can just call `queryClient.invalidateQueries` inside the global callback:
 
-```ts title="automatic-invalidation" {2-6}
+```ts title="automatic invalidation" {2-6}
 const queryClient = new QueryClient({
   mutationCache: new MutationCache({
     onSuccess: () => {
@@ -193,7 +193,7 @@ We've since introduced `staleTime: 'static'` to support this use-case out of the
 
 We can use `meta` to store arbitrary, static information about a Mutation. As an example, we can add an `invalidates` field to give "tags" to our mutation. These tags can then be used to fuzzily match Queries we'd want to invalidate:
 
-```js title="the-meta-option" {10-12,21-23}
+```js title="the meta option" {10-12,21-23}
 import { matchQuery } from '@tanstack/react-query'
 
 const queryClient = new QueryClient({
@@ -248,7 +248,7 @@ In all the examples shown above, we are never `awaiting` an invalidation, and th
 
 We can build this into our `meta` solution by extending how that structure is defined, for example:
 
-```ts title="meta-awaits" {3-6}
+```ts title="meta awaits" {3-6}
 useMutation({
   mutationFn: updateLabel,
   meta: {
@@ -260,7 +260,7 @@ useMutation({
 
 Or, we can take advantage of the fact that callbacks on the MutationCache run <Emph>before</Emph> callbacks on `useMutation`. If we have our global callback set-up to invalidate everything, we can still add a local callback that just `awaits` what we want it to:
 
-```ts title="local-onSuccess" {11-17}
+```ts title="local onSuccess" {11-17}
 const queryClient = new QueryClient({
   mutationCache: new MutationCache({
     onSuccess: () => {

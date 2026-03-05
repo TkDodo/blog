@@ -47,7 +47,7 @@ Let's start with what they both have in common before exploring their difference
 
 As already hinted, they both provide a way to pre-fill the cache with data that we have synchronously available. It further means that if either one of these is supplied, our query will not be in `loading` state, but will go directly to `success` state. Also, they can both be either a _value_ or a function that returns a _value_, for those times when computing that value is expensive:
 
-```jsx title="success-queries"
+```jsx title="success queries"
 function Component() {
   // ✅ status will be success even if we have not yet fetched data
   const { data, status } = useQuery({

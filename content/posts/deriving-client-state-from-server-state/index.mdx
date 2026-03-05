@@ -31,7 +31,7 @@ import Aside from '@components/Aside'
 
 Just as I came back from vacation, I saw [this reddit question](https://www.reddit.com/r/reactjs/comments/1n4fz2m/is_this_the_biggest_tradeoff_for_zustand_am_i/) about the biggest trade-off when it comes to using `zustand`. The code looked something like this (I altered it slightly for updated syntax and packed it into a custom hook):
 
-```ts title="manual-sync"
+```ts title="manual sync"
 const useSelectedUser = () => {
   const { data: users } = useQuery({
     queryKey: ['users'],
@@ -88,7 +88,7 @@ But can't we change that thinking to be a bit more declarative:
 
 > Here is the `users` from the backend and the current selection, please give me the real state.
 
-```ts title="derived-selection" {8-10}
+```ts title="derived selection" {8-10}
 const useSelectedUser = () => {
   const { data: users } = useQuery({
     queryKey: ['users'],
@@ -137,7 +137,7 @@ And since the reddit question also mentions that redux toolkit "solves this" - I
 
 The concept of not updating <Emph>Client State</Emph> when <Emph>Server State</Emph> changes can be useful in many cases. A common example is when prefilling forms with default values from the server:
 
-```tsx title="default-value-effect" {9-13}
+```tsx title="default value effect" {9-13}
 function UserSelection() {
   const { data: users } = useQuery({
     queryKey: ['users'],
@@ -158,7 +158,7 @@ function UserSelection() {
 
 This effect is not only verbose, it also has a bug 🐛 where it overwrites the current selection when new data comes in from the Query. This is easily fixable by adding another check, but the better solution would still be deriving state:
 
-```tsx title="derived-default-value" {8}
+```tsx title="derived default value" {8}
 function UserSelection() {
   const { data: users } = useQuery({
     queryKey: ['users'],

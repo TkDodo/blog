@@ -34,7 +34,7 @@ How can this even be? We were promised isomorphic rendering - first on the serve
 
 Except that the server isn't the client. It might run in another timezone or with a different locale, thus rendering different information than on the client, e.g. when Dates are involved. It also doesn't have access to APIs that are only available in the Browser, like `window`.
 
-```jsx title="date-rendering"
+```jsx title="date rendering"
 function LastUpdated() {
   const date = getLastUpdated()
   return <span>Last updated at: {date.toLocaleDateString()}</span>
@@ -76,7 +76,7 @@ Another variation of this approach is to just render `null` on the server and le
 
 Whatever value you choose for server rendering, code will usually look something like this:
 
-```jsx title="double-render-pass" {2-10}
+```jsx title="double render pass" {2-10}
 function LastUpdated() {
   const [isClient, setIsClient] = React.useState(false)
 
@@ -188,7 +188,7 @@ Layout shifts are not ideal, and not rendering a component completely just becau
 
 So if we can produce a stable date output on the server, we can limit the content shift to only the date, similar to what the page in the previously shown GIF is doing:
 
-```jsx title="stable-server-value" {7}
+```jsx title="stable server value" {7}
 const emptySubscribe = () => () => {}
 
 function LastUpdated() {

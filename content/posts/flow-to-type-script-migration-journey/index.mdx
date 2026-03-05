@@ -99,7 +99,7 @@ Not quite. On September 1st, I opened a follow-up issue: _no-implicit-any_. We c
 
 The reason for this is quite simple: If the compiler doesn't scream at you, you might not notice that you need to add types unless you are very familiar with TypeScript. Consider the following React event handler:
 
-```tsx title="implicit-any"
+```tsx title="implicit any"
 const loginUser = (event) => {
   event.preventDefault()
   axios.post('/login', ...)
@@ -114,7 +114,7 @@ This works, and event is just _any_ here - not what we want for new, type-safe c
 
 We found ts-migrate, which allowed us to convert most the of implicit anys to explicit anys, turning the above code to:
 
-```tsx title="explicit-any" {1}
+```tsx title="explicit any" {1}
 const loginUser = (event: any) => {
   event.preventDefault()
   axios.post('/login', ...)

@@ -71,7 +71,7 @@ With that, we are all set-up. That wasn't hard, so where's the catch?
 Maybe you've already noticed: The third parameter is actually _optional_.
 So we would like to call our function like that:
 
-```ts title="the-catch"
+```ts title="the catch"
 sum({ first: 1, second: 2 })
 ```
 
@@ -107,7 +107,7 @@ And you have to remember to keep the both files in sync, so I'm not a big fan of
 The described problem is actually due to typescript performing better inference if you use destructuring.
 We could change the implementation to:
 
-```js title="no-destruct-utils"
+```js title="no destruct utils"
 export const sum = (params) =>
   params.first + params.second + (params.third ?? 0)
 ```
@@ -117,7 +117,7 @@ Especially if you are working with React components, destructing props is very c
 
 ### Assign default parameters
 
-```js title="default-params"
+```js title="default params"
 export const sum = ({ first, second, third = 0 }) =>
   first + second + third
 ```
@@ -128,7 +128,7 @@ This works well for variables where the default is clear, like booleans, where y
 
 If you don't know what a good default value would be, you could even cheat a bit and do this:
 
-```js title="cheating-default-params"
+```js title="cheating default params"
 export const sum = ({ first, second, third = undefined }) =>
   first + second + (third ?? 0)
 ```
@@ -140,7 +140,7 @@ This is a non-invasive change, so if you have complex types where you can't easi
 
 ### Convert the file to TypeScript
 
-```ts title="ts-all-the-things"
+```ts title="ts all the things"
 type Params = {
   first: number
   second: number
@@ -165,7 +165,7 @@ Adding JsDoc annotations to your JavaScript functions will:
 - Give you IntelliSense in your IDE.
 - Make it easier to finally migrate to TypeScript when the time is right.
 
-```js title="with-js-docs"
+```js title="with js docs"
 /**
  * @param {{ first: number, second: number, third?: number }} params
  * @returns {number}

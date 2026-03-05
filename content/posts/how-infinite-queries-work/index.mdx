@@ -112,7 +112,7 @@ But conceptually, it's still just one query that lives under one QueryKey. We ac
 
 I wasn't totally honest before about the fact that the `queryFn` gets passed directly to the `retryer`. There is a thin layer around it. For single queries, it's set to executing the `queryFn` only. But for infinite queries, it will take the function from the `infiniteQueryBehavior`:
 
-```ts title="query-behavior" {6-9}
+```ts title="query behavior" {6-9}
 class Query() {
   fetch() {
     if (this.state.fetchStatus === 'idle') {

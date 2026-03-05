@@ -55,7 +55,7 @@ That's why we sometimes wrap components in `React.memo`, which is [an uphill bat
 
 If we pass a function or a non-primitive value to a memoized component, we need to make sure that references to those are <Emph>stable</Emph>. That's because React compares the props of a memoized component with [Object.is](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) to check if it can skip rendering that sub-tree. So if the reference isn't stable, e.g. because it's newly created in each render, our memoization "breaks":
 
-```tsx title="performance-optimization"
+```tsx title="performance optimization"
 function Meh() {
   return (
     <MemoizedComponent
@@ -97,7 +97,7 @@ I think we could all use some stability in our lives, so what's the cases where 
 
 Let's take the example from above and change a tiny thing:
 
-```tsx title="no-memo"
+```tsx title="no memo"
 function Okay() {
   const value = useMemo(() => ({ hello: 'world' }), [])
   const onChange = useCallback((result) => console.log(result), [])
@@ -108,7 +108,7 @@ function Okay() {
 
 Can you spot the difference? Exactly - we are not passing `value` and `onChange` to a memoized component anymore - it's just a regular functional react component now. I see this happening a lot when values get, at the end, passed to React built-in components:
 
-```tsx title="react-built-ins"
+```tsx title="react built ins"
 function MyButton() {
   const onClick = useCallback(
     (event) => console.log(event.currentTarget.value),
@@ -139,7 +139,7 @@ That brings us right to the second point:
 
 Adding non-primitive `props` you get passed into your component to internal dependency arrays is rarely right, because this component has no control over the referential stability of those props. A common example is:
 
-```tsx title="props-as-dependencies"
+```tsx title="props as dependencies"
 function OhNo({ onChange }) {
   const handleChange = useCallback(
     (e: React.ChangeEvent) => {
@@ -155,7 +155,7 @@ function OhNo({ onChange }) {
 
 This `useCallback` is likely useless, or at best, it depends on how consumers will use this component. In all likeliness, there is a call-side that just invokes an inline function:
 
-```tsx title="inline-function"
+```tsx title="inline function"
 <OhNo onChange={() => props.doSomething()} />
 ```
 
@@ -200,7 +200,7 @@ useHotkeys(paginateHotkeys)
 
 `useHotKeys` passes `paginateHotkeys`, which is memoized, but it depends on `paginateItems`. Where does that come from? Well, it's another `useCallback` that [depends on](https://github.com/getsentry/sentry/blob/97130081986520a2035882249b5670189d859dda/static/app/components/events/eventTagsAndScreenshot/screenshot/modal.tsx#L77) `screenshots` and `currentAttachmentIndex`. And where does `screenshots` come from?
 
-```tsx title="breaking-memoization"
+```tsx title="breaking memoization"
 const screenshots = attachments.filter(({ name }) =>
   name.includes('screenshot'),
 )
@@ -220,7 +220,7 @@ If anything, we have to outsource all of this to [a compiler](https://react.dev/
 
 I wrote about [this pattern before](refs-events-and-escape-hatches#the-latest-ref); what we do is we basically store the value we want to gain imperative access to inside our effect in a ref, and then update the value with another effect that purposefully runs on every render:
 
-```tsx title="the-latest-ref" {2-6}
+```tsx title="the latest ref" {2-6}
 export function useHotkeys(hotkeys: Hotkey[]): {
   const hotkeysRef = useRef(hotkeys)
 
@@ -250,7 +250,7 @@ More good news: React has realized that oftentimes, we need imperative access to
 
 Once that ships, we can refactor the code towards:
 
-```tsx title="the-latest-ref" {2}
+```tsx title="the latest ref" {2}
 export function useHotkeys(hotkeys: Hotkey[]): {
   const onKeyDown = useEffectEvent(() => ...)
 

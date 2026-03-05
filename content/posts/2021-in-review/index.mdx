@@ -120,7 +120,7 @@ For the second half of the year, I kept an eye on React 18, the Working group, a
 
 React 18 was about to ship a hook called _useMutableSource_, and it required input selectors to be referentially stable. I stumbled upon this when I reviewed a PR at work, where a co-worker of mine memoized all selectors to a zustand store with _useCallback_, something like:
 
-```js title="memoized-selectors"
+```js title="memoized selectors"
 import create from 'zustand'
 
 const useStore = create((set) => ({

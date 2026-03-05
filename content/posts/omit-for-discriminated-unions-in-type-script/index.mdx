@@ -79,7 +79,7 @@ That works, but it introduces a new problem: all existing `Select` usages now er
 
 We'd really want to tell the type-checker: "If we pass `clearable`, `onChange` might get `null`, otherwise, it won't". [Discriminated Unions](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions) can help us with that:
 
-```ts title="Discriminated-Union-Type"
+```ts title="Discriminated Union Type"
 type BaseSelectProps = {
   options: ReadonlyArray<SelectOption>
   value: string | null
@@ -114,7 +114,7 @@ That made little sense to me when I read it the first time - after all, I'm just
 
 It started to make more sense once I inspected what my `UserSelectProps` now expands to:
 
-```ts title="Expanded-UserSelectProps"
+```ts title="Expanded UserSelectProps"
 type UserSelectProps = {
   onChange:
     | ((value: string | null) => void)
@@ -163,13 +163,13 @@ type DistributiveOmit<T, K extends keyof T> = T extends any
 
 Have a look at what happens if we apply this to our `UserSelectProps`:
 
-```ts title="New-UserSelectProps"
+```ts title="New UserSelectProps"
 type UserSelectProps = DistributiveOmit<SelectProps, 'options'>
 ```
 
 If we hover this type, it will expand to:
 
-```ts title="New-Expanded-UserSelectProps"
+```ts title="New Expanded UserSelectProps"
 type UserSelectProps =
   | Omit<ClearableSelectProps, 'options'>
   | Omit<UnclearableSelectProps, 'options'>

@@ -114,7 +114,7 @@ If you want to test a Component that uses a `useQuery` hook, you also need to wr
 
 It's one of the most common "gotchas" with React Query and testing: The library defaults to three retries with exponential backoff, which means that your tests are likely to timeout if you want to test an erroneous query. The easiest way to turn retries off is, again, via the `QueryClientProvider`. Let's extend the above example:
 
-```tsx title="no-retries" {2-9}
+```tsx title="no retries" {2-9}
 const createWrapper = () => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -147,7 +147,7 @@ The best advice I can give you for this problem is: Don't set these options on `
 
 So for example, instead of setting retry on `useQuery`:
 
-```tsx title="not-on-useQuery"
+```tsx title="not on useQuery"
 const queryClient = new QueryClient()
 
 function App() {
@@ -255,7 +255,7 @@ test("my first test", async () => {
 
 [@testing-library/react v13.1.0](https://github.com/testing-library/react-testing-library/releases/tag/v13.1.0) also has a new [renderHook](https://testing-library.com/docs/react-testing-library/api/#renderhook) that you can use. However, it doesn't return its own `waitFor` util, so you'll have to use the one you can [import from @testing-library/react](https://testing-library.com/docs/dom-testing-library/api-async/#waitfor) instead. The API is a bit different, as it doesn't allow to return a `boolean`, but expects a `Promise` instead. That means we must adapt our code slightly:
 
-```tsx title="new-render-hook" {8-11}
+```tsx title="new render hook" {8-11}
 import { waitFor, renderHook } from '@testing-library/react'
 
 test("my first test", async () => {

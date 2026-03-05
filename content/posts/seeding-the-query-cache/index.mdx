@@ -51,7 +51,7 @@ In many cases though, we can actually fetch all the data we need in parallel, be
 
 In React Query, we can do that in two different ways:
 
-```tsx title="parallel-queries"
+```tsx title="parallel queries"
 // 1. Use useQuery twice
 const issues = useQuery({
   queryKey: ['issues'],
@@ -81,7 +81,7 @@ When a promise is _pending_, React will unmount the component tree and render a 
 
 This will decouple our components from handling those states, and we can focus on the happy path. It almost acts like synchronous code that just _reads_ a value from a cache. React Query offers a dedicated `useSuspenseQuery` hook for that since v5:
 
-```jsx title="useQuery-with-suspense" {2-3}
+```jsx title="useQuery with suspense" {2-3}
 function Issues() {
   // 👓 read data from cache
   const { data } = useSuspenseQuery({
@@ -183,7 +183,7 @@ There are two common approaches to fill a detail cache with data from a list cac
 
 This is the one also described [in the docs](https://tanstack.com/query/v4/docs/guides/initial-query-data#initial-data-from-cache): When you try to render the detail view, you look up the list cache for the item you want to render. If it is there, you use it as initial data for the detail query.
 
-```tsx title="pull-approach" {6-11}
+```tsx title="pull approach" {6-11}
 const useTodo = (id: number) => {
   const queryClient = useQueryClient()
   return useQuery({
@@ -234,7 +234,7 @@ However, there is no good callback to hook into when a query is fetched. The glo
 
 The best way I've found to execute the push approach is to do it directly in the `queryFn`, after data has been fetched:
 
-```tsx title="push-approach" {7-11}
+```tsx title="push approach" {7-11}
 const useTodos = () => {
   const queryClient = useQueryClient()
   return useQuery({

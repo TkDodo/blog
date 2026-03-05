@@ -47,7 +47,7 @@ A barrel is a file that does nothing but re-export things from other files. Usua
 
 Now let's assume each file exports a single component. That means we can import those modules individually like so:
 
-```tsx title="my-page.tsx"
+```tsx title="my page.tsx"
 import { TabList } from '@/tab/tab-list'
 import { TabPanel } from '@/tab/tab-panel'
 ```
@@ -61,7 +61,7 @@ export { TabPanel } from './tab-panel'
 
 Because the file is named `index`, which can be omitted when importing, we get a seemingly cleared up usage site:
 
-```tsx title="my-page.tsx"
+```tsx title="my page.tsx"
 import { TabList, TabPanel } from '@/tab'
 ```
 
@@ -79,7 +79,7 @@ export { useTabState } from './use-tab-state'
 
 So far, so good - consumers can import `useTabState` directly from the barrel file. However, what happens if we are inside `TabPanel` and we import `useTabState`? It depends on how we write our import statement:
 
-```ts title="tab/tab-panel.ts"
+```ts title="tab/tab panel.ts"
 // ✅ good: imports from use-tab-state module
 import { useTabState } from './use-tab-state'
 

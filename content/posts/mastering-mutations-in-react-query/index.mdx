@@ -44,7 +44,7 @@ For this use-case, React Query offers the `useMutation` hook.
 
 Generally speaking, mutations are functions that have a side effect. As an example, have a look at the `push` method of Arrays: It has the side effect of _changing_ the array in place where you're pushing a value to:
 
-```js title="mutable-array-push"
+```js title="mutable array push"
 const myArray = [1]
 myArray.push(2)
 
@@ -53,7 +53,7 @@ console.log(myArray) // [1, 2]
 
 The _immutable_ counterpart would be `concat`, which can also add values to an array, but it will return a new Array instead of directly manipulating the Array you operate on:
 
-```js title="immutable-array-concat"
+```js title="immutable array concat"
 const myArray = [1]
 const newArray = myArray.concat(2)
 
@@ -87,7 +87,7 @@ By that, I mean that queries mostly run automatically. You define the dependenci
 
 For mutations, that wouldn't work well. Imagine a new todo would be created every time you focus your browser window 🤨. So instead of running the mutation instantly, React Query gives you a function that you can invoke whenever you want to make the mutation:
 
-```jsx title="imperative-mutate"
+```jsx title="imperative mutate"
 function AddComment({ id }) {
   // this doesn't really do anything yet
   const addComment = useMutation({
@@ -130,7 +130,7 @@ To have a mutation reflect the changes it made on our queries, React Query prima
 
 This is conceptually the simplest way to get your screen up-to-date. Remember, with server state, you're only ever displaying a snapshot of data from a given point in time. React Query tries to keep that up-to-date of course, but if you're deliberately changing server state with a mutation, this is a great point in time to tell React Query that some data you have cached is now "invalid". React Query will then go and refetch that data if it's currently in use, and your screen will update automatically for you once the fetch is completed. The only thing you have to tell the library is _which_ queries you want to invalidate:
 
-```jsx title="invalidation-from-mutation" {9-11}
+```jsx title="invalidation from mutation" {9-11}
 const useAddComment = (id) => {
   const queryClient = useQueryClient()
 
@@ -162,7 +162,7 @@ Since we're only displaying one of them on the screen, `invalidateQueries` will 
 
 Sometimes, you don't want to refetch data, especially if the mutation already returns everything you need to know. If you have a mutation that updates the title of your blog post, and the backend returns the complete blog post as a response, you can update the query cache directly via `setQueryData`:
 
-```jsx title="update-from-mutation-response"
+```jsx title="update from mutation response"
 const useUpdateTitle = (id) => {
   const queryClient = useQueryClient()
 
@@ -218,7 +218,7 @@ Finally, let's dive into some things that are good to know when dealing with mut
 
 Promises returned from the mutation callbacks are awaited by React Query, and as it so happens, `invalidateQueries` returns a Promise. If you want your mutation to stay in `loading` state while your related queries update, you have to return the result of `invalidateQueries` from the callback:
 
-```js title="awaited-promises"
+```js title="awaited promises"
 {
   // 🎉 will wait for query invalidation to finish
   onSuccess: () => {
@@ -245,7 +245,7 @@ Promises returned from the mutation callbacks are awaited by React Query, and as
 
 You can still get access to the `data` or the `error` via the callbacks, and you don't have to worry about error handling: Since `mutateAsync` gives you control over the Promise, you also have to catch errors manually, or you might get an [unhandled promise rejection](https://stackoverflow.com/questions/40500490/what-is-an-unhandled-promise-rejection).
 
-```js title="accessing-mutation-data"
+```js title="accessing mutation data"
 const onSubmit = () => {
   // ✅ accessing the response via onSuccess
   myMutation.mutate(someData, {
@@ -278,7 +278,7 @@ The only situations where I've found `mutateAsync` to be superior is when you re
 
 Since the last argument to `mutate` is the options object, `useMutation` can currently only take _one_ argument for variables. This is certainly a limitation, but it can be easily worked around by using an object:
 
-```jsx title="multiple-variables"
+```jsx title="multiple variables"
 // 🚨 this is invalid syntax and will NOT work
 const mutation = useMutation({
   mutationFn: (title, body) => updateTodo(title, body),
@@ -305,7 +305,7 @@ That's why I think it's a good practice to separate concerns in your callbacks:
 
 This separation is especially neat if `useMutation` comes from a custom hook, as this will keep query related logic in the custom hook while UI related actions are still in the UI. This also makes the custom hook more reusable, because how you interact with the UI might vary on a case by case basis - but the invalidation logic will likely always be the same:
 
-```js title="separate-concerns"
+```js title="separate concerns"
 const useUpdateTodo = () =>
   useMutation({
     mutationFn: updateTodo,

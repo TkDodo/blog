@@ -58,7 +58,7 @@ One feature where I gave in to many requests is the [refetchPage](https://tansta
 
 Basically, the question here is: Does it make sense for us to have that feature, or would this encourage anti-patterns? As an example, I've seen many requests for a callback that is triggered whenever data is read from the cache - something like `onDataChanged`. You could use `onSuccess` for that, but `onSuccess` is tied to a fetch happening, and if you have `staleTime` set, this might not be the case:
 
-```ts title="onSuccess-with-staleTime" {6-9}
+```ts title="onSuccess with staleTime" {6-9}
 const useTodo = (id: number) => {
   return useQuery({
     queryKey: ['todos', id],
@@ -76,7 +76,7 @@ If you switch between `ids` and you have fresh data in the cache, the `onSuccess
 
 So while that callback might seem like a good idea at first, I'm unsure what you would do with such a callback, as it's ultimately equivalent to a `useEffect`:
 
-```ts title="onDataChanged-with-useEffect" {8-10}
+```ts title="onDataChanged with useEffect" {8-10}
 const useTodo = (id: number) => {
   const query = useQuery({
     queryKey: ['todos', id],

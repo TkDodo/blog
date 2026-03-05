@@ -93,7 +93,7 @@ Of course, an occasional re-render of this simple component just because somethi
 
 That's where `select` can help: Instead of subscribing our component to all product data, we're gonna pick the field (or fields) we're interested in:
 
-```tsx title="select-title" {4}
+```tsx title="select title" {4}
 function ProductTitle({ id }: Props) {
   const productTitleQuery = useSuspenseQuery({
     ...productOptions(id),
@@ -110,7 +110,7 @@ Even better - we can also "pick" multiple properties if we want to, and we don't
 
 In essence, this means code like this will also work as you'd expect:
 
-```tsx title="pick-multiple-values" {4-7}
+```tsx title="pick multiple values" {4-7}
 function Product({ id }: Props) {
   const productQuery = useSuspenseQuery({
     ...productOptions(id),
@@ -139,7 +139,7 @@ However, this only works if you let type inference do it's magic 🪄, which mea
 
 This is relatively easy to adhere to, but brings one question: How can I write a reusable abstraction in TypeScript that includes `select`? What type sorcery is needed to e.g. make `productOptions` that get `select` as an argument?
 
-```ts title="how-do-I-type-select?" {5-6}
+```ts title="how do I type select?" {5-6}
 const productOptions = (id: string, select) => {
   return queryOptions({
     queryKey: ['product', id],
@@ -154,7 +154,7 @@ My usual answer is - don't do it! We've built [the Query Options API](the-query-
 
 But TkDodo, what if I _really_ want it? Okay, fine, if you must do this, it's a bit more involved, especially if you want `select` to be optional:
 
-```ts title="select-abstraction" {3}
+```ts title="select abstraction" {3}
 const productOptions = <TData = ProductData>(
   id: string,
   select?: (data: ProductData) => TData,
@@ -231,7 +231,7 @@ The irony of this isn't lost on me, given that I've just written an article abou
 
 </Aside>
 
-```tsx title="select-useCallback" {4-7}
+```tsx title="select useCallback" {4-7}
 function ProductList({ filters, minRating }: Props) {
   const productsQuery = useSuspenseQuery({
     ...productListOptions(filters),
@@ -253,7 +253,7 @@ function ProductList({ filters, minRating }: Props) {
 
 Now, we'll get a stable reference passed to `select` unless `minRating` changes, and that's exactly what we want. And if we don't have any dependencies, we can even just move the function outside of our component to make it stable - no `useCallback` with empty dependency array necessary:
 
-```tsx title="stable-select" {1-2}
+```tsx title="stable select" {1-2}
 const select = (data: Array<Product>) =>
   expensiveSuperTransformation(data)
 
@@ -287,7 +287,7 @@ We add more memoization, of course!
 
 We really just want to memoize our `expensiveSuperTransformation` by its inputs, but this has to happen outside of React Query, because React Query caches this per observer. So, we can bring in a library like [fast memoize](https://www.npmjs.com/fast-memoize) that'll do just that:
 
-```tsx title="fast-memoize" {3-5}
+```tsx title="fast memoize" {3-5}
 import memoize from 'fast-memoize'
 
 const select = memoize((data: Array<Product>) =>

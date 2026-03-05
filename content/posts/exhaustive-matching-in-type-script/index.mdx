@@ -49,7 +49,7 @@ Exhaustive matching basically means that the compiler, given that he knows all t
 can tell you when you are missing one state in your match.
 I will use `scala` code for the examples since it's the language I am most familiar with.
 
-```java title="basic-pattern-matching-in-scala"
+```java title="basic pattern matching in scala"
 sealed trait Shape
 
 final case class Circle(radius: Int) extends Shape
@@ -71,7 +71,7 @@ Here, the compiler would complain with the following message:
 Great, so as a JavaScript developer, being aware of the [default-case](https://eslint.org/docs/rules/default-case) eslint rule,
 I'll just add a default case here and call it a day:
 
-```java title="default-case" {4}
+```java title="default case" {4}
 def renderShape(shape: Shape): String = {
   shape match {
     case _:Rectangle => "I am a Rectangle!"
@@ -85,7 +85,7 @@ def renderShape(shape: Shape): String = {
 The program works, and all the cases in the match are being taken care of, so no one complains.
 But what happens if we add another shape?
 
-```java title="a-new-shape" {1}
+```java title="a new shape" {1}
 final case class Square(length: Int) extends Shape
 
 def renderShape(shape: Shape): String = {
@@ -110,7 +110,7 @@ Being able to utilize _compiler driven development_ (think: Fix everything that'
 
 So here is how the fixed scala code would look:
 
-```java title="exhaustive-match" {4,5}
+```java title="exhaustive match" {4,5}
 def renderShape(shape: Shape): String = {
   shape match {
     case _:Rectangle => "I am a Rectangle!"
@@ -133,7 +133,7 @@ This is great and all, but TypeScript doesn't support pattern matching, so how a
 It turns out that the TypeScript compiler is actually pretty smart when it comes to matching exhaustively on union types.
 This is best done with tagged unions, which just means a union where each member define a discriminator of a literal type:
 
-```ts title="tagged-union"
+```ts title="tagged union"
 type Circle = {
   kind: 'circle'
   radius: number
@@ -179,7 +179,7 @@ The compiler will also narrow the type for us in the case block, so we _will_ ha
 A small caveat seems to be that you cannot use object destructuring on the shape param.
 Even though all members of the union type contain a shape, TypeScript won't accept this:
 
-```ts title="❌-no-destructuring-😢" {1, 4}
+```ts title="❌ no destructuring 😢" {1, 4}
 const renderShape = ({ kind, ...shape }: Shape): string => {
   switch (kind) {
     case 'circle':
@@ -194,7 +194,7 @@ It is especially important to keep this in mind when working with React componen
 
 So with all this in mind, our code would look like this:
 
-```ts title="exhaustive-matching-in-ts"
+```ts title="exhaustive matching in ts"
 const renderShape = (shape: Shape): string => {
   switch (shape.kind) {
     case 'circle':
@@ -220,7 +220,7 @@ Let's assume for example that we call a rest service that delivers a couple of S
 and we have established with the backend team that we will focus on Circle and Rectangle first and will add Square later.
 We will use `React` to render our little app:
 
-```tsx title="react-shapes"
+```tsx title="react shapes"
 export const App = () => {
   const [shapes, setShapes] = React.useState()
 
