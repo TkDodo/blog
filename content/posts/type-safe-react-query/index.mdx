@@ -65,7 +65,7 @@ However, as a user of a library, you ideally shouldn't need to care about their 
 
 Angle brackets makes your code look "more complex" than it has to be. As an example, let's look at how `useQuery` is often written:
 
-```ts:title=useQuery-with-angle-brackets {8}
+```ts title="useQuery-with-angle-brackets" {8}
 type Todo = { id: number; name: string; done: boolean }
 
 const fetchTodo = async (id: number) => {
@@ -88,7 +88,7 @@ Just to be on the same page - `axios.get` returns `any` (just like `fetch` would
 
 The better way is to type the `fetchTodo` function itself:
 
-```ts:title=typed-fetchTodo {3-4,9-10}
+```ts title="typed-fetchTodo" {3-4,9-10}
 type Todo = { id: number; name: string; done: boolean }
 
 // ✅ typing the return value of fetchTodo
@@ -114,7 +114,7 @@ Now with this, React Query can properly infer what data will be from the result 
 
 Alternatively, we can also tell our data fetching layer, in this case `axios`, what the expected type is by providing the Generics via angle brackets there:
 
-```ts:title=providing-generics {2}
+```ts title="providing-generics" {2}
 const fetchTodo = async (id: number) => {
   const response = await axios.get<Todo>(`/todos/${id}`)
   return response.data
@@ -133,14 +133,14 @@ I learned this rule from [@danvdk's](https://twitter.com/danvdk) great book [Eff
 
 The so called "return-only" generics are nothing more than a type assertion in disguise. The (slightly simplified) type signature for `axios.get` reads:
 
-```ts:title=axios-get-type-signature
+```ts title="axios-get-type-signature"
 function get<T = any>(url: string): Promise<{ data: T, status: number}>
 ```
 
 The Type `T` only appears in one place - the return type. So it's a lie!
 We could've just as well written:
 
-```ts:title=explicit-type-assertion {3}
+```ts title="explicit-type-assertion" {3}
 const fetchTodo = async (id: number) => {
   const response = await axios.get(`/todos/${id}`)
   return response.data as Todo
@@ -171,7 +171,7 @@ I first heard about zod when working with forms. It makes total sense to validat
 
 <br />
 
-```ts:title=parsing-with-zod {3-8,12-13}
+```ts title="parsing-with-zod" {3-8,12-13}
 import { z } from 'zod'
 
 // 👀 define the schema
@@ -218,7 +218,7 @@ Also, parsing does come with an overhead, as data must be analyzed at runtime to
 
 You might have noticed that `queryClient.getQueryData` suffers from the same problem: It contains a return-only generic, and it will default to `unknown` if you don't provide it.
 
-```ts:title=getQueryData-generic
+```ts title="getQueryData-generic"
 const todo = queryClient.getQueryData(['todos', 1])
 //    ^? const todo: unknown
 

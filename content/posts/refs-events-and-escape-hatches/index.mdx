@@ -95,7 +95,7 @@ Refs are just bags that can contain an arbitrary mutable value. The ref itself i
 
 As an example, let's implement a somewhat common use-case of storing a value and triggering a callback after some debounced time:
 
-```js:title=useDebouncedState
+```js title="useDebouncedState"
 export const useDebouncedState = (callback, delay) => {
   const [value, setValue] = React.useState('')
 
@@ -117,7 +117,7 @@ export const useDebouncedState = (callback, delay) => {
 
 We've added _callback_ to the effect's dependency array as the linter wants, but that has a downside: consumers will need to memoize the function, which is not a very developer friendly interface. Of course, they'll most often just want to use an inline function, without having to care about referential stability:
 
-```js:title=inline-function
+```js title="inline-function"
 const [state, setState] = useDebouncedState((value) => {
   alert(value)
 }, 1000)
@@ -129,7 +129,7 @@ This will potentially run our effect too often, e.g. if the component re-renders
 
 I first read about a pattern called _the latest ref_ in [this article](https://epicreact.dev/the-latest-ref-pattern-in-react/) by [Kent C. Dodds](https://twitter.com/kentcdodds). The idea is to store the function (our callback) in a ref so that we can omit it from the dependency array. All we then need to do is to make sure that the ref is updated when the function changes, and we can do that with an additional effect:
 
-```js:title=the-latest-ref {3-4,6-9,14-15,22-23}
+```js title="the-latest-ref" {3-4,6-9,14-15,22-23}
 export const useDebouncedState = (callback, delay) => {
   const [value, setValue] = React.useState('')
   // 👇 store callback in a ref
@@ -168,7 +168,7 @@ As pointed out in the [new beta docs](https://beta.reactjs.org/learn/separating-
 
 Would that hook exist already, we could rewrite our _useDebouncedState_ hook like this:
 
-```js:title=useEvent {4-5,10-11,18-19}
+```js title="useEvent" {4-5,10-11,18-19}
 export const useDebouncedState = (callback, delay) => {
   const [value, setValue] = React.useState('')
 

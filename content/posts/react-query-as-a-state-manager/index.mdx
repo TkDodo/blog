@@ -58,7 +58,7 @@ So if React Query is no data fetching library, what is it?
 
 React Query is an async state manager. It can manage any form of asynchronous state - it is happy as long as it gets a Promise. Yes, most of the time, we produce Promises via data fetching, so that's where it shines. But it does more than just handling loading and error states for you. It is a proper, real, "global state manager". The `QueryKey` uniquely identifies your query, so as long you call the query with the same key in two different places, they will get the same data. This can be best abstracted with a custom hook so that we don't have to access the actual data fetching function twice:
 
-```tsx:title=async-state-manager
+```tsx title="async-state-manager"
 export const useTodos = () =>
   useQuery({ queryKey: ['todos'], queryFn: fetchTodos })
 
@@ -139,7 +139,7 @@ Finally, if you, as the developer of your app, know a good point in time, you ca
 
 I love [these defaults](https://react-query.tanstack.com/guides/important-defaults), but as I said before, they are geared towards keeping things up-to-date, _not_ to minimize the amount of network requests. This is mainly because `staleTime` defaults to _zero_, which means that every time you e.g. mount a new component instance, you will get a background refetch. If you do this a lot, especially with mounts in short succession that are not in the same render cycle, you might see _a lot_ of fetches in the network tab. That's because React Query can't deduplicate in such situations:
 
-```tsx:title=mounts-in-short-succession
+```tsx title="mounts-in-short-succession"
 function ComponentOne() {
   const { data } = useTodos()
 
@@ -176,7 +176,7 @@ At that point, it might seem like a good idea to either pass `data` down via pro
 
 Generally, there is nothing wrong with passing data as props. It's the most explicit thing you can do, and would work well in the above example. But what if we tweak the example a bit towards a more real-life situation:
 
-```tsx:title=lazy-second-component
+```tsx title="lazy-second-component"
 function ComponentOne() {
   const { data } = useTodos()
   const [showMore, toggleShowMore] = React.useReducer(
@@ -222,7 +222,7 @@ There is also no "correct" value for `staleTime`. In many situations, the defaul
 
 Since v3, React Query supports a great way of setting default values per Query Key via [QueryClient.setQueryDefaults](https://react-query.tanstack.com/reference/QueryClient#queryclientsetquerydefaults). So if you follow the patterns I've outlined in [#8: Effective React Query Keys](effective-react-query-keys), you can set defaults for any granularity you want, because passing Query Keys to `setQueryDefaults` follows the standard partial matching that e.g. [Query Filters](https://react-query.tanstack.com/guides/filters#query-filters) also have:
 
-```tsx:title=setQueryDefaults
+```tsx title="setQueryDefaults"
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

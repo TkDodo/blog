@@ -39,7 +39,7 @@ When I first learned about async functions, the following sentence stuck with me
 
 This is mostly true, and if that's your mental model about async functions, it will get you quite far. To re-iterate, let's take an example and refactor it from promise chaining to an async function:
 
-```ts:title=promise-chaining
+```ts title="promise-chaining"
 function fetchTodos() {
   return fetch('/todos')
     .then(response => response.json())
@@ -49,7 +49,7 @@ function fetchTodos() {
 
 So far, so good. Nothing too difficult here, just our normal data fetching and extracting (error handling left out intentionally here). Still, even with this example, the callbacks are not so easy to read, so how would this look with an async function?
 
-```ts:title=async-function
+```ts title="async-function"
 async function fetchTodos() {
   const response = await fetch('/todos')
   const json = await response.json()
@@ -65,7 +65,7 @@ So, if that is a good mental model for async functions, what's the problem with 
 
 This is actually _the_ defining trait of an async function. No matter what you do, it will always return a promise, even if you don't explicitly return one:
 
-```ts:title=promisify
+```ts title="promisify"
 async function fetchRandom() {
   // ✅ this will return `Promise<number>`
   return Math.random()
@@ -80,7 +80,7 @@ In JavaScript however, an async function will stay asynchronous, so the return v
 
 You might have seen this in example code involving [the fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), as fetch will not automatically give you a failed promise on erroneous status codes like other libraries, e.g. [axios](https://axios-http.com/), do. To get to a failed promise, you just throw an Error (or anything, really), which will then be transformed into a failed promise. This is happening because, again, an async function always needs to return a promise:
 
-```ts:title=throw
+```ts title="throw"
 async function fetchTodos() {
   const response = await fetch('/todos')
   if (!response.ok) {
@@ -93,7 +93,7 @@ async function fetchTodos() {
 
 Now the same works if you are in a promise chain, but not if you are _outside_ of it. Suppose you want to do some parameter validation and decide to throw an Error if the input is invalid in a non-async function:
 
-```ts:title=parameter-validation
+```ts title="parameter-validation"
 function fetchTodo(id: number | undefined) {
   if (!id) {
     // 🚨 this will NOT give you a failed promise
@@ -107,7 +107,7 @@ function fetchTodo(id: number | undefined) {
 
 If you make the same function _async_, it would give you a failed promise. These little nuances can be quite confusing, so I prefer to explicitly work with _Promise.reject_ no matter which context I'm in:
 
-```ts:title=parameter-explicit-promise-rejection
+```ts title="parameter-explicit-promise-rejection"
 function fetchTodo(id: number | undefined) {
   if (!id) {
     // ✅ this will work as expected, no matter where
@@ -123,7 +123,7 @@ function fetchTodo(id: number | undefined) {
 
 I first stumbled upon this when working with [query cancellation in react-query](https://react-query.tanstack.com/guides/query-cancellation). Here, react-query wants us to attach a `.cancel` method on our resulting promise. Surprisingly, this doesn't quite work in async functions:
 
-```js:title=query-cancellation
+```js title="query-cancellation"
 async function fetchTodos() {
   const controller = new AbortController()
   const signal = controller.signal
@@ -150,7 +150,7 @@ Since [v3.30.0](https://react-query.tanstack.com/guides/query-cancellation), Rea
 
 The default way of handling errors in async functions is with try / catch, which I don't like very much, mainly because the scope of try / catches seems to get very large. If additional, synchronous code happens _after_ the async operation that might fail, we are likely still treating it as if the fetch failed:
 
-```ts:title=error-handling
+```ts title="error-handling"
 const fetchTodos = async (): Promise<Todos | undefined> => {
   try {
     const response = await axios.get('/todos')
@@ -167,7 +167,7 @@ Sometimes, we even silently catch and discard the error, which will make debuggi
 
 So if you also think that async / await is cool, but try / catch is not, you can try combining async functions with "traditional" catch methods:
 
-```ts:title=await-and-catch
+```ts title="await-and-catch"
 const fetchTodos = async (): Promise<Todos | undefined> => {
   const response = await axios.get('/todos').catch(error => {
     // 🚀 showing the toast is scoped to catching the response error
@@ -182,7 +182,7 @@ const fetchTodos = async (): Promise<Todos | undefined> => {
 
 I hope this gives you a bit of a deeper understanding of what async / await is doing under the hood. I have seen lots of code where the _async_ keyword is just stuck on a function for no good reason, so lastly, here are some examples of patterns that I think should be avoided:
 
-```ts:title=weird-combos
+```ts title="weird-combos"
 // 🚨 the async keyword doesn't do anything -
 // except creating a new unnecessary promise
 const fetchTodos = async () => axios.get('/todos')

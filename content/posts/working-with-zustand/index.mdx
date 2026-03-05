@@ -57,7 +57,7 @@ I've been working with Zustand since 2018, in projects small and large. I've als
 
 This is my number one tip for working with... everything in React, really. I've listed many [advantages of custom hooks](simplifying-use-effect#3-write-custom-hooks) before, and I believe they apply to working with Zustand as well.
 
-```js:title=custom-hooks
+```js title="custom-hooks"
 // ⬇️ not exported, so that no one can subscribe to the entire store
 const useBearStore = create((set) => ({
   bears: 0,
@@ -74,7 +74,7 @@ export const useBears = () => useBearStore((state) => state.bears)
 
 They'll give you a cleaner interface, and you don't need to write the selector repeatedly everywhere you want to subscribe to just one value in the store. Also, it avoids accidentally subscribing to the entire store:
 
-```js:title=subscribe-to-the-entire-store
+```js title="subscribe-to-the-entire-store"
 // ❌ we could do this if useBearStore was exported
 const { bears } = useBearStore()
 ```
@@ -91,7 +91,7 @@ Zustand decides when to inform your component that the state it is interested in
 
 Effectively, this means that selectors have to return _stable_ results. If you return a new Array or Object, it will _always_ be considered a change, even if the content is the same:
 
-```js:title=ineffective-selectors
+```js title="ineffective-selectors"
 // 🚨 selector returns a new Object in every invocation
 const { bears, fish } = useBearStore((state) => ({
   bears: state.bears,
@@ -104,7 +104,7 @@ const { bears, fish } = useBearStore()
 
 If you want to return an Object or Array from a selector, you can adjust the comparison function to use shallow comparison:
 
-```js:title=shallow-comparison
+```js title="shallow-comparison"
 import shallow from 'zustand/shallow'
 
 // ⬇️ much better, because optimized
@@ -116,7 +116,7 @@ const { bears, fish } = useBearStore(
 
 However, I much prefer the simplicity of just exporting two separate selectors:
 
-```js:title=atomic-selectors
+```js title="atomic-selectors"
 export const useBears = () => useBearStore((state) => state.bears)
 export const useFish = () => useBearStore((state) => state.fish)
 ```
@@ -127,7 +127,7 @@ If a component really needs both values, it can consume both hooks.
 
 Actions are functions which update values in your store. These are static and never change, so they aren't technically "state". Organising them into a separate object in our store will allow us to expose them as a single hook to be used in any our components without any impact on performance:
 
-```js:title=separate-actions
+```js title="separate-actions"
 const useBearStore = create((set) => ({
   bears: 0,
   fish: 0,
@@ -150,7 +150,7 @@ export const useBearActions = () =>
 
 Note that it's totally fine to now destruct actions and only "use" one of them:
 
-```js:title=useBearActions
+```js title="useBearActions"
 const { increasePopulation } = useBearActions()
 ```
 
@@ -166,7 +166,7 @@ The examples above have already been using this pattern - the logic (e.g. "incre
 
 Unlike Redux, where you're supposed to have a single store for your whole app, Zustand encourages you to have multiple, small stores. Each store can be responsible for a single piece of state. If you need to combine them, you can do that with - of course - custom hooks:
 
-```js:title=combine-stores
+```js title="combine-stores"
 const currentUser = useCredentialsStore((state) => state.currentUser)
 const user = useUsersStore((state) => state.users[currentUser])
 ```
@@ -179,7 +179,7 @@ I honestly haven't needed to combine multiple Zustand stores very often, because
 
 Once again, the same principle applies: if you need to combine another hook with a Zustand store, custom hooks are your best friend:
 
-```js:title=combine-with-useQuery
+```js title="combine-with-useQuery"
 const useFilterStore = create((set) => ({
   applied: [],
   actions: {

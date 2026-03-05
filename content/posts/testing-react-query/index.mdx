@@ -88,7 +88,7 @@ I prefer to give each test its own QueryClientProvider and create a `new QueryCl
 
 If you are testing custom hooks, I'm quite certain you're using [react-testing-library](https://testing-library.com/docs/react-testing-library/intro). It's the easiest thing there is to test hooks. With that library, we can wrap our hook in a [renderHook wrapper](https://testing-library.com/docs/react-testing-library/api/#renderhook), which is a React component to wrap the test component in when rendering. I think this is the perfect place to create the QueryClient, because it will be executed once per test:
 
-```tsx:title=wrapper
+```tsx title="wrapper"
 const createWrapper = () => {
   // ✅ creates a new QueryClient for each test
   const queryClient = new QueryClient()
@@ -114,7 +114,7 @@ If you want to test a Component that uses a `useQuery` hook, you also need to wr
 
 It's one of the most common "gotchas" with React Query and testing: The library defaults to three retries with exponential backoff, which means that your tests are likely to timeout if you want to test an erroneous query. The easiest way to turn retries off is, again, via the `QueryClientProvider`. Let's extend the above example:
 
-```tsx:title=no-retries {2-9}
+```tsx title="no-retries" {2-9}
 const createWrapper = () => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -147,7 +147,7 @@ The best advice I can give you for this problem is: Don't set these options on `
 
 So for example, instead of setting retry on `useQuery`:
 
-```tsx:title=not-on-useQuery
+```tsx title="not-on-useQuery"
 const queryClient = new QueryClient()
 
 function App() {
@@ -170,7 +170,7 @@ function Example() {
 
 Set it like this:
 
-```tsx:title=setQueryDefaults {9-10}
+```tsx title="setQueryDefaults" {9-10}
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -197,7 +197,7 @@ Here, all queries will retry two times, only _todos_ will retry five times, and 
 
 Of course, this only works for known query keys. Sometimes, you really want to set some configs on a subset of your component tree. In v2, React Query had a [ReactQueryConfigProvider](https://react-query-v2.tanstack.com/docs/api#reactqueryconfigprovider) for that exact use-case. You can achieve the same thing in v3 with a couple of lines of codes:
 
-```jsx:title=ReactQueryConfigProvider
+```jsx title="ReactQueryConfigProvider"
 const ReactQueryConfigProvider = ({ children, defaultOptions }) => {
   const client = useQueryClient()
   const [newClient] = React.useState(
@@ -223,7 +223,7 @@ You can see this in action in this [codesandbox example](https://codesandbox.io/
 
 Since React Query is async by nature, when running the hook, you won't immediately get a result. It usually will be in loading state and without data to check. The [async utilities](https://react-hooks-testing-library.com/reference/api#async-utilities) from react-hooks-testing-library offer a lot of ways to solve this problem. For the simplest case, we can just wait until the query has transitioned to success state:
 
-```tsx:title=waitFor {21-24}
+```tsx title="waitFor" {21-24}
 const createWrapper = () => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -255,7 +255,7 @@ test("my first test", async () => {
 
 [@testing-library/react v13.1.0](https://github.com/testing-library/react-testing-library/releases/tag/v13.1.0) also has a new [renderHook](https://testing-library.com/docs/react-testing-library/api/#renderhook) that you can use. However, it doesn't return its own `waitFor` util, so you'll have to use the one you can [import from @testing-library/react](https://testing-library.com/docs/dom-testing-library/api-async/#waitfor) instead. The API is a bit different, as it doesn't allow to return a `boolean`, but expects a `Promise` instead. That means we must adapt our code slightly:
 
-```tsx:title=new-render-hook {8-11}
+```tsx title="new-render-hook" {8-11}
 import { waitFor, renderHook } from '@testing-library/react'
 
 test("my first test", async () => {

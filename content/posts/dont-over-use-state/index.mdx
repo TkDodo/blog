@@ -62,7 +62,7 @@ Fetch some data from a remote endpoint (a list of items with categories) and let
 
 The way the state was managed looked something like this most of the time:
 
-```jsx:title=use-state
+```jsx title="use-state"
 import { fetchData } from './api'
 import { computeCategories } from './utils'
 
@@ -100,7 +100,7 @@ The problem is that we have a "publicly" available function `setCategories` that
 
 If we intended our categories to be solely dependent on our data (like we expressed with our useEffect), this is bad news:
 
-```jsx:title=bad-news {2,26}
+```jsx title="bad-news" {2,26}
 import { fetchData } from './api'
 import { computeCategories, getMoreCategories } from './utils'
 
@@ -188,7 +188,7 @@ We want to have proof that something is slow before acting on it. For more on th
 
 In my world, the example would look just like this:
 
-```diff:title=no-useless-state
+```diff title="no-useless-state"
 import { fetchData } from './api'
 import { computeCategories } from './utils'
 

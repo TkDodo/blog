@@ -57,7 +57,7 @@ This one _should_ be obvious: We ought to build web-apps for <Emph>everyone</Emp
 
 We don't have to look any further than [Material UI](https://mui.com/), one of the most popular component libraries. Their [basic tooltip example](https://mui.com/material-ui/react-tooltip/#basic-tooltip) from the docs looks like this:
 
-```tsx:title=MUI-basic-tooltip
+```tsx title="MUI-basic-tooltip"
 <Tooltip title="Delete">
   <IconButton>
     <DeleteIcon />
@@ -67,7 +67,7 @@ We don't have to look any further than [Material UI](https://mui.com/), one of t
 
 That's easy and works, but what happens if we only add a `<Tooltip>` around an Icon, or around another non-interactive element like a `Badge`:
 
-```tsx:title=MUI-non-interactive-tooltip
+```tsx title="MUI-non-interactive-tooltip"
 <Tooltip title="Home">
   <IconHome />
 </Tooltip>

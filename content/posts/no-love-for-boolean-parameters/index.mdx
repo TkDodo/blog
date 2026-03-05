@@ -31,7 +31,7 @@ Ah, booleans. 0 or 1, true or false. Always either one of them, never something 
 
 There is nothing wrong with booleans per se. We use them for conditions every day:
 
-```js:title=boolean-condition
+```js title="boolean-condition"
 // ✅ boolean condition
 if (user.age() < legalAge) {
   return 'Sorry, you are too young to use this service'
@@ -44,7 +44,7 @@ But using them for parameters to a function can be an indication of bad design f
 
 A function should do one thing, and one thing only. Passing a "flag" to it often indicates that a function does two things at once, thus violating [this principle](https://en.wikipedia.org/wiki/Single-responsibility_principle). For example:
 
-```ts:title=single-responsibility
+```ts title="single-responsibility"
 // 🚨 booleans as a function parameter
 function createReport(user: User, sendEmail: boolean) {
   // create the report here
@@ -63,7 +63,7 @@ There seem to be some cases where we want to send the report as email directly a
 
 Flags can be confusing, especially in languages where you don't have named parameters. Take for example this signature of [equals](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/equals.html) from the Kotlin standard library:
 
-```kt:title=equals-with-ignore-case-flag
+```kt title="equals-with-ignore-case-flag"
 fun String?.equals(other: String?, ignoreCase: Boolean): Boolean
 
 // Returns true if this string is equal to other,
@@ -72,7 +72,7 @@ fun String?.equals(other: String?, ignoreCase: Boolean): Boolean
 
 As opposed to the first example, the function doesn't do two things at once, it does one thing in two different _variations_ - an important difference. This can be highly confusing when you have to read the call-side that looks something like this:
 
-```kt:title=???
+```kt title="???"
 "foo".equals("bar", true)
 "foo".equals("bar", false)
 ```
@@ -83,7 +83,7 @@ How should we know what `true` means in this context. Even worse, what would `fa
 
 Before you look it up [here](<http://docs.groovy-lang.org/latest/html/groovy-jdk/java/lang/Iterable.html#sort(boolean,%20groovy.lang.Closure)>) - what do you think this boolean flag on Groovy's `List.sort` method means:
 
-```groovy:title=sort
+```groovy title="sort"
 ["hello","hi","hey"].sort(false) { it.length() }
 ```
 
@@ -97,7 +97,7 @@ Totally logical and intuitive api, not confusing at all 🤷‍♂️
 
 Booleans make it easy to create impossible states. Suppose you have a _metric_ of some sorts, and you want to format that. It might be a "normal" number, but it might also be a percentage value. So you decide to model the formatting function like this:
 
-```ts:title=format-metric
+```ts title="format-metric"
 function formatMetric(value: number, isPercent: boolean): string {
   if (isPercent) {
     return `${value * 100}%`
@@ -112,7 +112,7 @@ This is rather rudimentary number formatting function, but apart from that, it d
 
 Requirements change over time (as they tend to do), and now we have to support currencies for some of our metrics as well. Starting from the above formatting function, we are tempted to add _another_ flag, `isCurrency`
 
-```ts:title=🚨-currency-formatting {1,5-7}
+```ts title="🚨-currency-formatting" {1,5-7}
 function formatMetric(
   value: number,
   isPercent: boolean,
@@ -144,7 +144,7 @@ The answer is: you can't know. It's an implementation detail which flag is check
 
 To avoid impossible states, resist the urge of adding the _first_ boolean parameter. It is infinitely easier for humans to extend existing patterns instead of recognizing anti-patterns and refactoring them. If there is one boolean, there will be a second. If we start of with an enumeration of possible states, it is much more likely that this will be extended instead:
 
-```ts:title=✅-metric-variant {1,2}
+```ts title="✅-metric-variant" {1,2}
 function formatMetric(value: number, variant?: 'percent'): string {
   if (variant === 'percent') {
     return `${value * 100}%`
@@ -165,7 +165,7 @@ Further advantages of a single variant property include:
 - Exhaustive matching <br />
   I've written about [exhaustive matching in TypeScript](./exhaustive-matching-in-type-script) before, and it also comes in very handy in this example. The compiler will then tell us where we need to adapt our code when we add a new variant. CDD, compiler-driven-development:
 
-```ts:title=exhaustive-variants
+```ts title="exhaustive-variants"
 type MetricVariant = 'standard' | 'percent' | 'currency'
 function formatMetric(
   value: number,
@@ -184,7 +184,7 @@ function formatMetric(
 
 We also do the same when creating React components, or have you seen a Button with an _isPrimary_ and _isSecondary_ flag? Of course not - because how can they be both at the same time?
 
-```tsx:title=button-variants
+```tsx title="button-variants"
 // 🚨 Don't do this
 <Button isPrimary isSecondary />
 

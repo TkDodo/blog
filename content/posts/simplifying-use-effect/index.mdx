@@ -49,7 +49,7 @@ I'm obviously going to recommend my favourite open source library, [react-query]
 
 A function or a class should do one thing, and one thing only. Your `processPayment` function is hopefully only going to process the payment and not additionally redirecting the user somewhere, because that is not it's responsibility. The same principle applies to the function that you pass to _useEffect_. There is no need to tuck everything in one _useEffect_:
 
-```js:title=one-effect-two-responsibilities
+```js title="one-effect-two-responsibilities"
 React.useEffect(() => {
   document.title = 'hello world'
   trackPageVisit()
@@ -60,7 +60,7 @@ Here, we want to perform some operations, like setting the document title and tr
 
 Suppose we now want to add a feature that syncs some local state with the document title:
 
-```js:title=sync-title {1,4,6}
+```js title="sync-title" {1,4,6}
 const [title, setTitle] = React.useState('hello world')
 
 React.useEffect(() => {
@@ -71,7 +71,7 @@ React.useEffect(() => {
 
 Can you spot the bug? Every time the title changes, we are also tracking a page visit, which is probably not what we intended. Spitting it into two effects solves the problem, and I believe we should have done so right from the beginning:
 
-```js:title=single-responsibility
+```js title="single-responsibility"
 const [title, setTitle] = React.useState('hello world')
 
 React.useEffect(() => {
@@ -93,7 +93,7 @@ I really don't like components where 50% of the code is hook calls. It usually s
 
 Giving variables and functions [a good name](./on-naming-things) is like writing documentation, and the same applies to hooks. If you are using TypeScript, you will also benefit from a clearly defined interface:
 
-```ts:title=named-hooks
+```ts title="named-hooks"
 const useTitleSync = (title: string) => {
   React.useEffect(() => {
     document.title = title
@@ -113,7 +113,7 @@ All our effects are now nicely hidden inside custom hooks with descriptive names
 
 This is probably the biggest advantage of custom hooks for me: We can tie things together that belong together, and we don't have to expose everything. The _useTitleSync_ hook is not ideal: it only covers the effect, and each component still needs to manage that title manually. So why don't we put _everything_ title related in the custom hook to encapsulate all the logic with it:
 
-```ts:title=useTitle {1-2,8}
+```ts title="useTitle" {1-2,8}
 const useTitle = (initialTitle: string) => {
   const [title, setTitle] = React.useState(initialTitle)
 
@@ -127,7 +127,7 @@ const useTitle = (initialTitle: string) => {
 
 We can even take this one step further: If we only intend to show the title in the document title and nowhere else, we can keep the title value in the hook and expose only the setter, producing a minimal interface:
 
-```ts:title=encapsulated-value {8}
+```ts title="encapsulated-value" {8}
 const useTitle = (initialTitle: string) => {
   const [title, setTitle] = React.useState(initialTitle)
 
@@ -143,7 +143,7 @@ const useTitle = (initialTitle: string) => {
 
 Testing the _useTitle_ hook without having to test the component that uses it has the advantage that you don't have to think about all the other things that are going on in that component, like page tracking. Testing custom hooks is very similar to testing any other util function:
 
-```js:title=testing-custom-hooks
+```js title="testing-custom-hooks"
 import { act, renderHook } from '@testing-library/react-hooks'
 
 describe('useTitle', () => {
@@ -161,7 +161,7 @@ describe('useTitle', () => {
 
 All the above reasons make me want to write custom hooks even if I only use them once. But if you cannot or don't want to extract it to a custom hook for whatever reason, the function passed to _useEffect_ can still have a name, so consider naming your effects:
 
-```js:title=named-effect
+```js title="named-effect"
 const [title, setTitle] = React.useState('hello world')
 
 React.useEffect(fuction syncTitle() {
@@ -175,7 +175,7 @@ Not even, or actually especially not, for functions. I will just defer to Dan he
 
 One additional thing that I think is worth mentioning is: not every effect needs dependencies. I've seen effects with 8+ dependencies, some of them being objects that are not memoized, so they will trigger the effect in every render anyways. So why bother, the second argument of _useEffect_ is optional after all. This comes in handy if your effect uses early returns or executes the side effect conditionally:
 
-```js:title=effect-without-dependencies
+```js title="effect-without-dependencies"
 const useInitializePayload = () => {
   const payload = usePayload()
   React.useEffect(() => {

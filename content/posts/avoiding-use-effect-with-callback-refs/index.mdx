@@ -42,7 +42,7 @@ import { RcToc } from '@components/rc-toc'
 
 Even though refs are mutable containers where we can theoretically store arbitrary values, they are most often used to get access to a DOM node:
 
-```jsx:title=a-basic-ref
+```jsx title="a-basic-ref"
 const ref = React.useRef(null)
 
 return <input ref={ref} defaultValue="Hello world" />
@@ -62,7 +62,7 @@ So how would you, right now, focus an input element after it rendered? (I know [
 
 Well, most code I've seen tries to do this:
 
-```jsx:title=focus-an-input {3-5}
+```jsx title="focus-an-input" {3-5}
 const ref = React.useRef(null)
 
 React.useEffect(() => {
@@ -80,7 +80,7 @@ Yet this is _not_ the best way to do it and does have some caveats in some more 
 
 Specifically, it assumes that the ref is "filled" when the effect runs. If it's not available, e.g. because you pass the ref to a custom component which will defer the rendering or only show the input after some other user interaction, the content of the ref will still be _null_ when the effect runs and nothing will be focussed:
 
-```jsx:title=custom-form {5-6,20-22}
+```jsx title="custom-form" {5-6,20-22}
 function App() {
   const ref = React.useRef(null)
 
@@ -129,7 +129,7 @@ Conceptually, I like to think about refs on React elements as functions that are
 
 Passing a ref from _useRef_ (a RefObject) to a React element is therefore just syntactic sugar for:
 
-```jsx:title=callback-ref {2-4}
+```jsx title="callback-ref" {2-4}
 <input
   ref={(node) => {
     ref.current = node;
@@ -146,7 +146,7 @@ And those functions run after rendering, where it is totally fine to execute sid
 
 With that knowledge, what stops us from focussing the input right inside the callback ref, where we have direct access to the node?
 
-```jsx:title=focus-with-callback-ref {2-4}
+```jsx title="focus-with-callback-ref" {2-4}
 <input
   ref={(node) => {
     node?.focus()
@@ -171,7 +171,7 @@ And that is where _useCallback_ comes in, because that is how we ensure a functi
 
 Here's the final solution:
 
-```jsx:title=callback-ref-with-use-callback {1-3}
+```jsx title="callback-ref-with-use-callback" {1-3}
 const ref = React.useCallback((node) => {
   node?.focus()
 }, [])
@@ -183,7 +183,7 @@ Comparing this to the initial version, it's less code and only uses one hook ins
 
 And as shown in this [hidden gem in the (old) React docs](https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node), you can use it to run any sort of side effects, e.g. call _setState_ in it. I'll just leave the example here because it's actually pretty good:
 
-```jsx:title=measure-a-dom-node
+```jsx title="measure-a-dom-node"
 function MeasureExample() {
   const [height, setHeight] = React.useState(0)
 

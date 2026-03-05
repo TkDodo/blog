@@ -64,7 +64,7 @@ I find the concept of closures somewhat hard to explain. Let's take a look at th
 
 I would best rephrase this as: JavaScript functions can "see", and interact with, things that were defined outside of them. You might not know it, but you are probably using this concept _very_ often, for example, when using props of your React component inside a callback:
 
-```js:title=a-simple-closure
+```js title="a-simple-closure"
 function Counter({ count }) {
   const logCount = () => {
     // 💡 accessing count from the outer scope
@@ -77,7 +77,7 @@ function Counter({ count }) {
 
 _logCount_ can access everything we define in the _Counter_ component, for example, the _count_ prop. You can easily check that you are relying on closures by moving the function to the outside of its parent. If it doesn't work anymore, it's because you don't have access to something you were "closing over" anymore:
 
-```js:title=moving-it-up
+```js title="moving-it-up"
 // ❌ 'count' is not defined. (no-undef)
 const logCount = () => {
   console.log('count', count)
@@ -200,7 +200,7 @@ But what about more complex dependencies? Like an object or a callback function 
 
 Once upon a time, we had a component that wasn't fast. It looked something like this:
 
-```js:title=slow-component
+```js title="slow-component"
 function SlowComponent({ value, onChange }) {
   return <RenderSomethingSlow value={value} onChange={onChange} />
 }
@@ -210,7 +210,7 @@ Our idea was to memoize it by wrapping it in [React.memo](https://reactjs.org/do
 
 We thought: "We actually only want to re-render our component when _value_ changes, so why don't we just omit the _onChange_ prop from the comparison function and side-step that problem?" 🤔
 
-```js:title=fast-but-buggy-component
+```js title="fast-but-buggy-component"
 const FastComponent = React.memo(
   SlowComponent,
   (prevProps, nextProps) => prevProps.value === nextProps.value
@@ -223,7 +223,7 @@ We only care about _value_ for our render result, so what's wrong with this appr
 
 The answer lies again in _stale closures_: If the caller component re-creates _onChange_ for some reason, but _value_ doesn't change, we are not taking a new picture of our SlowComponent, which means it still sees the old _onChange_ function:
 
-```js:title=a-stale-closure
+```js title="a-stale-closure"
 function User({ name }) {
   const [count, increment] = React.useReducer((prev) => prev + 1, 1)
 

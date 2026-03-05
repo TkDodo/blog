@@ -116,7 +116,7 @@ It's funny because I saw the tweet, and even commented on it, but didn't think t
 
 So after the React 19 upgrade in React Query itself, I continued working on the suspense lesson of the course. We have one example in there where we're showing how to reveal content at the same time, but still have all requests fetch in parallel. As shown in the [react docs](https://react.dev/reference/react/Suspense#revealing-content-together-at-once), we can achieve this by putting both components as siblings into the same suspense boundary. The example looks roughly like this:
 
-```jsx:title=suspense-with-two-children
+```jsx title="suspense-with-two-children"
 export default function App() {
   return (
     <Suspense fallback={<p>...</p>}>
@@ -133,7 +133,7 @@ This is a pretty great feature because it means if each sibling triggers anythin
 
 A more complete example might look something like this:
 
-```jsx:title=app-with-suspense
+```jsx title="app-with-suspense"
 export default function App() {
   return (
     <Suspense fallback={<p>...</p>}>
@@ -152,7 +152,7 @@ Some or all of those components can initiate critical data fetching, and we'll g
 
 Another advantage is that we can add fetches later without having to think about how pending states will be handled. The `<Footer />` component might not fetch data now, but if we add it later, it will just work. And if we deem data as non-critical, we can always wrap our component in it's own suspense boundary:
 
-```jsx:title=nested-suspense {9-11}
+```jsx title="nested-suspense" {9-11}
 export default function App() {
   return (
     <Suspense fallback={<p>...</p>}>
@@ -219,7 +219,7 @@ Needless to say, this tweet took off and started a somewhat heated twitter discu
 
 There are of course reasons why this change was made, and, oddly enough, they are meant as a performance improvement for some situations. Continuing to render siblings of a component that has already suspended is not for free, and it will block showing the fallback. Consider the following example:
 
-```jsx:title=expensive-sibling
+```jsx title="expensive-sibling"
 export default function App() {
   return (
     <Suspense fallback={<p>...</p>}>
@@ -244,7 +244,7 @@ That is why the recommended approach by the react team is to initiate fetches ea
 
 For example, with TanStack Router and TanStack Query, the example could look like this:
 
-```tsx:title=prefetch-in-route-loader
+```tsx title="prefetch-in-route-loader"
 export const Route = createFileRoute('/')({
   loader: ({ context: { queryClient } }) => {
     queryClient.ensureQueryData(repoOptions('tanstack/query'))
@@ -267,7 +267,7 @@ Hoisting your data requirements is a good idea regardless of how suspense works,
 
 Further, if learned anything from React Query, it's that not every async operation is a fetch. For example, using `React.lazy` for code-splitting would also mean that bundles are loaded in serial if your App looks like this:
 
-```jsx:title=react.lazy
+```jsx title="react.lazy"
 const Header = lazy(() => import('./Header.tsx'))
 const Navbar = lazy(() => import('./Navbar.tsx'))
 const Content = lazy(() => import('./Content.tsx'))

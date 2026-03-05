@@ -59,7 +59,7 @@ If you're using a framework that has a built-in solution for data fetching and m
 
 So let's instead look at the standard fetch-in-`useEffect` example that came up on [Twitter](https://twitter.com/ken_wheeler/status/1719122802333118557) lately, and dive into why it might be a good idea to use React Query for those situation, too:
 
-```jsx:title=fetch-in-useEffect
+```jsx title="fetch-in-useEffect"
 function Bookmarks({ category }) {
   const [data, setData] = useState([])
   const [error, setError] = useState()
@@ -99,7 +99,7 @@ At the end, you'll be left with an <Emph>inconsistent</Emph> state: Your local s
 
 The React docs say that we can fix this with a cleanup function and an `ignore` boolean, so let's do that:
 
-```jsx:title=ignore-flag {6,10-12,15-17,19-21}
+```jsx title="ignore-flag" {6,10-12,15-17,19-21}
 function Bookmarks({ category }) {
   const [data, setData] = useState([])
   const [error, setError] = useState()
@@ -133,7 +133,7 @@ What happens now is that the effect cleanup function runs when `category` change
 
 It's not there at all. We have no way to show a pending UI while the requests are happening - not for the first one and not for further requests. So, let's add that?
 
-```jsx:title=loading-state {2,8,21-25}
+```jsx title="loading-state" {2,8,21-25}
 function Bookmarks({ category }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
@@ -172,7 +172,7 @@ function Bookmarks({ category }) {
 
 Initializing `data` with an empty array seems like a good idea to avoid having to check for `undefined` all the time - but what if we fetch data for a category that has no entries yet, and we actually get back an empty array? We'd have no way to distinguish between "no data yet" and "no data at all". The loading state we've just introduced helps, but it's still better to initialize with `undefined`:
 
-```jsx:title=empty-state {3}
+```jsx title="empty-state" {3}
 function Bookmarks({ category }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState()
@@ -218,7 +218,7 @@ error: errorFromPreviousCategory
 
 The result will then depend on how we actually render JSX based on this state. If we check for `error` first, we'll render the error UI with the old message even though we have valid data:
 
-```jsx:title=error-first
+```jsx title="error-first"
 return (
   <div>
     { error ? (
@@ -238,7 +238,7 @@ If we check data first, we have the same problem if the second request fails. If
 
 To fix this, we have to reset our local state when category changes:
 
-```jsx:title=reset-state {14,20}
+```jsx title="reset-state" {14,20}
 function Bookmarks({ category }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState()
@@ -285,7 +285,7 @@ If we'd want to avoid that, we'd have to add another "ref workaround", which I d
 
 I didn't include this in the original list of bugs, because you'd have the same problem with React Query: `fetch` doesn't reject on HTTP errors, so you'd have to check for `res.ok` and throw an error yourself.
 
-```jsx:title=error-handling {10-14}
+```jsx title="error-handling" {10-14}
 function Bookmarks({ category }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState()
@@ -347,7 +347,7 @@ But you still <Emph>need it</Emph> to make that state predictably available in y
 
 With React Query, the above code becomes:
 
-```jsx:title=react-query
+```jsx title="react-query"
 function Bookmarks({ category }) {
   const { isLoading, data, error } = useQuery({
     queryKey: ['bookmarks', category],
@@ -388,7 +388,7 @@ I've been working on a new, official course on React Query together with [ui.dev
 
 A lot of folks on twitter mentioned missing request cancellation in the original snippet. I don't think that's necessarily a bug - just a missing feature. Of course, React Query has you covered here as well with a pretty straightforward change:
 
-```jsx:title=cancellation {4,5}
+```jsx title="cancellation" {4,5}
 function Bookmarks({ category }) {
   const { isLoading, data, error } = useQuery({
     queryKey: ['bookmarks', category],

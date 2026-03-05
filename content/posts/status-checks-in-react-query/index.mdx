@@ -66,7 +66,7 @@ Also, the `isFetching` flag is derived from a secondary `fetchStatus` - just lik
 
 Most examples look something like this:
 
-```jsx:title=standard-example
+```jsx title="standard-example"
 const todos = useTodos()
 
 if (todos.isPending) {
@@ -112,7 +112,7 @@ This is even more relevant when we take into account that React Query will retry
 
 This is why I usually check for data-availability first:
 
-```jsx:title=data-first
+```jsx title="data-first"
 const todos = useTodos()
 
 if (todos.data) {

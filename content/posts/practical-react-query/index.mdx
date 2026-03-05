@@ -195,7 +195,7 @@ Because React Query will trigger a refetch whenever the query key changes.
 So when we pass a variable parameter to our `queryFn`, we almost always want to fetch data when that value changes.
 Instead of orchestrating complex effects to manually trigger a refetch, we can utilize the query key:
 
-```ts:title=feature/todos/queries.ts
+```ts title="feature/todos/queries.ts"
 type State = 'all' | 'open' | 'done'
 type Todo = {
   id: number
@@ -232,7 +232,7 @@ This is certainly not ideal, so if possible, we can try to pre-fill the newly cr
 [initialData](https://tanstack.com/query/latest/docs/react/guides/initial-query-data#initial-data-from-cache).
 The above example is perfect for that, because we can do some client side pre-filtering on our todos:
 
-```ts:title=pre-filtering {17-26}
+```ts title="pre-filtering" {17-26}
 type State = 'all' | 'open' | 'done'
 type Todo = {
   id: number
@@ -282,7 +282,7 @@ and render your Form once you have data.
 Background updates are very unlikely to yield something new, and even if, your Form has already been initialized.
 So if you do that on purpose, make sure to _not_ fire off unnecessary background refetches by setting `staleTime`:
 
-```jsx:title=initial-form-data
+```jsx title="initial-form-data"
 const App = () => {
   const { data } = useQuery({
     queryKey: ['key'],

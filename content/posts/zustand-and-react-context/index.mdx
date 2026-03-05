@@ -50,7 +50,7 @@ With zustand, it's totally fine - encouraged even - to [create multiple, small s
 
 Global stores are created outside of the React Component lifecycle, so we can't initialize the store with a value we get as a prop. With a global store, we need to create it first with a known default state, then sync props-to-store with `useEffect`:
 
-```js:title=sync-with-useEffect {2-3,12-15}
+```js title="sync-with-useEffect" {2-3,12-15}
 const useBearStore = create((set) => ({
   // ⬇️ initialize with default value
   bears: 0,
@@ -125,7 +125,7 @@ In this article, I'll be showing the v5 syntax for combining zustand with React 
 
 </Aside>
 
-```jsx:title=zustand-and-react-context
+```jsx title="zustand-and-react-context"
 import { createStore, useStore } from 'zustand'
 
 const BearStoreContext = React.createContext(null)
@@ -158,7 +158,7 @@ Because we create the store inside our component, we can close over props like `
 
 After that, we need to consume that context whenever we want to select some values from our store. For that, we need to pass the `store` and the `selector` to the `useStore` hook we can get from zustand. This is best abstracted in a custom hook:
 
-```js:title=useBearStore
+```js title="useBearStore"
 const useBearStore = (selector) => {
   const store = React.useContext(BearStoreContext)
   if (!store) {
@@ -170,7 +170,7 @@ const useBearStore = (selector) => {
 
 Then, we can use the `useBearStore` hook like we are used to, and export custom hooks with atomic selectors:
 
-```js:title=useBears
+```js title="useBears"
 export const useBears = () => useBearStore((state) => state.bears)
 ```
 

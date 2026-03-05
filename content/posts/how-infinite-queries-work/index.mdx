@@ -72,7 +72,7 @@ Further, the query holds an instance of a `retryer`, which is singlehandedly res
 
 A simplified, pseudo-code version would look something like this:
 
-```ts:title=retryer
+```ts title="retryer"
 class Query() {
   fetch() {
     if (this.state.fetchStatus === 'idle') {
@@ -112,7 +112,7 @@ But conceptually, it's still just one query that lives under one QueryKey. We ac
 
 I wasn't totally honest before about the fact that the `queryFn` gets passed directly to the `retryer`. There is a thin layer around it. For single queries, it's set to executing the `queryFn` only. But for infinite queries, it will take the function from the `infiniteQueryBehavior`:
 
-```ts:title=query-behavior {6-9}
+```ts title="query-behavior" {6-9}
 class Query() {
   fetch() {
     if (this.state.fetchStatus === 'idle') {
@@ -135,7 +135,7 @@ class Query() {
 
 The behavior for an infinite query knows what it has to do when it is being run. For example, when you call `fetchNextPage`, it knows to call the `queryFn` passed to it once and append the page to the cached data. If a refetch happens, it executes the `queryFn` in a loop, always calling `getNextPageParam` to ensure consistency. It might look something like this:
 
-```ts:title=InfiniteQueryBehavior
+```ts title="InfiniteQueryBehavior"
 function infiniteQueryBehavior() {
   return {
     onFetch: (context, queryFn) => {
@@ -169,7 +169,7 @@ function infiniteQueryBehavior() {
 
 I think conceptually, this is a brilliant design. All we need to do to make a query an infinite query is to attach the `infiniteQueryBehavior` to it, and the rest works just the same. The `fetchInfiniteQuery` function on the `queryClient` literally does just this:
 
-```ts:title=fetchInfiniteQuery
+```ts title="fetchInfiniteQuery"
 fetchInfiniteQuery(options) {
   return this.fetchQuery({
     ...options,
@@ -192,7 +192,7 @@ This freaked me out because I was questioning the architecture. Do we need to re
 
 I couldn't stop thinking about this bug. I didn't want to completely re-write those layers. I thought that the only thing missing was having the `infiniteQueryBehavior` remember at which point to re-start the loop. It turns out, this is trivial with javascript closures. We can hoist the relevant information out of the returned function, so when it's invoked again, it will "remember" where it was:
 
-```ts:title=hoisting {4-6}
+```ts title="hoisting" {4-6}
 function infiniteQueryBehavior() {
   return {
     onFetch: (context, queryFn) => {
