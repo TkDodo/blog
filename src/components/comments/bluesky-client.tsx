@@ -73,22 +73,6 @@ function formatRelativeTime(value?: string): string {
   return formatter.format(Math.round(diffMs / 1000), "second");
 }
 
-function BlueskyHeaderSkeleton() {
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-subtle">
-      <div className="flex items-center gap-4">
-        <span className="inline-flex h-4 w-16 animate-pulse rounded bg-ic-bg" />
-        <span className="inline-flex h-4 w-14 animate-pulse rounded bg-ic-bg" />
-        <span className="inline-flex h-4 w-14 animate-pulse rounded bg-ic-bg" />
-      </div>
-      <div className="flex items-center gap-3">
-        <span className="inline-flex h-7 w-18 animate-pulse rounded border border-border bg-ic-bg/70" />
-        <span className="inline-flex h-4 w-28 animate-pulse rounded bg-ic-bg" />
-      </div>
-    </div>
-  );
-}
-
 function BlueskyRepliesSkeleton() {
   return (
     <ul className="space-y-5">
@@ -117,7 +101,7 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
     queryKey: ["bluesky-thread", postUrl],
     queryFn: () => fetchBlueskyThreadData(postUrl),
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60,
+    staleTime: 1000 * 30,
   });
 
   React.useEffect(() => {
@@ -138,7 +122,48 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
   return (
     <div className="space-y-5 text-sm md:text-base">
       {isInitialLoading ? (
-        <BlueskyHeaderSkeleton />
+        <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-subtle">
+          <div className="flex items-center gap-4">
+            <span className="inline-flex min-w-16">
+              {summary ? (
+                pluralize(summary.replyCount, "reply")
+              ) : (
+                <span className="inline-flex h-4 w-16 animate-pulse rounded bg-ic-bg" />
+              )}
+            </span>
+            <span className="inline-flex min-w-14">
+              {summary ? (
+                pluralize(summary.likeCount, "like")
+              ) : (
+                <span className="inline-flex h-4 w-14 animate-pulse rounded bg-ic-bg" />
+              )}
+            </span>
+            <span className="inline-flex min-w-14">
+              {summary ? (
+                pluralize(summary.quoteCount, "quote")
+              ) : (
+                <span className="inline-flex h-4 w-14 animate-pulse rounded bg-ic-bg" />
+              )}
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              className="cursor-pointer rounded border border-border px-2 py-1 text-xs text-subtle hover:text-text"
+              disabled
+            >
+              Refresh
+            </button>
+            <a
+              href={summary?.replyUrl ?? postUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              Reply on Bluesky
+            </a>
+          </div>
+        </div>
       ) : (
         <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-subtle">
           <div className="flex items-center gap-4">
