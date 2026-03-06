@@ -36,6 +36,19 @@ function writeTabPreference(tab: "github" | "bluesky") {
   }
 }
 
+function runWhenIdle(callback: () => void) {
+  const requestIdle = (globalThis as typeof globalThis & {
+    requestIdleCallback?: (cb: () => void, options?: { timeout: number }) => number;
+  }).requestIdleCallback;
+
+  if (requestIdle) {
+    requestIdle(callback, { timeout: 1500 });
+    return;
+  }
+
+  globalThis.setTimeout(callback, 120);
+}
+
 function getTheme(): "light" | "dark" {
   return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
 }
@@ -221,13 +234,19 @@ async function initRoot(root: HTMLElement) {
 
   const activateTab = async (
     tab: "github" | "bluesky",
-    options?: { persist?: boolean },
+    options?: { persist?: boolean; deferBlueskyLoad?: boolean },
   ) => {
     setTabState(elements, tab);
     if (options?.persist) {
       writeTabPreference(tab);
     }
     if (tab === "bluesky") {
+      if (options?.deferBlueskyLoad) {
+        runWhenIdle(() => {
+          void loadBluesky();
+        });
+        return;
+      }
       await loadBluesky();
     }
   };
@@ -299,7 +318,7 @@ async function initRoot(root: HTMLElement) {
 
   const preferredTab = readTabPreference();
   if (preferredTab === "bluesky") {
-    void activateTab("bluesky");
+    void activateTab("bluesky", { deferBlueskyLoad: true });
   } else {
     setTabState(elements, "github");
   }
