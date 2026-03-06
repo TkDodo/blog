@@ -22,7 +22,11 @@ const mountedEntries = new WeakMap<HTMLElement, MountedEntry>();
 const SKELETON_ROWS = [0, 1, 2];
 
 function pluralize(count: number, singular: string, plural = `${singular}s`) {
-  return `${count} ${count === 1 ? singular : plural}`;
+  const resolvedPlural =
+    plural === `${singular}s` && singular.endsWith("y")
+      ? `${singular.slice(0, -1)}ies`
+      : plural;
+  return `${count} ${count === 1 ? singular : resolvedPlural}`;
 }
 
 function groupRepliesByThread<T extends { depth: number }>(
