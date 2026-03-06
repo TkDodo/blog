@@ -21,6 +21,10 @@ interface MountedEntry {
 const mountedEntries = new WeakMap<HTMLElement, MountedEntry>();
 const SKELETON_ROWS = [0, 1, 2];
 
+function pluralize(count: number, singular: string, plural = `${singular}s`) {
+  return `${count} ${count === 1 ? singular : plural}`;
+}
+
 function groupRepliesByThread<T extends { depth: number }>(replies: T[]): T[][] {
   const groups: T[][] = [];
   let current: T[] = [];
@@ -138,9 +142,9 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
       ) : (
         <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-subtle">
           <div className="flex items-center gap-4">
-            <span>{summary?.replyCount ?? 0} replies</span>
-            <span>{summary?.likeCount ?? 0} likes</span>
-            <span>{summary?.quoteCount ?? 0} quotes</span>
+            <span>{pluralize(summary?.replyCount ?? 0, "reply")}</span>
+            <span>{pluralize(summary?.likeCount ?? 0, "like")}</span>
+            <span>{pluralize(summary?.quoteCount ?? 0, "quote")}</span>
           </div>
           <div className="flex items-center gap-3">
             <button
@@ -262,7 +266,9 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
                       </a>
                     )}
 
-                    <p className="ml-12 text-sm text-subtle">{reply.likeCount} likes</p>
+                    <p className="ml-12 text-sm text-subtle">
+                      {pluralize(reply.likeCount, "like")}
+                    </p>
                   </li>
                 ))}
               </ul>
