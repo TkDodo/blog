@@ -19,6 +19,7 @@ interface MountedEntry {
 }
 
 const mountedEntries = new WeakMap<HTMLElement, MountedEntry>();
+const SKELETON_ROWS = [0, 1, 2];
 
 function formatRelativeTime(value?: string): string {
   if (!value) return "";
@@ -47,10 +48,50 @@ function formatRelativeTime(value?: string): string {
   return formatter.format(Math.round(diffMs / 1000), "second");
 }
 
+function BlueskyHeaderSkeleton() {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-subtle">
+      <div className="flex items-center gap-4">
+        <span className="inline-flex h-4 w-16 animate-pulse rounded bg-ic-bg" />
+        <span className="inline-flex h-4 w-14 animate-pulse rounded bg-ic-bg" />
+        <span className="inline-flex h-4 w-14 animate-pulse rounded bg-ic-bg" />
+      </div>
+      <div className="flex items-center gap-3">
+        <span className="inline-flex h-7 w-18 animate-pulse rounded border border-border bg-ic-bg/70" />
+        <span className="inline-flex h-4 w-28 animate-pulse rounded bg-ic-bg" />
+      </div>
+    </div>
+  );
+}
+
+function BlueskyRepliesSkeleton() {
+  return (
+    <ul className="space-y-5">
+      {SKELETON_ROWS.map((row) => (
+        <li key={row} className="space-y-2">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex h-9 w-9 animate-pulse rounded-full bg-ic-bg" />
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="inline-flex h-4 w-28 animate-pulse rounded bg-ic-bg" />
+              <span className="inline-flex h-4 w-14 animate-pulse rounded bg-ic-bg" />
+            </div>
+          </div>
+          <div className="ml-12 space-y-2">
+            <span className="inline-flex h-5 w-[90%] animate-pulse rounded bg-ic-bg" />
+            <span className="inline-flex h-5 w-[72%] animate-pulse rounded bg-ic-bg" />
+            <span className="inline-flex h-4 w-12 animate-pulse rounded bg-ic-bg" />
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
   const query = useQuery({
     queryKey: ["bluesky-thread", postUrl],
     queryFn: () => fetchBlueskyThreadData(postUrl),
+    refetchOnWindowFocus: false,
     staleTime: 1000 * 60,
   });
 
@@ -60,45 +101,49 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
     }
   }, [onUnavailable, query.data]);
 
-  if (query.isLoading) {
-    return <p className="text-sm text-subtle">Loading Bluesky comments...</p>;
-  }
-
-  if (!query.data || query.data.status === "unavailable") {
+  const isInitialLoading = query.isLoading || !query.data;
+  if (!isInitialLoading && query.data?.status === "unavailable") {
     return null;
   }
 
-  const { summary, replies } = query.data.data;
+  const summary = query.data?.status === "ok" ? query.data.data.summary : null;
+  const replies = query.data?.status === "ok" ? query.data.data.replies : [];
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-subtle">
-        <div className="flex items-center gap-4">
-          <span>{summary.replyCount} replies</span>
-          <span>{summary.likeCount} likes</span>
-          <span>{summary.quoteCount} quotes</span>
+      {isInitialLoading ? (
+        <BlueskyHeaderSkeleton />
+      ) : (
+        <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-subtle">
+          <div className="flex items-center gap-4">
+            <span>{summary?.replyCount ?? 0} replies</span>
+            <span>{summary?.likeCount ?? 0} likes</span>
+            <span>{summary?.quoteCount ?? 0} quotes</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              className="cursor-pointer rounded border border-border px-2 py-1 text-xs text-subtle hover:text-text"
+              onClick={() => query.refetch()}
+              disabled={query.isFetching}
+            >
+              {query.isFetching ? "Refreshing..." : "Refresh"}
+            </button>
+            <a
+              href={summary?.replyUrl ?? postUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              Reply on Bluesky
+            </a>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="cursor-pointer rounded border border-border px-2 py-1 text-xs text-subtle hover:text-text"
-            onClick={() => query.refetch()}
-            disabled={query.isFetching}
-          >
-            {query.isFetching ? "Refreshing..." : "Refresh"}
-          </button>
-          <a
-            href={summary.replyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary hover:underline"
-          >
-            Reply on Bluesky
-          </a>
-        </div>
-      </div>
+      )}
 
-      {replies.length === 0 ? (
+      {isInitialLoading ? (
+        <BlueskyRepliesSkeleton />
+      ) : replies.length === 0 ? (
         <p className="text-sm text-subtle">No Bluesky replies yet.</p>
       ) : (
         <ul className="space-y-5">
