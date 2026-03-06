@@ -168,8 +168,18 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
                   <span className="font-semibold text-text">
                     {reply.author.displayName ?? reply.author.handle}
                   </span>{" "}
-                  <span className="text-subtle">@{reply.author.handle}</span>{" "}
-                  <span className="text-subtle">{formatRelativeTime(reply.createdAt)}</span>
+                  {reply.replyUrl ? (
+                    <a
+                      href={reply.replyUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-subtle hover:underline"
+                    >
+                      {formatRelativeTime(reply.createdAt)}
+                    </a>
+                  ) : (
+                    <span className="text-subtle">{formatRelativeTime(reply.createdAt)}</span>
+                  )}
                 </div>
               </div>
 

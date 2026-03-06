@@ -7,6 +7,7 @@ export interface BlueskyReplySegment {
 
 export interface BlueskyReplyItem {
   id: string;
+  replyUrl: string;
   depth: number;
   hasReplies: boolean;
   author: {

@@ -144,6 +144,7 @@ function toReplyItem(
   const external = post?.embed?.external;
   return {
     id: uri,
+    replyUrl: toWebPostUrlFromAtUri(uri) ?? "",
     depth,
     hasReplies,
     author: {

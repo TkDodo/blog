@@ -8,6 +8,7 @@ interface GiscusConfig {
 }
 
 interface CommentsRootElements {
+  tabList: HTMLElement;
   githubTab: HTMLButtonElement;
   blueskyTab: HTMLButtonElement | null;
   githubPanel: HTMLElement;
@@ -102,15 +103,17 @@ function hideBluesky(elements: CommentsRootElements) {
 }
 
 function getRootElements(root: HTMLElement): CommentsRootElements | null {
+  const tabList = root.querySelector<HTMLElement>("[role='tablist']");
   const githubTab = root.querySelector<HTMLButtonElement>("[data-comments-tab='github']");
   const githubPanel = root.querySelector<HTMLElement>("[data-comments-panel='github']");
   const giscusRoot = root.querySelector<HTMLElement>(".giscus");
 
-  if (!githubTab || !githubPanel || !giscusRoot) {
+  if (!tabList || !githubTab || !githubPanel || !giscusRoot) {
     return null;
   }
 
   return {
+    tabList,
     githubTab,
     blueskyTab: root.querySelector<HTMLButtonElement>("[data-comments-tab='bluesky']"),
     githubPanel,
@@ -175,10 +178,6 @@ async function initRoot(root: HTMLElement) {
   let blueskyLoaded = false;
   let blueskyLoading = false;
 
-  const activateTab = (tab: "github" | "bluesky") => {
-    setTabState(elements, tab);
-  };
-
   const loadBluesky = async () => {
     if (blueskyLoaded || blueskyLoading) return;
 
@@ -189,22 +188,88 @@ async function initRoot(root: HTMLElement) {
         postUrl: blueskyUrl,
         onUnavailable: () => {
           hideBluesky(elements);
-          activateTab("github");
+          setTabState(elements, "github");
         },
       });
       blueskyLoaded = true;
     } catch {
       hideBluesky(elements);
-      activateTab("github");
+      setTabState(elements, "github");
     } finally {
       blueskyLoading = false;
     }
   };
 
-  elements.githubTab.addEventListener("click", () => activateTab("github"));
-  elements.blueskyTab.addEventListener("click", async () => {
-    activateTab("bluesky");
-    await loadBluesky();
+  const activateTab = async (tab: "github" | "bluesky") => {
+    setTabState(elements, tab);
+    if (tab === "bluesky") {
+      await loadBluesky();
+    }
+  };
+
+  const getVisibleTabs = () =>
+    [elements.githubTab, elements.blueskyTab].filter(
+      (tab): tab is HTMLButtonElement => Boolean(tab && !tab.hidden),
+    );
+
+  elements.githubTab.addEventListener("click", () => {
+    void activateTab("github");
+  });
+  elements.blueskyTab.addEventListener("click", () => {
+    void activateTab("bluesky");
+  });
+
+  elements.tabList.addEventListener("keydown", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLButtonElement)) return;
+    if (target.getAttribute("role") !== "tab") return;
+
+    const visibleTabs = getVisibleTabs();
+    const currentIndex = visibleTabs.indexOf(target);
+    if (currentIndex === -1) return;
+
+    const moveToIndex = async (index: number) => {
+      const nextTab = visibleTabs[index];
+      if (!nextTab) return;
+      nextTab.focus();
+      const tabName =
+        nextTab.dataset.commentsTab === "bluesky" ? "bluesky" : "github";
+      await activateTab(tabName);
+    };
+
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      const nextIndex = (currentIndex + 1) % visibleTabs.length;
+      void moveToIndex(nextIndex);
+      return;
+    }
+
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      const nextIndex =
+        (currentIndex - 1 + visibleTabs.length) % visibleTabs.length;
+      void moveToIndex(nextIndex);
+      return;
+    }
+
+    if (event.key === "Home") {
+      event.preventDefault();
+      void moveToIndex(0);
+      return;
+    }
+
+    if (event.key === "End") {
+      event.preventDefault();
+      void moveToIndex(visibleTabs.length - 1);
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      const tabName =
+        target.dataset.commentsTab === "bluesky" ? "bluesky" : "github";
+      void activateTab(tabName);
+    }
   });
 
   setTabState(elements, "github");
