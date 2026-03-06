@@ -121,6 +121,11 @@ describe("normalizeThreadResponse", () => {
     });
 
     expect(normalized?.replies).toHaveLength(2);
+    expect(normalized?.replies.map((reply) => reply.depth)).toEqual([0, 1]);
+    expect(normalized?.replies.map((reply) => reply.hasReplies)).toEqual([
+      true,
+      false,
+    ]);
     expect(normalized?.replies[0]?.segments.some((s) => s.href)).toBe(true);
   });
 });

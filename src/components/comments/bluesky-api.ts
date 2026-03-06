@@ -125,7 +125,11 @@ function toNumber(value: unknown): number {
   return typeof value === "number" && Number.isFinite(value) ? value : 0;
 }
 
-function toReplyItem(node: BlueskyThreadNode): BlueskyReplyItem | null {
+function toReplyItem(
+  node: BlueskyThreadNode,
+  depth: number,
+  hasReplies: boolean,
+): BlueskyReplyItem | null {
   const post = node.post;
   const uri = post?.uri;
   const author = post?.author;
@@ -140,6 +144,8 @@ function toReplyItem(node: BlueskyThreadNode): BlueskyReplyItem | null {
   const external = post?.embed?.external;
   return {
     id: uri,
+    depth,
+    hasReplies,
     author: {
       handle,
       displayName: author.displayName,
@@ -164,20 +170,25 @@ function flattenReplies(nodes: unknown[] | undefined): BlueskyReplyItem[] {
   if (!nodes) return [];
 
   const replies: BlueskyReplyItem[] = [];
-  const stack: unknown[] = [...nodes].reverse();
+  const stack: Array<{ node: unknown; depth: number }> = nodes
+    .map((node) => ({ node, depth: 0 }))
+    .reverse();
 
   while (stack.length > 0) {
-    const value = stack.pop();
+    const current = stack.pop();
+    if (!current) continue;
+    const value = current.node;
     if (!isThreadNode(value)) continue;
+    const childReplies = Array.isArray(value.replies) ? value.replies : [];
 
-    const reply = toReplyItem(value);
+    const reply = toReplyItem(value, current.depth, childReplies.length > 0);
     if (reply) {
       replies.push(reply);
     }
 
-    if (Array.isArray(value.replies)) {
-      for (let index = value.replies.length - 1; index >= 0; index -= 1) {
-        stack.push(value.replies[index]);
+    if (childReplies.length > 0) {
+      for (let index = childReplies.length - 1; index >= 0; index -= 1) {
+        stack.push({ node: childReplies[index], depth: current.depth + 1 });
       }
     }
   }

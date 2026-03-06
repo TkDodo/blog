@@ -51,7 +51,6 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
   const query = useQuery({
     queryKey: ["bluesky-thread", postUrl],
     queryFn: () => fetchBlueskyThreadData(postUrl),
-    refetchOnWindowFocus: false,
     staleTime: 1000 * 60,
   });
 
@@ -104,7 +103,11 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
       ) : (
         <ul className="space-y-5">
           {replies.map((reply) => (
-            <li key={reply.id} className="space-y-2">
+            <li
+              key={reply.id}
+              className="relative space-y-2"
+              style={{ marginInlineStart: `${reply.depth * 1.5}rem` }}
+            >
               <div className="flex items-center gap-3">
                 {reply.author.avatar ? (
                   <img
