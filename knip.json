@@ -15,9 +15,5 @@
   "compilers": {
     "mdx": true
   },
-  "ignoreDependencies": [
-    "@tailwindcss/typography",
-    "shiki",
-    "tailwindcss"
-  ]
+  "ignoreDependencies": ["@tailwindcss/typography", "shiki", "tailwindcss"]
 }
