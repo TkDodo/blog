@@ -17,7 +17,6 @@
   },
   "ignoreDependencies": [
     "@tailwindcss/typography",
-    "@tanstack/react-query",
     "shiki",
     "tailwindcss"
   ]
