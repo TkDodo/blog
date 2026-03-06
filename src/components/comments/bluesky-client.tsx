@@ -21,6 +21,27 @@ interface MountedEntry {
 const mountedEntries = new WeakMap<HTMLElement, MountedEntry>();
 const SKELETON_ROWS = [0, 1, 2];
 
+function groupRepliesByThread<T extends { depth: number }>(replies: T[]): T[][] {
+  const groups: T[][] = [];
+  let current: T[] = [];
+
+  for (const reply of replies) {
+    if (reply.depth === 0 && current.length > 0) {
+      groups.push(current);
+      current = [reply];
+      continue;
+    }
+
+    current.push(reply);
+  }
+
+  if (current.length > 0) {
+    groups.push(current);
+  }
+
+  return groups;
+}
+
 function formatRelativeTime(value?: string): string {
   if (!value) return "";
 
@@ -108,6 +129,7 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
 
   const summary = query.data?.status === "ok" ? query.data.data.summary : null;
   const replies = query.data?.status === "ok" ? query.data.data.replies : [];
+  const threadedReplies = groupRepliesByThread(replies);
 
   return (
     <div className="space-y-5 text-sm md:text-base">
@@ -146,95 +168,104 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
       ) : replies.length === 0 ? (
         <p className="text-sm text-subtle">No Bluesky replies yet.</p>
       ) : (
-        <ul className="space-y-5">
-          {replies.map((reply) => (
+        <ul className="space-y-4">
+          {threadedReplies.map((thread, threadIndex) => (
             <li
-              key={reply.id}
-              className="relative space-y-2"
-              style={{ marginInlineStart: `${reply.depth * 1.5}rem` }}
+              key={thread[0]?.id ?? threadIndex}
+              className="rounded-xl border border-border bg-ic-bg/25 p-4 md:p-5"
             >
-              <div className="flex items-center gap-3">
-                {reply.author.avatar ? (
-                  <img
-                    src={reply.author.avatar}
-                    alt=""
-                    className="h-9 w-9 rounded-full object-cover"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="h-9 w-9 rounded-full bg-ic-bg" aria-hidden="true" />
-                )}
-                <div className="min-w-0 text-sm">
-                  <span className="font-semibold text-text">
-                    {reply.author.displayName ?? reply.author.handle}
-                  </span>{" "}
-                  {reply.replyUrl ? (
-                    <a
-                      href={reply.replyUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-subtle hover:underline"
-                    >
-                      {formatRelativeTime(reply.createdAt)}
-                    </a>
-                  ) : (
-                    <span className="text-subtle">{formatRelativeTime(reply.createdAt)}</span>
-                  )}
-                </div>
-              </div>
-
-              <p className="ml-12 whitespace-pre-wrap text-text">
-                {reply.segments.map((segment, index) =>
-                  segment.href ? (
-                    <a
-                      key={`${reply.id}-${index}`}
-                      href={segment.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline"
-                    >
-                      {segment.text}
-                    </a>
-                  ) : (
-                    <React.Fragment key={`${reply.id}-${index}`}>
-                      {segment.text}
-                    </React.Fragment>
-                  ),
-                )}
-              </p>
-
-              {reply.externalEmbed && (
-                <a
-                  href={reply.externalEmbed.uri}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ml-12 block overflow-hidden rounded-lg border border-border bg-ic-bg/50 hover:border-primary"
-                >
-                  <div className="flex items-stretch">
-                    {reply.externalEmbed.thumb ? (
-                      <img
-                        src={reply.externalEmbed.thumb}
-                        alt=""
-                        className="h-24 w-24 shrink-0 object-cover"
-                        loading="lazy"
-                      />
-                    ) : null}
-                    <div className="space-y-1 p-3 text-sm">
-                      <p className="line-clamp-1 text-primary">{reply.externalEmbed.uri}</p>
-                      {reply.externalEmbed.title ? (
-                        <p className="line-clamp-1 text-text">{reply.externalEmbed.title}</p>
-                      ) : null}
-                      {reply.externalEmbed.description ? (
-                        <p className="line-clamp-2 text-subtle">
-                          {reply.externalEmbed.description}
-                        </p>
-                      ) : null}
+              <ul className="space-y-5">
+                {thread.map((reply) => (
+                  <li
+                    key={reply.id}
+                    className="space-y-2"
+                    style={{ marginInlineStart: `${reply.depth * 1.25}rem` }}
+                  >
+                    <div className="flex items-center gap-3">
+                      {reply.author.avatar ? (
+                        <img
+                          src={reply.author.avatar}
+                          alt=""
+                          className="h-9 w-9 rounded-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="h-9 w-9 rounded-full bg-ic-bg" aria-hidden="true" />
+                      )}
+                      <div className="min-w-0 text-sm">
+                        <span className="font-semibold text-text">
+                          {reply.author.displayName ?? reply.author.handle}
+                        </span>{" "}
+                        {reply.replyUrl ? (
+                          <a
+                            href={reply.replyUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-subtle hover:underline"
+                          >
+                            {formatRelativeTime(reply.createdAt)}
+                          </a>
+                        ) : (
+                          <span className="text-subtle">{formatRelativeTime(reply.createdAt)}</span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </a>
-              )}
 
-              <p className="ml-12 text-sm text-subtle">{reply.likeCount} likes</p>
+                    <p className="ml-12 whitespace-pre-wrap text-text">
+                      {reply.segments.map((segment, index) =>
+                        segment.href ? (
+                          <a
+                            key={`${reply.id}-${index}`}
+                            href={segment.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary hover:underline"
+                          >
+                            {segment.text}
+                          </a>
+                        ) : (
+                          <React.Fragment key={`${reply.id}-${index}`}>
+                            {segment.text}
+                          </React.Fragment>
+                        ),
+                      )}
+                    </p>
+
+                    {reply.externalEmbed && (
+                      <a
+                        href={reply.externalEmbed.uri}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ml-12 block overflow-hidden rounded-lg border border-border bg-ic-bg/50 hover:border-primary"
+                      >
+                        <div className="flex items-stretch">
+                          {reply.externalEmbed.thumb ? (
+                            <img
+                              src={reply.externalEmbed.thumb}
+                              alt=""
+                              className="h-24 w-24 shrink-0 object-cover"
+                              loading="lazy"
+                            />
+                          ) : null}
+                          <div className="space-y-1 p-3 text-sm">
+                            <p className="line-clamp-1 text-primary">{reply.externalEmbed.uri}</p>
+                            {reply.externalEmbed.title ? (
+                              <p className="line-clamp-1 text-text">{reply.externalEmbed.title}</p>
+                            ) : null}
+                            {reply.externalEmbed.description ? (
+                              <p className="line-clamp-2 text-subtle">
+                                {reply.externalEmbed.description}
+                              </p>
+                            ) : null}
+                          </div>
+                        </div>
+                      </a>
+                    )}
+
+                    <p className="ml-12 text-sm text-subtle">{reply.likeCount} likes</p>
+                  </li>
+                ))}
+              </ul>
             </li>
           ))}
         </ul>
