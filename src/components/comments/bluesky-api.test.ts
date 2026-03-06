@@ -25,7 +25,9 @@ describe("parseBlueskyPostUrl", () => {
 
   it("returns null for invalid URLs", () => {
     expect(parseBlueskyPostUrl("https://example.com/foo")).toBeNull();
-    expect(parseBlueskyPostUrl("https://bsky.app/profile/tkdodo.eu")).toBeNull();
+    expect(
+      parseBlueskyPostUrl("https://bsky.app/profile/tkdodo.eu"),
+    ).toBeNull();
   });
 });
 
@@ -43,7 +45,9 @@ describe("resolveActorDid", () => {
       "did:plc:resolved",
     );
     expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(fetchMock.mock.calls[0]?.[0]).toContain("resolveHandle?handle=tkdodo.eu");
+    expect(fetchMock.mock.calls[0]?.[0]).toContain(
+      "resolveHandle?handle=tkdodo.eu",
+    );
   });
 });
 

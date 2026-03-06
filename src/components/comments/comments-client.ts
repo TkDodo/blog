@@ -37,9 +37,14 @@ function writeTabPreference(tab: "github" | "bluesky") {
 }
 
 function runWhenIdle(callback: () => void) {
-  const requestIdle = (globalThis as typeof globalThis & {
-    requestIdleCallback?: (cb: () => void, options?: { timeout: number }) => number;
-  }).requestIdleCallback;
+  const requestIdle = (
+    globalThis as typeof globalThis & {
+      requestIdleCallback?: (
+        cb: () => void,
+        options?: { timeout: number },
+      ) => number;
+    }
+  ).requestIdleCallback;
 
   if (requestIdle) {
     requestIdle(callback, { timeout: 1500 });
@@ -57,7 +62,8 @@ function getThemeUrl(baseUrl: string): string {
   const origin = window.location.origin;
   const giscusBasePath = (baseUrl || "/").replace(/\/$/, "");
   const mode = getTheme();
-  const file = mode === "dark" ? "giscus-dark.css?v=10" : "giscus-light.css?v=10";
+  const file =
+    mode === "dark" ? "giscus-dark.css?v=10" : "giscus-light.css?v=10";
   return `${origin + giscusBasePath}/${file}`;
 }
 
@@ -102,7 +108,9 @@ function injectGiscus(
 }
 
 function updateGiscusTheme(baseUrl: string) {
-  const iframe = document.querySelector<HTMLIFrameElement>("iframe.giscus-frame");
+  const iframe = document.querySelector<HTMLIFrameElement>(
+    "iframe.giscus-frame",
+  );
   if (!iframe || !iframe.contentWindow) return;
   iframe.contentWindow.postMessage(
     { giscus: { setConfig: { theme: getThemeUrl(baseUrl) } } },
@@ -110,9 +118,16 @@ function updateGiscusTheme(baseUrl: string) {
   );
 }
 
-function setTabState(elements: CommentsRootElements, tab: "github" | "bluesky") {
-  const tabs = [elements.githubTab, elements.blueskyTab].filter(Boolean) as HTMLButtonElement[];
-  const panels = [elements.githubPanel, elements.blueskyPanel].filter(Boolean) as HTMLElement[];
+function setTabState(
+  elements: CommentsRootElements,
+  tab: "github" | "bluesky",
+) {
+  const tabs = [elements.githubTab, elements.blueskyTab].filter(
+    Boolean,
+  ) as HTMLButtonElement[];
+  const panels = [elements.githubPanel, elements.blueskyPanel].filter(
+    Boolean,
+  ) as HTMLElement[];
 
   for (const tabEl of tabs) {
     const selected = tabEl.dataset.commentsTab === tab;
@@ -136,8 +151,12 @@ function hideBluesky(elements: CommentsRootElements) {
 
 function getRootElements(root: HTMLElement): CommentsRootElements | null {
   const tabList = root.querySelector<HTMLElement>("[role='tablist']");
-  const githubTab = root.querySelector<HTMLButtonElement>("[data-comments-tab='github']");
-  const githubPanel = root.querySelector<HTMLElement>("[data-comments-panel='github']");
+  const githubTab = root.querySelector<HTMLButtonElement>(
+    "[data-comments-tab='github']",
+  );
+  const githubPanel = root.querySelector<HTMLElement>(
+    "[data-comments-panel='github']",
+  );
   const giscusRoot = root.querySelector<HTMLElement>(".giscus");
 
   if (!tabList || !githubTab || !githubPanel || !giscusRoot) {
@@ -147,9 +166,13 @@ function getRootElements(root: HTMLElement): CommentsRootElements | null {
   return {
     tabList,
     githubTab,
-    blueskyTab: root.querySelector<HTMLButtonElement>("[data-comments-tab='bluesky']"),
+    blueskyTab: root.querySelector<HTMLButtonElement>(
+      "[data-comments-tab='bluesky']",
+    ),
     githubPanel,
-    blueskyPanel: root.querySelector<HTMLElement>("[data-comments-panel='bluesky']"),
+    blueskyPanel: root.querySelector<HTMLElement>(
+      "[data-comments-panel='bluesky']",
+    ),
     blueskyMount: root.querySelector<HTMLElement>("[data-bluesky-mount]"),
     giscusRoot,
   };
@@ -184,7 +207,10 @@ async function initRoot(root: HTMLElement) {
 
   const themeObserver = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
-      if (mutation.type === "attributes" && mutation.attributeName === "data-theme") {
+      if (
+        mutation.type === "attributes" &&
+        mutation.attributeName === "data-theme"
+      ) {
         updateGiscusTheme(baseUrl);
       }
     }
@@ -199,9 +225,15 @@ async function initRoot(root: HTMLElement) {
     document
       .querySelector<HTMLMetaElement>("meta[name='x-tkdodo-post-bluesky']")
       ?.content?.trim() ?? "";
-  const hasPotentialBluesky = Boolean(blueskyUrl) && Boolean(parseBlueskyPostUrl(blueskyUrl));
+  const hasPotentialBluesky =
+    Boolean(blueskyUrl) && Boolean(parseBlueskyPostUrl(blueskyUrl));
 
-  if (!hasPotentialBluesky || !elements.blueskyTab || !elements.blueskyPanel || !elements.blueskyMount) {
+  if (
+    !hasPotentialBluesky ||
+    !elements.blueskyTab ||
+    !elements.blueskyPanel ||
+    !elements.blueskyMount
+  ) {
     hideBluesky(elements);
     setTabState(elements, "github");
     return;

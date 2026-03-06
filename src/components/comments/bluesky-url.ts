@@ -9,7 +9,9 @@ export function parseBlueskyPostUrl(url: string): ParsedBlueskyPostUrl | null {
   }
 
   if (parsed.hostname !== "bsky.app") return null;
-  const match = parsed.pathname.match(/^\/profile\/([^/]+)\/post\/([^/?#]+)\/?$/);
+  const match = parsed.pathname.match(
+    /^\/profile\/([^/]+)\/post\/([^/?#]+)\/?$/,
+  );
   if (!match) return null;
 
   const actor = decodeURIComponent(match[1] ?? "").trim();

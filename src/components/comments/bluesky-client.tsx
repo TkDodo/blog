@@ -25,7 +25,9 @@ function pluralize(count: number, singular: string, plural = `${singular}s`) {
   return `${count} ${count === 1 ? singular : plural}`;
 }
 
-function groupRepliesByThread<T extends { depth: number }>(replies: T[]): T[][] {
+function groupRepliesByThread<T extends { depth: number }>(
+  replies: T[],
+): T[][] {
   const groups: T[][] = [];
   let current: T[] = [];
 
@@ -219,7 +221,10 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
                           loading="lazy"
                         />
                       ) : (
-                        <div className="h-9 w-9 rounded-full bg-ic-bg" aria-hidden="true" />
+                        <div
+                          className="h-9 w-9 rounded-full bg-ic-bg"
+                          aria-hidden="true"
+                        />
                       )}
                       <div className="min-w-0 text-sm">
                         <span className="font-semibold text-text">
@@ -235,7 +240,9 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
                             {formatRelativeTime(reply.createdAt)}
                           </a>
                         ) : (
-                          <span className="text-subtle">{formatRelativeTime(reply.createdAt)}</span>
+                          <span className="text-subtle">
+                            {formatRelativeTime(reply.createdAt)}
+                          </span>
                         )}
                       </div>
                     </div>
@@ -277,9 +284,13 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
                             />
                           ) : null}
                           <div className="space-y-1 p-3 text-sm">
-                            <p className="line-clamp-1 text-primary">{reply.externalEmbed.uri}</p>
+                            <p className="line-clamp-1 text-primary">
+                              {reply.externalEmbed.uri}
+                            </p>
                             {reply.externalEmbed.title ? (
-                              <p className="line-clamp-1 text-text">{reply.externalEmbed.title}</p>
+                              <p className="line-clamp-1 text-text">
+                                {reply.externalEmbed.title}
+                              </p>
                             ) : null}
                             {reply.externalEmbed.description ? (
                               <p className="line-clamp-2 text-subtle">

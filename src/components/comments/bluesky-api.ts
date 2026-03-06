@@ -155,15 +155,14 @@ function toReplyItem(
     createdAt: record.createdAt,
     likeCount: toNumber(post.likeCount),
     segments: segmentPostText(text, record.facets),
-    externalEmbed:
-      external?.uri
-        ? {
-            uri: external.uri,
-            title: external.title,
-            description: external.description,
-            thumb: external.thumb,
-          }
-        : undefined,
+    externalEmbed: external?.uri
+      ? {
+          uri: external.uri,
+          title: external.title,
+          description: external.description,
+          thumb: external.thumb,
+        }
+      : undefined,
   };
 }
 
