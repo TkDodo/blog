@@ -17,6 +17,25 @@ interface CommentsRootElements {
   giscusRoot: HTMLElement;
 }
 
+const COMMENTS_TAB_PREFERENCE_KEY = "tkdodo-comments-tab-preference";
+
+function readTabPreference(): "github" | "bluesky" | null {
+  try {
+    const value = window.localStorage.getItem(COMMENTS_TAB_PREFERENCE_KEY);
+    return value === "github" || value === "bluesky" ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeTabPreference(tab: "github" | "bluesky") {
+  try {
+    window.localStorage.setItem(COMMENTS_TAB_PREFERENCE_KEY, tab);
+  } catch {
+    // Ignore storage failures (private mode / blocked storage).
+  }
+}
+
 function getTheme(): "light" | "dark" {
   return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
 }
@@ -200,8 +219,14 @@ async function initRoot(root: HTMLElement) {
     }
   };
 
-  const activateTab = async (tab: "github" | "bluesky") => {
+  const activateTab = async (
+    tab: "github" | "bluesky",
+    options?: { persist?: boolean },
+  ) => {
     setTabState(elements, tab);
+    if (options?.persist) {
+      writeTabPreference(tab);
+    }
     if (tab === "bluesky") {
       await loadBluesky();
     }
@@ -213,10 +238,10 @@ async function initRoot(root: HTMLElement) {
     );
 
   elements.githubTab.addEventListener("click", () => {
-    void activateTab("github");
+    void activateTab("github", { persist: true });
   });
   elements.blueskyTab.addEventListener("click", () => {
-    void activateTab("bluesky");
+    void activateTab("bluesky", { persist: true });
   });
 
   elements.tabList.addEventListener("keydown", (event) => {
@@ -234,7 +259,7 @@ async function initRoot(root: HTMLElement) {
       nextTab.focus();
       const tabName =
         nextTab.dataset.commentsTab === "bluesky" ? "bluesky" : "github";
-      await activateTab(tabName);
+      await activateTab(tabName, { persist: true });
     };
 
     if (event.key === "ArrowRight") {
@@ -268,11 +293,16 @@ async function initRoot(root: HTMLElement) {
       event.preventDefault();
       const tabName =
         target.dataset.commentsTab === "bluesky" ? "bluesky" : "github";
-      void activateTab(tabName);
+      void activateTab(tabName, { persist: true });
     }
   });
 
-  setTabState(elements, "github");
+  const preferredTab = readTabPreference();
+  if (preferredTab === "bluesky") {
+    void activateTab("bluesky");
+  } else {
+    setTabState(elements, "github");
+  }
 }
 
 function initAllRoots() {
