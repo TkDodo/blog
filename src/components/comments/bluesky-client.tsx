@@ -110,7 +110,7 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
   const replies = query.data?.status === "ok" ? query.data.data.replies : [];
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 text-sm md:text-base">
       {isInitialLoading ? (
         <BlueskyHeaderSkeleton />
       ) : (
