@@ -3,6 +3,7 @@ title: React Query Selectors, Supercharged
 description: How to get the most out of select, sprinkled with some TypeScript tips.
 date: 2025-08-04
 banner: ./supercharged.jpg
+bluesky: https://bsky.app/profile/tkdodo.eu/post/3lvlibjf7c22s
 tags:
   - ReactJs
   - React Query
@@ -68,7 +69,7 @@ In my opinion, they are, the most explicit way to describe which data you want t
 
 Let's say we fetch some product data from an API of ours:
 
-```ts:title=productOptions
+```ts title="productOptions"
 const productOptions = (id: string) => {
   return queryOptions({
     queryKey: ['product', id],
@@ -79,7 +80,7 @@ const productOptions = (id: string) => {
 
 and we want to create a component that only renders the product title
 
-```tsx:title=ProductTitle
+```tsx title="ProductTitle"
 function ProductTitle({ id }: Props) {
   const productQuery = useSuspenseQuery(productOptions(id))
 
@@ -93,7 +94,7 @@ Of course, an occasional re-render of this simple component just because somethi
 
 That's where `select` can help: Instead of subscribing our component to all product data, we're gonna pick the field (or fields) we're interested in:
 
-```tsx:title=select-title {4}
+```tsx title="select title" {4}
 function ProductTitle({ id }: Props) {
   const productTitleQuery = useSuspenseQuery({
     ...productOptions(id),
@@ -110,7 +111,7 @@ Even better - we can also "pick" multiple properties if we want to, and we don't
 
 In essence, this means code like this will also work as you'd expect:
 
-```tsx:title=pick-multiple-values {4-7}
+```tsx title="pick multiple values" {4-7}
 function Product({ id }: Props) {
   const productQuery = useSuspenseQuery({
     ...productOptions(id),
@@ -139,8 +140,8 @@ However, this only works if you let type inference do it's magic 🪄, which mea
 
 This is relatively easy to adhere to, but brings one question: How can I write a reusable abstraction in TypeScript that includes `select`? What type sorcery is needed to e.g. make `productOptions` that get `select` as an argument?
 
-```ts:title=how-do-I-type-select? {5-6}
-const productOptions = (id:string, select) => {
+```ts title="how do I type select?" {5-6}
+const productOptions = (id: string, select) => {
   return queryOptions({
     queryKey: ['product', id],
     queryFn: () => fetchProduct(id),
@@ -154,10 +155,10 @@ My usual answer is - don't do it! We've built [the Query Options API](the-query-
 
 But TkDodo, what if I _really_ want it? Okay, fine, if you must do this, it's a bit more involved, especially if you want `select` to be optional:
 
-```ts:title=select-abstraction {3}
+```ts title="select abstraction" {3}
 const productOptions = <TData = ProductData>(
   id: string,
-  select?: (data: ProductData) => TData
+  select?: (data: ProductData) => TData,
 ) => {
   return queryOptions({
     queryKey: ['product', id],
@@ -173,7 +174,7 @@ The trick here is to add a type parameter `TData` that defaults to whatever your
 
 Since we're already optimizing, why not take it one step further and assume that our function we run in `select` is _really_ expensive. Like, maybe we're looping through a large product list and calculate the average rating for each product based on thousands of user reviews, filtering out invalid entries, and sorting the top-rated items — all in one pass. We'll call it `expensiveSuperTransformation` from now on. If we write our code normally with `select`, here's what we get:
 
-```tsx:title=expensiveSuperTransformation {4}
+```tsx title="expensiveSuperTransformation" {4}
 function ProductList({ filters }: Props) {
   const productsQuery = useSuspenseQuery({
     ...productListOptions(filters),
@@ -202,7 +203,7 @@ This should work fine, but there's one catch: Our `expensiveSuperTransformation`
 
 Inline functions though are always newly created, on each render, so that optimization doesn't apply. This is actually a good feature, because it means we can close over additional props and don't have to worry about stale results:
 
-```tsx:title=minRating {4}
+```tsx title="minRating" {4}
 function ProductList({ filters, minRating }: Props) {
   const productsQuery = useSuspenseQuery({
     ...productListOptions(filters),
@@ -231,13 +232,13 @@ The irony of this isn't lost on me, given that I've just written an article abou
 
 </Aside>
 
-```tsx:title=select-useCallback {4-7}
+```tsx title="select useCallback" {4-7}
 function ProductList({ filters, minRating }: Props) {
   const productsQuery = useSuspenseQuery({
     ...productListOptions(filters),
     select: React.useCallback(
       (data) => expensiveSuperTransformation(data, minRating),
-      [minRating]
+      [minRating],
     ),
   })
 
@@ -253,7 +254,7 @@ function ProductList({ filters, minRating }: Props) {
 
 Now, we'll get a stable reference passed to `select` unless `minRating` changes, and that's exactly what we want. And if we don't have any dependencies, we can even just move the function outside of our component to make it stable - no `useCallback` with empty dependency array necessary:
 
-```tsx:title=stable-select {1-2}
+```tsx title="stable select" {1-2}
 const select = (data: Array<Product>) =>
   expensiveSuperTransformation(data)
 
@@ -287,11 +288,11 @@ We add more memoization, of course!
 
 We really just want to memoize our `expensiveSuperTransformation` by its inputs, but this has to happen outside of React Query, because React Query caches this per observer. So, we can bring in a library like [fast memoize](https://www.npmjs.com/fast-memoize) that'll do just that:
 
-```tsx:title=fast-memoize {3-5}
+```tsx title="fast memoize" {3-5}
 import memoize from 'fast-memoize'
 
 const select = memoize((data: Array<Product>) =>
-  expensiveSuperTransformation(data)
+  expensiveSuperTransformation(data),
 )
 
 function ProductList({ filters }: Props) {

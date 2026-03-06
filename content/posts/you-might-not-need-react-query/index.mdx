@@ -3,6 +3,7 @@ title: You Might Not Need React Query
 description: React Query is a great library, but like any tool, you should choose it for the right problem
 date: 2023-05-20
 banner: ./trees.jpeg
+bluesky: https://bsky.app/profile/tkdodo.eu/post/3jw6fqgqhzr2j
 tags:
   - ReactJs
   - React Query
@@ -96,10 +97,10 @@ Times are evolving, things get better. Even though it might look like things are
 
 React is still just a library to render components, but with Server Components, it now offers a new application architecture where you can render them ahead of time, on the server. This could be during build time, or at runtime, where they allow access to data without building an API that needs to be queried from the client:
 
-```jsx:title=server-component
+```jsx title="server component"
 export default async function Page() {
   const data = await fetch(
-    `https://api.github.com/repos/tanstack/react-query`
+    `https://api.github.com/repos/tanstack/react-query`,
   )
 
   return (

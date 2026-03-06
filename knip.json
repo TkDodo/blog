@@ -15,10 +15,5 @@
   "compilers": {
     "mdx": true
   },
-  "ignoreDependencies": [
-    "@tailwindcss/typography",
-    "@tanstack/react-query",
-    "shiki",
-    "tailwindcss"
-  ]
+  "ignoreDependencies": ["@tailwindcss/typography", "shiki", "tailwindcss"]
 }

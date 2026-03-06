@@ -17,7 +17,7 @@ import rehypeSlug from "rehype-slug";
 import remarkDirective from "remark-directive";
 import remarkSmartypants from "remark-smartypants";
 import { SITE } from "./src/constants";
-import { remarkAsides, remarkLegacyCodeFenceInfo } from "./src/remark";
+import { remarkAsides } from "./src/remark";
 import { pagefindIntegration } from "./src/utils";
 
 export default defineConfig({
@@ -76,7 +76,6 @@ export default defineConfig({
       [remarkSmartypants, { backticks: false }],
       remarkDirective,
       remarkAsides,
-      remarkLegacyCodeFenceInfo,
       [remarkSandpack, { componentName: ["Playground"] }],
     ],
     rehypePlugins: [

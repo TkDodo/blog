@@ -81,7 +81,7 @@ This is a _very_ important concept that cannot be emphasized enough, and it's al
 
 I have a query, it fetches some data. Now I click this button and I want to refetch, but with different parameters. I've seen many attempts that look like this:
 
-```jsx:title=imperative-refetch
+```jsx title="imperative refetch"
 function Component() {
   const { data, refetch } = useQuery({
     queryKey: ['todos'],
@@ -99,7 +99,7 @@ That's not what `refetch` is for - it's for refetching _with the same parameters
 
 If you have some _state_ that changes your data, all you need to do is to put it in the Query Key, because React Query will trigger a refetch automatically whenever the key changes. So when you want to apply your filters, just change your _client state_:
 
-```jsx:title=query-key-drives-the-query
+```jsx title="query key drives the query"
 function Component() {
   const [filters, setFilters] = React.useState()
   const { data } = useQuery({
@@ -145,7 +145,7 @@ The _queries_ file will contain everything React Query related. I usually only e
 
 Yes, Query Keys can be a string, too, but to keep things unified, I like to always use Arrays. React Query will internally convert them to an Array anyhow, so:
 
-```ts:title=always-use-array-keys
+```ts title="always use array keys"
 // 🚨 will be transformed to ['todos'] anyhow
 useQuery({ queryKey: 'todos' })
 // ✅
@@ -168,7 +168,7 @@ Structure your Query Keys from _most generic_ to _most specific_, with as many l
 With that structure, I can invalidate everything todo related with `['todos']`, all the lists or all the details, as well as target one specific list if I know the exact key. [Updates from Mutation Responses
 ](https://react-query.tanstack.com/guides/updates-from-mutation-responses) become a lot more flexible with this, because you can target all lists if necessary:
 
-```js:title=updates-from-mutation-responses
+```js title="updates from mutation responses"
 function useUpdateTitle() {
   return useMutation({
     mutationFn: updateTitle,
@@ -176,14 +176,14 @@ function useUpdateTitle() {
       // ✅ update the todo detail
       queryClient.setQueryData(
         ['todos', 'detail', newTodo.id],
-        newTodo
+        newTodo,
       )
 
       // ✅ update all the lists that contain this todo
       queryClient.setQueriesData(['todos', 'list'], (previous) =>
         previous.map((todo) =>
-          todo.id === newTodo.id ? newTodo : todo
-        )
+          todo.id === newTodo.id ? newTodo : todo,
+        ),
       )
     },
   })
@@ -192,19 +192,19 @@ function useUpdateTitle() {
 
 This might not work if the structure of lists and details differ a lot, so alternatively, you can also of course just invalidate all the lists instead:
 
-```js:title=invalidate-all-lists {10-13}
+```js title="invalidate all lists" {10-13}
 function useUpdateTitle() {
   return useMutation({
     mutationFn: updateTitle,
     onSuccess: (newTodo) => {
       queryClient.setQueryData(
         ['todos', 'detail', newTodo.id],
-        newTodo
+        newTodo,
       )
 
       // ✅ just invalidate all the lists
       queryClient.invalidateQueries({
-        queryKey: ['todos', 'list']
+        queryKey: ['todos', 'list'],
       })
     },
   })
@@ -213,7 +213,7 @@ function useUpdateTitle() {
 
 If you know which list you are currently on, e.g. by reading the filters from the url, and can therefore construct the exact Query Key, you can also combine this two methods and call `setQueryData` on your list and invalidate all the others:
 
-```js:title=combine {14-28}
+```js title="combine" {14-28}
 function useUpdateTitle() {
   // imagine a custom hook that returns
   // the current filters, stored in the url
@@ -224,7 +224,7 @@ function useUpdateTitle() {
     onSuccess: (newTodo) => {
       queryClient.setQueryData(
         ['todos', 'detail', newTodo.id],
-        newTodo
+        newTodo,
       )
 
       // ✅ update the list we are currently on
@@ -232,8 +232,8 @@ function useUpdateTitle() {
         ['todos', 'list', { filters }],
         (previous) =>
           previous.map((todo) =>
-            todo.id === newTodo.id ? newtodo : todo
-          )
+            todo.id === newTodo.id ? newtodo : todo,
+          ),
       )
 
       // 🥳 invalidate all the lists,
@@ -256,11 +256,12 @@ In the examples above, you can see that I've been manually declaring the Query K
 
 That's why I recommend one Query Key factory per feature. It's just a simple object with entries and functions that will produce query keys, which you can then use in your custom hooks. For the above example structure, it would look something like this:
 
-```ts:title=query-key-factory
+```ts title="query key factory"
 const todoKeys = {
   all: ['todos'] as const,
   lists: () => [...todoKeys.all, 'list'] as const,
-  list: (filters: string) => [...todoKeys.lists(), { filters }] as const,
+  list: (filters: string) =>
+    [...todoKeys.lists(), { filters }] as const,
   details: () => [...todoKeys.all, 'detail'] as const,
   detail: (id: number) => [...todoKeys.details(), id] as const,
 }
@@ -268,16 +269,16 @@ const todoKeys = {
 
 This gives me a lot of flexibility, as each level builds on top of another, but is still independently accessible:
 
-```ts:title=examples
+```ts title="examples"
 // 🕺 remove everything related
 // to the todos feature
 queryClient.removeQueries({
-  queryKey: todoKeys.all
+  queryKey: todoKeys.all,
 })
 
 // 🚀 invalidate all the lists
 queryClient.invalidateQueries({
-  queryKey: todoKeys.lists()
+  queryKey: todoKeys.lists(),
 })
 
 // 🙌 prefetch a single todo

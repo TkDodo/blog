@@ -43,7 +43,7 @@ Then, I can go back to the beginning and try to understand it.
 
 This is not the case in other languages, for example _scala_, where the initial value is the first parameter:
 
-```java:title=sum-a-list
+```java title="sum a list"
 val numbers = List(1, 2, 3)
 
 numbers.fold(0)(_ + _) // 6
@@ -53,7 +53,7 @@ numbers.fold(0)(_ + _) // 6
 
 Reduce is so mighty, you can implement all the other Array functions you are using on a daily basis with it:
 
-```js:title=map-with-reduce
+```js title="map with reduce"
 const mapWithReduce = (array, callback) =>
   array.reduce((accumulator, currentValue, index) => {
     accumulator[index] = callback(currentValue, index, array)
@@ -65,14 +65,14 @@ mapWithReduce([1, 2, 3], (value) => value * 2) // 2, 4, 6
 
 I have even seen people re-implement _join_ with reduce:
 
-```js:title=join-with-reduce
+```js title="join with reduce"
 const joinWithReduce = (array, delimiter) =>
   array.reduce(
     (accumulator, currentValue, index) =>
       accumulator +
       currentValue +
       (index === array.length - 1 ? '' : delimiter),
-    ''
+    '',
   )
 
 joinWithReduce(['foo', 'bar', 'baz'], ';') //foo;bar;baz
@@ -107,16 +107,23 @@ Yes, there is no easy native way to do that, and not even popular util libraries
 In one project, we frequently had the need for such transformations, so we made our own util for it.
 The implementation is something like this:
 
-```ts:title=to-object
+```ts title="to object"
 export const toObject = <T, K extends string | number | symbol, V>(
   array: ReadonlyArray<T>,
-  iteratee: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
+  iteratee: (
+    element: T,
+    index: number,
+    array: ReadonlyArray<T>,
+  ) => [K, V],
 ): Record<K, V> =>
-  array.reduce((result, element, index) => {
-    const [key, value] = iteratee(element, index, array)
-    result[key] = value
-    return result
-  }, {} as Record<K, V>)
+  array.reduce(
+    (result, element, index) => {
+      const [key, value] = iteratee(element, index, array)
+      result[key] = value
+      return result
+    },
+    {} as Record<K, V>,
+  )
 
 toObject(['foo', 'bar', 'baz'], (element) => [
   'key-' + element,
@@ -150,18 +157,25 @@ and found it to be a bottleneck.
 
 Talking about performance and linear iterations, I've learned the hard way _not_ to do this when working with reduce:
 
-```ts:title=immutability-🎉 {7-10}
+```ts title="immutability 🎉" {7-10}
 export const toObject = <T, K extends string | number | symbol, V>(
   array: ReadonlyArray<T>,
-  iteratee: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
+  iteratee: (
+    element: T,
+    index: number,
+    array: ReadonlyArray<T>,
+  ) => [K, V],
 ): Record<K, V> =>
-  array.reduce((result, element, index) => {
-    const [key, value] = iteratee(element, index, array)
-    return {
-      ...result,
-      [key]: value,
-    }
-  }, {} as Record<K, V>)
+  array.reduce(
+    (result, element, index) => {
+      const [key, value] = iteratee(element, index, array)
+      return {
+        ...result,
+        [key]: value,
+      }
+    },
+    {} as Record<K, V>,
+  )
 ```
 
 Why should I be _dirty_ and mutate the result, when I can be super fancy instead and create a new object every time. 🤔🤦‍

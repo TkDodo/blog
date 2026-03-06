@@ -47,7 +47,7 @@ When I first read about [xstate/store](https://stately.ai/docs/xstate-store), I 
 
 Let's take a look at an example, and for easy comparison, I'll be using a similar example as the one from my [working with zustand](working-with-zustand) article:
 
-```ts:title=example
+```ts title="example"
 import { createStore } from '@xstate/store'
 import { useSelector } from '@xstate/store/react'
 
@@ -60,7 +60,8 @@ const store = createStore({
   // transitions
   on: {
     increasePopulation: {
-      bears: (context, event: { by: number }) => context.bears + event.by,
+      bears: (context, event: { by: number }) =>
+        context.bears + event.by,
     },
     eatFish: {
       fish: (context) => context.fish - 1,
@@ -95,7 +96,7 @@ The store has a natural split between state and actions, which is something that
 
 Speaking of updates: if we don't select actions from the store - how do we trigger a transition? Quite simply with `store.send`:
 
-```tsx:title=transitions
+```tsx title="transitions"
 function App() {
   const bears = useBears()
 

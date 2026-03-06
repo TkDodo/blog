@@ -52,7 +52,7 @@ I think the way most people approached the switch from class based state managem
 
 Before:
 
-```jsx:title=class-based-set-state
+```jsx title="class based set state"
 class Names extends React.Component {
   state = {
     firstName: '',
@@ -82,7 +82,7 @@ class Names extends React.Component {
 
 After:
 
-```jsx:title=separate-use-states
+```jsx title="separate use states"
 const Names = () => {
   const [firstName, setFirstName] = React.useState('')
   const [lastName, setLastName] = React.useState('')
@@ -108,7 +108,7 @@ But this isn't always the case. Sometimes, you might have state that actually up
 
 One example that comes to mind is storing mouse coordinates (x/y). Using two _useStates_ seems super weird for something that always updates together, so I would use a single state object here:
 
-```jsx:title=single-state-object
+```jsx title="single state object"
 const App = () => {
   const [{ x, y }, setCoordinates] = React.useState({ x: 0, y: 0 })
 
@@ -128,13 +128,15 @@ const App = () => {
 
 I think a single useState object also works fine for a simple generic form, where the structure might be different each time you're using it, and you only want to update one field at the time. You can't really have multiple _useStates_ for that, so a rudimentary custom hook implementation could look something like this:
 
-```tsx:title=use-form
+```tsx title="use form"
 const useForm = <State extends Record<string, unknown>>(
-  initialState: State
+  initialState: State,
 ) => {
   const [values, setValues] = React.useState(initialState)
-  const update = <Key extends keyof State>(name: Key, value: State[Key]) =>
-    setValues((form) => ({ ...form, [name]: value }))
+  const update = <Key extends keyof State>(
+    name: Key,
+    value: State[Key],
+  ) => setValues((form) => ({ ...form, [name]: value }))
 
   return [values, update] as const
 }
@@ -154,7 +156,7 @@ Consider using a single state object over calling multiple _useState_ setters in
 
 I believe [useReducer](https://reactjs.org/docs/hooks-reference.html#usereducer) is still heavily underused. The main thinking around _useReducer_ seems to be that you only need it for "complex state". As I've written previously, it's pretty good for [toggling state](things-to-know-about-use-state#bonus2-toggling-state-with-usereducer):
 
-```js:title=toggle-with-use-reducer
+```js title="toggle with use reducer"
 const [value, toggleValue] = React.useReducer(previous => !previous, true)
 
 <button onClick={toggleValue}>Toggle</button>
@@ -162,7 +164,7 @@ const [value, toggleValue] = React.useReducer(previous => !previous, true)
 
 It's also an often used way to implement _forceUpdate_ (which almost every global state manager needs to inform subscribers about state changes if that state is kept outside of React):
 
-```js:title=force-update-with-use-reducer
+```js title="force update with use reducer"
 const forceUpdate = React.useReducer((state) => state + 1, 0)[1]
 ```
 
@@ -190,7 +192,7 @@ Modelling actions as events is something that I really want to emphasize on, bec
 
 To illustrate the concept, let's have a quick look at the standard _counter_ example:
 
-```jsx:title=event-driven-reducer
+```jsx title="event driven reducer"
 const reducer = (state, action) => {
   // ✅ ui only dispatches events, logic is in the reducer
   switch (action) {
@@ -218,7 +220,7 @@ The logic is not very sophisticated (adding 1 or subtracting 1), but it's still 
 
 All of that would happen _inside_ the reducer. Compare that to an example where the reducer is "dumb" and just accepts the new number:
 
-```jsx:title=🚨-dumb-reducer
+```jsx title="🚨 dumb reducer"
 const reducer = (state, action) => {
   switch (action.type) {
     // 🚨 dumb reducer that doesn't do anything, logic is in the ui
@@ -233,10 +235,14 @@ function App() {
   return (
     <div>
       Count: {count}
-      <button onClick={() => dispatch({ type: 'set', value: count + 1 })}>
+      <button
+        onClick={() => dispatch({ type: 'set', value: count + 1 })}
+      >
         Increment
       </button>
-      <button onClick={() => dispatch({ type: 'set', value: count - 1 })}>
+      <button
+        onClick={() => dispatch({ type: 'set', value: count - 1 })}
+      >
         Decrement
       </button>
     </div>
@@ -250,7 +256,7 @@ This works the same, but is not as extensible as the previous example. So genera
 
 Another great trait of reducers is that you can inline them, or close over props. This comes in very handy if you need access to props or server state (e.g. coming from a [useQuery](https://react-query.tanstack.com/) hook) _inside_ your reducer. Instead of "copying" these things into the reducer by using the state initializer, you can pass it to a function:
 
-```js:title=reducer-with-props
+```js title="reducer with props"
 const reducer = (data) => (state, action) => {
   // ✅ you'll always have access to the latest
   // server state in here
@@ -268,7 +274,7 @@ So you'd wind up creating effects that try to sync the state into the reducer, w
 
 Extending our event driven counter example where we fetch an _amount_ parameter from an endpoint would work pretty well with this approach. And of course, I'd use a custom hook for that:
 
-```jsx:title=use-counter-state
+```jsx title="use counter state"
 const reducer = (amount) => (state, action) => {
   switch (action) {
     case 'increment':
@@ -279,7 +285,10 @@ const reducer = (amount) => (state, action) => {
 }
 
 const useCounterState = () => {
-  const { data } = useQuery({ queryKey: ['amount'], queryFn: fetchAmount })
+  const { data } = useQuery({
+    queryKey: ['amount'],
+    queryFn: fetchAmount,
+  })
   return React.useReducer(reducer(data ?? 1), 0)
 }
 

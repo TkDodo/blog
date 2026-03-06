@@ -33,7 +33,7 @@ If you add an _index signature_ to an object, you tell TypeScript that you don't
 you only know which _type_ the key will have.
 This is very useful if you build objects where you really don't know the keys, for example, normalized objects where the keys are ids of database records:
 
-```ts:title=index-signature
+```ts title="index signature"
 type Widget = {
   id: string
   title: string
@@ -50,7 +50,7 @@ type WidgetIndex = {
 So naturally, when you try to retrieve a Widget from that index via it's id, the access _should_ yield `Widget | undefined`.
 But alas, it does not:
 
-```ts:title=unsafe-access {6-11}
+```ts title="unsafe access" {6-11}
 type Widget = {
   id: string
   title: string
@@ -74,7 +74,7 @@ And it gets worse. Even if you, as a responsible developer, anticipate that the 
 and thus implement a fallback, TypeScript will completely ignore it and _not_ type check it at all, because on type level, the index
 access will _always_ return a value:
 
-```ts:title=unsafe-fallback {11}
+```ts title="unsafe fallback" {11}
 type Widget = {
   id: string
   title: string
@@ -97,7 +97,7 @@ const title: string = widgetIndex['helloWorld']?.title ?? {
 Like many others, I believe this to be a big flaw of the language itself.
 But luckily, you can always implement your own types and use them instead of _Record_:
 
-```ts:title=safe-record
+```ts title="safe record"
 type SafeRecord<Key extends string | number | symbol, Value> = Record<
   Key,
   Value | undefined
@@ -114,7 +114,7 @@ values to actually be undefined. I still advocate for using SafeRecords whenever
 
 Well, Arrays are just as affected. After all, Arrays are (mostly) just objects where the index is a number.
 
-```ts:title=unsafe-arrays
+```ts title="unsafe arrays"
 const strings: Array<string> = ['one', 'two', 'three']
 
 strings[999].toUpperCase()
@@ -140,10 +140,10 @@ It basically means: A list with a length of at least one, so accessing the first
 TypeScript 4.0 introduced [variadic tuple types](https://devblogs.microsoft.com/typescript/announcing-typescript-4-0/#variadic-tuple-types),
 which let us tackle that specific problem:
 
-```ts:title=non-empty-array
+```ts title="non empty array"
 type NonEmptyArray<T> = [T, ...Array<T>]
 const isNonEmpty = <T extends unknown>(
-  array: Array<T>
+  array: Array<T>,
 ): array is NonEmptyArray<T> => array.length > 0
 ```
 
@@ -153,15 +153,16 @@ that assures an Array is really non-empty.
 So if you want to force people to give you a non-empty Array so that you can safely access the first value,
 just type your function with a _NonEmptyArray_:
 
-```ts:title=forced-empty-check {7-15}
+```ts title="forced empty check" {7-15}
 type NonEmptyArray<T> = [T, ...Array<T>]
 const isNonEmpty = <T extends unknown>(
-  array: Array<T>
+  array: Array<T>,
 ): array is NonEmptyArray<T> => array.length > 0
 
 const strings: Array<string> = ['one', 'two', 'three']
 
-const firstToUpper = (list: NonEmptyArray<string>) => list[0].toUpperCase()
+const firstToUpper = (list: NonEmptyArray<string>) =>
+  list[0].toUpperCase()
 
 // this will type-err
 firstToUpper(strings)

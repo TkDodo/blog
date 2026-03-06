@@ -90,7 +90,7 @@ So if you want to optimize for readability, try to avoid abbreviations whenever 
 
 It's fine if the scope is small:
 
-```ts:title=small-scope-abbreviation
+```ts title="small scope abbreviation"
 posts.map((p) => p.id)
 ```
 
@@ -118,7 +118,7 @@ If you cannot come up with a name, prefer inlining.
 Lastly, if you are using _TypeScript_, types will nicely be inferred for you, which takes away a bunch of complexity.
 Let's take the above map example:
 
-```ts:title=extracted-mapping function
+```ts title="extracted mapping function"
 type Post = { id: string; title: string }
 
 const getPostId = (post: Post) => post.id
@@ -139,13 +139,13 @@ I would recommend inlining functions if:
 This comes up a lot with event handlers in React.
 And no, inline functions are _not_ bad for performance.
 
-```jsx:title=inlined-event-handler
+```jsx title="inlined event handler"
 <button onClick={() => login({ username, password })}>Login</button>
 ```
 
 ## Name things for what they represent
 
-```js:title=twenty
+```js title="twenty"
 export const TWENTY = 20
 ```
 
@@ -157,7 +157,7 @@ A single source of truth, so that you only have one place to change if you need 
 The problem is that the above constant is named after what it _is_, not what it _represents_.
 We cannot just use it for various functions, because the twenties might have different meanings:
 
-```js:title=multiple-twenties
+```js title="multiple twenties"
 const calculateTaxes = (amount) => amount * percentage(TWENTY)
 const sessionTimeout = minutes(TWENTY)
 ```
@@ -171,7 +171,7 @@ they actually need to be the same thing.
 
 I think this would be a much better name:
 
-```js:title=sales-tax
+```js title="sales tax"
 const SALES_TAX = 20
 const calculateTaxes = (amount) => amount * percentage(SALES_TAX)
 ```
@@ -181,7 +181,7 @@ Now we know what this one twenty means. 🥳
 Let's take a different example.
 Assume we have the following condition that we want to name:
 
-```jsx:title=the-condition
+```jsx title="the condition"
 const ??? = status === 'fetching' && !data
 
 ...
@@ -230,7 +230,7 @@ without having to change the name.
 
 The same applies when you create an event handler, and you call it _handleClick_:
 
-```jsx:title=handleClick
+```jsx title="handleClick"
 const handleClick = () => {
   login(
     { userName, password },

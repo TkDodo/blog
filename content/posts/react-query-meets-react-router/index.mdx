@@ -76,7 +76,7 @@ The router however is the first component that always knows which page you are t
 
 As an example (yes, this is from the tutorial mentioned before. Credits go to Ryan Florence), suppose you have a list of contacts. If you click on one of them, you show the contact details:
 
-```jsx:title=src/routes/contact.jsx {4-6,10-11}
+```jsx title="src/routes/contact.jsx" {4-6,10-11}
 import { useLoaderData } from 'react-router-dom'
 import { getContact } from '../contacts'
 
@@ -92,7 +92,7 @@ export default function Contact() {
 }
 ```
 
-```jsx:title=src/main.jsx {1,15-16}
+```jsx title="src/main.jsx" {1,15-16}
 import Contact, { loader as contactLoader } from './routes/contact'
 
 const router = createBrowserRouter([
@@ -131,7 +131,7 @@ What if we can use the loader to pre-fill the React Query Cache, but still `useQ
 
 Let's try to move the example in that direction:
 
-```jsx:title=src/routes/contacts.jsx {10-11,15-19,24-25}
+```jsx title="src/routes/contacts.jsx" {10-11,15-19,24-25}
 import { useQuery } from '@tanstack/react-query'
 import { getContact } from '../contacts'
 
@@ -156,12 +156,14 @@ export const loader =
 export default function Contact() {
   const params = useParams()
   // ⬇️ useQuery as per usual
-  const { data: contact } = useQuery(contactDetailQuery(params.contactId))
+  const { data: contact } = useQuery(
+    contactDetailQuery(params.contactId),
+  )
   // render some jsx
 }
 ```
 
-```jsx:title=src/main.jsx {15-16}
+```jsx title="src/main.jsx" {15-16}
 const queryClient = new QueryClient()
 
 const router = createBrowserRouter([
@@ -200,7 +202,7 @@ We want the loader to wait for our data to be ready and return it to get a good 
 
 An alternative approach would be to set a `staleTime` for `fetchQuery`:
 
-```jsx:title=alternative-loader {6}
+```jsx title="alternative loader" {6}
 export const loader =
   (queryClient) =>
   ({ params }) =>
@@ -230,7 +232,7 @@ Thanks to [Matt Pocock](https://twitter.com/mattpocockuk) and his [contribution]
 
 And where would we get `initialData` from? `useLoaderData` of course! We can even infer the type from the loader function:
 
-```tsx:title=initial-data {2-3, 8}
+```tsx title="initial data" {2-3, 8}
 export default function Contact() {
   const initialData = useLoaderData() as Awaited<
     ReturnType<ReturnType<typeof loader>>
@@ -251,7 +253,7 @@ But it will nicely narrow the type of the `useQuery` result, which is what we wa
 
 The next piece of the puzzle involves query invalidation. Here is how an action would look without React Query, straight from the tutorial (yes, this is all it takes to perform an update):
 
-```jsx:title=src/routes/edit.jsx
+```jsx title="src/routes/edit.jsx"
 export const action = async ({ request, params }) => {
   const formData = await request.formData()
   const updates = Object.fromEntries(formData)
@@ -262,7 +264,7 @@ export const action = async ({ request, params }) => {
 
 Actions invalidate loaders, but because we've set up our loaders to always return data from the cache, we won't see any updates unless we somehow invalidate the cache. It's just one line of code really:
 
-```jsx:title=src/routes/edit.jsx {7}
+```jsx title="src/routes/edit.jsx" {7}
 export const action =
   (queryClient) =>
   async ({ request, params }) => {
@@ -280,14 +282,14 @@ The [fuzzy matching of invalidateQueries](https://tanstack.com/query/v4/docs/gui
 
 However, this will make our action function take longer and block the transition. Would we not be able to trigger the invalidation, then redirect to the detail view, show the stale data and then let it update in the background once the new data is available? Of course we can: Just leave out the `await` keyword:
 
-```jsx:title=src/routes/edit.jsx {7}
+```jsx title="src/routes/edit.jsx" {7}
 export const action =
   (queryClient) =>
   async ({ request, params }) => {
     const formData = await request.formData()
     const updates = Object.fromEntries(formData)
     await updateContact(params.contactId, updates)
-    queryClient.invalidateQueries({ queryKey: ["contacts"] });
+    queryClient.invalidateQueries({ queryKey: ['contacts'] })
     return redirect(`/contacts/${params.contactId}`)
   }
 ```

@@ -3,6 +3,7 @@ title: My Open Source Origin Story
 description: A brief story of how I got into Open Source
 date: 2025-03-31
 banner: ./origin-story.jpg
+bluesky: https://bsky.app/profile/tkdodo.eu/post/3llnzt5mukk2p
 tags:
   - Personal
   - Open Source
@@ -62,7 +63,7 @@ It took me some time to "level up" and do some code contributions myself. I had 
 
 In v3 of React Query, per default, every component would re-render when anything in the result changed:
 
-```ts:title=lots-of-renders
+```ts title="lots of renders"
 const { data } = useQuery({
   queryKey: ['todos'],
   queryFn: fetchTodos,
@@ -73,11 +74,11 @@ const { data } = useQuery({
 
 The way to opt-out of this behaviour was to manually pass `notifyOnChangeProps`:
 
-```ts:title=optimized {4}
+```ts title="optimized" {4}
 const { data } = useQuery({
   queryKey: ['todos'],
   queryFn: fetchTodos,
-  notifyOnChangeProps: ['data']
+  notifyOnChangeProps: ['data'],
 })
 ```
 

@@ -3,6 +3,7 @@ title: Omit for Discriminated Unions in TypeScript
 description: Why TypeScript’s built-in Omit breaks discriminated unions, and how a distributive version preserves them.
 date: 2025-11-24
 banner: ./omit.jpg
+bluesky: https://bsky.app/profile/tkdodo.eu/post/3m6f6i4i2222h
 tags:
   - TypeScript
   - ReactJs
@@ -38,7 +39,7 @@ You're probably aware that TypeScript has built-in utility types to help with co
 
 When building React components that are specific wrappers over lower-level primitives, `Omit` can be helpful when typing `Props`, as it can tie your implementation to the underlying one.
 
-```ts:title=SelectProps {7}
+```ts title="SelectProps" {7}
 type SelectProps = {
   onChange: (value: string) => void
   options: ReadonlyArray<SelectOption>
@@ -50,7 +51,7 @@ type UserSelectProps = Omit<SelectProps, 'options'>
 
 It basically says: I want all the props of the component I'm depending upon, _except_ this one thing (or multiple things). We can then build our `UserSelect` component by spreading props and setting the missing things ourselves:
 
-```tsx:title=UserSelect
+```tsx title="UserSelect"
 function UserSelect(props: UserSelectProps) {
   const users = useSuspenseQuery(usersQueryOptions)
 
@@ -66,7 +67,7 @@ There are also disadvantages: It can become harder to see which props a componen
 
 Let's add a new feature to `Select`: a `clearable` prop, which allows users to unselect the current value. If that happens, we'd want to trigger `onChange` with `null`. A first draft for types might look like this:
 
-```ts:title=clearable {2,5}
+```ts title="clearable" {2,5}
 type SelectProps = {
   onChange: (value: string | null) => void
   options: ReadonlyArray<SelectOption>
@@ -79,7 +80,7 @@ That works, but it introduces a new problem: all existing `Select` usages now er
 
 We'd really want to tell the type-checker: "If we pass `clearable`, `onChange` might get `null`, otherwise, it won't". [Discriminated Unions](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions) can help us with that:
 
-```ts:title=Discriminated-Union-Type
+```ts title="Discriminated Union Type"
 type BaseSelectProps = {
   options: ReadonlyArray<SelectOption>
   value: string | null
@@ -114,7 +115,7 @@ That made little sense to me when I read it the first time - after all, I'm just
 
 It started to make more sense once I inspected what my `UserSelectProps` now expands to:
 
-```ts:title=Expanded-UserSelectProps
+```ts title="Expanded UserSelectProps"
 type UserSelectProps = {
   onChange:
     | ((value: string | null) => void)
@@ -155,7 +156,7 @@ Yes - it is, and that's exactly the point. It's a <Emph>fake conditional type</E
 
 With that, we can create an `Omit` helper type that works better with our unions, simply by calling `Omit` in the true branch of such a fake conditional type:
 
-```ts:title=DistributiveOmit
+```ts title="DistributiveOmit"
 type DistributiveOmit<T, K extends keyof T> = T extends any
   ? Omit<T, K>
   : never
@@ -163,13 +164,13 @@ type DistributiveOmit<T, K extends keyof T> = T extends any
 
 Have a look at what happens if we apply this to our `UserSelectProps`:
 
-```ts:title=New-UserSelectProps
+```ts title="New UserSelectProps"
 type UserSelectProps = DistributiveOmit<SelectProps, 'options'>
 ```
 
 If we hover this type, it will expand to:
 
-```ts:title=New-Expanded-UserSelectProps
+```ts title="New Expanded UserSelectProps"
 type UserSelectProps =
   | Omit<ClearableSelectProps, 'options'>
   | Omit<UnclearableSelectProps, 'options'>
@@ -185,7 +186,7 @@ Additionally, there's one more benefit we've coded into our `DistributiveOmit` s
 
 If we look at the type signature of `Omit`:
 
-```ts:title=Omit
+```ts title="Omit"
 type Omit<T, K extends keyof any> = {
   [P in Exclude<keyof T, K>]: T[P]
 }

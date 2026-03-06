@@ -47,21 +47,21 @@ A barrel is a file that does nothing but re-export things from other files. Usua
 
 Now let's assume each file exports a single component. That means we can import those modules individually like so:
 
-```tsx:title=my-page.tsx
+```tsx title="my page.tsx"
 import { TabList } from '@/tab/tab-list'
 import { TabPanel } from '@/tab/tab-panel'
 ```
 
 Oftentimes, developers want to improve the code organization by providing a single interface to import everything tab related from. We would usually do that with a barrel file that re-exports those:
 
-```ts:title=tab/index.ts
+```ts title="tab/index.ts"
 export { TabList } from './tab-list'
 export { TabPanel } from './tab-panel'
 ```
 
 Because the file is named `index`, which can be omitted when importing, we get a seemingly cleared up usage site:
 
-```tsx:title=my-page.tsx
+```tsx title="my page.tsx"
 import { TabList, TabPanel } from '@/tab'
 ```
 
@@ -71,7 +71,7 @@ This not only seems a lot cleaner, it also means we can shift internal files aro
 
 Having a barrel file in a directory changes how we import depending on our current location. Let's extend our example by adding a `use-tab-state.ts` util. It's a custom hook that we're going to use inside our `TabPanel` component. Additionally, we want to export it for everyone to use, which is why we add it to our barrel file:
 
-```ts:title=tab/index.ts {3}
+```ts title="tab/index.ts" {3}
 export { TabList } from './tab-list'
 export { TabPanel } from './tab-panel'
 export { useTabState } from './use-tab-state'
@@ -79,7 +79,7 @@ export { useTabState } from './use-tab-state'
 
 So far, so good - consumers can import `useTabState` directly from the barrel file. However, what happens if we are inside `TabPanel` and we import `useTabState`? It depends on how we write our import statement:
 
-```ts:title=tab/tab-panel.ts
+```ts title="tab/tab panel.ts"
 // ✅ good: imports from use-tab-state module
 import { useTabState } from './use-tab-state'
 
@@ -102,7 +102,7 @@ In our NextJs project, I have seen pages that were loading over 11k modules, whi
 
 The NextJs team has also realized that barrel file are a real problem in development mode and have started to ship the `optimizePackageImports` feature to automatically transform imports from barrel files into their real module paths. The blog post [How we optimized package imports in Next.js](https://vercel.com/blog/how-we-optimized-package-imports-in-next-js) by [Shu Ding](https://x.com/shuding_) explains in detail how this works. What's most interesting is that those optimizations can only be applied if the barrel is a "real" barrel - which means it does nothing but export other things. As soon as you add one line that isn't a re-export, like:
 
-```ts:title=tab/index.ts {5-6}
+```ts title="tab/index.ts" {5-6}
 export { TabList } from './tab-list'
 export { TabPanel } from './tab-panel'
 export { useTabState } from './use-tab-state'

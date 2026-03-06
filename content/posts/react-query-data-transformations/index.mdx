@@ -73,7 +73,7 @@ This is my favourite approach, if you can afford it. If the backend returns data
 
 The `queryFn` is the function that you pass to `useQuery`. It expects you to return a Promise, and the resulting data winds up in the query cache. But it doesn't mean that you have to absolutely return data in the structure that the backend delivers here. You can transform it before doing so:
 
-```ts:title=queryFn-transformation {5}
+```ts title="queryFn transformation" {5}
 const fetchTodos = async (): Promise<Todos> => {
   const response = await axios.get('todos')
   const data: Todos = response.data
@@ -101,7 +101,7 @@ Also, there is no optimization that react-query can do for you here. Every time 
 
 As advised in [Part 1](practical-react-query), if you create custom hooks, you can easily do transformations there:
 
-```ts:title=render-transformation {12-15}
+```ts title="render transformation" {12-15}
 const fetchTodos = async (): Promise<Todos> => {
   const response = await axios.get('todos')
   return response.data
@@ -122,11 +122,11 @@ export const useTodosQuery = () => {
 
 As it stands, this will not only run every time your fetch function runs, but actually on every render (even those that do not involve data fetching). This is likely not a problem at all, but if it is, you can optimize with `useMemo`. Be careful to define your dependencies _as narrow as possible_. `data` inside the queryInfo will be referentially stable unless something really changed (in which case you want to recompute your transformation), but the `queryInfo` itself will _not_. If you add `queryInfo` as your dependency, the transformation will again run on every render:
 
-```ts:title=useMemo-dependencies
+```ts title="useMemo dependencies"
 export const useTodosQuery = () => {
   const queryInfo = useQuery({
     queryKey: ['todos'],
-    queryFn: fetchTodos
+    queryFn: fetchTodos,
   })
 
   return {
@@ -134,13 +134,13 @@ export const useTodosQuery = () => {
     // 🚨 don't do this - the useMemo does nothing at all here!
     data: React.useMemo(
       () => queryInfo.data?.map((todo) => todo.name.toUpperCase()),
-      [queryInfo]
+      [queryInfo],
     ),
 
     // ✅ correctly memoizes by queryInfo.data
     data: React.useMemo(
       () => queryInfo.data?.map((todo) => todo.name.toUpperCase()),
-      [queryInfo.data]
+      [queryInfo.data],
     ),
   }
 }
@@ -164,7 +164,7 @@ Since React Query has [tracked queries](react-query-render-optimizations#tracked
 
 v3 introduced built-in selectors, which can also be used to transform data:
 
-```ts:title=select-transformation {5}
+```ts title="select transformation" {5}
 export const useTodosQuery = () =>
   useQuery({
     queryKey: ['todos'],
@@ -175,7 +175,7 @@ export const useTodosQuery = () =>
 
 selectors will only be called if `data` exists, so you don't have to care about `undefined` here. Selectors like the one above will also run on every render, because the functional identity changes (it's an inline function). If your transformation is expensive, you can memoize it either with useCallback, or by extracting it to a stable function reference:
 
-```ts:title=select-memoizations {8-9,16-20}
+```ts title="select memoizations" {8-9,16-20}
 const transformTodoNames = (data: Todos) =>
   data.map((todo) => todo.name.toUpperCase())
 
@@ -194,14 +194,14 @@ export const useTodosQuery = () =>
     // ✅ memoizes with useCallback
     select: React.useCallback(
       (data: Todos) => data.map((todo) => todo.name.toUpperCase()),
-      []
+      [],
     ),
   })
 ```
 
 Further, the select option can also be used to subscribe to only parts of the data. This is what makes this approach truly unique. Consider the following example:
 
-```js:title=select-partial-subscriptions
+```js title="select partial subscriptions"
 export const useTodosQuery = (select) =>
   useQuery({
     queryKey: ['todos'],

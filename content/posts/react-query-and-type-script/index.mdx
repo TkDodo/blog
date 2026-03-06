@@ -58,7 +58,7 @@ React Query heavily uses [Generics](https://www.typescriptlang.org/docs/handbook
 
 The TypeScript section in the [official docs](https://react-query.tanstack.com/typescript) is not very extensive, and it tells us to explicitly specify the Generics that `useQuery` expects when calling it:
 
-```ts:title=explicit-generics
+```ts title="explicit generics"
 function useGroups() {
   return useQuery<Group[], Error>({
     queryKey: ['groups'],
@@ -80,7 +80,7 @@ Over time, React Query has added more Generics to the `useQuery` hook (there are
 
 This is the current definition of the `useQuery` hook:
 
-```ts:title=useQuery
+```ts title="useQuery"
 export function useQuery<
   TQueryFnData = unknown,
   TError = unknown,
@@ -98,7 +98,7 @@ There's a lot of stuff going on, so let's try to break it down:
 
 As you can also see, all those Generics have default values, which means that if you don't provide them, TypeScript will fall back to those types. This works pretty much the same as default parameters in JavaScript:
 
-```js:title=default-parameters
+```js title="default parameters"
 function multiply(a, b = 2) {
   return a * b
 }
@@ -111,7 +111,7 @@ multiply(10, 3) // ✅ 30
 
 TypeScript works best if you let it infer (or figure out) what type something should be on its own. Not only does it make code easier to _write_ (because you don't have to type all the types 😅), but it will also make it easier to _read_. In many instances, it can make code look exactly like JavaScript. Some simple examples of type inference would be:
 
-```ts:title=type-inference
+```ts title="type inference"
 const num = Math.random() + 5 // ✅ `number`
 
 // 🚀 both greeting and the result of greet will be string
@@ -122,7 +122,7 @@ function greet(greeting = 'ciao') {
 
 When it comes to Generics, they can also generally be inferred from their usage, which is super awesome. You could also provide them manually, but in many cases, you don't need to.
 
-```ts:title=generic-identity
+```ts title="generic identity"
 function identity<T>(value: T): T {
   return value
 }
@@ -141,7 +141,7 @@ let result = identity('react-query')
 
 ...doesn't exist in TypeScript yet (see this [open issue](https://github.com/microsoft/TypeScript/issues/26242)). This basically means that if you provide _one_ Generic, you have to provide _all_ of them. But because React Query has default values for Generics, we might not notice right away that they will be taken. The resulting error messages can be quite cryptic. Let's look at an example where this actually backfires:
 
-```ts:title=default-generics
+```ts title="default generics"
 function useGroupCount() {
   return useQuery<Group[], Error>({
     queryKey: ['groups'],
@@ -155,7 +155,7 @@ function useGroupCount() {
 
 Because we haven't provided the 3rd Generic, the default value kicks in, which is also `Group[]`, but we return `number` from our `select` function. One fix is to simply add the 3rd Generic:
 
-```ts:title=third-generic {3}
+```ts title="third generic" {3}
 function useGroupCount() {
   // ✅ fixed it
   return useQuery<Group[], Error, number>({
@@ -174,7 +174,7 @@ So what's the alternative?
 
 Let's start by _not_ passing in any Generics at all and let TypeScript figure out what to do. For this to work, we need the `queryFn` to have a good return type. Of course, if you inline that function without an explicit return type, you will have `any` - because that's what `axios` or `fetch` give you:
 
-```ts:title=inlined-queryFn
+```ts title="inlined queryFn"
 function useGroups() {
   // 🚨 data will be `any` here
   return useQuery({
@@ -187,7 +187,7 @@ function useGroups() {
 
 If you (like me) like to keep your api layer separated from your queries, you'll need to add type definitions anyways to avoid _implicit any_, so React Query can infer the rest:
 
-```ts:title=inferred-types
+```ts title="inferred types"
 function fetchGroups(): Promise<Group[]> {
   return axios.get('groups').then((response) => response.data)
 }
@@ -218,7 +218,7 @@ Advantages of this approach are:
 
 What about error, you might ask? Per default, without any Generics, error will be inferred to `unknown`. This might sound like a bug, why is it not `Error`? But it is actually on purpose, because in JavaScript, you can throw _anything_ - it doesn't have to be of type `Error`:
 
-```js:title=totally-legit-throw-statements
+```js title="totally legit throw statements"
 throw 5
 throw undefined
 throw Symbol('foo')
@@ -226,7 +226,7 @@ throw Symbol('foo')
 
 Since React Query is not in charge of the function that returns the Promise, it also can't know what type of errors it might produce. So `unknown` is correct. Once TypeScript allows skipping some generics when calling a function with multiple generics (see [this issue for more information](https://github.com/microsoft/TypeScript/issues/10571)), we could handle this better, but for now, if we need to work with errors and don't want to resort to passing Generics, we can narrow the type with an instanceof check:
 
-```ts:title=narrow-with-instanceof
+```ts title="narrow with instanceof"
 const groups = useGroups()
 
 if (groups.error) {
@@ -248,7 +248,7 @@ Since v4, the type for `Error` defaults to `Error` instead of `unknown`. Even th
 
 Additionally, React Query allows to register global errors via module augmentation:
 
-```ts:title=global-error-registration
+```ts title="global error registration"
 declare module '@tanstack/react-query' {
   interface Register {
     defaultError: AxiosError
@@ -264,7 +264,7 @@ With that, you could get back the v4 behaviour by setting `defaultError: unknown
 
 I rarely use destructuring when working with React Query. First of all, names like `data` and `error` are quite universal (purposefully so), so you'll likely rename them anyway. Keeping the whole object will keep the context of what data it is or where the error is coming from. It will further help TypeScript to narrow types when using the status field or one of the status booleans, which it cannot do if you use destructuring:
 
-```ts:title=type-narrowing
+```ts title="type narrowing"
 const { data, isSuccess } = useGroups()
 if (isSuccess) {
   // 🚨 data will still be `Group[] | undefined` here
@@ -307,7 +307,7 @@ which makes the above example work. So this is no longer an issue. 🙌
 
 I've expressed my ♥️ for the [enabled option](./practical-react-query#the-enabled-option-is-very-powerful) right from the start, but it can be a bit tricky on type level if you want to use it for [dependent queries](https://react-query.tanstack.com/guides/dependent-queries) and disable your query for as long as some parameters are not yet defined:
 
-```ts:title=the-enabled-option
+```ts title="the enabled option"
 function fetchGroup(id: number): Promise<Group> {
   return axios.get(`group/${id}`).then((response) => response.data)
 }
@@ -327,7 +327,7 @@ Technically, TypeScript is right, `id` is possibly `undefined`: the `enabled` op
 
 I've found the best way to go here, if you don't like the [non-null assertion operator](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator), is to accept that `id` can be `undefined` and reject the Promise in the `queryFn`. It's a bit of duplication, but it's also explicit and safe:
 
-```ts:title=explicit-id-check {3-5}
+```ts title="explicit id check" {3-5}
 function fetchGroup(id: number | undefined): Promise<Group> {
   // ✅ check id at runtime because it can be `undefined`
   return typeof id === 'undefined'
@@ -348,7 +348,7 @@ function useGroup(id: number | undefined) {
 
 Since v5.25, You can use a [`skipToken`](https://tanstack.com/query/v5/docs/framework/react/guides/disabling-queries#typesafe-disabling-of-queries-using-skiptoken) to disable a query while having good type safety in `queryFn`:
 
-```ts:title=skipToken
+```ts title="skipToken"
 import { useQuery, skipToken } from '@tanstack/query'
 
 function useGroup(id: number | undefined) {
@@ -383,7 +383,7 @@ Also, React Query v5 has a [new way to make optimistic updates](https://tanstack
 
 For the most parts, typing `useInfiniteQuery` is no different from typing `useQuery`. One noticeable gotcha is that the `pageParam` value, which is passed to the `queryFn`, is typed as `any`. Could be improved in the library for sure, but as long as it's `any`, it's probably best to explicitly annotate it:
 
-```ts:title=useInfiniteQuery
+```ts title="useInfiniteQuery"
 type GroupResponse = { next?: number; groups: Group[] }
 const queryInfo = useInfiniteQuery({
   queryKey: ['groups'],
@@ -403,12 +403,11 @@ If `fetchGroups` returns a `GroupResponse`, `lastGroup` will have its type nicel
 
 This is fixed in v5, because you now have to provide an explicit `initialPageParam`, which is typed correctly:
 
-```ts:title=initialPageParam {3-4,7}
+```ts title="initialPageParam" {3-4,7}
 const queryInfo = useInfiniteQuery({
   queryKey: ['groups'],
   // ✅ typed correctly as number
-  queryFn: ({ pageParam }) =>
-    fetchGroups(groups, pageParam),
+  queryFn: ({ pageParam }) => fetchGroups(groups, pageParam),
   getNextPageParam: (lastGroup) => lastGroup.next,
   initialPageParam: 0,
 })
@@ -420,7 +419,7 @@ const queryInfo = useInfiniteQuery({
 
 I am personally not using a [defaultQueryFn](https://react-query.tanstack.com/guides/default-query-function), but I know many people are. It's a neat way to leverage the passed `queryKey` to directly build your request url. If you inline the function when creating the `queryClient`, the type of the passed `QueryFunctionContext` will also be inferred for you. TypeScript is just so much better when you inline stuff :)
 
-```ts:title=defaultQueryFn
+```ts title="defaultQueryFn"
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -435,7 +434,7 @@ const queryClient = new QueryClient({
 
 This just works, however, `url` is inferred to type `unknown`, because the whole `queryKey` is an `unknown Array`. At the time of the creation of the queryClient, there is absolutely no guarantee how the queryKeys will be constructed when calling `useQuery`, so there is only so much React Query can do. That is just the nature of this highly dynamic feature. It's not a bad thing though because it means you now have to work defensively and narrow the type with runtime checks to work with it, for example:
 
-```ts:title=narrow-with-typeof {5-12}
+```ts title="narrow with typeof" {5-12}
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -444,7 +443,7 @@ const queryClient = new QueryClient({
         // so that we can work with it
         if (typeof url === 'string') {
           const { data } = await axios.get(
-            `${baseUrl}/${url.toLowerCase()}`
+            `${baseUrl}/${url.toLowerCase()}`,
           )
           return data
         }

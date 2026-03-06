@@ -27,7 +27,7 @@ Any is the [top type](https://en.wikipedia.org/wiki/Top_type) in TypeScript's ty
 
 It does however also work on a much simpler level, for example with the string type and a string literal type. Every string literal is a sub-type of the type string:
 
-```ts:title=string-literal-types
+```ts title="string literal types"
 let parent: string = 'hello'
 let child: 'hello' = 'hello'
 ```
@@ -38,7 +38,7 @@ Here, _child_ would also "extend" _parent_, even though we don't really have a t
 
 Parent is not assignable to child because it's type is wider. This can be proven by trying to actually assign the variables to each other:
 
-```ts:title=assign-child-to-parent {4-7}
+```ts title="assign child to parent" {4-7}
 let parent: string = 'hello'
 let child: 'hello' = 'hello'
 
@@ -54,7 +54,7 @@ We can assign child to parent, because child is assignable to parent, but it doe
 
 In any case (pun intended), _any_ would sit at the top of the tree. Everything is assignable to _any_. If we add _any_ to the above example, our tree would be `any -> string -> 'hello'`
 
-```ts:title=any-at-the-top {1,7-8}
+```ts title="any at the top" {1,7-8}
 let top: any = 'hello'
 let parent: string = 'hello'
 let child: 'hello' = 'hello'
@@ -67,7 +67,7 @@ top = parent
 
 So far so good, and if _any_ sits at the top, it must mean that you cannot assign it to a more narrow type, right? This is where things get weird with _any_:
 
-```ts:title=weird-any {5-8}
+```ts title="weird any" {5-8}
 let top: any = 'hello'
 let parent: string = 'hello'
 let child: 'hello' = 'hello'
@@ -86,7 +86,7 @@ In [TypeScript 3.0](https://www.typescriptlang.org/docs/handbook/release-notes/t
 
 > Anything is assignable to unknown, but unknown isn’t assignable to anything but itself and any
 
-```ts:title=unknown-at-the-top {1,11-12}
+```ts title="unknown at the top" {1,11-12}
 let top: unknown = 'hello'
 let parent: string = 'hello'
 let child: 'hello' = 'hello'
@@ -107,7 +107,7 @@ But that's okay.
 
 Because we don't know what it is, we have to find that out at runtime first. TypeScript will narrow the type if we perform a type narrowing check:
 
-```ts:title=type-narrowing {4-7}
+```ts title="type narrowing" {4-7}
 let top: unknown = 'hello'
 let parent: string = 'hello'
 
@@ -133,7 +133,7 @@ This basically means if you have an _any_, and you call a function on it, the re
 
 All of a sudden, this little _any_ is spreading like wildfire:
 
-```ts:title=leaking-any
+```ts title="leaking any"
 const dangerous: any = 5
 // ✅ inferred to the number literal 5
 const okay = 5
@@ -153,7 +153,7 @@ const result2 = {
 
 Especially the object merging took me by surprise, but it makes sense. You can't build a union type with _any_. Not even the awesome [const assertion](./the-power-of-const-assertions) will help you here. This is especially dangerous when using it together with React components, as spreading the result of a function that returns _any_ will make all props of that component fall back to _any_:
 
-```tsx:title=any-props-spreading
+```tsx title="any props spreading"
 declare function myAnyUtil(input: Record<string, unknown>): any
 
 function App(props: Props) {
@@ -168,14 +168,14 @@ function App(props: Props) {
 
 Oops. Because we spread the result of _myAnyUtil_, which returns _any_, onto our _button_, nothing is now type checked (if you are wondering: _onClick_ needs to accept a function, not a string). Remember, jsx is just syntatic sugar for _React.createElement_, so the above code reads:
 
-```ts:title=react-create-element {4-8}
+```ts title="react create element" {4-8}
 declare function myAnyUtil(input: Record<string, unknown>): any
 
 function App(props: Props) {
   return React.createElement(
     'button',
     { onClick: 'yes please', ...myAnyUtil(props) },
-    'click me'
+    'click me',
   )
 }
 ```

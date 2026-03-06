@@ -83,7 +83,7 @@ I don't think we do this enough, which is why many applications stop with compon
 
 Inside JSX, we can conditionally render other components. This is nothing new, and it's also not terrible or evil by itself. Consider the following component that renders a shopping list and optionally adds some user information about the person that's assigned to the list:
 
-```tsx:title=conditional-rendering {9}
+```tsx title="conditional rendering" {9}
 export function ShoppingList(props: {
   content: ShoppingList
   assignee?: User
@@ -108,7 +108,7 @@ I would say this is perfectly fine. If the shopping list isn't assigned to anyon
 
 I think conditional rendering inside JSX starts to become a problem when we use it for rendering different states of a component. Suppose we refactor this component to become self contained by reading the shopping list data directly from a query:
 
-```tsx:title=self-contained-component {2,9-14}
+```tsx title="self contained component" {2,9-14}
 export function ShoppingList() {
   const { data, isPending } = useQuery(/* ... */)
 
@@ -137,7 +137,7 @@ One problem here is that this component just doesn't evolve very well. Yes, we c
 
 So let's add another state - if no `data` comes back from the API call, we'd want to render a special `<EmptyScreen />`. Shouldn't be hard to change the existing condition:
 
-```tsx:title=empty-screen {10,14-16}
+```tsx title="empty screen" {10,14-16}
 export function ShoppingList() {
   const { data, isPending } = useQuery(/* ... */)
 
@@ -162,7 +162,7 @@ export function ShoppingList() {
 
 Of course you'll quickly spot the bug 🐞 we've just introduced: This will show the `<EmptyScreen />` when we are in `pending` state, too, because in that state, we also have no data. Easily fixable by adding another condition instead:
 
-```tsx:title="fixed"-condition {10}
+```tsx title="fixed condition" {10}
 export function ShoppingList() {
   const { data, isPending } = useQuery(/* ... */)
 
@@ -196,7 +196,7 @@ At this point, I would suggest to listen to the React docs and break down what t
 
 In all three states, we want to render a shared "layout" - the red part. That's why we made our component in the first place - because we have some common parts to render. The blue stuff is what's different between the three states. So how would a refactoring look like if we'd extract the red parts to their own layout component that accepts dynamic `children`:
 
-```tsx:title=layout-component {1-8,14,23}
+```tsx title="layout component" {1-8,14,23}
 function Layout(props: { children: ReactNode }) {
   return (
     <Card>
@@ -241,7 +241,7 @@ more about the difference between the two.
 
 But now, we don't have to be inside JSX anymore. The only JSX we have is a single call to `<Layout>`. We could just duplicate that and use early returns instead:
 
-```tsx:title=early-returns {14-18,22-26,29-36}
+```tsx title="early returns" {14-18,22-26,29-36}
 function Layout(props: { children: ReactNode }) {
   return (
     <Card>
@@ -299,7 +299,7 @@ Notice how the last check for `data` is just gone? That's because TypeScript kno
 
 I know some people are concerned about the duplication of rendering the `<Layout>` component in each branch. I think they are focusing on the wrong thing. The duplication is not only fine, it will also help the component evolve better in case there might be a slight differentiation. For example, let's add a `title` property from our `data` to the heading:
 
-```tsx:title=layout-with-props {1,4,30}
+```tsx title="layout with props" {1,4,30}
 function Layout(props: { children: ReactNode; title?: string }) {
   return (
     <Card>
