@@ -23,6 +23,7 @@
     "@astrojs/react": "^4.4.1",
     "@astrojs/rss": "^4.0.13",
     "@astrojs/sitemap": "^3.6.0",
+    "@atcute/bluesky-richtext-segmenter": "^3.0.0",
     "@codesandbox/sandpack-react": "^2.20.0",
     "@docsearch/css": "^4.5.4",
     "@docsearch/react": "^4.5.4",

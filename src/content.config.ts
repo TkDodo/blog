@@ -14,6 +14,7 @@ const blog = defineCollection({
       .optional()
       .default([]),
     banner: z.string().optional(),
+    bluesky: z.string().url().optional(),
     slug: z.string().optional(),
     searchIndex: z.boolean().optional().default(true),
   }),

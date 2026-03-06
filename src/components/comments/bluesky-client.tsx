@@ -1,0 +1,213 @@
+import type { Root } from "react-dom/client";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
+import * as React from "react";
+import { createRoot } from "react-dom/client";
+import { fetchBlueskyThreadData } from "./bluesky-api";
+
+interface MountOptions {
+  postUrl: string;
+  onUnavailable: () => void;
+}
+
+interface MountedEntry {
+  root: Root;
+  queryClient: QueryClient;
+}
+
+const mountedEntries = new WeakMap<HTMLElement, MountedEntry>();
+
+function formatRelativeTime(value?: string): string {
+  if (!value) return "";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  const diffMs = date.getTime() - Date.now();
+  const formatter = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+
+  const ranges: Array<[Intl.RelativeTimeFormatUnit, number]> = [
+    ["year", 1000 * 60 * 60 * 24 * 365],
+    ["month", 1000 * 60 * 60 * 24 * 30],
+    ["week", 1000 * 60 * 60 * 24 * 7],
+    ["day", 1000 * 60 * 60 * 24],
+    ["hour", 1000 * 60 * 60],
+    ["minute", 1000 * 60],
+  ];
+
+  for (const [unit, ms] of ranges) {
+    if (Math.abs(diffMs) >= ms) {
+      return formatter.format(Math.round(diffMs / ms), unit);
+    }
+  }
+
+  return formatter.format(Math.round(diffMs / 1000), "second");
+}
+
+function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
+  const query = useQuery({
+    queryKey: ["bluesky-thread", postUrl],
+    queryFn: () => fetchBlueskyThreadData(postUrl),
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60,
+  });
+
+  React.useEffect(() => {
+    if (query.data?.status === "unavailable") {
+      onUnavailable();
+    }
+  }, [onUnavailable, query.data]);
+
+  if (query.isLoading) {
+    return <p className="text-sm text-subtle">Loading Bluesky comments...</p>;
+  }
+
+  if (!query.data || query.data.status === "unavailable") {
+    return null;
+  }
+
+  const { summary, replies } = query.data.data;
+
+  return (
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-subtle">
+        <div className="flex items-center gap-4">
+          <span>{summary.replyCount} replies</span>
+          <span>{summary.likeCount} likes</span>
+          <span>{summary.quoteCount} quotes</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            className="cursor-pointer rounded border border-border px-2 py-1 text-xs text-subtle hover:text-text"
+            onClick={() => query.refetch()}
+            disabled={query.isFetching}
+          >
+            {query.isFetching ? "Refreshing..." : "Refresh"}
+          </button>
+          <a
+            href={summary.replyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:underline"
+          >
+            Reply on Bluesky
+          </a>
+        </div>
+      </div>
+
+      {replies.length === 0 ? (
+        <p className="text-sm text-subtle">No Bluesky replies yet.</p>
+      ) : (
+        <ul className="space-y-5">
+          {replies.map((reply) => (
+            <li key={reply.id} className="space-y-2">
+              <div className="flex items-center gap-3">
+                {reply.author.avatar ? (
+                  <img
+                    src={reply.author.avatar}
+                    alt=""
+                    className="h-9 w-9 rounded-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="h-9 w-9 rounded-full bg-ic-bg" aria-hidden="true" />
+                )}
+                <div className="min-w-0 text-sm">
+                  <span className="font-semibold text-text">
+                    {reply.author.displayName ?? reply.author.handle}
+                  </span>{" "}
+                  <span className="text-subtle">@{reply.author.handle}</span>{" "}
+                  <span className="text-subtle">{formatRelativeTime(reply.createdAt)}</span>
+                </div>
+              </div>
+
+              <p className="ml-12 whitespace-pre-wrap text-text">
+                {reply.segments.map((segment, index) =>
+                  segment.href ? (
+                    <a
+                      key={`${reply.id}-${index}`}
+                      href={segment.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      {segment.text}
+                    </a>
+                  ) : (
+                    <React.Fragment key={`${reply.id}-${index}`}>
+                      {segment.text}
+                    </React.Fragment>
+                  ),
+                )}
+              </p>
+
+              {reply.externalEmbed && (
+                <a
+                  href={reply.externalEmbed.uri}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-12 block overflow-hidden rounded-lg border border-border bg-ic-bg/50 hover:border-primary"
+                >
+                  <div className="flex items-stretch">
+                    {reply.externalEmbed.thumb ? (
+                      <img
+                        src={reply.externalEmbed.thumb}
+                        alt=""
+                        className="h-24 w-24 shrink-0 object-cover"
+                        loading="lazy"
+                      />
+                    ) : null}
+                    <div className="space-y-1 p-3 text-sm">
+                      <p className="line-clamp-1 text-primary">{reply.externalEmbed.uri}</p>
+                      {reply.externalEmbed.title ? (
+                        <p className="line-clamp-1 text-text">{reply.externalEmbed.title}</p>
+                      ) : null}
+                      {reply.externalEmbed.description ? (
+                        <p className="line-clamp-2 text-subtle">
+                          {reply.externalEmbed.description}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+                </a>
+              )}
+
+              <p className="ml-12 text-sm text-subtle">{reply.likeCount} likes</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+export async function mountBlueskyComments(
+  container: HTMLElement,
+  options: MountOptions,
+): Promise<void> {
+  const current = mountedEntries.get(container);
+
+  if (current) {
+    current.root.render(
+      <QueryClientProvider client={current.queryClient}>
+        <BlueskyComments {...options} />
+      </QueryClientProvider>,
+    );
+    return;
+  }
+
+  const queryClient = new QueryClient();
+  const root = createRoot(container);
+
+  mountedEntries.set(container, { root, queryClient });
+
+  root.render(
+    <QueryClientProvider client={queryClient}>
+      <BlueskyComments {...options} />
+    </QueryClientProvider>,
+  );
+}
