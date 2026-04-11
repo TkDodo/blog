@@ -1,23 +1,37 @@
-import * as React from 'react'
-import { Link } from '@theme-ui/components'
+import type { ReactNode } from "react";
+import SmallCentered from "./SmallCentered";
 
-import SmallCentered from './SmallCentered'
-
-type Props = {
-  name: string
-  url: string
-  prefix?: string
+interface Props {
+  name?: string;
+  url?: string;
+  prefix?: string;
+  children?: ReactNode;
 }
 
-const Attribution = ({ name, url, prefix = 'Photo by' }: Props) => (
-  <>
-    <SmallCentered>
-      {prefix}{' '}
-      <Link href={url} target="_blank" rel="noreferrer noopener">
-        {name}
-      </Link>
-    </SmallCentered>
-  </>
-)
+export default function Attribution({
+  name,
+  url,
+  prefix = "Photo by",
+  children,
+}: Props) {
+  if (!name && !children) return null;
 
-export default Attribution
+  return (
+    <SmallCentered>
+      {prefix}{" "}
+      {url ? (
+        <a
+          href={url}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="text-subtle hover:text-subtle font-normal hover:underline"
+        >
+          {name}
+        </a>
+      ) : (
+        name
+      )}
+      {children}
+    </SmallCentered>
+  );
+}

@@ -4,25 +4,24 @@ description: Getting huge refactorings going is not an easy task, but urgency ca
 date: 2022-03-25
 banner: ./urgency.jpeg
 tags:
-  - principles
-  - road to refactoring
+  - Principles
+  - Road to Refactoring
 ---
 
-import Comments from 'components/Comments'
-import Highlight from 'components/Highlight'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
+import Comments from '@components/Comments.astro'
+import Highlight from '@components/Highlight'
+import Attribution from '@components/Attribution'
+import Translations from '@components/Translations'
+import { RtrToc } from '@components/rtr-toc'
 
-<img alt="Urgency" src="./urgency.jpeg" />
+<Attribution
+  name="Nate Isaac"
+  url="https://unsplash.com/@jubilation"
+/>
 
-<Attribution name="Nate Isaac" url="https://unsplash.com/@jubilation" />
+<RtrToc id="use-urgency" />
 
-- [#1: Don't mix refactorings with hotfixes](road-to-refactoring)
-- [#2: Always provide customer value](always-provide-customer-value)
-- <b>#3: Use Urgency</b>
-- [#4: Refactor impactfully](refactor-impactfully)
-
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 Huge refactorings are not an easy project to successfully complete. It's the ones that touch upon the base architecture of your product. They likely take a long time, and don't provide any _immediate_ customer value - the value is mostly _indirect_.
 

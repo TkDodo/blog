@@ -1,0 +1,117 @@
+---
+import bytesImage from "@assets/bytes.jpg";
+import QueryGG from "@components/QueryGG.astro";
+import { Image } from "astro:assets";
+
+const REPO =
+  (import.meta.env.PUBLIC_GISCUS_REPO as string | undefined) ??
+  "tkdodo/blog-comments";
+const REPO_ID =
+  (import.meta.env.PUBLIC_GISCUS_REPO_ID as string | undefined) ??
+  "MDEwOlJlcG9zaXRvcnkyOTE1MzI1NjI=";
+const CATEGORY =
+  (import.meta.env.PUBLIC_GISCUS_CATEGORY as string | undefined) ??
+  "Announcements";
+const CATEGORY_ID =
+  (import.meta.env.PUBLIC_GISCUS_CATEGORY_ID as string | undefined) ??
+  "DIC_kwDOEWBvEs4COl22";
+
+type Props = {
+  withSeparator?: boolean;
+};
+
+const { withSeparator = true } = Astro.props as Props;
+---
+
+<section
+  class:list={[
+    "not-prose mt-12 pt-6",
+    withSeparator && "border-t border-border",
+  ]}
+  data-comments-root
+  data-comments-base-url={import.meta.env.BASE_URL}
+  data-comments-repo={REPO}
+  data-comments-repo-id={REPO_ID}
+  data-comments-category={CATEGORY}
+  data-comments-category-id={CATEGORY_ID}
+>
+  <div class="flex flex-col gap-3">
+    <div
+      class="rounded-lg bg-[var(--color-ic-bg)] p-4 text-center md:p-[1.125rem]"
+    >
+      <p class="font-mono leading-relaxed text-sm md:text-base">
+        Like the monospace font in the code blocks?
+      </p>
+      <p class="font-mono leading-relaxed text-sm md:text-base">
+        Check out{" "}
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.monolisa.dev/?ref=dominik"
+          class="text-primary hover:underline"
+        >
+          monolisa.dev
+        </a>
+      </p>
+    </div>
+
+    <div id="querygg-referral" class="hidden">
+      <QueryGG />
+    </div>
+
+    <a
+      id="bytes-referral"
+      href="https://bytes.dev/?r=dom"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="block"
+    >
+      <Image
+        src={bytesImage}
+        alt="Bytes - the JavaScript Newsletter that doesn't suck"
+        loading="lazy"
+        class="w-full rounded-lg"
+      />
+    </a>
+  </div>
+
+  <div class="mt-8">
+    <div
+      role="tablist"
+      aria-label="Comment sources"
+      class="mb-4 flex items-center gap-2 border-b border-border"
+    >
+      <button
+        type="button"
+        role="tab"
+        aria-selected="true"
+        data-comments-tab="github"
+        class="cursor-pointer border-0 border-b-2 border-transparent px-3 py-2 text-sm font-semibold text-subtle transition-colors hover:text-text aria-selected:border-primary aria-selected:text-text"
+      >
+        GitHub
+      </button>
+      <button
+        type="button"
+        role="tab"
+        aria-selected="false"
+        tabindex="-1"
+        data-comments-tab="bluesky"
+        class="cursor-pointer border-0 border-b-2 border-transparent px-3 py-2 text-sm font-semibold text-subtle transition-colors hover:text-text aria-selected:border-primary aria-selected:text-text"
+      >
+        Bluesky
+      </button>
+    </div>
+
+    <div role="tabpanel" data-comments-panel="github">
+      <div class="giscus"></div>
+    </div>
+
+    <div role="tabpanel" data-comments-panel="bluesky" hidden>
+      <div data-bluesky-mount></div>
+    </div>
+  </div>
+
+  <script>
+    import "./comments/comments-client";
+  </script>
+</section>

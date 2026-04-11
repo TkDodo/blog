@@ -10,23 +10,24 @@ tags:
   - Hooks
 ---
 
-import Comments from 'components/Comments'
-import Highlight from 'components/Highlight'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Tweet, { AvatarAcemarke } from 'components/Tweet'
-
-<img src="./people-holding-smartphones.jpeg" />
+import Comments from '@components/Comments.astro'
+import Highlight from '@components/Highlight'
+import Attribution from '@components/Attribution'
+import Translations from '@components/Translations'
+import Tweet, {
+  AvatarAcemarke,
+  TwitterBlueText,
+} from '@components/Tweet'
+import { HsToc } from '@components/hs-toc'
 
 <Attribution
   name="David Sarkisov"
   url="https://unsplash.com/@david_sarkisov_photography"
 />
 
-- <b>#1: Hooks, Dependencies and Stale Closures</b>
-- [#2: Refs, Events and Escape Hatches](refs-events-and-escape-hatches)
+<HsToc id="hooks-dependencies-and-stale-closures" />
 
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 Working with [closures](<https://en.wikipedia.org/wiki/Closure_(computer_programming)>) is something that can become quite tricky, especially when dealing with hooks that have dependencies in React (think _useEffect_, _useMemo_, _useCallback_). A lot of bugs and frustration are tied pretty closely to that concept - even though it is nothing that React itself introduced. It's rather a language concept that hooks rely upon.
 
@@ -46,11 +47,8 @@ I love this question from Mark Erikson:
     things better, worse, or just "same thing but different" ?
   </p>
   <p>
-    (Inspired by the questions we see in{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      @reactiflux
-    </Text>{' '}
-    daily)
+    (Inspired by the questions we see in
+    <TwitterBlueText>@reactiflux</TwitterBlueText> daily)
   </p>
 </Tweet>
 
@@ -66,7 +64,7 @@ I find the concept of closures somewhat hard to explain. Let's take a look at th
 
 I would best rephrase this as: JavaScript functions can "see", and interact with, things that were defined outside of them. You might not know it, but you are probably using this concept _very_ often, for example, when using props of your React component inside a callback:
 
-```js:title=a-simple-closure
+```js title="a simple closure"
 function Counter({ count }) {
   const logCount = () => {
     // 💡 accessing count from the outer scope
@@ -79,7 +77,7 @@ function Counter({ count }) {
 
 _logCount_ can access everything we define in the _Counter_ component, for example, the _count_ prop. You can easily check that you are relying on closures by moving the function to the outside of its parent. If it doesn't work anymore, it's because you don't have access to something you were "closing over" anymore:
 
-```js:title=moving-it-up
+```js title="moving it up"
 // ❌ 'count' is not defined. (no-undef)
 const logCount = () => {
   console.log('count', count)
@@ -91,36 +89,31 @@ function Counter({ count }) {
 
 The nice part about closures in React is that it will "just work" if your component re-renders with a new prop. Have a look at this interactive example:
 
-```js react-live
-function App() {
+<Playground template="react">
+
+```js name=App.js active
+import * as React from 'react'
+
+export default function App() {
   const [count, increment] = React.useReducer((prev) => prev + 1, 1)
+  const [logged, setLogged] = React.useState(count)
 
   const logCount = () => {
-    log(count)
+    setLogged(count)
   }
 
   return (
     <div>
       <div>count is {count}</div>
+      <div>log: {logged}</div>
       <button onClick={increment}>increment</button>
       <button onClick={logCount}>log</button>
     </div>
   )
 }
-
-render(
-  <div style={{ color: 'black ' }}>
-    <App />
-    <div id="result">log:</div>
-  </div>
-)
-
-// just a way to make logging work in this interactive example
-function log(value) {
-  document.getElementById('result').innerHTML =
-    'log: ' + String(value)
-}
 ```
+
+</Playground>
 
 You can click both buttons a bunch of times, and you should see that the log function, which closures over _count_, will always have access to the "latest" count. Or so it seems.
 
@@ -167,38 +160,33 @@ Whenever you do that, no new picture is taken. React will just give you the old 
 
 We can see how ignoring the linter in our example will lead to non working code:
 
-```js react-live
-function App() {
+<Playground template="react">
+
+```js name=App.js active
+import * as React from 'react'
+
+export default function App() {
   const [count, increment] = React.useReducer((prev) => prev + 1, 1)
+  const [logged, setLogged] = React.useState(count)
 
   // 🚨 the linter says we should include count
   // as a dependency, but we don't
   const logCount = React.useCallback(() => {
-    log(count)
+    setLogged(count)
   }, [])
 
   return (
     <div>
       <div>count is {count}</div>
+      <div>log: {logged}</div>
       <button onClick={increment}>increment</button>
       <button onClick={logCount}>log</button>
     </div>
   )
 }
-
-render(
-  <div style={{ color: 'black ' }}>
-    <App />
-    <div id="result2">log:</div>
-  </div>
-)
-
-// just a way to make logging work in this interactive example
-function log(value) {
-  document.getElementById('result2').innerHTML =
-    'log: ' + String(value)
-}
 ```
+
+</Playground>
 
 We instruct React to only create our _logCount_ function once, "on mount". It doesn't have any dependencies (an empty dependency array), so it will always "see" the count from the first render cycle, which is 1. Every time we click the button, it will log 1. This is certainly not what we had in mind.
 
@@ -212,7 +200,7 @@ But what about more complex dependencies? Like an object or a callback function 
 
 Once upon a time, we had a component that wasn't fast. It looked something like this:
 
-```js:title=slow-component
+```js title="slow component"
 function SlowComponent({ value, onChange }) {
   return <RenderSomethingSlow value={value} onChange={onChange} />
 }
@@ -222,10 +210,10 @@ Our idea was to memoize it by wrapping it in [React.memo](https://reactjs.org/do
 
 We thought: "We actually only want to re-render our component when _value_ changes, so why don't we just omit the _onChange_ prop from the comparison function and side-step that problem?" 🤔
 
-```js:title=fast-but-buggy-component
+```js title="fast but buggy component"
 const FastComponent = React.memo(
   SlowComponent,
-  (prevProps, nextProps) => prevProps.value === nextProps.value
+  (prevProps, nextProps) => prevProps.value === nextProps.value,
 )
 ```
 
@@ -235,7 +223,7 @@ We only care about _value_ for our render result, so what's wrong with this appr
 
 The answer lies again in _stale closures_: If the caller component re-creates _onChange_ for some reason, but _value_ doesn't change, we are not taking a new picture of our SlowComponent, which means it still sees the old _onChange_ function:
 
-```js:title=a-stale-closure
+```js title="a stale closure"
 function User({ name }) {
   const [count, increment] = React.useReducer((prev) => prev + 1, 1)
 

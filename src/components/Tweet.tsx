@@ -1,11 +1,58 @@
-import * as React from 'react'
-import { Box, Link, Flex } from 'theme-ui'
-import { StaticImage } from 'gatsby-plugin-image'
+import type { ReactNode } from "react";
+import { createElement, isValidElement } from "react";
+import acdliteAvatar from "../assets/avatars/acdlite.jpg";
+import acemarkeAvatar from "../assets/avatars/acemarke.jpeg";
+import alexdotjsAvatar from "../assets/avatars/alexdotjs.jpg";
+import danvdkAvatar from "../assets/avatars/danvdk.jpeg";
+import diegohazAvatar from "../assets/avatars/diegohaz.jpeg";
+import gabbeVAvatar from "../assets/avatars/GabbeV_.jpg";
+import housecorAvatar from "../assets/avatars/housecor.png";
+import leeerobAvatar from "../assets/avatars/leeerob.jpeg";
+import mattpocockukAvatar from "../assets/avatars/mattpocockuk.jpeg";
+import michaelCAvatar from "../assets/avatars/michaelc_1991.jpeg";
+import mxstbrAvatar from "../assets/avatars/mxstbr.jpg";
+import ralex1993Avatar from "../assets/avatars/ralex1993.jpg";
+import ryanflorenceAvatar from "../assets/avatars/ryanflorence.jpeg";
+import sathyaAvatar from "../assets/avatars/sathya.jpg";
+import sophiebitsAvatar from "../assets/avatars/sophiebits.jpeg";
+import swyxAvatar from "../assets/avatars/swyx.jpeg";
+import tannerlinsleyAvatar from "../assets/avatars/tannerlinsley.jpeg";
+import t3dotggAvatar from "../assets/avatars/theo_twitter.jpg";
+import willmcguganAvatar from "../assets/avatars/willmcgugan.jpeg";
+import tkdodoAvatar from "../assets/profile.jpg";
+import bafkreiaImage from "../assets/tweets/bafkreiazq5owsx6neqzgvjquwenob6su4kgd7zzl3z5ytfq4oywwjwbis4.jpg";
+import eCqCxd4Image from "../assets/tweets/eC_qCxd4.jpeg";
+import EXx9RHYVAAUgegZImage from "../assets/tweets/EXx9RHYVAAUgegZ.jpeg";
+import Fcnj9l0XEAMnLdVImage from "../assets/tweets/Fcnj9l0XEAMnLdV.jpeg";
+import FSJNvbJWUAIVEGBImage from "../assets/tweets/FSJNvbJWUAIVEGB.jpeg";
+import FVegS4nXwAQHskNImage from "../assets/tweets/FVegS4nXwAQHskN.jpeg";
+import FxnXEGVX0AEeYAfImage from "../assets/tweets/FxnXEGVX0AEeYAf.jpeg";
+import GP724X0AANNKImage from "../assets/tweets/GP-724-X0AAN_NK.jpeg";
+import separationOfConcernsImage from "../assets/tweets/separation_of_concerns.jpeg";
+import TanStackQueryV5Image from "../assets/tweets/TanStackQueryV5.png";
+import UseApiImage from "../assets/tweets/UseApi.jpeg";
+import v5390Image from "../assets/tweets/v5390.jpeg";
+
+type TweetType = "x" | "twitter" | "bsky";
+
+interface Props {
+  tweetId: string;
+  handle: string;
+  name: string;
+  avatar: ReactNode;
+  children?: ReactNode;
+  date: Date | string;
+  type?: TweetType;
+}
+
+type ImportedImage = { src: string } | string;
+const imageSrc = (asset: ImportedImage): string =>
+  typeof asset === "string" ? asset : asset.src;
 
 const TwitterIcon = () => (
   <svg
-    stroke="var(--theme-ui-colors-twitterBlue)"
-    fill="var(--theme-ui-colors-twitterBlue)"
+    stroke="var(--color-twitter-blue)"
+    fill="var(--color-twitter-blue)"
     strokeWidth="0"
     viewBox="0 0 512 512"
     height="22"
@@ -14,7 +61,7 @@ const TwitterIcon = () => (
   >
     <path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
   </svg>
-)
+);
 
 const BskyIcon = () => (
   <svg
@@ -28,397 +75,216 @@ const BskyIcon = () => (
       fill="#1185fe"
     />
   </svg>
-)
+);
 
-const Avatar = ({ children }: { children: React.ReactNode }) => (
-  <Box
-    sx={{
-      width: '3.5rem',
-      height: '3.5rem',
-      marginRight: '1rem',
-    }}
-  >
-    {children}
-  </Box>
-)
+const avatarImageClass = "h-full w-full rounded-full object-cover";
+
+const Avatar = ({ children }: { children?: ReactNode }) => (
+  <div className="mr-4 h-14 w-14">{children}</div>
+);
+
+interface AstroJsxLike {
+  "astro:jsx"?: unknown;
+  type?: unknown;
+  props?: Record<string, unknown>;
+}
+
+function normalizeAvatarNode(avatar: ReactNode): ReactNode {
+  if (isValidElement(avatar)) {
+    return avatar;
+  }
+
+  const astroNode = avatar as AstroJsxLike;
+  if (astroNode && typeof astroNode === "object" && astroNode.type) {
+    return createElement(
+      astroNode.type as React.ElementType,
+      astroNode.props ?? {},
+    );
+  }
+
+  return <div className="h-full w-full" aria-hidden="true" />;
+}
+
+const AvatarAsset = ({ src, alt }: { src: ImportedImage; alt: string }) => (
+  <img
+    className={avatarImageClass}
+    src={imageSrc(src)}
+    alt={alt}
+    loading="lazy"
+  />
+);
 
 export const AvatarTkDodo = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/1021430.jpeg"
-    alt="Avatar for TkDodo"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={tkdodoAvatar} alt="Avatar for TkDodo" />
+);
 export const AvatarSathya = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/sathya.jpg"
-    alt="Avatar for Satya"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={sathyaAvatar} alt="Avatar for Satya" />
+);
 export const AvatarGabbeV_ = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/GabbeV_.jpg"
-    alt="Avatar for GabbeV_"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={gabbeVAvatar} alt="Avatar for GabbeV_" />
+);
 export const AvatarAcdlite = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/acdlite.jpg"
-    alt="Avatar for acdlite"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={acdliteAvatar} alt="Avatar for acdlite" />
+);
 export const AvatarRalex1993 = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/ralex1993.jpg"
-    alt="Avatar for ralex1993"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={ralex1993Avatar} alt="Avatar for ralex1993" />
+);
 export const AvatarT3dotgg = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/theo_twitter.jpg"
-    alt="Avatar for t3dotgg"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={t3dotggAvatar} alt="Avatar for t3dotgg" />
+);
 export const AvatarMichaelC = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/michaelc_1991.jpeg"
-    alt="Avatar for michaelc_1991"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={michaelCAvatar} alt="Avatar for michaelc_1991" />
+);
 export const AvatarMattpocockuk = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/mattpocockuk.jpeg"
-    alt="Avatar for mattpocockuk"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={mattpocockukAvatar} alt="Avatar for mattpocockuk" />
+);
 export const AvatarTannerlinsley = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/tannerlinsley.jpeg"
-    alt="Avatar for tannerlinsley"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={tannerlinsleyAvatar} alt="Avatar for tannerlinsley" />
+);
 export const AvatarSophiebits = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/sophiebits.jpeg"
-    alt="Avatar for sophiebits"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={sophiebitsAvatar} alt="Avatar for sophiebits" />
+);
 export const AvatarDiegohaz = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/diegohaz.jpeg"
-    alt="Avatar for diegohaz"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={diegohazAvatar} alt="Avatar for diegohaz" />
+);
 export const AvatarRyanflorence = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/ryanflorence.jpeg"
-    alt="Avatar for ryanflorence"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={ryanflorenceAvatar} alt="Avatar for ryanflorence" />
+);
 export const AvatarWillMcGugan = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/willmcgugan.jpeg"
-    alt="Avatar for willmcgugan"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={willmcguganAvatar} alt="Avatar for willmcgugan" />
+);
 export const AvatarDanvdk = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/danvdk.jpeg"
-    alt="Avatar for danvdk"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={danvdkAvatar} alt="Avatar for danvdk" />
+);
 export const AvatarAcemarke = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/acemarke.jpeg"
-    alt="Avatar for acemarke"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={acemarkeAvatar} alt="Avatar for acemarke" />
+);
 export const AvatarAlexDotJs = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/alexdotjs.jpg"
-    alt="Avatar for alexdotjs"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={alexdotjsAvatar} alt="Avatar for alexdotjs" />
+);
 export const AvatarLeeerob = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/leeerob.jpeg"
-    alt="Avatar for leeerob"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={leeerobAvatar} alt="Avatar for leeerob" />
+);
 export const AvatarSwyx = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/swyx.jpeg"
-    alt="Avatar for swyx"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={swyxAvatar} alt="Avatar for swyx" />
+);
 export const AvatarHousecor = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/housecor.png"
-    alt="Avatar for housecor"
-    placeholder="blurred"
-  />
-)
-
+  <AvatarAsset src={housecorAvatar} alt="Avatar for housecor" />
+);
 export const AvatarMxstbr = () => (
-  <StaticImage
-    style={{ borderRadius: '50%' }}
-    src="../../static/images/mxstbr.jpg"
-    alt="Avatar for mxstbr"
-    placeholder="blurred"
-  />
-)
+  <AvatarAsset src={mxstbrAvatar} alt="Avatar for mxstbr" />
+);
 
-export const TweetImage = ({
-  children,
-}: {
-  children: React.ReactNode
-}) => (
-  <Box
-    sx={{
-      '> *': {
-        borderRadius: '0.75rem',
-      },
-    }}
-  >
-    {children}
-  </Box>
-)
+export const TweetImage = ({ children }: { children: ReactNode }) => (
+  <div className="[&>*]:rounded-xl">{children}</div>
+);
+
+function TweetIllustration({ src, alt }: { src: ImportedImage; alt: string }) {
+  return <img src={imageSrc(src)} alt={alt} loading="lazy" />;
+}
 
 export const TannerAndMe = () => (
-  <StaticImage
-    placeholder="blurred"
-    src="../../static/images/FVegS4nXwAQHskN.jpeg"
-    alt="Tanner and me"
-  />
-)
-
+  <TweetIllustration src={FVegS4nXwAQHskNImage} alt="Tanner and me" />
+);
 export const TanStackQueryV5 = () => (
-  <StaticImage
-    placeholder="blurred"
-    src="../../static/images/TanStackQueryV5.png"
-    alt="TanStackQuery v5"
-  />
-)
-
+  <TweetIllustration src={TanStackQueryV5Image} alt="TanStackQuery v5" />
+);
+export const UseApi = () => (
+  <TweetIllustration src={UseApiImage} alt="UseApi" />
+);
 export const V5390 = () => (
-  <StaticImage
-    placeholder="blurred"
-    src="../../static/images/v5390.jpeg"
-    alt="New Release v5.39.0"
-  />
-)
-
+  <TweetIllustration src={v5390Image} alt="New Release v5.39.0" />
+);
 export const SathyaAndMe = () => (
-  <StaticImage
-    placeholder="blurred"
-    src="../../static/images/GP-724-X0AAN_NK.jpeg"
-    alt="Sathya and me"
-  />
-)
-
+  <TweetIllustration src={GP724X0AANNKImage} alt="Sathya and me" />
+);
 export const ContactDetailQuery = () => (
-  <StaticImage
-    placeholder="blurred"
-    src="../../static/images/Fcnj9l0XEAMnLdV.jpeg"
-    alt="A code block with the following code in it
-
-const contactDetailQuery = (id) => ({
-  queryKey: ['contacts', 'detail', id],
-  queryFn: async () => getContact(id),
-})
-
-...
-
-queryClient.fetchQuery(
-  contactDetailQuery(params.contactId)
-)
-
-...
-
-useQuery(contactDetailQuery(params.contactId))"
+  <TweetIllustration
+    src={Fcnj9l0XEAMnLdVImage}
+    alt="Contact detail query code screenshot"
   />
-)
-
+);
 export const SelfieInception = () => (
-  <StaticImage
-    placeholder="blurred"
-    src="../../static/images/FxnXEGVX0AEeYAf.jpeg"
-    alt="selfie inception"
-  />
-)
-
+  <TweetIllustration src={FxnXEGVX0AEeYAfImage} alt="selfie inception" />
+);
 export const QueryGGImage = () => (
-  <StaticImage
-    placeholder="blurred"
-    src="../../static/images/eC_qCxd4.jpeg"
-    alt="Query.gg - The Official React Query Course"
+  <TweetIllustration
+    src={eCqCxd4Image}
+    alt="Query.gg - The official React Query course"
   />
-)
-
+);
+export const ADayOnTheOrangeSite = () => (
+  <TweetIllustration src={bafkreiaImage} alt="Unique visitor stats outlier" />
+);
 export const CynicsVsBuilders = () => (
-  <StaticImage
-    placeholder="blurred"
-    src="../../static/images/EXx9RHYVAAUgegZ.jpeg"
-    alt="Cynics vs Builders"
-  />
-)
-
+  <TweetIllustration src={EXx9RHYVAAUgegZImage} alt="Cynics vs Builders" />
+);
 export const SeparationOfConcerns = () => (
-  <StaticImage
-    placeholder="blurred"
-    src="../../static/images/separation_of_concerns.jpeg"
-    alt="Cynics vs Builders"
+  <TweetIllustration
+    src={separationOfConcernsImage}
+    alt="Separation of concerns"
   />
-)
-
+);
 export const UseEvent = () => (
-  <StaticImage
-    placeholder="blurred"
-    src="../../static/images/FSJNvbJWUAIVEGB.jpeg"
-    alt="Screenshot of code where a useEvent function is defined and used. Text version available on the link in the tweet."
+  <TweetIllustration
+    src={FSJNvbJWUAIVEGBImage}
+    alt="useEvent code screenshot"
   />
-)
+);
 
-function Tweet({
+export const TwitterBlueText = ({ children }: { children: ReactNode }) => (
+  <span style={{ color: "var(--color-twitter-blue)" }}>{children}</span>
+);
+
+function normalizeType(type: TweetType): "x" | "bsky" {
+  return type === "bsky" ? "bsky" : "x";
+}
+
+export default function Tweet({
   tweetId,
   handle,
   name,
-  children,
   avatar,
+  children,
   date,
-  type = 'x',
-}: {
-  tweetId: string
-  handle: string
-  children: string
-  name: string
-  avatar: React.ReactNode
-  date: Date
-  type: 'x' | 'bsky'
-}) {
+  type = "x",
+}: Props) {
+  const normalizedType = normalizeType(type);
   const href =
-    type === 'bsky'
+    normalizedType === "bsky"
       ? `https://bsky.app/profile/${handle}/post/${tweetId}`
-      : `https://x.com/${handle}/status/${tweetId}`
+      : `https://x.com/${handle}/status/${tweetId}`;
+  const dateValue = date instanceof Date ? date : new Date(date);
+  const avatarNode = normalizeAvatarNode(avatar);
 
   return (
-    <Link
-      sx={{
-        color: 'var(--theme-ui-colors-text)',
-        textDecoration: 'none !important',
-        display: 'block',
-        width: '100%',
-        maxWidth: '550px',
-        marginY: ['1em', '1.125em'],
-        position: 'relative',
-        borderRadius: '0.5rem',
-        padding: '1.5rem',
-        fontSize: [1, 1, 2],
-        border:
-          '1px solid var(--theme-ui-colors-backgroundSecondary)',
-        '&:hover': {
-          backgroundColor:
-            'var(--theme-ui-colors-backgroundSecondary)',
-        },
-      }}
+    <a
+      className="not-prose text-text hover:text-text border-border relative my-4 block w-full max-w-[550px] rounded-lg border p-6 text-base no-underline transition-colors hover:bg-[var(--color-ic-bg)] hover:no-underline md:text-lg"
       href={href}
       target="_blank"
       rel="noopener noreferrer"
     >
-      <Box sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
-        {type === 'bsky' ? <BskyIcon /> : <TwitterIcon />}
-      </Box>
-      <Flex>
-        <Avatar>{avatar}</Avatar>
-        <Box>
-          <Box
-            sx={{
-              fontWeight: 600,
-            }}
-          >
-            {name}
-          </Box>
-          <Box
-            sx={{
-              fontSize: ['0.75rem', '0.75rem', 1],
-              lineHeight: '0.75rem',
-              color: 'var(--theme-ui-colors-textMuted)',
-            }}
-          >
+      <div className="absolute top-4 right-4">
+        {normalizedType === "bsky" ? <BskyIcon /> : <TwitterIcon />}
+      </div>
+      <div className="flex">
+        <Avatar>{avatarNode}</Avatar>
+        <div>
+          <div className="font-semibold">{name}</div>
+          <div className="text-faded text-xs leading-3 md:text-base md:leading-4">
             @{handle}
-          </Box>
-        </Box>
-      </Flex>
-      <Box sx={{ marginTop: '1rem', marginBottom: '1rem' }}>
+          </div>
+        </div>
+      </div>
+      <div className="my-4 leading-normal [&_br]:leading-normal [&_p]:m-0 [&_p]:leading-normal [&_p+p]:mt-4">
         {children}
-      </Box>
-      <Box
-        sx={{
-          fontSize: ['0.75rem', '0.75rem', 1],
-          color: 'var(--theme-ui-colors-textMuted)',
-        }}
-      >
-        -{' '}
-        {Intl.DateTimeFormat(undefined, {
-          dateStyle: 'medium',
-        }).format(date)}
-      </Box>
-    </Link>
-  )
+      </div>
+      <div className="text-faded text-xs md:text-base">
+        -{" "}
+        {Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(
+          dateValue,
+        )}
+      </div>
+    </a>
+  );
 }
-
-export default Tweet

@@ -4,32 +4,31 @@ description: Why not every refactoring is worth doing...
 date: 2022-11-13
 banner: ./impact.jpeg
 tags:
-  - principles
-  - road to refactoring
+  - Principles
+  - Road to Refactoring
 ---
 
-import Comments from 'components/Comments'
-import Highlight from 'components/Highlight'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
+import Comments from '@components/Comments.astro'
+import Highlight from '@components/Highlight'
+import Attribution from '@components/Attribution'
+import Translations from '@components/Translations'
+import { RtrToc } from '@components/rtr-toc'
 
-<img alt="Refactor impactfully" src="./impact.jpeg" />
+<Attribution
+  name="Francisco Suarez"
+  url="https://unsplash.com/@fsuarez"
+/>
 
-<Attribution name="Francisco Suarez" url="https://unsplash.com/@fsuarez" />
+<RtrToc id="refactor-impactfully" />
 
-- [#1: Don't mix refactorings with hotfixes](road-to-refactoring)
-- [#2: Always provide customer value](always-provide-customer-value)
-- [#3: Use urgency](use-urgency)
-- <b>#4: Refactor impactfully</b>
-
-<Translations>
-  {[
+<Translations
+  translations={[
     {
       language: '日本語',
       url: 'https://makotot.dev/posts/refactor-impactfully-translation-ja',
     },
   ]}
-</Translations>
+/>
 
 Apart from [the small refactorings](always-provide-customer-value#the-small-ones) that you, as a responsible developer, should be doing with every feature request without asking for permission, a larger refactoring always costs in some way. Even if you [package them well](always-provide-customer-value#the-right-package), someone will likely question if it's really necessary to do, or if we couldn't use the time and resources better.
 
@@ -47,7 +46,9 @@ However, a tidy kitchen is useless if there are no customers in the restaurant. 
 
 As we can't refactor everything, my tip is:
 
-<Highlight>Choose the most impactful things for refactoring</Highlight>
+<Highlight>
+  Choose the most impactful things for refactoring
+</Highlight>
 
 To stay with the kitchen example: Should we replace the broken dishwasher or get new plates because they are shinier? I hope it's clear that the dishwasher has a much bigger impact.
 

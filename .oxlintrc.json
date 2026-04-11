@@ -1,0 +1,20 @@
+{
+  "plugins": [
+    "typescript",
+    "unicorn",
+    "oxc",
+    "import",
+    "react",
+    "jsx-a11y",
+    "vitest"
+  ],
+  "options": {
+    "typeAware": true
+  },
+  "ignorePatterns": ["public/sw.js"],
+  "rules": {
+    "import/default": "off",
+    "jest/no-conditional-expect": "off",
+    "react/jsx-key": "off"
+  }
+}

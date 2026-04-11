@@ -7,39 +7,33 @@ tags:
   - ReactJs
   - JavaScript
   - SSR
-  - hydration
+  - Hydration
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Emph from 'components/Emph'
-import Highlight from 'components/Highlight'
-import { Alert } from '@theme-ui/components'
-import Aside from 'components/Aside'
-import GifPlayer from 'components/GifPlayer'
-import Tweet, { AvatarAcdlite } from 'components/Tweet'
-
-<img
-  src="./mismatch.jpg"
-  alt="A person with two shoes, one is green, one is orange"
-/>
+import Comments from '@components/Comments.astro'
+import Attribution from '@components/Attribution'
+import Translations from '@components/Translations'
+import Emph from '@components/Emph'
+import { TsError } from '@components/TsError'
+import Aside from '@components/Aside'
+import GifPlayer from '@components/GifPlayer.astro'
+import Tweet, { AvatarAcdlite } from '@components/Tweet'
 
 <Attribution name="Chanhee Lee" url="https://unsplash.com/@jjik_da" />
 
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 Hydration mismatches are among the most dreaded errors a React developer could potentially face:
 
-<Alert sx={{ fontFamily: 'ml, monospace', fontSize: [0, 1] }}>
+<TsError>
   Uncaught Error: Text content does not match server-rendered HTML.
-</Alert>
+</TsError>
 
 How can this even be? We were promised isomorphic rendering - first on the server, then on the client. Write your code once, execute twice.
 
 Except that the server isn't the client. It might run in another timezone or with a different locale, thus rendering different information than on the client, e.g. when Dates are involved. It also doesn't have access to APIs that are only available in the Browser, like `window`.
 
-```jsx:title=date-rendering
+```jsx title="date rendering"
 function LastUpdated() {
   const date = getLastUpdated()
   return <span>Last updated at: {date.toLocaleDateString()}</span>
@@ -54,7 +48,7 @@ But as we've seen, the mismatch is unavoidable in some cases. So how do we "fix"
 
 This feels a bit like an `eslint-ignore` or a `@ts-expect-error`, and it's probably fine if you know what you're doing. Just stick `suppressHydrationWarning` on the element in question and call it a day:
 
-```jsx:title=suppressHydrationWarning {4}
+```jsx title="suppressHydrationWarning" {4}
 function LastUpdated() {
   const date = getLastUpdated()
   return (
@@ -81,7 +75,7 @@ Another variation of this approach is to just render `null` on the server and le
 
 Whatever value you choose for server rendering, code will usually look something like this:
 
-```jsx:title=double-render-pass {2-10}
+```jsx title="double render pass" {2-10}
 function LastUpdated() {
   const [isClient, setIsClient] = React.useState(false)
 
@@ -130,14 +124,14 @@ There's just one problem: which "store" should we subscribe to? It might look we
 
 Since the `subscribe` parameter is mandatory, our code would look something like this:
 
-```jsx:title=useSyncExternalStore
+```jsx title="useSyncExternalStore"
 const emptySubscribe = () => () => {}
 
 function LastUpdated() {
   const date = React.useSyncExternalStore(
     emptySubscribe,
     () => lastUpdated.toLocaleDateString(),
-    () => null
+    () => null,
   )
 
   return date ? <span>Last updated at: {date}</span> : null
@@ -166,12 +160,12 @@ I wish there would be a more ergonomic way, but I haven't found any. Maybe I sho
 
 This pattern also makes it quite easy to create a `ClientGate` - a component that will only render on the client, where you can safely access browser only APIs:
 
-```jsx:title=ClientGate
+```jsx title="ClientGate"
 function ClientGate({ children }) {
   const isServer = React.useSyncExternalStore(
     emptySubscribe,
     () => false,
-    () => true
+    () => true,
   )
 
   return isServer ? null : children()
@@ -193,14 +187,14 @@ Layout shifts are not ideal, and not rendering a component completely just becau
 
 So if we can produce a stable date output on the server, we can limit the content shift to only the date, similar to what the page in the previously shown GIF is doing:
 
-```jsx:title=stable-server-value {7}
+```jsx title="stable server value" {7}
 const emptySubscribe = () => () => {}
 
 function LastUpdated() {
   const date = React.useSyncExternalStore(
     emptySubscribe,
     () => lastUpdated.toLocaleDateString(),
-    () => lastUpdated.toLocaleDateString('en-US')
+    () => lastUpdated.toLocaleDateString('en-US'),
   )
 
   return <span>Last updated at: {date}</span>

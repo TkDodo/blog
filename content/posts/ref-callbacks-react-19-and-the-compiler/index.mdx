@@ -9,35 +9,29 @@ tags:
   - TypeScript
 ---
 
-import Aside from 'components/Aside'
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Highlight from 'components/Highlight'
-import { VerticalRuler } from 'components/VerticalRuler'
-import Tweet, { AvatarSathya } from 'components/Tweet'
-
-<img
-  src="./ref-callbacks.jpg"
-  alt="minimalist photography of three crank phones"
-/>
+import Aside from '@components/Aside'
+import Comments from '@components/Comments.astro'
+import Attribution from '@components/Attribution'
+import Translations from '@components/Translations'
+import { VerticalRuler } from '@components/VerticalRuler'
+import Tweet, { AvatarSathya } from '@components/Tweet'
+import { RcToc } from '@components/rc-toc'
 
 <Attribution
   name="Pavan Trikutam"
   url="https://unsplash.com/@ptrikutam"
 />
 
-- [#1: Avoiding useEffect with callback refs](avoiding-use-effect-with-callback-refs)
-- <b>#2: Ref Callbacks, React 19 and the Compiler</b>
+<RcToc id="ref-callbacks-react-19-and-the-compiler" />
 
-<Translations>
-  {[
+<Translations
+  translations={[
     {
-      language: "한국어",
-      url: "https://www.gwansik.dev/posts/ref-callbacks-react-19-and-the-compiler",
+      language: '한국어',
+      url: 'https://www.gwansik.dev/posts/ref-callbacks-react-19-and-the-compiler',
     },
   ]}
-</Translations>
+/>
 
 It's been more than two years since I published my first article about [callback refs](avoiding-use-effect-with-callback-refs). I didn't think I'd write about that topic again, but time moves on, things change, and I learned a thing or two as well in the meantime.
 
@@ -61,7 +55,7 @@ I wrote [a full blogpost](use-state-for-one-time-initializations) on why `useMem
 
 One of my example clearly violates that:
 
-```jsx:title=ref-callback-with-use-callback
+```jsx title="ref callback with use callback"
 function CustomInput() {
   const ref = React.useCallback((node) => {
     node?.scrollIntoView({ behavior: 'smooth' })
@@ -75,7 +69,7 @@ If our intention here is to scroll to the node when we "mount" the `input`, we r
 
 The better solution here is to move the function out of the `CustomInput` component:
 
-```jsx:title=ref-with-stable-function {1-3}
+```jsx title="ref with stable function" {1-3}
 function scrollIntoView(node) {
   node?.scrollIntoView({ behavior: 'smooth' })
 }
@@ -91,11 +85,11 @@ This will never re-create the function during a re-render of `CustomInput`, so i
 
 But what if we can't move it out of the component, because we depend on something inside it - like in the other example - where we are measuring a DOM node and storing that value in react state?
 
-```jsx:title=measure-a-dom-node {4,8}
+```jsx title="measure a dom node" {4,8}
 function MeasureExample() {
   const [height, setHeight] = React.useState(0)
 
-  const measuredRef = React.useCallback(node => {
+  const measuredRef = React.useCallback((node) => {
     if (node !== null) {
       setHeight(node.getBoundingClientRect().height)
     }
@@ -119,7 +113,7 @@ I think this example is still perfectly fine, because we can remove `useCallback
 
 So the neat little `useState` optimization to skip re-renders when it sees an identical value works to our advantage here, but it also means this falls apart if we try to store newly created objects in state every time:
 
-```jsx:title=store-rect-in-state {2,6,7}
+```jsx title="store rect in state" {2,6,7}
 function MeasureExample() {
   const [rect, setRect] = React.useState({ height: 0 })
 
@@ -171,7 +165,7 @@ That's a nice convenience change, and it means we can now do things that require
 
 A [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver) can address both problems, and we can now create one and clean it up inside our ref callback (with or without `useCallback`):
 
-```jsx:title=ResizeObserver {5-13}
+```jsx title="ResizeObserver" {5-13}
 function MeasureExample() {
   const [height, setHeight] = React.useState(0)
 

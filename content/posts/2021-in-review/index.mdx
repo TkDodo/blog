@@ -10,19 +10,20 @@ tags:
   - React Query
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Tweet, { AvatarTkDodo } from 'components/Tweet'
-
-<img alt="2021" src="./2021.jpeg" />
+import Comments from '@components/Comments.astro'
+import Attribution from '@components/Attribution'
+import Translations from '@components/Translations'
+import Tweet, {
+  AvatarTkDodo,
+  TwitterBlueText,
+} from '@components/Tweet'
 
 <Attribution
   name="engin akyurt"
   url="https://unsplash.com/@enginakyurt"
 />
 
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 Since I'm currently sitting at home on my couch, resting after my 3rd Covid-19 vaccine shot with not a lot else to do, I thought I'd reflect a bit on the year I've had and give a bit of an outlook of what's ahead.
 
@@ -76,16 +77,14 @@ Later that summer, my blog even became a part of the official React Query docs. 
   <p>
     I'm super proud to announce that my blog has made it as a
     community resource into the official react-query docs 🎊 You can
-    now read an excerpt of all my RQ related articles here:{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      https://react-query.tanstack.com/community/tkdo...
-    </Text>
+    now read an excerpt of all my RQ related articles here:
+    <TwitterBlueText>
+      {'https://\u200breact-query.tanstack.com/community/tkdo...'}
+    </TwitterBlueText>
   </p>
   <p>
-    and the docs also link to them from other places. Thank you{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      @tannerlinsley
-    </Text>
+    and the docs also link to them from other places. Thank you
+    <TwitterBlueText>@tannerlinsley</TwitterBlueText>
   </p>
 </Tweet>
 
@@ -103,9 +102,9 @@ For the second half of the year, I kept an eye on React 18, the Working group, a
   <p>
     Hmm, why are the zustand docs recommending to memoize selectors
     with useCallback
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      @dai_shi
-    </Text> ? Especially with the example:
+    
+    <TwitterBlueText>@dai_shi</TwitterBlueText>
+     ? Especially with the example:
   </p>
   <p>
     const fruit = useStore(useCallback(state => state.fruits[id],
@@ -121,18 +120,19 @@ For the second half of the year, I kept an eye on React 18, the Working group, a
 
 React 18 was about to ship a hook called _useMutableSource_, and it required input selectors to be referentially stable. I stumbled upon this when I reviewed a PR at work, where a co-worker of mine memoized all selectors to a zustand store with _useCallback_, something like:
 
-```js:title=memoized-selectors
+```js title="memoized selectors"
 import create from 'zustand'
 
 const useStore = create((set) => ({
   bears: 0,
-  increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
+  increasePopulation: () =>
+    set((state) => ({ bears: state.bears + 1 })),
 }))
 
 // usage:
 const bears = useStore(React.useCallback((state) => state.bears, []))
 const increasePopulation = useStore(
-  React.useCallback((state) => state.increasePopulation, [])
+  React.useCallback((state) => state.increasePopulation, []),
 )
 ```
 
@@ -186,7 +186,7 @@ For that time period, I can see a steady stream of about **20k** visitors and **
 
 From what I can tell, most people come to my blog from Google (about 50% traffic!) and from the React Query docs (another 20%). The top 6 articles in terms of page views are also all from the React Query series:
 
-<img alt="Metrics" src="./metrics.png" />
+![Metrics](./metrics.png)
 
 I also tried to blog regularly - about once every two to three weeks. I've written a total of 21 articles, and November was the only month without a blog post (mainly because I was working on React Query v4 instead).
 

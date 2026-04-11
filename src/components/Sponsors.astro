@@ -1,0 +1,126 @@
+---
+import { Image } from "astro:assets";
+import { getSponsors } from "../lib/sponsors";
+
+type SponsorSection = {
+  title: string;
+  gridClass: string;
+};
+
+const sponsorSections: SponsorSection[] = [
+  {
+    title: "Premium Sponsors",
+    gridClass:
+      "grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5",
+  },
+  {
+    title: "Supporters",
+    gridClass:
+      "grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5",
+  },
+];
+
+const sponsors = await getSponsors();
+
+const sections = sponsorSections
+  .map((section) => {
+    const sectionSponsors =
+      section.title === "Premium Sponsors"
+        ? sponsors.filter((sponsor) => sponsor.amount >= 20)
+        : sponsors.filter((sponsor) => sponsor.amount < 20);
+
+    return {
+      ...section,
+      sponsors: sectionSponsors,
+    };
+  })
+  .filter((section) => section.sponsors.length > 0);
+---
+
+<div class="space-y-12">
+  <section
+    class="relative overflow-hidden rounded-[2rem] border border-border bg-[radial-gradient(circle_at_top_left,_color-mix(in_srgb,var(--color-primary)_18%,transparent),transparent_35%),linear-gradient(135deg,color-mix(in_srgb,var(--color-ic-bg)_75%,var(--color-bg))_0%,var(--color-bg)_100%)] p-6 md:p-8"
+  >
+    <div
+      aria-hidden="true"
+      class="absolute -right-16 top-6 h-40 w-40 rounded-full bg-[color:color-mix(in_srgb,var(--color-primary)_14%,transparent)] blur-3xl"
+    >
+    </div>
+    <div
+      class="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+    >
+      <div class="max-w-2xl">
+        <p class="text-sm font-medium uppercase tracking-[0.12em] text-subtle">
+          Backing Open Source
+        </p>
+        <p
+          class="mt-4 max-w-xl text-base leading-relaxed text-subtle md:text-lg"
+        >
+          These sponsors help fund the time behind the writing, maintenance, and
+          community work.
+        </p>
+      </div>
+      <a
+        href="https://github.com/sponsors/TkDodo"
+        target="_blank"
+        rel="noreferrer noopener"
+        class="inline-flex items-center justify-center rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white shadow-sm hover:translate-y-[-1px] hover:shadow-md hover:no-underline dark:bg-highlight dark:text-[color:var(--color-bg)]"
+      >
+        Sponsor me on GitHub
+      </a>
+    </div>
+  </section>
+
+  <div class="space-y-10">
+    {
+      sections.map((section) => (
+        <section class="space-y-6">
+          <div class="border-b border-border pb-4 text-center">
+            <h3 class="text-2xl font-semibold text-highlight">
+              {section.title}
+            </h3>
+          </div>
+
+          <div class={section.gridClass}>
+            {section.sponsors.map((sponsor) => (
+              <article
+                class={`${section.sponsors.length === 1 ? "col-span-full flex justify-center lg:col-auto" : "flex justify-center"}`}
+              >
+                <a
+                  href={sponsor.url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  class="group flex w-full max-w-[10rem] flex-col items-center text-center hover:no-underline"
+                >
+                  <div class="relative rounded-full border border-transparent p-2 transition-all duration-200 ease-in group-hover:border-primary group-focus-visible:border-primary motion-safe:group-hover:-translate-y-1 motion-safe:group-focus-visible:-translate-y-1">
+                    {typeof sponsor.image === "string" ? (
+                      <img
+                        src={sponsor.image}
+                        alt={sponsor.imageAlt ?? sponsor.name}
+                        loading="lazy"
+                        class="h-24 w-24 rounded-full object-cover bg-[color:var(--color-ic-bg)] md:h-28 md:w-28"
+                      />
+                    ) : (
+                      <Image
+                        src={sponsor.image}
+                        alt={sponsor.imageAlt ?? sponsor.name}
+                        loading="lazy"
+                        class="h-24 w-24 rounded-full object-cover bg-[color:var(--color-ic-bg)] md:h-28 md:w-28"
+                      />
+                    )}
+                    <span class="absolute right-0 bottom-0 inline-flex h-7 w-7 items-center justify-center rounded-full border border-border bg-[color:var(--color-bg)] text-[0.95rem] leading-none shadow-sm">
+                      <span class="leading-none">{sponsor.emoji}</span>
+                    </span>
+                  </div>
+                  <h4 class="mt-3 text-base font-semibold leading-snug text-highlight md:text-lg">
+                    {sponsor.name}
+                  </h4>
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</div>

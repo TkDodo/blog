@@ -1,21 +1,13 @@
-import * as React from 'react'
-import { Box, Divider, Link } from '@theme-ui/components'
+import type { ReactNode } from "react";
 
-type Props = {
-  children: React.ReactNode
+interface Props {
+  children?: ReactNode;
 }
 
-const SmallCentered = ({ children }: Props) => (
-  <Box
-    sx={{
-      fontSize: 'smaller',
-      textAlign: 'center',
-      marginTop: ['-1rem', '-1rem', '-3rem'],
-      marginBottom: '1rem',
-    }}
-  >
-    {children}
-  </Box>
-)
-
-export default SmallCentered
+export default function SmallCentered({ children }: Props) {
+  return (
+    <small className="not-prose text-faded -mt-10 mb-4 block text-center text-sm leading-relaxed md:text-base">
+      {children}
+    </small>
+  );
+}

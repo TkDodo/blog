@@ -8,14 +8,12 @@ tags:
   - React Query
 ---
 
-import Comments from 'components/Comments'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
-import Aside from 'components/Aside'
-import { QueryGG } from 'components/QueryGG'
-import Attribution from 'components/Attribution'
-
-<img src="./practical.jpg" alt="a wall full of old tools" />
+import Comments from '@components/Comments.astro'
+import Translations from '@components/Translations'
+import { RqToc } from '@components/rq-toc'
+import Aside from '@components/Aside'
+import QueryGG from '@components/QueryGG.astro'
+import Attribution from '@components/Attribution'
 
 <Attribution name="Lachlan Donald" url="https://unsplash.com/@lox" />
 
@@ -23,23 +21,15 @@ import Attribution from 'components/Attribution'
 
 <RqToc id="practical-react-query" />
 
-<Translations>
-  {[
+<Translations
+  translations={[
     {
       language: '한국어',
       url: 'https://highjoon-dev.vercel.app/blogs/1-practical-react-query/',
     },
     {
-      language: '正體中文',
-      url: 'https://yuri-journal.me/%E8%BB%9F%E9%AB%94%E9%96%8B%E7%99%BC/2022060716',
-    },
-    {
       language: 'Português',
       url: 'https://dbrno.vercel.app/pt-BR/blog/practical-react-query',
-    },
-    {
-      language: '日本語',
-      url: 'https://yamaneko.dev/blogs/translation_practical_react_query/',
     },
     {
       language: 'Español',
@@ -58,7 +48,7 @@ import Attribution from 'components/Attribution'
       url: 'https://medium.com/@grzegorz.chyla/react-query-w-praktyce-f1da6e334065',
     },
   ]}
-</Translations>
+/>
 
 When GraphQL and especially [Apollo Client](https://www.apollographql.com/docs/react/)
 became popular in ca. 2018, there was a lot of fuss about it completely replacing redux, and the question
@@ -205,7 +195,7 @@ Because React Query will trigger a refetch whenever the query key changes.
 So when we pass a variable parameter to our `queryFn`, we almost always want to fetch data when that value changes.
 Instead of orchestrating complex effects to manually trigger a refetch, we can utilize the query key:
 
-```ts:title=feature/todos/queries.ts
+```ts title="feature/todos/queries.ts"
 type State = 'all' | 'open' | 'done'
 type Todo = {
   id: number
@@ -242,7 +232,7 @@ This is certainly not ideal, so if possible, we can try to pre-fill the newly cr
 [initialData](https://tanstack.com/query/latest/docs/react/guides/initial-query-data#initial-data-from-cache).
 The above example is perfect for that, because we can do some client side pre-filtering on our todos:
 
-```ts:title=pre-filtering {17-26}
+```ts title="pre filtering" {17-26}
 type State = 'all' | 'open' | 'done'
 type Todo = {
   id: number
@@ -292,7 +282,7 @@ and render your Form once you have data.
 Background updates are very unlikely to yield something new, and even if, your Form has already been initialized.
 So if you do that on purpose, make sure to _not_ fire off unnecessary background refetches by setting `staleTime`:
 
-```jsx:title=initial-form-data
+```jsx title="initial form data"
 const App = () => {
   const { data } = useQuery({
     queryKey: ['key'],

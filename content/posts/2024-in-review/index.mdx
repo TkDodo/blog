@@ -3,33 +3,30 @@ title: 2024 in Review
 description: A retrospective on what has happened for me in 2024
 date: 2024-12-29
 banner: ./2024.jpg
+bluesky: https://bsky.app/profile/tkdodo.eu/post/3lehciatmy22a
 tags:
   - Personal
   - 2024
   - Year in Review
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Emph from 'components/Emph'
+import Comments from '@components/Comments.astro'
+import Attribution from '@components/Attribution'
+import Translations from '@components/Translations'
+import Emph from '@components/Emph'
 import Tweet, {
   AvatarTkDodo,
   TweetImage,
   QueryGGImage,
-} from 'components/Tweet'
-
-<img
-  alt="a number of letters with confetti falling around them"
-  src="./2024.jpg"
-/>
+  TwitterBlueText,
+} from '@components/Tweet'
 
 <Attribution
   name="BoliviaInteligente"
   url="https://unsplash.com/@boliviainteligente"
 />
 
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 I always enjoy writing the "Year in Review" posts, because when I start to look back on the year, I always start to realize what has actually happened. Oftentimes, I intuitively place events in last year, only to realize "wow, this happened only a couple of months ago". 😂
 
@@ -53,12 +50,9 @@ On a technical level, this pivot gave us the opportunity to start building somet
 
 If you get these two "right", you'll have a good chance to be able to build something with great UX and DX that will not be likely to degrade over time. We did our due diligence, analyzing available solutions:
 
-<img
-  src="./router-comparisons.webp"
-  alt="Comparison of available routing solutions, grouped by File-Based Routing, Type Safety, Nested Routes, Granular Data Loading, Suspense Integration and SSR capabilities"
-/>
+![Comparison of available routing solutions, grouped by File-Based Routing, Type Safety, Nested Routes, Granular Data Loading, Suspense Integration and SSR capabilities](./router-comparisons.webp)
 
-It probably won't come as a surprise to anyone that we settled on <Emph>TanStack Router</Emph> together with <Emph>TanStack Query</Emph>. I'm totally aware that the Router is still young and far from being "battle-tested", but what convinced me about it is that it got the important parts right, conceptually: type-safety, URL state management (this one didn't even make the chart, not sure why 😂) and suspense integration.
+It probably won't come as a surprise to anyone that we settled on <Emph>TanStack Router</Emph> together with <Emph>TanStack Query</Emph>. I'm totally aware that the Router is still young and far from being "battle-tested", but what convinced me about it is that it got the important parts right, conceptually: type safety, URL state management (this one didn't even make the chart, not sure why 😂) and suspense integration.
 
 I also took this opportunity to personally step up and become an active maintainer of the Router. This allowed us to have a quick turnaround on bugfixes should we ever encounter ones that were critical for us. Thankfully, this hasn't happened yet, but I was still able to interface directly with the other maintainers and collaborate on features and integrations that we figured out while dogfooding our own open source code.
 
@@ -74,11 +68,9 @@ In the meantime, I was still working with [ui.dev](https://ui.dev) on the releas
   date={new Date('2024-05-29')}
 >
   <p>
-    📢 I'm so stoked to announce that today, 🔮{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">query.gg</Text> -
-    the brand new, official{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">@tan_stack</Text>{' '}
-    React Query course - is live and available for everyone 🎉
+    📢 I'm so stoked to announce that today, 🔮 query.gg - the brand
+    new, official <TwitterBlueText>@tan_stack</TwitterBlueText> React
+    Query course - is live and available for everyone 🎉
   </p>
   <p>
     <TweetImage>

@@ -10,15 +10,16 @@ tags:
   - ReactJs
 ---
 
-import Attribution from 'components/Attribution'
-import Comments from 'components/Comments'
-import Translations from 'components/Translations'
+import Attribution from '@components/Attribution'
+import Comments from '@components/Comments.astro'
+import Translations from '@components/Translations'
 
-<img src="./race.jpg" />
+<Attribution
+  name="Jan Starek"
+  url="https://unsplash.com/@janstarek"
+/>
 
-<Attribution name="Jan Starek" url="https://unsplash.com/@janstarek" />
-
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 It's the end of 2020, and it's hard to imagine frontend development without static types. It is very convenient to start a project without types, because you can allegedly move much faster. For personal projects, or for trying out new things, it also makes perfect sense: Probably, no one else will need to read it or work with it.
 
@@ -90,7 +91,7 @@ As we saw some light at the end of the tunnel, we decided to have new features b
 
 A draft PR was opened on June 3rd, and we finally merged it almost 3 months later:
 
-<img src="merged.png" />
+![](merged.png)
 
 ## Case closed?
 
@@ -98,7 +99,7 @@ Not quite. On September 1st, I opened a follow-up issue: _no-implicit-any_. We c
 
 The reason for this is quite simple: If the compiler doesn't scream at you, you might not notice that you need to add types unless you are very familiar with TypeScript. Consider the following React event handler:
 
-```tsx:title=implicit-any
+```tsx title="implicit any"
 const loginUser = (event) => {
   event.preventDefault()
   axios.post('/login', ...)
@@ -113,7 +114,7 @@ This works, and event is just _any_ here - not what we want for new, type-safe c
 
 We found ts-migrate, which allowed us to convert most the of implicit anys to explicit anys, turning the above code to:
 
-```tsx:title=explicit-any {1}
+```tsx title="explicit any" {1}
 const loginUser = (event: any) => {
   event.preventDefault()
   axios.post('/login', ...)

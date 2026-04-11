@@ -1,15 +1,14 @@
-import Emph from './Emph'
-import * as React from 'react'
-import { Box, Flex } from 'theme-ui'
+import type { ReactNode } from "react";
+import type { ColorVariant } from "./color-variant";
 
-type Props = {
-  children: React.ReactNode
-  title: string
-  icon?: keyof typeof icons
-  color?: string
+interface Props {
+  icon?: "bell" | "info" | "shield-alert" | "lightbulb";
+  color?: ColorVariant;
+  title?: string;
+  children?: ReactNode;
 }
 
-const Svg = ({ children }: { children: React.ReactNode }) => (
+const Svg = ({ children }: { children: ReactNode }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -23,82 +22,69 @@ const Svg = ({ children }: { children: React.ReactNode }) => (
   >
     {children}
   </svg>
-)
-
-const Bell = () => (
-  <Svg>
-    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-  </Svg>
-)
-
-const Info = () => (
-  <Svg>
-    <circle cx="12" cy="12" r="10" />
-    <path d="M12 16v-4" />
-    <path d="M12 8h.01" />
-  </Svg>
-)
-
-const ShieldAlert = () => (
-  <Svg>
-    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
-    <path d="M12 8v4" />
-    <path d="M12 16h.01" />
-  </Svg>
-)
+);
 
 const icons = {
-  bell: Bell,
-  info: Info,
-  'shield-alert': ShieldAlert,
-} as const
+  bell: () => (
+    <Svg>
+      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+    </Svg>
+  ),
+  info: () => (
+    <Svg>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 16v-4" />
+      <path d="M12 8h.01" />
+    </Svg>
+  ),
+  "shield-alert": () => (
+    <Svg>
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+      <path d="M12 8v4" />
+      <path d="M12 16h.01" />
+    </Svg>
+  ),
+  lightbulb: () => (
+    <Svg>
+      <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+      <path d="M9 18h6" />
+      <path d="M10 22h4" />
+    </Svg>
+  ),
+};
 
-const Aside = ({
-  children,
+export default function Aside({
   title,
-  icon = 'info',
-  color = 'var(--theme-ui-colors-primary)',
-}: Props) => {
-  const Icon = icons[icon]
-  return (
-    <Box
-      as="aside"
-      sx={{
-        color: 'var(--theme-ui-colors-text)',
-        marginY: ['1em', '1em'],
-        borderRadius: '0.5rem',
-        padding: ['1em', '1em'],
-        borderLeft: `6px solid ${color}`,
-        overflow: 'hidden',
-        backgroundColor: 'var(--theme-ui-colors-backgroundSecondary)',
-        code: {
-          backgroundColor:
-            'var(--theme-ui-colors-backgroundTertiary) !important',
-        },
-        'p:last-child': {
-          marginBottom: 0,
-        },
-        pre: {
-          code: {
-            backgroundColor: 'inherit !important',
-          },
-        },
-      }}
-    >
-      <Flex
-        sx={{
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          color,
-        }}
-      >
-        {title && <Emph color={color}>{title}</Emph>}
-        <Icon />
-      </Flex>
-      {children}
-    </Box>
-  )
-}
+  children,
+  icon = "info",
+  color = "primary",
+}: Props) {
+  const Icon = icons[icon];
+  const isWarning = color === "warning";
+  const isDanger = color === "danger";
+  const headerClass = isWarning
+    ? "text-warning"
+    : isDanger
+      ? "text-danger"
+      : "text-primary";
+  const borderClass = isWarning
+    ? "border-warning"
+    : isDanger
+      ? "border-danger"
+      : "border-primary";
 
-export default Aside
+  return (
+    <aside
+      className={`text-text bg-border my-5 overflow-hidden rounded-lg border-l-[6px] p-4 ${borderClass}`}
+    >
+      <div className={`flex items-center justify-between ${headerClass}`}>
+        {title ? (
+          <span className="font-bold tracking-[0.05em]">{title}</span>
+        ) : null}
+        <Icon />
+      </div>
+      <div>{children}</div>
+    </aside>
+  );
+}

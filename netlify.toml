@@ -1,25 +1,78 @@
 [[redirects]]
-  from = "/"
-  to = "/blog"
-  status = 301
+from = "/"
+to = "/blog"
+status = 301
+force = true
 
 [[redirects]]
-  from = "/images/*"
-  to = "/blog/images/:splat"
-  status = 301
+from = "/blog"
+to = "/index.html"
+status = 200
 
 [[redirects]]
-  from = "/js/script.js"
-  to = "https://plausible.io/js/plausible.js"
-  status = 200
+from = "/blog/"
+to = "/index.html"
+status = 200
 
 [[redirects]]
-  from = "/api/event"
-  to = "https://plausible.io/api/event"
-  status = 202
+from = "/blog/*"
+to = "/:splat"
+status = 200
 
 [[redirects]]
-  from = "/query"
-  to = "https://github.com/TkDodo/react-query-beyond-the-basics"
-  status = 301
-  force = true
+from = "/favicon.ico"
+to = "/blog/favicon.ico"
+status = 200
+
+[[redirects]]
+from = "/favicon.svg"
+to = "/blog/favicon.svg"
+status = 200
+
+[[redirects]]
+from = "/favicon-32x32.png"
+to = "/blog/favicon-32x32.png"
+status = 200
+
+[[redirects]]
+from = "/favicon-16x16.png"
+to = "/blog/favicon-16x16.png"
+status = 200
+
+[[redirects]]
+from = "/apple-touch-icon.png"
+to = "/blog/apple-touch-icon.png"
+status = 200
+
+[[redirects]]
+from = "/images/*"
+to = "/blog/images/:splat"
+status = 301
+
+[[redirects]]
+from = "/js/script.js"
+to = "https://plausible.io/js/plausible.js"
+status = 200
+
+[[redirects]]
+from = "/api/event"
+to = "https://plausible.io/api/event"
+status = 202
+
+[[redirects]]
+from = "/query"
+to = "https://github.com/TkDodo/react-query-beyond-the-basics"
+status = 301
+force = true
+
+[[headers]]
+for = "/giscus-*.css"
+[headers.values]
+Access-Control-Allow-Origin = "*"
+Access-Control-Allow-Methods = "GET, HEAD, OPTIONS"
+
+[[headers]]
+for = "/blog/giscus-*.css"
+[headers.values]
+Access-Control-Allow-Origin = "*"
+Access-Control-Allow-Methods = "GET, HEAD, OPTIONS"

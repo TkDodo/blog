@@ -1,0 +1,19 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "noUncheckedIndexedAccess": true,
+    "paths": {
+      "@assets/*": ["./src/assets/*"],
+      "@components/*": ["./src/components/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@layouts/*": ["./src/layouts/*"],
+      "@constants": ["./src/constants.ts"],
+      "@utils": ["./src/utils.ts"],
+      "@styles/*": ["./src/styles/*"]
+    }
+  },
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist", "blog-main"]
+}

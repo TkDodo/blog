@@ -10,13 +10,11 @@ tags:
   - TypeScript
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import GifPlayer from 'components/GifPlayer'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
-
-<img src="./offline.jpeg" />
+import Comments from '@components/Comments.astro'
+import Attribution from '@components/Attribution'
+import GifPlayer from '@components/GifPlayer.astro'
+import Translations from '@components/Translations'
+import { RqToc } from '@components/rq-toc'
 
 <Attribution
   name="Jordan Harrison"
@@ -25,8 +23,8 @@ import { RqToc } from 'components/rq-toc'
 
 <RqToc id="offline-react-query" />
 
-<Translations>
-  {[
+<Translations
+  translations={[
     {
       language: '한국어',
       url: 'https://highjoon-dev.vercel.app/blogs/13-offline-react-query',
@@ -40,7 +38,7 @@ import { RqToc } from 'components/rq-toc'
       url: 'https://rubenvara.io/react-query/react-query-offline',
     },
   ]}
-</Translations>
+/>
 
 I've said it time and time again - React Query is an [async state manager](react-query-as-a-state-manager). As long as you give it a Promise, resolved or rejected, the library is happy. Doesn't matter where that Promise comes from.
 

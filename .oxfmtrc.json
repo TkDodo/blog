@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "experimentalSortPackageJson": false,
+  "printWidth": 80,
+  "sortTailwindcss": {},
+  "overrides": [
+    {
+      "files": ["*.mdx"],
+      "options": {
+        "printWidth": 70,
+        "singleQuote": true,
+        "semi": false
+      }
+    }
+  ]
+}

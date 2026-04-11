@@ -11,13 +11,11 @@ tags:
   - Suspense
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
-import Aside from 'components/Aside'
-
-<img src="./seeding.jpeg" />
+import Comments from '@components/Comments.astro'
+import Attribution from '@components/Attribution'
+import Translations from '@components/Translations'
+import { RqToc } from '@components/rq-toc'
+import Aside from '@components/Aside'
 
 <Attribution
   name="Markus Spiske"
@@ -28,14 +26,14 @@ import Aside from 'components/Aside'
 
 <RqToc id="seeding-the-query-cache" />
 
-<Translations>
-  {[
+<Translations
+  translations={[
     {
       language: '한국어',
       url: 'https://velog.io/@eunbinn/seeding-the-query-cache',
     },
   ]}
-</Translations>
+/>
 
 A new RFC about [first class support for Promises](https://github.com/reactjs/rfcs/pull/229) has been released last week, and it got some talk going about how this would introduce fetch waterfalls if used incorrectly. So what are fetch waterfalls exactly?
 
@@ -45,24 +43,24 @@ A waterfall describes a situation where one request is made, and we wait for it 
 
 Sometimes, this is unavoidable, because the first request contains information that is needed to make the second request. We also refer to these as [dependent queries](https://tanstack.com/query/v4/docs/guides/dependent-queries):
 
-<img
-  src="./dependent-queries.png"
-  alt="component mounts, /user endpoint is being fetched, and after that, we fire off two requests for the user's projects and todos"
-/>
+![component mounts, /user endpoint is being fetched, and after that, we fire off two requests for the user's projects and todos](./dependent-queries.png)
 
 In many cases though, we can actually fetch all the data we need in parallel, because it is independent data:
 
-<img
-  src="./parallel-queries.png"
-  alt="component mounts, both /issues and /labels are fetched at the same time"
-/>
+![component mounts, both /issues and /labels are fetched at the same time](./parallel-queries.png)
 
 In React Query, we can do that in two different ways:
 
-```tsx:title=parallel-queries
+```tsx title="parallel queries"
 // 1. Use useQuery twice
-const issues = useQuery({ queryKey: ['issues'], queryFn: fetchIssues })
-const labels = useQuery({ queryKey: ['labels'], queryFn: fetchLabels })
+const issues = useQuery({
+  queryKey: ['issues'],
+  queryFn: fetchIssues,
+})
+const labels = useQuery({
+  queryKey: ['labels'],
+  queryFn: fetchLabels,
+})
 
 // 2. Use the useQueries hook
 const [issues, labels] = useQueries([
@@ -83,7 +81,7 @@ When a promise is _pending_, React will unmount the component tree and render a 
 
 This will decouple our components from handling those states, and we can focus on the happy path. It almost acts like synchronous code that just _reads_ a value from a cache. React Query offers a dedicated `useSuspenseQuery` hook for that since v5:
 
-```jsx:title=useQuery-with-suspense {2-3}
+```jsx title="useQuery with suspense" {2-3}
 function Issues() {
   // 👓 read data from cache
   const { data } = useSuspenseQuery({
@@ -95,7 +93,7 @@ function Issues() {
 
   return (
     <div>
-      { /* TypeScript knows data can't be undefined */ }
+      {/* TypeScript knows data can't be undefined */}
       {data.map((issue) => (
         <div>{issue.title}</div>
       ))}
@@ -119,10 +117,7 @@ function App() {
 
 So this is nice and all, but it can backfire when you use multiple queries in the same component that have suspense turned on. Here is what happens:
 
-<img
-  src="./fetch-waterfall.png"
-  alt="component mounts, /issues are fetched and component suspends. After the request is finished, component mounts and suspends again, triggering a fetch for /labels"
-/>
+![component mounts, /issues are fetched and component suspends. After the request is finished, component mounts and suspends again, triggering a fetch for /labels](./fetch-waterfall.png)
 
 - Component renders, tries to read the first query
 - Sees that there is no data in the cache yet, so it suspends
@@ -147,7 +142,7 @@ The earlier you initiate a fetch, the better, because the sooner it starts, the 
 
 But even if that's not the case, you can still use `prefetchQuery` to initiate a fetch before the component is rendered:
 
-```tsx:title=prefetching {3-4}
+```tsx title="prefetching" {3-4}
 const issuesQuery = { queryKey: ['issues'], queryFn: fetchIssues }
 
 // ⬇️ initiate a fetch before the component renders
@@ -162,10 +157,7 @@ The call to `prefetchQuery` is executed as soon as your JavaScript bundle is eva
 
 This means it will still be kicked off before the component renders. If you do this for both queries in our example, you will get those parallel queries back even when using suspense.
 
-<img
-  src="./prefetching.png"
-  alt="prefetch for both queries triggers before the component mounts. component suspends for a short time until both queries re finished."
-/>
+![prefetch for both queries triggers before the component mounts. component suspends for a short time until both queries re finished.](./prefetching.png)
 
 As we can see, the query will still suspend until both are done fetching, but because we've triggered them in parallel, the waiting time is now drastically reduced.
 
@@ -191,7 +183,7 @@ There are two common approaches to fill a detail cache with data from a list cac
 
 This is the one also described [in the docs](https://tanstack.com/query/v4/docs/guides/initial-query-data#initial-data-from-cache): When you try to render the detail view, you look up the list cache for the item you want to render. If it is there, you use it as initial data for the detail query.
 
-```tsx:title=pull-approach {6-11}
+```tsx title="pull approach" {6-11}
 const useTodo = (id: number) => {
   const queryClient = useQueryClient()
   return useQuery({
@@ -213,7 +205,7 @@ Be advised that if you have `staleTime` set, no further background refetch will 
 
 As shown [in the docs](https://tanstack.com/query/v4/docs/guides/initial-query-data#initial-data-from-the-cache-with-initialdataupdatedat), we can additionally specify `initialDataUpdatedAt` on our detail query. It will tell React Query when the data we are passing in as `initialData` was originally fetched, so it can determine staleness correctly. Conveniently, React Query also knows when the list was last fetched, so we can just pass that in:
 
-```tsx:title=initialDataUpdatedAt {11-13}
+```tsx title="initialDataUpdatedAt" {11-13}
 const useTodo = (id: number) => {
   const queryClient = useQueryClient()
   return useQuery({
@@ -242,7 +234,7 @@ However, there is no good callback to hook into when a query is fetched. The glo
 
 The best way I've found to execute the push approach is to do it directly in the `queryFn`, after data has been fetched:
 
-```tsx:title=push-approach {7-11}
+```tsx title="push approach" {7-11}
 const useTodos = () => {
   const queryClient = useQueryClient()
   return useQuery({

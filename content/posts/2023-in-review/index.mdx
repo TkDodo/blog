@@ -9,26 +9,25 @@ tags:
   - Year in Review
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Emph from 'components/Emph'
-import { QueryGG } from 'components/QueryGG'
+import Comments from '@components/Comments.astro'
+import Attribution from '@components/Attribution'
+import Translations from '@components/Translations'
+import Emph from '@components/Emph'
+import QueryGG from '@components/QueryGG.astro'
 import Tweet, {
   AvatarTkDodo,
   TanStackQueryV5,
   SelfieInception,
   TweetImage,
-} from 'components/Tweet'
-
-<img alt="2023" src="./2023.jpg" />
+  TwitterBlueText,
+} from '@components/Tweet'
 
 <Attribution
   name="Ricardo Loaiza"
   url="https://unsplash.com/@rickpekar"
 />
 
-<Translations>{[]}</Translations>
+<Translations translations={[]} />
 
 > I'm sure 2023 will have some exciting things in store for me.
 
@@ -59,24 +58,16 @@ Speaking of TanStack Query - we've released a new major version this year. 🎉
   avatar={<AvatarTkDodo />}
   date={new Date('2023-10-17')}
 >
-  <p>📢 Announcing TanStack Query v5 🎉🥳</p>
   <p>
-    🤝 unified object API
-    <br />
-    📈 simplified, optimistic updates
-    <br />
-    ♻️ sharable mutation state
-    <br />
-    🔀 suspense and streaming w/ RSC
-    <br />
-    ♾ improved infinite queries
-    <br />
-    ⚡️ ~20 % smaller
-    <br />
-    🛠️ new agnostic devtools
-    <br />
-    💾 fine-grained persistence
-    <br />
+    <div>📢 Announcing TanStack Query v5 🎉🥳</div>
+    <div>🤝 unified object API</div>
+    <div>📈 simplified, optimistic updates</div>
+    <div>♻️ sharable mutation state</div>
+    <div>🔀 suspense and streaming w/ RSC</div>
+    <div>♾ improved infinite queries</div>
+    <div>⚡️ ~20 % smaller</div>
+    <div>🛠️ new agnostic devtools</div>
+    <div>💾 fine-grained persistence</div>
   </p>
   <p>
     <TweetImage>
@@ -106,9 +97,7 @@ I went to React Summit again, this time as a speaker, and I had a blast. My talk
 >
   <p>
     The selfie inception 🤳{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      #ReactSummit
-    </Text>
+    <TwitterBlueText>#ReactSummit</TwitterBlueText>
   </p>
   <p>
     <TweetImage>

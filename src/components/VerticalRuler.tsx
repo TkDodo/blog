@@ -1,16 +1,14 @@
-import { Box } from '@theme-ui/components'
-import * as React from 'react'
+interface Props {
+  height?: string;
+}
 
-export const VerticalRuler = ({ height }: { height: string }) => (
-  <Box
-    as="hr"
-    sx={{
-      width: '4px',
-      height,
-      background: 'var(--theme-ui-colors-primary)',
-      margin: '5em auto',
-      border: 'none',
-      borderRadius: '5px',
-    }}
-  ></Box>
-)
+export function VerticalRuler({ height = "4rem" }: Props) {
+  const heightClass =
+    height === "15em" ? "h-[15em]" : height === "5em" ? "h-[5em]" : "h-16";
+
+  return (
+    <hr
+      className={`w-1 ${heightClass} bg-primary mx-auto my-[5em] rounded-[5px] border-0`}
+    />
+  );
+}

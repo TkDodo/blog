@@ -10,16 +10,11 @@ tags:
   - JavaScript
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
-import Emph from 'components/Emph'
-import Aside from 'components/Aside'
-import { QueryGG } from 'components/QueryGG'
-import Highlight from 'components/Highlight'
-import { Alert } from '@theme-ui/components'
-import { VerticalRuler } from 'components/VerticalRuler'
+import Comments from '@components/Comments.astro'
+import Attribution from '@components/Attribution'
+import Translations from '@components/Translations'
+import Emph from '@components/Emph'
+import { VerticalRuler } from '@components/VerticalRuler'
 import Tweet, {
   AvatarTkDodo,
   AvatarSophiebits,
@@ -27,23 +22,19 @@ import Tweet, {
   TweetImage,
   SathyaAndMe,
   V5390,
-} from 'components/Tweet'
-
-<img
-  src="./suspense.jpeg"
-  alt="Silhouette of person under gray sky"
-/>
+  TwitterBlueText,
+} from '@components/Tweet'
 
 <Attribution name="Jr Korpa" url="https://unsplash.com/@jrkorpa" />
 
-<Translations>
-  {[
+<Translations
+  translations={[
     {
       language: '한국어',
       url: 'https://velog.io/@cnsrn1874/react-19-and-suspense-a-drama-in-3-acts',
     },
   ]}
-</Translations>
+/>
 
 That was quite a roller-coaster last week 🎢. Some things unravelled, some things went down, and in the middle of it: [React Summit](https://reactsummit.com/), the biggest React conference in the world.
 
@@ -66,9 +57,9 @@ This release is packed with goodies, and I was excited to upgrade React Query to
 >
   <p>React Query 🤝 React 19</p>
   <p>
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      github.com/TanStack/query...
-    </Text>
+    <TwitterBlueText>
+      {'github.com\u200b/TanStack/query...'}
+    </TwitterBlueText>
   </p>
   <p>
     Someone please try out the react compiler on an example and report
@@ -99,22 +90,21 @@ Full disclosure upfront: I wasn't the first to discover this. Shout out to [Gabr
   <p>A ton of great changes! 🥳</p>
   <p>
     However this change probably deserve a bigger disclaimer.
-    <br />
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      https://github.com/facebook/react...
-    </Text>
+    <TwitterBlueText>
+      {'https://\u200bgithub.com/facebook/react...'}
+    </TwitterBlueText>
   </p>
   <p>
     Code using suspense with libraries like react-query will get
     waterfalls where loading previously happened in parallel.
-    <br />
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      https://codesandbox.io/p/devbox/react...
-    </Text>
-    <br />
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      https://codesandbox.io/p/devbox/react...
-    </Text>
+  </p>
+  <p>
+    <TwitterBlueText>
+      {'https://\u200bcodesandbox.io/p/devbox/react...'}
+    </TwitterBlueText>
+    <TwitterBlueText>
+      {'https://\u200bcodesandbox.io/p/devbox/react...'}
+    </TwitterBlueText>
   </p>
 </Tweet>
 
@@ -122,7 +112,7 @@ It's funny because I saw the tweet, and even commented on it, but didn't think t
 
 So after the React 19 upgrade in React Query itself, I continued working on the suspense lesson of the course. We have one example in there where we're showing how to reveal content at the same time, but still have all requests fetch in parallel. As shown in the [react docs](https://react.dev/reference/react/Suspense#revealing-content-together-at-once), we can achieve this by putting both components as siblings into the same suspense boundary. The example looks roughly like this:
 
-```jsx:title=suspense-with-two-children
+```jsx title="suspense with two children"
 export default function App() {
   return (
     <Suspense fallback={<p>...</p>}>
@@ -139,7 +129,7 @@ This is a pretty great feature because it means if each sibling triggers anythin
 
 A more complete example might look something like this:
 
-```jsx:title=app-with-suspense
+```jsx title="app with suspense"
 export default function App() {
   return (
     <Suspense fallback={<p>...</p>}>
@@ -158,7 +148,7 @@ Some or all of those components can initiate critical data fetching, and we'll g
 
 Another advantage is that we can add fetches later without having to think about how pending states will be handled. The `<Footer />` component might not fetch data now, but if we add it later, it will just work. And if we deem data as non-critical, we can always wrap our component in it's own suspense boundary:
 
-```jsx:title=nested-suspense {9-11}
+```jsx title="nested suspense" {9-11}
 export default function App() {
   return (
     <Suspense fallback={<p>...</p>}>
@@ -197,30 +187,25 @@ I was so surprised by this behaviour that I did the only thing I could think of 
     the same Suspense Boundary, where each was doing a fetch, was
     still firing them in parallel:
   </p>
-  <p>
-    <Suspense fallback={<p>...</p>}>
-      <RepoData name="tanstack/query" />
-      <RepoData name="tanstack/table" />
-    </Suspense>
-  </p>
+  ```
+  <Suspense fallback={<p>...</p>}>
+    <RepoData name="tanstack/query" />
+    <RepoData name="tanstack/table" />
+  </Suspense>
+  ```
   <p>
     This fires two queries, in parallel, waits until both are resolved
     and then shows the whole sub-tree.
   </p>
   <p>
     In React 19, as far as I can see, the queries run in a waterfall
-    now. I think I remember{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      @rickhanlonii
-    </Text>{' '}
+    now. I think I remember
+    <TwitterBlueText>@rickhanlonii</TwitterBlueText>
     mentioning something like this but I can't find any evidence now.
   </p>
   <p>
-    /cc{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">@acdlite</Text>{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      @dan_abramov2
-    </Text>
+    /cc <TwitterBlueText>@acdlite</TwitterBlueText>{' '}
+    <TwitterBlueText>@dan_abramov2</TwitterBlueText>
   </p>
 </Tweet>
 
@@ -230,7 +215,7 @@ Needless to say, this tweet took off and started a somewhat heated twitter discu
 
 There are of course reasons why this change was made, and, oddly enough, they are meant as a performance improvement for some situations. Continuing to render siblings of a component that has already suspended is not for free, and it will block showing the fallback. Consider the following example:
 
-```jsx:title=expensive-sibling
+```jsx title="expensive sibling"
 export default function App() {
   return (
     <Suspense fallback={<p>...</p>}>
@@ -255,7 +240,7 @@ That is why the recommended approach by the react team is to initiate fetches ea
 
 For example, with TanStack Router and TanStack Query, the example could look like this:
 
-```tsx:title=prefetch-in-route-loader
+```tsx title="prefetch in route loader"
 export const Route = createFileRoute('/')({
   loader: ({ context: { queryClient } }) => {
     queryClient.ensureQueryData(repoOptions('tanstack/query'))
@@ -278,7 +263,7 @@ Hoisting your data requirements is a good idea regardless of how suspense works,
 
 Further, if learned anything from React Query, it's that not every async operation is a fetch. For example, using `React.lazy` for code-splitting would also mean that bundles are loaded in serial if your App looks like this:
 
-```jsx:title=react.lazy
+```jsx title="react.lazy"
 const Header = lazy(() => import('./Header.tsx'))
 const Navbar = lazy(() => import('./Navbar.tsx'))
 const Content = lazy(() => import('./Content.tsx'))
@@ -318,8 +303,8 @@ Later that evening, I had the chance to talk to [Sathya Gunasekaran](https://bsk
   date={new Date('2024-06-13')}
 >
   <p>
-    Had a great discussion with{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">@_gsathya</Text>{' '}
+    Had a great discussion with
+    <TwitterBlueText>@_gsathya</TwitterBlueText>
     about React19, the suspense changes and the react compiler. I felt
     like my concerns were truly heard and the feedback appreciated, so
     thank you for that 🙏
@@ -343,26 +328,19 @@ On the next day, the react team met and decided to hold the release:
   date={new Date('2024-06-14')}
 >
   <p>
-    good news re Suspense, just met w/{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">
-      @rickhanlonii
-    </Text>{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">@en_JS</Text>{' '}
-    <Text color="var(--theme-ui-colors-twitterBlue)">@acdlite</Text>
-    <br />
-    <Text>
-      * we care a lot about SPAs, team misjudged how many people rely
-      on this today
-    </Text>
-    <br />
-    <Text>
-      * still recommend preloading but recognize not always practical
-    </Text>
-    <br />
-    <Text>
-      * we plan to hold the 19.0 release until we find a good fix
-    </Text>
+    good news re Suspense, just met w/
+    <TwitterBlueText>@rickhanlonii</TwitterBlueText>{' '}
+    <TwitterBlueText>@en_JS</TwitterBlueText>{' '}
+    <TwitterBlueText>@acdlite</TwitterBlueText>
   </p>
+  <p>
+    * we care a lot about SPAs, team misjudged how many people rely on
+    this today
+  </p>
+  <p>
+    * still recommend preloading but recognize not always practical
+  </p>
+  <p>* we plan to hold the 19.0 release until we find a good fix</p>
 </Tweet>
 
 It's very reassuring that the react team is open to feedback at this stage. Postponing a release that was already announced and presented at a conference is a big move - one that everyone involved really appreciated. I'll gladly work with the react team as best I can to find good compromise in that matter.

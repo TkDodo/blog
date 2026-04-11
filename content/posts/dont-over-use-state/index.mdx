@@ -8,28 +8,21 @@ tags:
   - useState pitfalls
 ---
 
-import Comments from 'components/Comments'
-import Translations from 'components/Translations'
-import Tweet, { AvatarSophiebits } from 'components/Tweet'
+import Comments from '@components/Comments.astro'
+import Translations from '@components/Translations'
+import Tweet, { AvatarSophiebits } from '@components/Tweet'
+import { UsToc } from '@components/us-toc'
 
-<img src="./use-state-pitfalls.png" />
+<UsToc id="dont-over-use-state" />
 
----
-
-- <b>#1: Don't over useState</b>
-- [#2: Putting props to useState](putting-props-to-use-state)
-- [#3: Things to know about useState](things-to-know-about-use-state)
-- [#4: useState for one-time initializations](use-state-for-one-time-initializations)
-- [#5: useState vs. useReducer](use-state-vs-use-reducer)
-
-<Translations>
-  {[
+<Translations
+  translations={[
     {
       language: '한국어',
       url: 'https://www.philly.im/blog/dont-over-use-state',
     },
   ]}
-</Translations>
+/>
 
 `useState` is considered to be the most basic of all the hooks provided by React.
 It is also the one you are most likely to use (no pun intended), alongside `useEffect`.
@@ -69,7 +62,7 @@ Fetch some data from a remote endpoint (a list of items with categories) and let
 
 The way the state was managed looked something like this most of the time:
 
-```jsx:title=use-state
+```jsx title="use state"
 import { fetchData } from './api'
 import { computeCategories } from './utils'
 
@@ -107,7 +100,7 @@ The problem is that we have a "publicly" available function `setCategories` that
 
 If we intended our categories to be solely dependent on our data (like we expressed with our useEffect), this is bad news:
 
-```jsx:title=bad-news {2,26}
+```jsx title="bad news" {2,26}
 import { fetchData } from './api'
 import { computeCategories, getMoreCategories } from './utils'
 
@@ -195,7 +188,7 @@ We want to have proof that something is slow before acting on it. For more on th
 
 In my world, the example would look just like this:
 
-```diff:title=no-useless-state
+```diff title="no useless state"
 import { fetchData } from './api'
 import { computeCategories } from './utils'
 

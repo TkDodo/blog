@@ -1,35 +1,27 @@
-import { withPrefix } from 'gatsby'
-import * as React from 'react'
-import { useColorMode } from 'theme-ui'
+import type { ReactNode } from "react";
 
-import { Flex, Box, Text, Divider } from '@theme-ui/components'
+interface SlideProps {
+  children: ReactNode;
+  index: number;
+  colorMode: "light" | "dark";
+}
 
-export const Slide = ({ children, index }) => {
-  const [colorMode] = useColorMode()
+export function Slide({ children, index, colorMode }: SlideProps) {
+  const baseUrl = import.meta.env.BASE_URL.endsWith("/")
+    ? import.meta.env.BASE_URL
+    : `${import.meta.env.BASE_URL}/`;
+  const src = `${baseUrl}images/react-query-api-design-lessons-learned/${colorMode}/${index + 1}.png`;
+
   return (
-    <Flex
-      sx={{
-        cursor: 'grab',
-        flexGrow: 1,
-        flexDirection: 'column',
-      }}
-    >
-      <Box
-        sx={{
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
-          backgroundSize: 'contain',
-          height: [300, 400, 500],
-          backgroundImage: `url(${withPrefix(
-            `images/react-query-api-design-lessons-learned/${
-              colorMode === 'light' ? 'light' : 'dark'
-            }/${index + 1}.png`
-          )})`,
-        }}
+    <div className="flex grow cursor-grab flex-col">
+      <img
+        src={src}
+        alt=""
+        aria-hidden="true"
+        className="h-[300px] w-full object-contain object-center md:h-[400px] lg:h-[500px]"
       />
-
-      <Divider />
-      <Text>{children}</Text>
-    </Flex>
-  )
+      <hr className="border-border my-4" />
+      <div className="text-text">{children}</div>
+    </div>
+  );
 }

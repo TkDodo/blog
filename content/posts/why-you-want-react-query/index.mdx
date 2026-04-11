@@ -10,21 +10,16 @@ tags:
   - useEffect
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import { RqToc } from 'components/rq-toc'
-import Emph from 'components/Emph'
-import Aside from 'components/Aside'
-import { QueryGG } from 'components/QueryGG'
-import { FixTitle } from 'components/FixTitle'
-import { VerticalRuler } from 'components/VerticalRuler'
-import Highlight from 'components/Highlight'
-
-<img
-  src="./want.jpg"
-  alt="white letters on brown wooden table, 'WANT' with reflection on shop window"
-/>
+import Comments from '@components/Comments.astro'
+import Attribution from '@components/Attribution'
+import Translations from '@components/Translations'
+import { RqToc } from '@components/rq-toc'
+import Emph from '@components/Emph'
+import Aside from '@components/Aside'
+import QueryGG from '@components/QueryGG.astro'
+import { FixTitle } from '@components/FixTitle'
+import { VerticalRuler } from '@components/VerticalRuler'
+import Highlight from '@components/Highlight'
 
 <Attribution
   name="Christian Lue"
@@ -35,8 +30,8 @@ import Highlight from 'components/Highlight'
 
 <RqToc id="why-you-want-react-query" />
 
-<Translations>
-  {[
+<Translations
+  translations={[
     {
       language: '한국어',
       url: 'https://velog.io/@cnsrn1874/why-you-need-react-query',
@@ -46,7 +41,7 @@ import Highlight from 'components/Highlight'
       url: 'https://dev.to/ccaracach/por-que-necesitas-react-query-3a1n',
     },
   ]}
-</Translations>
+/>
 
 It's no secret that I ❤️ React Query for how it simplifies the way we're interacting with asynchronous state in our React applications. And I know a lot of fellow devs feel the same.
 
@@ -64,25 +59,25 @@ If you're using a framework that has a built-in solution for data fetching and m
 
 So let's instead look at the standard fetch-in-`useEffect` example that came up on [Twitter](https://twitter.com/ken_wheeler/status/1719122802333118557) lately, and dive into why it might be a good idea to use React Query for those situation, too:
 
-```jsx:title=fetch-in-useEffect
+```jsx title="fetch in useEffect"
 function Bookmarks({ category }) {
   const [data, setData] = useState([])
   const [error, setError] = useState()
 
   useEffect(() => {
     fetch(`${endpoint}/${category}`)
-      .then(res => res.json())
-      .then(d => setData(d))
-      .catch(e => setError(e))
+      .then((res) => res.json())
+      .then((d) => setData(d))
+      .catch((e) => setError(e))
   }, [category])
 
   // Return JSX based on data and error state
 }
 ```
 
-If you think this code is fine for simple use cases where you don't need additional features, let me tell you that I immediately spotted 🐛 <Emph color="var(--red)">5 bugs</Emph> 🪲 hiding in these 10 lines of code.
+If you think this code is fine for simple use cases where you don't need additional features, let me tell you that I immediately spotted 🐛 <Emph color="danger">5 bugs</Emph> 🪲 hiding in these 10 lines of code.
 
-<img src="./this_is_fine.jpg" alt="This is fine meme" />
+![This is fine meme](./this_is_fine.jpg)
 
 Maybe take a minute or two and see if you can find them all. I'll wait...
 
@@ -98,16 +93,13 @@ There are reasons why the [official React docs](https://react.dev/reference/reac
 
 The effect is set up in a way that it re-fetches whenever `category` changes, which is certainly correct. However, network responses can arrive in a different order than you sent them. So if you change the category from `books` to `movies` and the response for `movies` arrives before the response for `books`, you'll end up with the wrong data in your component.
 
-<img
-  src="./race.png"
-  alt="Timeline that starts to fetch books, then fetches movies. Movies resolves faster so we setData(movies) before we setData(books)"
-/>
+![Timeline that starts to fetch books, then fetches movies. Movies resolves faster so we setData(movies) before we setData(books)](./race.png)
 
 At the end, you'll be left with an <Emph>inconsistent</Emph> state: Your local state will say that you have `movies` selected, but the data you're rendering is actually `books`.
 
 The React docs say that we can fix this with a cleanup function and an `ignore` boolean, so let's do that:
 
-```jsx:title=ignore-flag {6,10-12,15-17,19-21}
+```jsx title="ignore flag" {6,10-12,15-17,19-21}
 function Bookmarks({ category }) {
   const [data, setData] = useState([])
   const [error, setError] = useState()
@@ -115,20 +107,20 @@ function Bookmarks({ category }) {
   useEffect(() => {
     let ignore = false
     fetch(`${endpoint}/${category}`)
-      .then(res => res.json())
-      .then(d => {
+      .then((res) => res.json())
+      .then((d) => {
         if (!ignore) {
           setData(d)
         }
       })
-      .catch(e => {
+      .catch((e) => {
         if (!ignore) {
           setError(e)
         }
       })
-      return () => {
-        ignore = true
-      }
+    return () => {
+      ignore = true
+    }
   }, [category])
 
   // Return JSX based on data and error state
@@ -141,7 +133,7 @@ What happens now is that the effect cleanup function runs when `category` change
 
 It's not there at all. We have no way to show a pending UI while the requests are happening - not for the first one and not for further requests. So, let's add that?
 
-```jsx:title=loading-state {2,8,21-25}
+```jsx title="loading state" {2,8,21-25}
 function Bookmarks({ category }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
@@ -151,13 +143,13 @@ function Bookmarks({ category }) {
     let ignore = false
     setIsLoading(true)
     fetch(`${endpoint}/${category}`)
-      .then(res => res.json())
-      .then(d => {
+      .then((res) => res.json())
+      .then((d) => {
         if (!ignore) {
           setData(d)
         }
       })
-      .catch(e => {
+      .catch((e) => {
         if (!ignore) {
           setError(e)
         }
@@ -167,9 +159,9 @@ function Bookmarks({ category }) {
           setIsLoading(false)
         }
       })
-      return () => {
-        ignore = true
-      }
+    return () => {
+      ignore = true
+    }
   }, [category])
 
   // Return JSX based on data and error state
@@ -180,7 +172,7 @@ function Bookmarks({ category }) {
 
 Initializing `data` with an empty array seems like a good idea to avoid having to check for `undefined` all the time - but what if we fetch data for a category that has no entries yet, and we actually get back an empty array? We'd have no way to distinguish between "no data yet" and "no data at all". The loading state we've just introduced helps, but it's still better to initialize with `undefined`:
 
-```jsx:title=empty-state {3}
+```jsx title="empty state" {3}
 function Bookmarks({ category }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState()
@@ -190,13 +182,13 @@ function Bookmarks({ category }) {
     let ignore = false
     setIsLoading(true)
     fetch(`${endpoint}/${category}`)
-      .then(res => res.json())
-      .then(d => {
+      .then((res) => res.json())
+      .then((d) => {
         if (!ignore) {
           setData(d)
         }
       })
-      .catch(e => {
+      .catch((e) => {
         if (!ignore) {
           setError(e)
         }
@@ -206,9 +198,9 @@ function Bookmarks({ category }) {
           setIsLoading(false)
         }
       })
-      return () => {
-        ignore = true
-      }
+    return () => {
+      ignore = true
+    }
   }, [category])
 
   // Return JSX based on data and error state
@@ -226,7 +218,7 @@ error: errorFromPreviousCategory
 
 The result will then depend on how we actually render JSX based on this state. If we check for `error` first, we'll render the error UI with the old message even though we have valid data:
 
-```jsx:title=error-first
+```jsx title="error first"
 return (
   <div>
     { error ? (
@@ -246,7 +238,7 @@ If we check data first, we have the same problem if the second request fails. If
 
 To fix this, we have to reset our local state when category changes:
 
-```jsx:title=reset-state {14,20}
+```jsx title="reset state" {14,20}
 function Bookmarks({ category }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState()
@@ -256,14 +248,14 @@ function Bookmarks({ category }) {
     let ignore = false
     setIsLoading(true)
     fetch(`${endpoint}/${category}`)
-      .then(res => res.json())
-      .then(d => {
+      .then((res) => res.json())
+      .then((d) => {
         if (!ignore) {
           setData(d)
           setError(undefined)
         }
       })
-      .catch(e => {
+      .catch((e) => {
         if (!ignore) {
           setError(e)
           setData(undefined)
@@ -274,9 +266,9 @@ function Bookmarks({ category }) {
           setIsLoading(false)
         }
       })
-      return () => {
-        ignore = true
-      }
+    return () => {
+      ignore = true
+    }
   }, [category])
 
   // Return JSX based on data and error state
@@ -293,7 +285,7 @@ If we'd want to avoid that, we'd have to add another "ref workaround", which I d
 
 I didn't include this in the original list of bugs, because you'd have the same problem with React Query: `fetch` doesn't reject on HTTP errors, so you'd have to check for `res.ok` and throw an error yourself.
 
-```jsx:title=error-handling {10-14}
+```jsx title="error handling" {10-14}
 function Bookmarks({ category }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState()
@@ -303,19 +295,19 @@ function Bookmarks({ category }) {
     let ignore = false
     setIsLoading(true)
     fetch(`${endpoint}/${category}`)
-      .then(res => {
+      .then((res) => {
         if (!res.ok) {
           throw new Error('Failed to fetch')
         }
         return res.json()
       })
-      .then(d => {
+      .then((d) => {
         if (!ignore) {
           setData(d)
           setError(undefined)
         }
       })
-      .catch(e => {
+      .catch((e) => {
         if (!ignore) {
           setError(e)
           setData(undefined)
@@ -326,9 +318,9 @@ function Bookmarks({ category }) {
           setIsLoading(false)
         }
       })
-      return () => {
-        ignore = true
-      }
+    return () => {
+      ignore = true
+    }
   }, [category])
 
   // Return JSX based on data and error state
@@ -355,7 +347,7 @@ But you still <Emph>need it</Emph> to make that state predictably available in y
 
 With React Query, the above code becomes:
 
-```jsx:title=react-query
+```jsx title="react query"
 function Bookmarks({ category }) {
   const { isLoading, data, error } = useQuery({
     queryKey: ['bookmarks', category],
@@ -388,7 +380,7 @@ So, if you're still thinking that you don't want React Query, I'd like to challe
 
 I've been working on a new, official course on React Query together with [ui.dev](https://ui.dev/). This course will give you a first principles understanding of both how React Query works under the hood as well as how to write React Query code that scales. If you enjoy the content I've been creating so far, you'll love [query.gg](https://query.gg/?s=dom).
 
-<QueryGG />{' '}
+<QueryGG />
 
 </Aside>
 
@@ -396,7 +388,7 @@ I've been working on a new, official course on React Query together with [ui.dev
 
 A lot of folks on twitter mentioned missing request cancellation in the original snippet. I don't think that's necessarily a bug - just a missing feature. Of course, React Query has you covered here as well with a pretty straightforward change:
 
-```jsx:title=cancellation {4,5}
+```jsx title="cancellation" {4,5}
 function Bookmarks({ category }) {
   const { isLoading, data, error } = useQuery({
     queryKey: ['bookmarks', category],

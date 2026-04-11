@@ -1,24 +1,24 @@
-import * as React from 'react'
-import { Text, useColorMode } from 'theme-ui'
-import { tint } from '@theme-ui/color'
+import type { ReactNode } from "react";
+import type { ColorVariant } from "./color-variant";
 
-type Props = {
-  children: React.ReactNode
-  color?: string
+interface Props {
+  color?: ColorVariant;
+  children?: ReactNode;
 }
 
-const Emph = ({ children, color = 'primary' }: Props) => {
+export default function Emph({ color = "primary", children }: Props) {
+  const styleClass =
+    color === "danger"
+      ? "text-danger bg-danger/12"
+      : color === "warning"
+        ? "text-warning bg-warning/12"
+        : "text-primary bg-primary/12";
+
   return (
-    <Text
-      sx={{
-        letterSpacing: '0.05em',
-        color,
-        fontWeight: 'bold',
-      }}
+    <span
+      className={`emph inline rounded-[0.28em] px-[0.28em] py-[0.08em] font-semibold tracking-normal not-italic ${styleClass} [&_code]:px-0 [&_code]:py-0 [&_code]:font-semibold [&_code]:text-inherit`}
     >
       {children}
-    </Text>
-  )
+    </span>
+  );
 }
-
-export default Emph

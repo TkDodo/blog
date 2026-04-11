@@ -10,33 +10,28 @@ tags:
   - XState
 ---
 
-import Comments from 'components/Comments'
-import Attribution from 'components/Attribution'
-import Translations from 'components/Translations'
-import Emph from 'components/Emph'
-
-<img
-  src="./store.jpg"
-  alt="Open vintage sign broad through the glass of store window"
-/>
+import Comments from '@components/Comments.astro'
+import Attribution from '@components/Attribution'
+import Translations from '@components/Translations'
+import Emph from '@components/Emph'
 
 <Attribution
   name="Artem Beliaikin"
   url="https://unsplash.com/@belart84"
 />
 
-<Translations>
-  {[
+<Translations
+  translations={[
     {
       language: '简体中文',
       url: 'https://sorrycc.com/introducing-x-state-store/',
     },
     {
-      language: "한국어",
-      url: "https://www.gwansik.dev/posts/introducing-x-state-store",
+      language: '한국어',
+      url: 'https://www.gwansik.dev/posts/introducing-x-state-store',
     },
   ]}
-</Translations>
+/>
 
 I'm super happy with the tech stack I'm currently using, especially around state management. Obviously, server state is managed by [React Query](practical-react-query). For forms, I use [React Hook Form](react-query-and-forms).
 
@@ -52,7 +47,7 @@ When I first read about [xstate/store](https://stately.ai/docs/xstate-store), I 
 
 Let's take a look at an example, and for easy comparison, I'll be using a similar example as the one from my [working with zustand](working-with-zustand) article:
 
-```ts:title=example
+```ts title="example"
 import { createStore } from '@xstate/store'
 import { useSelector } from '@xstate/store/react'
 
@@ -65,7 +60,8 @@ const store = createStore({
   // transitions
   on: {
     increasePopulation: {
-      bears: (context, event: { by: number }) => context.bears + event.by,
+      bears: (context, event: { by: number }) =>
+        context.bears + event.by,
     },
     eatFish: {
       fish: (context) => context.fish - 1,
@@ -100,7 +96,7 @@ The store has a natural split between state and actions, which is something that
 
 Speaking of updates: if we don't select actions from the store - how do we trigger a transition? Quite simply with `store.send`:
 
-```tsx:title=transitions
+```tsx title="transitions"
 function App() {
   const bears = useBears()
 
