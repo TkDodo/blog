@@ -75,6 +75,325 @@ While the router does give you a way to access data with `useLoaderData`, it's n
 
 ---
 
+---
+title: Fixing Prefetching Mismatches in TanStack Router
+description:
+
+date: 2025-10-12
+banner:
+tags:
+  - ReactJs
+  - TanStack Router
+  - React Query
+  - TypeScript
+---
+
+import Comments from 'components/Comments'
+import Attribution from 'components/Attribution'
+import Translations from 'components/Translations'
+import { TsrToc } from 'components/tsr-toc'
+import Emph from 'components/Emph'
+import Aside from 'components/Aside'
+import Highlight from 'components/Highlight'
+
+<img
+  src="./inheritance.jpg"
+  alt="photo of library with turned on lights"
+/>
+
+<Attribution
+  name="Janko Ferlič"
+  url="https://unsplash.com/@itfeelslikefilm"
+/>
+
+<TsrToc id="fixing-prefetching-mismatches-in-tan-stack-router" />
+
+In [#2: Context Inheritance in TanStack Router](context-inheritance-in-tan-stack-router), we learned about how TanStack Router
+
+<Translations>{[]}</Translations>
+
+## Router Context
+
+Another property of the Router that can do inheritance is the [Router Context](https://tanstack.com/router/latest/docs/framework/react/guide/router-context). This context is created at the root route if we use `createRootRouteWithContext`, and it's initial values are passed to `createRouter` itself. It is generally used for dependency injection into route loaders. When used with TanStack Query, we usually use it to distribute the `QueryClient`:
+
+```tsx:title=router-context {5-7}
+const queryClient = new QueryClient()
+
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient,
+  },
+  Wrap: ({ children }) => {
+    return (
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    )
+  },
+})
+```
+
+Then, this `queryClient` instance is available in all loaders:
+
+```tsx:title=queryClient-in-loader {2-3}
+export const Route = createFileRoute('/dashboard/$dashboardId')({
+  loader: async ({ context, params }) => {
+    //             ^? { queryClient: QueryClient }
+    await context.queryClient.ensureQueryData(
+      dashboardQueryOptions(params.dashboardId)
+    )
+  },
+  component: Dashboard,
+})
+
+function Dashboard() {
+  const params = Route.useParams()
+  const { data } = useSuspenseQuery(
+    dashboardQueryOptions(params.dashboardId)
+  )
+}
+```
+
+This is great, but Route Context is more than just dependency injection. Again, the [docs state](https://tanstack.com/router/latest/docs/framework/react/guide/router-context#modifying-the-router-context) that "that you can modify the context at each route and the modifications will be available to all child routes."
+
+### Route Context
+
+To modify the context for a specific route, we can define the `context` function and return whatever we want:
+
+```tsx:title=context-function {2}
+export const Route = createFileRoute('/dashboard/$dashboardId')({
+  context: () => ({ hello: 'world' } as const),
+  loader: async ({ context, params }) => {
+    //             ^? {
+    //                  queryClient: QueryClient;
+    //                  readonly hello: "world";
+    //                }
+    await context.queryClient.ensureQueryData(
+      dashboardQueryOptions(params.dashboardId)
+    )
+  },
+  component: Dashboard,
+})
+```
+
+Whatever we return will not only be available to this route's loader, but also wherever we consume the context in child routes, for example, with `useRouteContext`:
+
+```tsx:title=useRouteContext {2,3}
+function Widget() {
+  const { hello } = Route.useRouteContext()
+  //      ^? "world"
+}
+```
+
+Okay, so the context can also evolve and inherit values from its parents, but where would that be useful? Of course we can use it for things like [building generic breadcrumbs](https://tanstack.com/router/latest/docs/framework/react/guide/router-context#processing-accumulated-route-context), but I think I've found a killer use-case for React Query as well.
+
+## The Great Divergence
+
+Initiating fetches in route loaders is almost always a good idea, because it makes sure data will be available to your components as early as possible. With the `prefetch: 'intent'` feature of TanStack Router, route loaders can be triggered _before_ the user even clicks on links that take them to that route. Yes, you basically get prefetch-on-hover "for free" by using route loaders.
+
+The big drawback of this approach is that you essentially duplicate what you do in the component in a second location - the route loader. Now duplication is not the end of the world, and its a fine trade-off for the UX you are giving your app, but there is one thing that's really critical to keep in mind as your app grows:
+
+<Highlight>Those two places have to be 100% in sync</Highlight>
+
+And usually, over time, this gets harder to ensure. Minimal examples are great for blogposts, but they don't necessarily reflect the real world. As we've built larger apps with TanStack Router, we've hit this "limitation" pretty quickly. There are a couple of things that contributed to this:
+
+1. Your components usually won't stay in the `Route` file.
+
+At least not completely. `component: Widget` is nice, but `Widget`
+is likely composed of a lot more components, who will also need access
+to the route APIs. TanStack Router has us covered with the [getRouteApi](https://tanstack.com/router/latest/docs/framework/react/api/router/getRouteApiFunction#getrouteapi-returns),
+so we can easily start to break things up into separate files:
+
+```tsx:title=getRouteApi {1}
+const Route = getRouteApi('/dashboard/$dashboardId')
+
+function DashboardContent() {
+  const params = Route.useParams()
+  const { data } = useSuspenseQuery(
+    dashboardQueryOptions(params.dashboardId)
+  )
+}
+   ```
+
+This is a good thing, but it means when we change how the component uses a Query, we might not immediately think about also adapting this in the route loader.
+
+2. There is no error if the two aren't the same
+
+While I have been thinking about a [Strict Mode](https://github.com/TanStack/query/discussions/8064) to help with prefetching mismatches, we don't have anything right now, so diverging is really easy to accidentally do.
+
+This means that as your product grows and new features are added, simply changing how you fetch data in the component can cause two issues: you’ll prefetch data you don’t actually need (potentially blocking the route), and you’ll also trigger another fetch for the data you do need, creating a waterfall effect.
+
+Also, if you remove a query from a component but don't clean-up the route loader, you'll be unnecessarily prefetching data you don't need at all.
+
+### Example
+
+Suppose we want to add a feature to our Dashboard where we can filter for a date in the past to essentially get a historical snapshot of its data and widgets at that point in time. Since we want this to be shareable, we'll add an optional `?asOf=YYYY-MM-DD` query parameter to our Dashboard route and consume that in the component:
+
+```tsx:title=as-of {4,6}
+const Route = getRouteApi('/dashboard/$dashboardId')
+function DashboardContent() {
+  const params = Route.useParams()
+  const { asOf } = Route.useSearch()
+  const { data } = useSuspenseQuery(
+    dashboardQueryOptions(params.dashboardId, { asOf })
+  )
+}
+```
+
+Now if we load our Dashboard, everything still works fine, and if we change the search param, we'll also see data from that snapshot. LGTM, ship it. 🚢
+
+I think I already spoiled what the bug is: If we now share a route to our Dashboard, we will:
+
+- Load data in the route loader for "today" (as we haven't adapted the `asOf` param in the route loader)
+- Wait until that data is available, then render the component
+- Now fetch again from within the component with the `asOf` param present
+- Since `asOf` will have to be a part of our `QueryKey`, we will get a completely new Query, thus we'll re-suspend the component until that data is available to
+
+Only then will we render the component with the accurate data.
+
+This is really bad because it makes the most common use-case (adding features) hard to get right and the bugs that come from this aren't easy to spot either. I think we actually hit that issue in the first couple of routes we created, where we were pre-fetching an InfiniteQuery in the route loader that optionally had `search`, `sortBy` and `sortDirection` query params. It's a really easy mistake to make, so how do we fix it?
+
+### Fix the Route Loader
+
+Well first, we should probably update the route loader to include the optional param there, too. This has to be done with an additional layer of indirection called [loaderDeps](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#using-search-params-in-loaders).
+
+<Aside title="Why loaderDeps?">
+
+  Path params are always injected into the loader because it's clear that if a path changes, we did a navigation to a different route and we need to load its data. But for query params, the story isn't quite as clear.
+
+  Query params can often be used to store client state that has nothing to do with how the route fetches data. We wouldn't want to re-run the loader when _any_ query param changes. That's why we have to be a bit more explicit and tell the loader which query params should be used to uniquely identify the data being loaded.
+
+</Aside>
+
+```tsx:title=loaderDeps {3,6}
+export const Route = createFileRoute('/dashboard/$dashboardId')({
+  validateSearch: type({ 'asOf?': 'string.date.iso' }).assert,
+  loaderDeps: ({ search: { asOf } }) => ({ asOf }),
+  loader: async ({ context, params, deps }) => {
+    await context.queryClient.ensureQueryData(
+      dashboardQueryOptions(params.dashboardId, deps)
+    )
+  },
+  component: Dashboard,
+})
+```
+
+This fixes the symptoms - we can now share URLs again without doing multiple unnecessary requests - but it doesn't address the root cause at all. It's still likely that we will make the same mistake on the next route again. To make it less likely to happen, we need to fix the duplication.
+
+### Fix the Duplication
+
+Let's compare the two query related calls again - the one in the loader and the one in the component:
+
+```tsx:title=queryOptions {3,8}
+//loader
+await context.queryClient.ensureQueryData(
+  dashboardQueryOptions(params.dashboardId, deps)
+)
+
+// components
+const { data } = useSuspenseQuery(
+  dashboardQueryOptions(params.dashboardId, { asOf })
+)
+```
+
+We can see that both instances share the same query options, the only difference is the function they’re passed to: `ensureQueryData` for an imperative, one-time fetch, and `useSuspenseQuery` for setting up a reactive subscription.
+
+In our case, the bug happened because those two weren't actually using the same options. If the component always relied on the same query options as the loader, they couldn't drift apart, so let's just put the options into Route Context and consume them in both places:
+
+```tsx:title=query-options-in-route-context {4-9,12,23,24}
+export const Route = createFileRoute('/dashboard/$dashboardId')({
+  validateSearch: type({ 'asOf?': 'string.date.iso' }).assert,
+  loaderDeps: ({ search: { asOf } }) => ({ asOf }),
+  context: ({ params, deps }) => ({
+    dashboardQueryOptions: dashboardQueryOptions(
+      params.dashboardId,
+      deps
+    ),
+  }),
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(
+      context.dashboardQueryOptions
+    )
+  },
+  component: Dashboard,
+})
+
+// in a different file, far far away
+
+const Route = getRouteApi('/dashboard/$dashboardId')
+
+function DashboardContent() {
+  const context = Route.useRouteContext()
+  const { data } = useSuspenseQuery(context.dashboardQueryOptions)
+}
+```
+
+A couple of things happened here. First, we're no longer depending on `params` or `deps` inside the loader _or_ the component. The `context` function is now the only place where we use those, and it's job is to create the query options we want to share and put them under an arbitrary key onto the context.
+
+Then, the loader _just_ uses the `context`, and the component also _just_ uses the `context` with `Route.useRouteContext()`.
+
+This little layer of indirection has a lot of advantages. Not only can our de-duplication bug no longer happen, we also know when a component uses a query that has been prefetched. That means we are much more likely to look at the route loader and clean up prefetches if we remove the usage in the component.
+
+And because context inherits from parents, sub-routes will know about those query options, too. We could, for example, prefetch some user data in the root route loader:
+
+```tsx:title=root-loader {4-7,10-12}
+export const Route = createRootRouteWithContext<RouteContext>()({
+  validateSearch: type({ debug: `boolean=false` }).assert,
+  context: () => ({
+    userQueryOptions: queryOptions({
+      queryKey: ['user'],
+      queryFn: getUser,
+    }),
+  }),
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(
+      context.userQueryOptions
+    )
+  },
+  component: Root,
+})
+```
+
+And then use them too in our Widgets:
+
+```tsx:title=use-all-query-options {2-3}
+function Widget() {
+  const { userQueryOptions, dashboardQueryOptions } =
+    Route.useRouteContext()
+}
+```
+
+We will see all query options that have been created by any parent, as long as they add it to the route context.
+
+### A Final Note on Subscriptions
+
+When this feature made it to the router, I was a bit concerned about what our components subscribe to. As you've seen, we've basically replaced all subscriptions to `useParams` and `useSearch` with just a single call to `useRouteContext`:
+
+```diff
+function DashboardContent() {
+-  const params = Route.useParams()
+-  const { asOf } = Route.useSearch()
++  const context = Route.useRouteContext()
+}
+```
+
+Even with [fine-grained subscriptions](the-beauty-of-tan-stack-router#fine-grained-subscriptions) (which Route Context also supports), wouldn't we get a new queryOptions object every render that isn't structurally sharable because it contains functions. And wouldn't that make everything re-render all the time?
+
+Rest assured - that's not the case. The `context` function only runs when either `params` or `loaderDeps` changes, so if there's a change to an unrelated search param (like `debug`), your components that are subscribed to the Route Context won't re-render unnecessarily.
+
+All in all, I've found this the best and most scalable solution to ensure that our components actually consume the same things that the route loader prefetches.
+
+---
+
+That's it for today. Feel free to reach out to me on [bluesky](https://bsky.app/profile/tkdodo.eu)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />
+
+
+---
+
 That's it for today. Feel free to reach out to me on [bluesky](https://bsky.app/profile/tkdodo.eu)
 if you have any questions, or just leave a comment below. ⬇️
 
