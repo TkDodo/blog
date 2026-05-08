@@ -95,6 +95,7 @@ const plausibleDomain = new URL(SITE.url).hostname;
 
         let pendingLink = null;
         let safetyTimer = null;
+        let activePostImageTransition = null;
 
         const clearPending = () => {
           document.body?.removeAttribute("data-nav-pending");
@@ -104,6 +105,13 @@ const plausibleDomain = new URL(SITE.url).hostname;
             clearTimeout(safetyTimer);
             safetyTimer = null;
           }
+        };
+
+        const clearPostImageTransition = () => {
+          if (activePostImageTransition instanceof HTMLElement) {
+            activePostImageTransition.style.viewTransitionName = "";
+          }
+          activePostImageTransition = null;
         };
 
         const setPending = (link) => {
@@ -116,7 +124,10 @@ const plausibleDomain = new URL(SITE.url).hostname;
             pendingLink.setAttribute("data-nav-pending", "true");
           }
           if (safetyTimer) clearTimeout(safetyTimer);
-          safetyTimer = setTimeout(clearPending, 5000);
+          safetyTimer = setTimeout(() => {
+            clearPending();
+            clearPostImageTransition();
+          }, 5000);
         };
 
         const isInternalNavigationLink = (link) => {
@@ -139,6 +150,37 @@ const plausibleDomain = new URL(SITE.url).hostname;
           return true;
         };
 
+        const getPathname = (url) =>
+          new URL(url, window.location.origin).pathname;
+
+        const activatePostImageTransition = (link) => {
+          clearPostImageTransition();
+
+          const targetPathname = getPathname(link.href);
+          const directCard = link.closest("[data-post-card-url]");
+          const candidates = directCard
+            ? [directCard]
+            : document.querySelectorAll("[data-post-card-url]");
+
+          for (const candidate of candidates) {
+            const cardUrl = candidate.getAttribute("data-post-card-url");
+            if (!cardUrl || getPathname(cardUrl) !== targetPathname) continue;
+
+            const image = candidate.querySelector(
+              "[data-post-image-transition-name]",
+            );
+            const transitionName = image?.getAttribute(
+              "data-post-image-transition-name",
+            );
+
+            if (image instanceof HTMLElement && transitionName) {
+              image.style.viewTransitionName = transitionName;
+              activePostImageTransition = image;
+            }
+            return;
+          }
+        };
+
         document.addEventListener(
           "click",
           (event) => {
@@ -156,6 +198,7 @@ const plausibleDomain = new URL(SITE.url).hostname;
             if (!(link instanceof HTMLAnchorElement)) return;
             if (!isInternalNavigationLink(link)) return;
 
+            activatePostImageTransition(link);
             setPending(link);
           },
           { capture: true },
@@ -165,8 +208,14 @@ const plausibleDomain = new URL(SITE.url).hostname;
           setPending(null);
         });
 
-        document.addEventListener("astro:page-load", clearPending);
-        window.addEventListener("pageshow", clearPending);
+        document.addEventListener("astro:page-load", () => {
+          clearPending();
+          clearPostImageTransition();
+        });
+        window.addEventListener("pageshow", () => {
+          clearPending();
+          clearPostImageTransition();
+        });
       })();
     </script>
   </body>

@@ -11,6 +11,8 @@ interface Props {
   fill?: boolean;
   wrapperClass?: string;
   wrapperStyle?: string;
+  viewTransitionName?: string;
+  dataViewTransitionName?: string;
   imageClass?: string;
   loading?: "eager" | "lazy";
   fetchpriority?: "high" | "low" | "auto";
@@ -26,6 +28,8 @@ const {
   fill = true,
   wrapperClass,
   wrapperStyle,
+  viewTransitionName,
+  dataViewTransitionName,
   imageClass,
   loading = "lazy",
   fetchpriority = "auto",
@@ -39,11 +43,19 @@ const placeholder = await getImage({
   quality: 35,
   format: "webp",
 });
+
+const wrapperStyles = [
+  wrapperStyle,
+  viewTransitionName && `view-transition-name:${viewTransitionName}`,
+]
+  .filter(Boolean)
+  .join(";");
 ---
 
 <div
   class:list={["relative overflow-hidden", wrapperClass]}
-  style={wrapperStyle}
+  style={wrapperStyles || undefined}
+  data-post-image-transition-name={dataViewTransitionName}
 >
   <img
     src={placeholder.src}

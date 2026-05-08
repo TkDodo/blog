@@ -52,6 +52,15 @@ export function getPostSlug(entry: CollectionEntry<"blog">): string {
 }
 
 /**
+ * Derive a stable CSS view transition name for a post image.
+ */
+export function getPostImageTransitionName(
+  entry: CollectionEntry<"blog">,
+): string {
+  return `post-image-${getPostSlug(entry).replace(/[^a-zA-Z0-9_-]/g, "-")}`;
+}
+
+/**
  * Create a URL-safe slug for tags.
  */
 export function slugifyTag(tag: string): string {
