@@ -46,6 +46,20 @@ import Icon from "./icon.astro";
   /** Key in `localStorage` to store color theme preference at. */
   const storageKey = "atmb-theme";
 
+  /**
+   * Safely access localStorage, returning null if unavailable or restricted.
+   * Vite compiles `localStorage?.` into a typeof check that doesn't guard
+   * against localStorage being null (e.g. Chrome Mobile WebView), so we
+   * use a function return value which preserves optional chaining at runtime.
+   */
+  function tryLocalStorage(): Storage | null {
+    try {
+      return typeof localStorage !== "undefined" ? localStorage : null;
+    } catch {
+      return null;
+    }
+  }
+
   function getThemeProvider(): ThemeProvider | undefined {
     return window.AtmbThemeProvider;
   }
@@ -57,14 +71,14 @@ import Icon from "./icon.astro";
       : "auto";
   }
 
-  /** Load the user’s preference from `localStorage`. */
+  /** Load the user's preference from `localStorage`. */
   function loadTheme(): Theme {
-    return parseTheme(localStorage?.getItem(storageKey));
+    return parseTheme(tryLocalStorage()?.getItem(storageKey));
   }
 
-  /** Store the user’s preference in `localStorage`. */
+  /** Store the user's preference in `localStorage`. */
   function storeTheme(theme: Theme): void {
-    localStorage?.setItem(
+    tryLocalStorage()?.setItem(
       storageKey,
       theme === "light" || theme === "dark" ? theme : "",
     );
