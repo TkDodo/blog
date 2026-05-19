@@ -59,19 +59,15 @@ import Icon from "./icon.astro";
 
   /** Load the user’s preference from `localStorage`. */
   function loadTheme(): Theme {
-    return parseTheme(
-      typeof localStorage !== "undefined" && localStorage.getItem(storageKey),
-    );
+    return parseTheme(localStorage?.getItem(storageKey));
   }
 
   /** Store the user’s preference in `localStorage`. */
   function storeTheme(theme: Theme): void {
-    if (typeof localStorage !== "undefined") {
-      localStorage.setItem(
-        storageKey,
-        theme === "light" || theme === "dark" ? theme : "",
-      );
-    }
+    localStorage?.setItem(
+      storageKey,
+      theme === "light" || theme === "dark" ? theme : "",
+    );
   }
 
   /** Get the preferred system color scheme. */
