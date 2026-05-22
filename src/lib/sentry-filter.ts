@@ -3,8 +3,10 @@ const ETHICAL_ADS_PATTERNS = [
   "media.ethicalads.io/media/client/ethicalads.min.js",
   "ethicalads.min.js",
 ];
-const ABORTED_TRANSITION_ERROR =
-  "InvalidStateError: Transition was aborted because of invalid state";
+const TRANSITION_ERROR_MESSAGES = [
+  "InvalidStateError: Transition was aborted because of invalid state",
+  "AbortError: Transition was skipped",
+];
 
 interface EventLike {
   message?: unknown;
@@ -52,7 +54,8 @@ function isAbortedTransitionError(event: EventLike): boolean {
     event.exception?.values?.some(
       (exceptionValue) =>
         exceptionValue.type === "Error" &&
-        exceptionValue.value === ABORTED_TRANSITION_ERROR,
+        typeof exceptionValue.value === "string" &&
+        TRANSITION_ERROR_MESSAGES.includes(exceptionValue.value),
     ) === true
   );
 }
