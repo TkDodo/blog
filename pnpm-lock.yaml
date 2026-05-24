@@ -43,9 +43,6 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.2.2
         version: 4.2.2(vite@7.3.1(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.0)(tsx@4.20.6)(yaml@2.8.2))
-      '@tanstack/react-router':
-        specifier: ^1.170.8
-        version: 1.170.8(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@unpic/astro':
         specifier: ^1.0.2
         version: 1.0.2(astro@6.0.7(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.32.0)(rollup@4.52.5)(terser@5.46.0)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.2))
@@ -104,6 +101,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.90.21
         version: 5.90.21(react@19.2.0)
+      '@tanstack/react-router':
+        specifier: ^1.170.8
+        version: 1.170.8(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@types/mdast':
         specifier: ^4.0.4
         version: 4.0.4
