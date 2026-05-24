@@ -57,7 +57,26 @@ However, everything I'm showing will also work with code-based routing, as file-
 
 If we look at the child route (a widget on a dashboard), we can see that we get all params from our hierarchy back when calling `Route.useParams()`:
 
-```tsx title="use params" {8,9}
+```tsx title="useParams" {8} twoslash
+import {
+  createFileRoute,
+  createRootRoute,
+  createRouter,
+} from '@tanstack/react-router'
+
+const rootRoute = createRootRoute()
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/dashboard/$dashboardId/widget/$widgetId/': {
+      parentRoute: typeof rootRoute
+      id: '/dashboard/$dashboardId/widget/$widgetId/'
+      path: '/dashboard/$dashboardId/widget/$widgetId/'
+      fullPath: '/dashboard/$dashboardId/widget/$widgetId/'
+    }
+  }
+}
+// ---cut---
 export const Route = createFileRoute(
   '/dashboard/$dashboardId/widget/$widgetId/',
 )({
@@ -66,7 +85,16 @@ export const Route = createFileRoute(
 
 function Widget() {
   const params = Route.useParams()
-  //    ^? { dashboardId: string, widgetId: string }
+  //    ^?
+}
+// ---cut-after---
+const routeTree = rootRoute.addChildren([Route])
+const router = createRouter({ routeTree })
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
 }
 ```
 
@@ -74,7 +102,28 @@ This is literally what you'd expect from a type-safe router, after all, `$dashbo
 
 Well, what if we'd want to express that `$dashboardId` is a number? We would define that on the parent route by parsing the `params` with our favourite validation library:
 
-```tsx title="params parsing" {5-7}
+```tsx title="params parsing" {5-7} twoslash
+import {
+  createFileRoute,
+  createRootRoute,
+  createRouter,
+} from '@tanstack/react-router'
+
+const rootRoute = createRootRoute()
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/dashboard/$dashboardId': {
+      parentRoute: typeof rootRoute
+      id: '/dashboard/$dashboardId'
+      path: '/dashboard/$dashboardId'
+      fullPath: '/dashboard/$dashboardId'
+    }
+  }
+}
+
+declare const Dashboard: () => null
+// ---cut---
 import { type } from 'arktype'
 
 export const Route = createFileRoute('/dashboard/$dashboardId')({
@@ -93,10 +142,60 @@ TanStack Router is compatible with any validation library that supports [Standar
 
 This change leads to something amazing: Every child route in the route tree now knows about this. [The docs](https://tanstack.com/router/latest/docs/framework/react/guide/path-params#path-params-can-be-used-by-child-routes) simply say that "once a path param has been parsed, it is available to all child routes", but look what happens to our types:
 
-```tsx title="dashboardId number" {2,3}
+```tsx title="dashboardId number" {2,3} twoslash
+import {
+  createFileRoute,
+  createRootRoute,
+  createRouter,
+} from '@tanstack/react-router'
+import { type } from 'arktype'
+
+const rootRoute = createRootRoute()
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/dashboard/$dashboardId': {
+      parentRoute: typeof rootRoute
+      id: '/dashboard/$dashboardId'
+      path: '/dashboard/$dashboardId'
+      fullPath: '/dashboard/$dashboardId'
+    }
+    '/dashboard/$dashboardId/widget/$widgetId/': {
+      parentRoute: typeof ParentRoute
+      id: '/dashboard/$dashboardId/widget/$widgetId/'
+      path: 'widget/$widgetId'
+      fullPath: '/dashboard/$dashboardId/widget/$widgetId/'
+    }
+  }
+}
+
+declare const Dashboard: () => null
+
+const ParentRoute = createFileRoute('/dashboard/$dashboardId')({
+  component: Dashboard,
+  params: {
+    parse: type({ dashboardId: 'string.integer.parse' }).assert,
+  },
+})
+
+const Route = createFileRoute(
+  '/dashboard/$dashboardId/widget/$widgetId/',
+)()
+
+const routeTree = rootRoute.addChildren([
+  ParentRoute.addChildren([Route]),
+])
+const router = createRouter({ routeTree })
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
+// ---cut---
 function Widget() {
   const params = Route.useParams()
-  //    ^? { dashboardId: number, widgetId: string }
+  //    ^?
 }
 ```
 
@@ -110,7 +209,13 @@ Nothing stops us, that's what. And in fact, there are a couple of other places w
 
 Yes, `searchParams` can inherit context on type-level from their parents, too. Let's say we want to have an optional `?debug` boolean flag available everywhere in our app. All we need to do is define it on our root component with:
 
-```tsx title="debug search param" {2}
+```tsx title="Debug Search Param" {2} twoslash
+import { createRootRouteWithContext } from '@tanstack/react-router'
+import { type } from 'arktype'
+
+type RouteContext = {}
+declare const Root: () => null
+// ---cut---
 export const Route = createRootRouteWithContext<RouteContext>()({
   validateSearch: type({ debug: 'boolean=false' }).assert,
   component: Root,
@@ -119,10 +224,47 @@ export const Route = createRootRouteWithContext<RouteContext>()({
 
 and now any component will get access to that boolean flag via `useSearch`:
 
-```tsx title="useSearch" {2,3}
+```tsx title="useSearch" {2,3} twoslash
+import {
+  createFileRoute,
+  createRootRouteWithContext,
+  createRouter,
+} from '@tanstack/react-router'
+import { type } from 'arktype'
+
+type RouteContext = {}
+
+const rootRoute = createRootRouteWithContext<RouteContext>()({
+  validateSearch: type({ debug: 'boolean=false' }).assert,
+})
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/dashboard/$dashboardId/widget/$widgetId/': {
+      parentRoute: typeof rootRoute
+      id: '/dashboard/$dashboardId/widget/$widgetId/'
+      path: '/dashboard/$dashboardId/widget/$widgetId/'
+      fullPath: '/dashboard/$dashboardId/widget/$widgetId/'
+    }
+  }
+}
+
+const Route = createFileRoute(
+  '/dashboard/$dashboardId/widget/$widgetId/',
+)()
+
+const routeTree = rootRoute.addChildren([Route])
+const router = createRouter({ routeTree })
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
+// ---cut---
 function Widget() {
   const search = Route.useSearch()
-  //    ^? { debug: boolean }
+  //    ^?
 }
 ```
 
@@ -134,7 +276,17 @@ Router's [Search Middleware](https://tanstack.com/router/latest/docs/framework/r
 
 For this specific use-case, there's a build-in middleware called `stripSearchParams` that can remove values if they are equal to the specified default:
 
-```tsx title="search middleware" {3-5}
+```tsx title="Search Middleware" {3-5} twoslash
+import {
+  createRootRouteWithContext,
+  stripSearchParams,
+} from '@tanstack/react-router'
+import { type } from 'arktype'
+import type { ReactElement } from 'react'
+
+type RouteContext = {}
+declare const Root: () => ReactElement
+// ---cut---
 export const Route = createRootRouteWithContext<RouteContext>()({
   validateSearch: type({ debug: 'boolean=false' }).assert,
   search: {
@@ -148,17 +300,50 @@ export const Route = createRootRouteWithContext<RouteContext>()({
 
 If we add more search params in our tree, they will be merged on type-level to produce the most accurate result. For example, our widget route might get a date range filter:
 
-```tsx title="merged search params" {4,9,10}
+```tsx title="Merged Search Params" {4,9,10} twoslash
+import {
+  createFileRoute,
+  createRootRouteWithContext,
+  createRouter,
+} from '@tanstack/react-router'
+import { type } from 'arktype'
+
+type RouteContext = {}
+
+const rootRoute = createRootRouteWithContext<RouteContext>()({
+  validateSearch: type({ debug: 'boolean=false' }).assert,
+})
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/dashboard/$dashboardId/widget/$widgetId/': {
+      parentRoute: typeof rootRoute
+      id: '/dashboard/$dashboardId/widget/$widgetId/'
+      path: '/dashboard/$dashboardId/widget/$widgetId/'
+      fullPath: '/dashboard/$dashboardId/widget/$widgetId/'
+    }
+  }
+}
+// ---cut---
 export const Route = createFileRoute(
   '/dashboard/$dashboardId/widget/$widgetId/',
 )({
-  validateSearch: type({ 'range?': "'7d' | '30d' | '90d'" }).assert,
+  validateSearch: type({ 'range?': '"7d" | "30d" | "90d"' }).assert,
   component: Widget,
 })
 
 function Widget() {
   const search = Route.useSearch()
-  //    ^? { debug: boolean, range?: '7d' | '30d' | '90d' }
+  //    ^?
+}
+// ---cut-after---
+const routeTree = rootRoute.addChildren([Route])
+const router = createRouter({ routeTree })
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
 }
 ```
 
@@ -177,7 +362,23 @@ Honestly, I have no idea 😂. I looked at the types in the Router repo and nope
 
 Another property of the Router that can do inheritance is the [Router Context](https://tanstack.com/router/latest/docs/framework/react/guide/router-context). This context is created at the root route if we use `createRootRouteWithContext`, and it's initial values are passed to `createRouter` itself. It is generally used for dependency injection into route loaders. When used with TanStack Query, we usually use it to distribute the `QueryClient`:
 
-```tsx title="router context" {5-7}
+```tsx title="Router Context" {5-7} twoslash
+import {
+  createRootRouteWithContext,
+  createRouter,
+} from '@tanstack/react-router'
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+import React from 'react'
+
+type RouteContext = {
+  queryClient: QueryClient
+}
+
+const routeTree = createRootRouteWithContext<RouteContext>()()
+// ---cut---
 const queryClient = new QueryClient()
 
 const router = createRouter({
@@ -197,10 +398,44 @@ const router = createRouter({
 
 Then, this `queryClient` instance is available in all loaders:
 
-```tsx title="queryClient in loader" {2-3}
+```tsx title="QueryClient in Loader" {2-3} twoslash
+import {
+  createFileRoute,
+  createRootRouteWithContext,
+  createRouter,
+} from '@tanstack/react-router'
+import {
+  QueryClient,
+  queryOptions,
+  useSuspenseQuery,
+} from '@tanstack/react-query'
+
+type RouteContext = {
+  queryClient: QueryClient
+}
+
+const rootRoute = createRootRouteWithContext<RouteContext>()()
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/dashboard/$dashboardId': {
+      parentRoute: typeof rootRoute
+      id: '/dashboard/$dashboardId'
+      path: '/dashboard/$dashboardId'
+      fullPath: '/dashboard/$dashboardId'
+    }
+  }
+}
+
+const dashboardQueryOptions = (dashboardId: string) =>
+  queryOptions({
+    queryKey: ['dashboard', dashboardId],
+    queryFn: async () => ({}),
+  })
+// ---cut---
 export const Route = createFileRoute('/dashboard/$dashboardId')({
   loader: async ({ context, params }) => {
-    //             ^? { queryClient: QueryClient }
+    //             ^?
     await context.queryClient.ensureQueryData(
       dashboardQueryOptions(params.dashboardId),
     )
@@ -214,6 +449,20 @@ function Dashboard() {
     dashboardQueryOptions(params.dashboardId),
   )
 }
+// ---cut-after---
+const routeTree = rootRoute.addChildren([Route])
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient: new QueryClient(),
+  },
+})
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
 ```
 
 This is great, but Route Context is more than just dependency injection. Again, the [docs state](https://tanstack.com/router/latest/docs/framework/react/guide/router-context#modifying-the-router-context) that "that you can modify the context at each route and the modifications will be available to all child routes."
@@ -222,28 +471,129 @@ This is great, but Route Context is more than just dependency injection. Again, 
 
 To modify the context for a specific route, we can define the `beforeLoad` function and return whatever we want:
 
-```tsx title="beforeLoad" {2,6}
+```tsx title="beforeLoad" {2,4} twoslash
+import {
+  createFileRoute,
+  createRootRouteWithContext,
+  createRouter,
+} from '@tanstack/react-router'
+import { QueryClient, queryOptions } from '@tanstack/react-query'
+import type { ReactElement } from 'react'
+
+type RouteContext = {
+  queryClient: QueryClient
+}
+
+const rootRoute = createRootRouteWithContext<RouteContext>()()
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/dashboard/$dashboardId': {
+      parentRoute: typeof rootRoute
+      id: '/dashboard/$dashboardId'
+      path: '/dashboard/$dashboardId'
+      fullPath: '/dashboard/$dashboardId'
+    }
+  }
+}
+
+const dashboardQueryOptions = (dashboardId: string) =>
+  queryOptions({
+    queryKey: ['dashboard', dashboardId],
+    queryFn: async () => ({}),
+  })
+
+declare const Dashboard: () => ReactElement
+// ---cut---
 export const Route = createFileRoute('/dashboard/$dashboardId')({
   beforeLoad: () => ({ hello: 'world' }) as const,
   loader: async ({ context, params }) => {
-    //             ^? {
-    //                  queryClient: QueryClient;
-    //                  readonly hello: "world";
-    //                }
+    //             ^?
     await context.queryClient.ensureQueryData(
       dashboardQueryOptions(params.dashboardId),
     )
   },
   component: Dashboard,
 })
+// ---cut-after---
+const routeTree = rootRoute.addChildren([Route])
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient: new QueryClient(),
+  },
+})
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
 ```
 
 Whatever we return will not only be available to this route's loader, but also wherever we consume the context in child routes, for example, with `useRouteContext`:
 
-```tsx title="useRouteContext" {2,3}
+```tsx title="useRouteContext" {2,3} twoslash
+import {
+  createFileRoute,
+  createRootRouteWithContext,
+  createRouter,
+} from '@tanstack/react-router'
+import { QueryClient } from '@tanstack/react-query'
+
+type RouteContext = {
+  queryClient: QueryClient
+}
+
+const rootRoute = createRootRouteWithContext<RouteContext>()()
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/dashboard/$dashboardId': {
+      parentRoute: typeof rootRoute
+      id: '/dashboard/$dashboardId'
+      path: '/dashboard/$dashboardId'
+      fullPath: '/dashboard/$dashboardId'
+    }
+    '/dashboard/$dashboardId/widget/$widgetId/': {
+      parentRoute: typeof ParentRoute
+      id: '/dashboard/$dashboardId/widget/$widgetId/'
+      path: 'widget/$widgetId'
+      fullPath: '/dashboard/$dashboardId/widget/$widgetId/'
+    }
+  }
+}
+
+declare const Dashboard: () => null
+
+const ParentRoute = createFileRoute('/dashboard/$dashboardId')({
+  beforeLoad: () => ({ hello: 'world' }) as const,
+  component: Dashboard,
+})
+
+const Route = createFileRoute(
+  '/dashboard/$dashboardId/widget/$widgetId/',
+)()
+
+const routeTree = rootRoute.addChildren([
+  ParentRoute.addChildren([Route]),
+])
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient: new QueryClient(),
+  },
+})
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
+// ---cut---
 function Widget() {
   const { hello } = Route.useRouteContext()
-  //      ^? "world"
+  //      ^?
 }
 ```
 
