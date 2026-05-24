@@ -185,6 +185,17 @@ export const rcSeriesItems = [
   },
 ] as const satisfies ReadonlyArray<SeriesItem>;
 
+export const memoSeriesItems = [
+  {
+    id: "the-uphill-battle-of-memoization",
+    title: "#1: The Uphill Battle of Memoization",
+  },
+  {
+    id: "the-useless-use-callback",
+    title: "#2: The Useless useCallback",
+  },
+] as const satisfies ReadonlyArray<SeriesItem>;
+
 export const rtrSeriesItems = [
   {
     id: "road-to-refactoring",
@@ -211,6 +222,7 @@ export const seriesByToc = {
   TsrToc: tsrSeriesItems,
   HsToc: hsSeriesItems,
   RcToc: rcSeriesItems,
+  MemoToc: memoSeriesItems,
   RtrToc: rtrSeriesItems,
 } as const;
 

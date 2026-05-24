@@ -12,8 +12,7 @@ import Icon from "./icon.astro";
 {/* This is intentionally inlined to avoid FOUC. */}
 <script is:inline>
   window.AtmbThemeProvider = (() => {
-    const storedTheme =
-      typeof localStorage !== "undefined" && localStorage.getItem("atmb-theme");
+    const storedTheme = localStorage?.getItem("atmb-theme");
     const theme =
       storedTheme ||
       (window.matchMedia("(prefers-color-scheme: light)").matches

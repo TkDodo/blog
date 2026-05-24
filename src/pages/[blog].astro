@@ -3,6 +3,7 @@ import type { TocName } from "@components/series-data";
 import type { ImageMetadata } from "astro";
 import SkipNavContent from "@components/a11y/skip-nav-content.astro";
 import Aside from "@components/aside.astro";
+import Abbr from "@components/Abbr.astro";
 import ErrorBoundary from "@components/ErrorBoundary";
 import Link from "@components/link.astro";
 import Playground from "@components/playground.astro";
@@ -39,7 +40,7 @@ const { Content } = await render(entry);
 
 const allPosts = sortAsc(await getCollection("blog"));
 const detectedToc = entry.body?.match(
-  /<(RqToc|DsToc|UsToc|TsrToc|HsToc|RcToc|RtrToc)\b/,
+  /<(RqToc|DsToc|UsToc|TsrToc|HsToc|RcToc|MemoToc|RtrToc)\b/,
 )?.[1] as TocName | undefined;
 const seriesItems = detectedToc ? seriesByToc[detectedToc] : null;
 const currentSeriesIndex =
@@ -157,6 +158,7 @@ const ogImagePath = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/og-images/${
       }
       <Content
         components={{
+          Abbr,
           Aside,
           Playground,
           RepoData,

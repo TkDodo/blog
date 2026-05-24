@@ -34,14 +34,35 @@ import Icon from "./icon.astro";
 
 {/* Inlined to avoid FOUC. Uses global scope from `ThemeProvider.astro` */}
 <script is:inline>
-  AtmbThemeProvider.updatePickers();
+  window.AtmbThemeProvider?.updatePickers();
 </script>
 
 <script>
   type Theme = "auto" | "dark" | "light";
+  type ThemeProvider = {
+    updatePickers: (theme?: Theme) => void;
+  };
 
   /** Key in `localStorage` to store color theme preference at. */
   const storageKey = "atmb-theme";
+
+  /**
+   * Safely access localStorage, returning null if unavailable or restricted.
+   * Vite compiles `localStorage?.` into a typeof check that doesn't guard
+   * against localStorage being null (e.g. Chrome Mobile WebView), so we
+   * use a function return value which preserves optional chaining at runtime.
+   */
+  function tryLocalStorage(): Storage | null {
+    try {
+      return typeof localStorage !== "undefined" ? localStorage : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function getThemeProvider(): ThemeProvider | undefined {
+    return window.AtmbThemeProvider;
+  }
 
   /** Get a typesafe theme string from any JS value (unknown values are coerced to `'auto'`). */
   function parseTheme(theme: unknown): Theme {
@@ -50,21 +71,17 @@ import Icon from "./icon.astro";
       : "auto";
   }
 
-  /** Load the user’s preference from `localStorage`. */
+  /** Load the user's preference from `localStorage`. */
   function loadTheme(): Theme {
-    return parseTheme(
-      typeof localStorage !== "undefined" && localStorage.getItem(storageKey),
-    );
+    return parseTheme(tryLocalStorage()?.getItem(storageKey));
   }
 
-  /** Store the user’s preference in `localStorage`. */
+  /** Store the user's preference in `localStorage`. */
   function storeTheme(theme: Theme): void {
-    if (typeof localStorage !== "undefined") {
-      localStorage.setItem(
-        storageKey,
-        theme === "light" || theme === "dark" ? theme : "",
-      );
-    }
+    tryLocalStorage()?.setItem(
+      storageKey,
+      theme === "light" || theme === "dark" ? theme : "",
+    );
   }
 
   /** Get the preferred system color scheme. */
@@ -76,7 +93,7 @@ import Icon from "./icon.astro";
 
   /** Update select menu UI, document theme, and local storage state. */
   function onThemeChange(theme: Theme): void {
-    AtmbThemeProvider.updatePickers(theme);
+    getThemeProvider()?.updatePickers(theme);
     document.documentElement.dataset.theme =
       theme === "auto" ? getPreferredColorScheme() : theme;
     storeTheme(theme);

@@ -22,6 +22,7 @@ import willmcguganAvatar from "../assets/avatars/willmcgugan.jpeg";
 import tkdodoAvatar from "../assets/profile.jpg";
 import bafkreiaImage from "../assets/tweets/bafkreiazq5owsx6neqzgvjquwenob6su4kgd7zzl3z5ytfq4oywwjwbis4.jpg";
 import eCqCxd4Image from "../assets/tweets/eC_qCxd4.jpeg";
+import GEg89DDXsAA8DCImage from "../assets/tweets/GEg89DDXsAA8DC.jpeg";
 import EXx9RHYVAAUgegZImage from "../assets/tweets/EXx9RHYVAAUgegZ.jpeg";
 import Fcnj9l0XEAMnLdVImage from "../assets/tweets/Fcnj9l0XEAMnLdV.jpeg";
 import FSJNvbJWUAIVEGBImage from "../assets/tweets/FSJNvbJWUAIVEGB.jpeg";
@@ -216,6 +217,11 @@ export const QueryGGImage = () => (
 export const ADayOnTheOrangeSite = () => (
   <TweetIllustration src={bafkreiaImage} alt="Unique visitor stats outlier" />
 );
+
+export const CodeColocation = () => (
+  <TweetIllustration src={GEg89DDXsAA8DCImage} alt="Code colocation" />
+);
+
 export const CynicsVsBuilders = () => (
   <TweetIllustration src={EXx9RHYVAAUgegZImage} alt="Cynics vs Builders" />
 );

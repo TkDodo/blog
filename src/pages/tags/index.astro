@@ -19,7 +19,7 @@ const tags = getTags(entries);
       All tags
     </h2>
     <Spacer axis="vertical" size={12} />
-    <div class="flex gap-6 flex-col">
+    <div class="flex gap-6 flex-col items-start">
       {
         tags.map(({ tag, slug, count }) => (
           <Link

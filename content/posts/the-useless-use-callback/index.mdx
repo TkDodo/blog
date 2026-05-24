@@ -3,6 +3,7 @@ title: The Useless useCallback
 description: Why most memoization is downright useless...
 date: 2025-07-28
 banner: ./useless.jpg
+bluesky: https://bsky.app/profile/tkdodo.eu/post/3luzyua2qqc2b
 tags:
   - ReactJs
   - JavaScript
@@ -16,12 +17,12 @@ import Attribution from '@components/Attribution'
 import Translations from '@components/Translations'
 import Emph from '@components/Emph'
 import Highlight from '@components/Highlight'
+import { MemoToc } from '@components/memo-toc'
 import { VerticalRuler } from '@components/VerticalRuler'
 
 <Attribution name="Nik Shuliahin" url="https://unsplash.com/@tjump" />
 
-- [#1: The Uphill Battle of Memoization](the-uphill-battle-of-memoization)
-- <b>#2: The Useless useCallback</b>
+<MemoToc id="the-useless-use-callback" />
 
 <Translations
   translations={[
@@ -126,7 +127,7 @@ Here, memoizing `onClick` achieves _nothing_, as `button` doesn't care if `onCli
 
 <Aside title="Achieves nothing?">
 
-"Achieves nothing" is a slightly wrong, because there is of course something happening here under the hood. React will have to create a cache to keep the `onClick` function around. It will have to keep track of dependencies, and compare them on every render. The inline function passed to `useCallback` will also be re-created every render, it's just that it will be thrown away immediately if the cached version gets returned.
+"Achieves nothing" is slightly wrong, because there is of course something happening here under the hood. React will have to create a cache to keep the `onClick` function around. It will have to keep track of dependencies, and compare them on every render. The inline function passed to `useCallback` will also be re-created every render, it's just that it will be thrown away immediately if the cached version gets returned.
 
 So, this technically creates some more overhead internally. I don't want to focus too much on this though because that "overhead" isn't the problem.
 
@@ -223,7 +224,7 @@ If anything, we have to outsource all of this to [a compiler](https://react.dev/
 
 I wrote about [this pattern before](refs-events-and-escape-hatches#the-latest-ref); what we do is we basically store the value we want to gain imperative access to inside our effect in a ref, and then update the value with another effect that purposefully runs on every render:
 
-```tsx title="the latest ref" {2-6}
+```tsx title="the latest ref" {2-6, 8}
 export function useHotkeys(hotkeys: Hotkey[]): {
   const hotkeysRef = useRef(hotkeys)
 
@@ -239,7 +240,7 @@ export function useHotkeys(hotkeys: Hotkey[]): {
     return () => {
       document.removeEventListener('keydown', onKeyDown)
     }
-  }, [])
+  }, [onKeyDown])
 }
 ```
 
@@ -267,7 +268,7 @@ export function useHotkeys(hotkeys: Hotkey[]): {
 }
 ```
 
-This would make `onKeyDown` _not_ reactive, it would get able to always "see" the latest values of `hotkeys`, and it would be referentially stable between renders. The best of all worlds, without having to write a single useless `useCallback` or `useMemo`.
+This would make `onKeyDown` _not_ reactive, it would be able to always "see" the latest values of `hotkeys`, and it would be referentially stable between renders. The best of all worlds, without having to write a single useless `useCallback` or `useMemo`.
 
 ---
 
