@@ -90,7 +90,7 @@ Queries can be used in components with hooks, and routers have loaders. If we us
 
 In short, initiating fetches in route loaders is almost always a good idea, because it makes sure data will be available to your components as early as possible. They run before the component renders. They might even run before the js bundle for the component is downloaded and evaluated. And with the `prefetch: 'intent'` feature of TanStack Router, route loaders can be triggered before the user even clicks on links that take them to that route. Yes, you basically get prefetch-on-hover "for free" by using route loaders.
 
-```tsx title="QueryClient in Loader" twoslash
+```tsx title="Query in Loader" twoslash
 import {
   createFileRoute,
   createRootRouteWithContext,
@@ -226,6 +226,104 @@ const router = createRouter({
   defaultErrorComponent: DefaultError,
 })
 ```
+
+### To `await` or not to `await` in the loader
+
+That's a frequent question I'm getting when integrating Query with Router, so let me try to get to the bottom of it. Most examples will show `await` in the loader for "blocking" data because that's what you would do without Query integration, and that's fine. The router will show the `pendingComponent` while the loader is `pending`, and only render the component afterwards. That's why data coming from `useLoaderData` is guaranteed to be defined. For [deferred data loading](https://tanstack.com/router/latest/docs/guide/deferred-data-loading#deferred-data-loading-with-await), you would return a non-awaited Promise from the loader and use the `Await` component from the router.
+
+But when you integrate with TanStack Query, you can shift that decision to the component if you <Emph>never `await` in the loader</Emph>. That decision can simply be made by using `useSuspenseQuery` for blocking data and `useQuery` for deferred data.
+
+```tsx title="Deferred and Blocking Data" twoslash {3,6,15,18}
+import {
+  createFileRoute,
+  createRootRouteWithContext,
+  createRouter,
+} from '@tanstack/react-router'
+import {
+  QueryClient,
+  queryOptions,
+  useSuspenseQuery,
+  useQuery,
+} from '@tanstack/react-query'
+
+type RouteContext = {
+  queryClient: QueryClient
+}
+
+const rootRoute = createRootRouteWithContext<RouteContext>()()
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/dashboard/$dashboardId': {
+      parentRoute: typeof rootRoute
+      id: '/dashboard/$dashboardId'
+      path: '/dashboard/$dashboardId'
+      fullPath: '/dashboard/$dashboardId'
+    }
+  }
+}
+
+type Dashboard = {
+  title: string
+}
+
+declare const fetchDashboard: (id: string) => Promise<Dashboard>
+declare const fetchWidgetCount: (id: string) => Promise<number>
+const dashboardQueryOptions = (dashboardId: string) =>
+  queryOptions({
+    queryKey: ['dashboard', dashboardId],
+    queryFn: async () => fetchDashboard(dashboardId),
+  })
+
+const widgetCountQueryOptions = (dashboardId: string) =>
+  queryOptions({
+    queryKey: ['dashboard', dashboardId, 'widgetCount'],
+    queryFn: async () => fetchWidgetCount(dashboardId),
+  })
+
+// ---cut---
+export const Route = createFileRoute('/dashboard/$dashboardId')({
+  loader: ({ context, params }) => {
+    context.queryClient.prefetchQuery(
+      dashboardQueryOptions(params.dashboardId),
+    )
+    context.queryClient.prefetchQuery(
+      widgetCountQueryOptions(params.dashboardId),
+    )
+  },
+  component: Dashboard,
+})
+
+function Dashboard() {
+  const params = Route.useParams()
+  const { data: dashboardData } = useSuspenseQuery(
+    //    ^?
+    dashboardQueryOptions(params.dashboardId),
+  )
+  const { data: widgetCountData } = useQuery(
+    //    ^?
+    widgetCountQueryOptions(params.dashboardId),
+  )
+}
+// ---cut-after---
+const routeTree = rootRoute.addChildren([Route])
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient: new QueryClient(),
+  },
+})
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
+```
+
+Look at that loader! It's not even an `async` function. It doesn't `await` anything or `return` anything. But since `useSuspenseQuery` integrates so well with the router's boundaries, we get the same behavior as if we'd `await` the Dashboard Query. There's also no waterfalls if call `useSuspenseQuery` multiple times in the same component, because the fetch has already been started.
+
+And on type level, we get `dashboardData` to never be `undefined` thanks to `useSuspenseQuery`, while our non-blocking `widgetCount` is of type `number | undefined`, so we can decide to e.g. show an inline skeleton loader while that request is pending.
 
 ### Always use a Query
 
