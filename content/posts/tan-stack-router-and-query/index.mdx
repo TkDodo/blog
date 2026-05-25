@@ -174,7 +174,7 @@ Here, the route loader merely triggers the Query so that it can start fetching e
 
 Additionally, there are a couple of things we need to keep in mind:
 
-### Add the QueryClient to the Router Context
+## Add the QueryClient to the Router Context
 
 This is necessary to get access to the `queryClient` in router specific methods like the loaders. The example already does this, but without the wiring, it won't work:
 
@@ -227,7 +227,7 @@ const router = createRouter({
 })
 ```
 
-### To `await` or not to `await` in the loader
+## To `await` or not to `await` in the loader
 
 That's a frequent question I'm getting when integrating Query with Router, so let me try to get to the bottom of it. Most examples will show `await` in the loader for "blocking" data because that's what you would do without Query integration, and that's fine. The router will show the `pendingComponent` while the loader is `pending`, and only render the component afterwards. That's why data coming from `useLoaderData` is guaranteed to be defined. For [deferred data loading](https://tanstack.com/router/latest/docs/guide/deferred-data-loading#deferred-data-loading-with-await), you would return a non-awaited Promise from the loader and use the `Await` component from the router.
 
@@ -325,7 +325,7 @@ Look at that loader! It's not even an `async` function. It doesn't `await` anyth
 
 And on type level, we get `dashboardData` to never be `undefined` thanks to `useSuspenseQuery`, while our non-blocking `widgetCount` is of type `number | undefined`, so we can decide to e.g. show an inline skeleton loader while that request is pending.
 
-### Always use a Query
+## Always use a Query
 
 While the router already gives you a way to access data with `useLoaderData`, it's not recommended when combining it with Query. TanStack Query keeps track of which queries are actively used, and for that, it needs Query Observers. Those observers are created with `useQuery` (or `useSuspenseQuery`). Without those hook calls, queries are seen as "inactive", which has a bunch of implications:
 
@@ -335,11 +335,42 @@ While the router already gives you a way to access data with `useLoaderData`, it
 
 As you can see, relying on `useLoaderData` might work at first, but can really hurt in the long run (especially the garbage collecting part). The easiest thing that prevents falling into this trap is to:
 
-### Treat the loader as an event handler
+## Treat the loader as an event handler
 
 If we were to treat the loader like a simple fire-and-forget event handler that only primes our cache <Emph>without actually returning any data</Emph>, `useLoaderData` would just give us `undefined`, which isn't very usable. That's good because we shouldn't use it - we should `useQuery`. 😁
 
 I find this generally a good mental model to have about route loaders, because it clearly defines what they are for: A point in time to initiate data fetching after a user interaction (navigating to page or showing intent to do so). This can also be done gradually, as an enhancement to speed up loading our pages. But if the loader doesn't exist, our pages should still work.
+
+## What about SSR?
+
+When upgrading from TanStack Router to the full-stack framework [TanStack Start](https://tanstack.com/start/latest), you'll get full-stack capabilities like full-document SSR, streaming, server functions, server components and more. The framework itself is probably worth a separate blogpost, but for the Query integration, it's good to know that nothing really changes.
+
+TanStack Start offers a unique execution model, where the loaders are <Emph>isomorphic</Emph>, meaning they will run on the server during SSR and on the client during navigations. This model works exceptionally well with client-side caches like TanStack Query.
+
+On the first page load, the server-fetched data is streamed to the client during SSR, which seeds the QueryCache. After that, your application becomes a SPA with client-side transitions, giving you the best of both worlds: Fast, server rendered page loads and fast navigations.
+
+Also, our component and loader code doesn't have to change one bit. The only thing we have to make sure is that data fetched on the server is somehow winding up in the client side cache. For that, TanStack Start offers a [simple integration](https://tanstack.com/router/latest/docs/integrations/query) that we can wire up globally:
+
+```tsx title="setupRouterSsrQueryIntegration" {1,13-16}
+import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
+
+const queryClient = new QueryClient()
+
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient,
+  },
+  defaultPreloadStaleTime: 0,
+})
+
+setupRouterSsrQueryIntegration({
+  router,
+  queryClient,
+})
+```
+
+This integration ensures that data fetched on the server is automatically dehydrated and streamed to the client, where it will be hydrated and put into the client side cache for you. It doesn't get any better than that, and it's all opt-in. 🔥
 
 ---
 
