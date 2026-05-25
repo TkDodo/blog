@@ -6,5 +6,5 @@ interface Props {
 }
 
 export function TsrToc({ id }: Props) {
-  return <SeriesToc id={id} items={tsrSeriesItems} />;
+  return <SeriesToc id={id} title="TanStack Router" items={tsrSeriesItems} />;
 }

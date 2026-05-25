@@ -6,8 +6,10 @@ interface SeriesItem {
 }
 
 interface Props {
+  framed?: boolean;
   id?: string;
   items: ReadonlyArray<SeriesItem>;
+  title?: string;
 }
 
 /**
@@ -15,7 +17,12 @@ interface Props {
  */
 const NO_TRUNCATE_MAX_ITEMS_LENGTH = 5;
 
-export default function SeriesToc({ id, items }: Props) {
+export default function SeriesToc({
+  framed = true,
+  id,
+  items,
+  title,
+}: Props) {
   if (!id) return null;
 
   const currentIndex = items.findIndex((item) => item.id === id);
@@ -45,8 +52,8 @@ export default function SeriesToc({ id, items }: Props) {
   // if the series is short enough, just render all items without truncation.
   if (itemsAsViewModel.length <= NO_TRUNCATE_MAX_ITEMS_LENGTH) {
     return (
-      <div className="bg-ic-bg/45 border-border rounded-lg border">
-        {/* Maybe you can give a title to the series and display it here */}
+      <div className={getContainerClassName(framed)}>
+        {title && <SeriesTitle>{title}</SeriesTitle>}
 
         <div className="px-4 py-2">
           <List>{itemsAsViewModel.map(renderItem)}</List>
@@ -64,8 +71,8 @@ export default function SeriesToc({ id, items }: Props) {
   });
 
   return (
-    <div className="bg-ic-bg/45 border-border rounded-lg border">
-      {/* Maybe you can give a title to the series and display it here */}
+    <div className={getContainerClassName(framed)}>
+      {title && <SeriesTitle>{title}</SeriesTitle>}
 
       <div className="px-4 py-2">
         <List>
@@ -131,6 +138,20 @@ function List({ indented = false, children }: ListProps) {
       {children}
     </ul>
   );
+}
+
+function SeriesTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="border-border text-subtle border-b px-4 py-2 text-sm font-bold tracking-wide uppercase">
+      {children}
+    </div>
+  );
+}
+
+function getContainerClassName(framed: boolean) {
+  if (!framed) return "";
+
+  return "bg-ic-bg/45 border-border rounded-lg border";
 }
 
 function ListItemEllipsis({ srText }: { srText: React.ReactNode }) {

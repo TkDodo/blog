@@ -4,8 +4,8 @@ import type { ImageMetadata } from "astro";
 import SkipNavContent from "@components/a11y/skip-nav-content.astro";
 import Aside from "@components/aside.astro";
 import Abbr from "@components/Abbr.astro";
+import ContinueSeries from "@components/continue-series.astro";
 import ErrorBoundary from "@components/ErrorBoundary";
-import Link from "@components/link.astro";
 import Playground from "@components/playground.astro";
 import ProgressiveImage from "@components/progressive-image.astro";
 import Prose from "@components/prose.astro";
@@ -39,28 +39,51 @@ const postSlug = getPostSlug(entry);
 const { Content } = await render(entry);
 
 const allPosts = sortAsc(await getCollection("blog"));
+const tocTitles = {
+  RqToc: "React Query",
+  DsToc: "Design Systems",
+  UsToc: "useState",
+  TsrToc: "TanStack Router",
+  HsToc: "Hooks",
+  RcToc: "Refs and Callbacks",
+  MemoToc: "Memoization",
+  RtrToc: "Road to Refactoring",
+} as const satisfies Record<TocName, string>;
+
 const detectedToc = entry.body?.match(
   /<(RqToc|DsToc|UsToc|TsrToc|HsToc|RcToc|MemoToc|RtrToc)\b/,
 )?.[1] as TocName | undefined;
-const seriesItems = detectedToc ? seriesByToc[detectedToc] : null;
-const currentSeriesIndex =
-  seriesItems?.findIndex((item) => item.id === postSlug) ?? -1;
-const previousSeriesSlug =
-  currentSeriesIndex > 0
-    ? (seriesItems?.[currentSeriesIndex - 1]?.id ?? null)
-    : null;
-const nextSeriesSlug =
-  currentSeriesIndex >= 0
-    ? (seriesItems?.[currentSeriesIndex + 1]?.id ?? null)
-    : null;
+const detectedTocs =
+  postSlug === "tan-stack-router-and-query"
+    ? (["TsrToc", "RqToc"] as const satisfies ReadonlyArray<TocName>)
+    : detectedToc
+      ? [detectedToc]
+      : [];
 
-const previousSeriesPost = previousSeriesSlug
-  ? (allPosts.find((p) => getPostSlug(p) === previousSeriesSlug) ?? null)
-  : null;
-const nextSeriesPost = nextSeriesSlug
-  ? (allPosts.find((p) => getPostSlug(p) === nextSeriesSlug) ?? null)
-  : null;
-const hasTableOfContents = Boolean(detectedToc);
+const seriesContexts = detectedTocs.map((toc) => {
+  const seriesItems = seriesByToc[toc];
+  const currentSeriesIndex = seriesItems.findIndex(
+    (item) => item.id === postSlug,
+  );
+  const previousSeriesSlug =
+    currentSeriesIndex > 0
+      ? (seriesItems[currentSeriesIndex - 1]?.id ?? null)
+      : null;
+  const nextSeriesSlug =
+    currentSeriesIndex >= 0
+      ? (seriesItems[currentSeriesIndex + 1]?.id ?? null)
+      : null;
+
+  return {
+    title: tocTitles[toc],
+    previousPost: previousSeriesSlug
+      ? (allPosts.find((p) => getPostSlug(p) === previousSeriesSlug) ?? null)
+      : null,
+    nextPost: nextSeriesSlug
+      ? (allPosts.find((p) => getPostSlug(p) === nextSeriesSlug) ?? null)
+      : null,
+  };
+});
 
 const banners = import.meta.glob<ImageMetadata>(
   "/content/posts/**/*.{avif,gif,jpeg,jpg,png,webp}",
@@ -83,8 +106,13 @@ const getBannerForEntry = (
 };
 
 const postBanner = getBannerForEntry(entry);
-const previousPostBanner = getBannerForEntry(previousSeriesPost);
-const nextPostBanner = getBannerForEntry(nextSeriesPost);
+const seriesContinuations = seriesContexts
+  .map((context) => ({
+    ...context,
+    previousBanner: getBannerForEntry(context.previousPost),
+    nextBanner: getBannerForEntry(context.nextPost),
+  }))
+  .filter(({ previousPost, nextPost }) => previousPost || nextPost);
 
 const POST_BANNER_MAX_WIDTH = 760;
 const postBannerRenderWidth = postBanner
@@ -167,85 +195,10 @@ const ogImagePath = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/og-images/${
         }}
       />
       {
-        hasTableOfContents && (previousSeriesPost || nextSeriesPost) && (
+        seriesContinuations.length > 0 && (
           <>
             <Spacer axis="vertical" size={32} />
-            <section id="read-next-callout" class="not-prose">
-              <h2 class="mb-3 text-sm font-semibold tracking-[0.06em] uppercase text-subtle">
-                Continue Series
-              </h2>
-              <div
-                class:list={[
-                  "grid gap-3",
-                  previousSeriesPost && nextSeriesPost
-                    ? "grid-cols-2 gap-2"
-                    : "grid-cols-1",
-                ]}
-              >
-                {previousSeriesPost && (
-                  <Link
-                    href={`/${getPostSlug(previousSeriesPost)}`}
-                    variant="subtle"
-                    underlineOnHover={false}
-                    class="group block rounded-xl border border-border bg-ic-bg/45 p-2 md:p-3 transition-colors duration-200 hover:border-primary"
-                  >
-                    <p class="text-[0.625rem] font-semibold tracking-[0.06em] uppercase text-subtle">
-                      Previous
-                    </p>
-                    <div class="mt-1 flex items-center gap-2 md:gap-3">
-                      {previousPostBanner && (
-                        <div class="h-12 w-12 shrink-0 overflow-hidden rounded-md md:h-16 md:w-16">
-                          <ProgressiveImage
-                            src={previousPostBanner}
-                            alt={previousSeriesPost.data.title}
-                            width={96}
-                            height={96}
-                            sizes="(max-width: 768px) 48px, 64px"
-                            wrapperClass="h-full w-full"
-                          />
-                        </div>
-                      )}
-                      <div class="min-w-0">
-                        <p class="text-sm font-semibold leading-tight text-text group-hover:text-text md:text-base">
-                          {previousSeriesPost.data.title}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                )}
-                {nextSeriesPost && (
-                  <Link
-                    href={`/${getPostSlug(nextSeriesPost)}`}
-                    variant="subtle"
-                    underlineOnHover={false}
-                    class="group block rounded-xl border border-border bg-ic-bg/45 p-2 md:p-3 transition-colors duration-200 hover:border-primary"
-                  >
-                    <p class="text-[0.625rem] font-semibold tracking-[0.06em] uppercase text-subtle">
-                      Next
-                    </p>
-                    <div class="mt-1 flex items-center gap-2 md:gap-3">
-                      {nextPostBanner && (
-                        <div class="h-12 w-12 shrink-0 overflow-hidden rounded-md md:h-16 md:w-16">
-                          <ProgressiveImage
-                            src={nextPostBanner}
-                            alt={nextSeriesPost.data.title}
-                            width={96}
-                            height={96}
-                            sizes="(max-width: 768px) 48px, 64px"
-                            wrapperClass="h-full w-full"
-                          />
-                        </div>
-                      )}
-                      <div class="min-w-0">
-                        <p class="text-sm font-semibold leading-tight text-text group-hover:text-text md:text-base">
-                          {nextSeriesPost.data.title}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                )}
-              </div>
-            </section>
+            <ContinueSeries continuations={seriesContinuations} id={postSlug} />
           </>
         )
       }
