@@ -40,11 +40,15 @@ const panels = visibleContinuations.map((continuation) => ({
       label: "Next",
       post: continuation.nextPost,
     },
-  ].filter((card): card is {
-    banner: ImageMetadata | null;
-    label: string;
-    post: BlogEntry;
-  } => Boolean(card.post)),
+  ].filter(
+    (
+      card,
+    ): card is {
+      banner: ImageMetadata | null;
+      label: string;
+      post: BlogEntry;
+    } => Boolean(card.post),
+  ),
 }));
 
 const tabsCss = hasTabs
@@ -91,7 +95,12 @@ const tabsCss = hasTabs
         Continue Series
       </h2>
 
-      <div class:list={[hasTabs && "continue-series-tabs rounded-lg border border-border bg-ic-bg/45"]}>
+      <div
+        class:list={[
+          hasTabs &&
+            "continue-series-tabs rounded-lg border border-border bg-ic-bg/45",
+        ]}
+      >
         {hasTabs && <style set:html={tabsCss} />}
 
         {hasTabs &&
@@ -118,7 +127,9 @@ const tabsCss = hasTabs
           </div>
         )}
 
-        <div class:list={[hasTabs && "continue-series-tabs__panels p-2 md:p-3"]}>
+        <div
+          class:list={[hasTabs && "continue-series-tabs__panels p-2 md:p-3"]}
+        >
           {panels.map((panel, index) => (
             <div
               class:list={[

@@ -17,12 +17,7 @@ interface Props {
  */
 const NO_TRUNCATE_MAX_ITEMS_LENGTH = 5;
 
-export default function SeriesToc({
-  framed = true,
-  id,
-  items,
-  title,
-}: Props) {
+export default function SeriesToc({ framed = true, id, items, title }: Props) {
   if (!id) return null;
 
   const currentIndex = items.findIndex((item) => item.id === id);
