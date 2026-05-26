@@ -6,5 +6,5 @@ interface Props {
 }
 
 export function RqToc({ id }: Props) {
-  return <SeriesToc id={id} items={rqSeriesItems} />;
+  return <SeriesToc id={id} title="React Query" items={rqSeriesItems} />;
 }

@@ -117,6 +117,10 @@ export const rqSeriesItems = [
     id: "creating-query-abstractions",
     title: "#31: Creating Query Abstractions",
   },
+  {
+    id: "tan-stack-router-and-query",
+    title: "#32: TanStack Router and Query",
+  },
 ] as const satisfies ReadonlyArray<SeriesItem>;
 
 export const dsSeriesItems = [
@@ -160,6 +164,10 @@ export const tsrSeriesItems = [
   {
     id: "context-inheritance-in-tan-stack-router",
     title: "#2: Context Inheritance in TanStack Router",
+  },
+  {
+    id: "tan-stack-router-and-query",
+    title: "#3: TanStack Router and Query",
   },
 ] as const satisfies ReadonlyArray<SeriesItem>;
 

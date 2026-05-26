@@ -1,0 +1,184 @@
+---
+import type { ImageMetadata } from "astro";
+import type { CollectionEntry } from "astro:content";
+import Link from "@components/link.astro";
+import ProgressiveImage from "@components/progressive-image.astro";
+import { getPostSlug } from "@utils";
+
+type BlogEntry = CollectionEntry<"blog">;
+
+interface SeriesContinuation {
+  title: string;
+  previousPost: BlogEntry | null;
+  nextPost: BlogEntry | null;
+  previousBanner: ImageMetadata | null;
+  nextBanner: ImageMetadata | null;
+}
+
+interface Props {
+  continuations: Array<SeriesContinuation>;
+  id: string;
+}
+
+const { continuations, id } = Astro.props;
+const visibleContinuations = continuations.filter(
+  ({ previousPost, nextPost }) => previousPost || nextPost,
+);
+const hasTabs = visibleContinuations.length > 1;
+const tabName = `${id}-continue-series`;
+
+const panels = visibleContinuations.map((continuation) => ({
+  ...continuation,
+  cards: [
+    {
+      banner: continuation.previousBanner,
+      label: "Previous",
+      post: continuation.previousPost,
+    },
+    {
+      banner: continuation.nextBanner,
+      label: "Next",
+      post: continuation.nextPost,
+    },
+  ].filter(
+    (
+      card,
+    ): card is {
+      banner: ImageMetadata | null;
+      label: string;
+      post: BlogEntry;
+    } => Boolean(card.post),
+  ),
+}));
+
+const tabsCss = hasTabs
+  ? `
+      .continue-series-tabs__input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .continue-series-tabs__panel {
+        display: none;
+      }
+
+      ${panels
+        .map(
+          (_, index) => `
+            #${tabName}-${index}:checked ~ .continue-series-tabs__tabs label[for="${tabName}-${index}"] {
+              background: var(--color-ic-bg);
+              color: var(--color-text);
+              font-weight: 700;
+            }
+
+            #${tabName}-${index}:focus-visible ~ .continue-series-tabs__tabs label[for="${tabName}-${index}"] {
+              outline: 2px solid var(--color-primary);
+              outline-offset: 2px;
+              box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 24%, transparent);
+            }
+
+            #${tabName}-${index}:checked ~ .continue-series-tabs__panels .continue-series-tabs__panel--${index} {
+              display: block;
+            }
+          `,
+        )
+        .join("")}
+    `
+  : "";
+---
+
+{
+  panels.length > 0 && (
+    <section id="read-next-callout" class="not-prose">
+      <h2 class="mb-3 text-sm font-semibold tracking-[0.06em] uppercase text-subtle">
+        Continue Series
+      </h2>
+
+      <div
+        class:list={[
+          hasTabs &&
+            "continue-series-tabs rounded-lg border border-border bg-ic-bg/45",
+        ]}
+      >
+        {hasTabs && <style set:html={tabsCss} />}
+
+        {hasTabs &&
+          panels.map((_, index) => (
+            <input
+              checked={index === 0}
+              class="continue-series-tabs__input"
+              id={`${tabName}-${index}`}
+              name={tabName}
+              type="radio"
+            />
+          ))}
+
+        {hasTabs && (
+          <div class="continue-series-tabs__tabs flex border-b border-border p-1">
+            {panels.map((panel, index) => (
+              <label
+                class="grow cursor-pointer rounded px-3 py-2 text-center text-sm font-bold tracking-wide uppercase text-subtle transition-colors duration-200 hover:bg-ic-bg"
+                for={`${tabName}-${index}`}
+              >
+                {panel.title}
+              </label>
+            ))}
+          </div>
+        )}
+
+        <div
+          class:list={[hasTabs && "continue-series-tabs__panels p-2 md:p-3"]}
+        >
+          {panels.map((panel, index) => (
+            <div
+              class:list={[
+                hasTabs && "continue-series-tabs__panel",
+                hasTabs && `continue-series-tabs__panel--${index}`,
+              ]}
+            >
+              <div
+                class:list={[
+                  "grid gap-3",
+                  panel.cards.length > 1 ? "grid-cols-2 gap-2" : "grid-cols-1",
+                ]}
+              >
+                {panel.cards.map(({ banner, label, post }) => (
+                  <Link
+                    href={`/${getPostSlug(post)}`}
+                    variant="subtle"
+                    underlineOnHover={false}
+                    class="group block rounded-xl border border-border bg-ic-bg/45 p-2 transition-colors duration-200 hover:border-primary md:p-3"
+                  >
+                    <p class="text-[0.625rem] font-semibold tracking-[0.06em] uppercase text-subtle">
+                      {label}
+                    </p>
+                    <div class="mt-1 flex items-center gap-2 md:gap-3">
+                      {banner && (
+                        <div class="h-12 w-12 shrink-0 overflow-hidden rounded-md md:h-16 md:w-16">
+                          <ProgressiveImage
+                            src={banner}
+                            alt={post.data.title}
+                            width={96}
+                            height={96}
+                            sizes="(max-width: 768px) 48px, 64px"
+                            wrapperClass="h-full w-full"
+                          />
+                        </div>
+                      )}
+                      <div class="min-w-0">
+                        <p class="text-sm font-semibold leading-tight text-text group-hover:text-text md:text-base">
+                          {post.data.title}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

@@ -1,0 +1,384 @@
+---
+title: TanStack Router and Query
+description: TanStack Router has a built-in cache, so why would we need TanStack Query? There are, of course, reasons ...
+date: 2026-05-26
+banner: ./silhouette.jpg
+tags:
+  - ReactJs
+  - TanStack Router
+  - TanStack Query
+---
+
+import Comments from '@components/Comments.astro'
+import Attribution from '@components/Attribution'
+import Translations from '@components/Translations'
+import { TanStackRouterQueryToc } from '@components/tan-stack-router-query-toc'
+import Highlight from '@components/Highlight'
+import Aside from '@components/Aside'
+import Emph from '@components/Emph'
+
+<Attribution
+  name="kabita Darlami"
+  url="https://unsplash.com/@itskabita"
+/>
+
+<TanStackRouterQueryToc />
+
+<Translations>{[]}</Translations>
+
+It shouldn't come as a surprise that TanStack Router integrates well with TanStack Query, after all, they're from the same <Emph>stack</Emph>. But wait a second - doesn't TanStack Router already come with support for caching?
+
+```tsx title="Loader Data" twoslash
+import {
+  createFileRoute,
+  createRootRoute,
+  createRouter,
+} from '@tanstack/react-router'
+import React from 'react'
+
+const rootRoute = createRootRoute()
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/dashboard/$dashboardId': {
+      parentRoute: typeof rootRoute
+      id: '/dashboard/$dashboardId'
+      path: '/dashboard/$dashboardId'
+      fullPath: '/dashboard/$dashboardId'
+    }
+  }
+}
+
+type Dashboard = {
+  title: string
+}
+
+declare const fetchDashboard: (id: string) => Promise<Dashboard>
+// ---cut---
+export const Route = createFileRoute('/dashboard/$dashboardId')({
+  component: Dashboard,
+  staleTime: 10_000,
+  loader: ({ params }) => fetchDashboard(params.dashboardId),
+})
+
+function Dashboard() {
+  const dashboard = Route.useLoaderData()
+  return <h1>{dashboard.title}</h1>
+}
+// ---cut-after---
+const routeTree = rootRoute.addChildren([Route])
+const router = createRouter({ routeTree })
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
+```
+
+We can now access our `dashboard` thanks to `Route.useLoaderData`, and if users navigate away and come back to our route within the supplied `staleTime` (10 seconds), they will see cached data.
+
+This is great, and works very well as long as we're talking about <Emph>Route Specific Data</Emph>. If our `/dashboard/$dashboardId` route, or a child like `/dashboard/$dashboardId/widget/$widgetId` is the only one that needs issue detail data, the router cache is perfect.
+
+But a lot of the time, we'll need data across multiple routes, for example when handling user data. Since the built-in Router Cache is stored per-route, other routes won't have access to that data and would need to fetch it (and cache it) on their own.
+
+The Query Cache on the other hand is truly global and accessible on all routes and route loaders through the unique `queryKey`, which is one of the reasons why TanStack Query gets used a lot in client side applications.
+
+## Combining Query and Router
+
+Queries can be used in components with hooks, and routers have loaders. If we use queries, why do we even need loaders? I've already talked a bit about this in [React Query Meets React Router](react-query-meets-react-router). Different router, but same concept.
+
+In short, initiating fetches in route loaders is almost always a good idea, because it makes sure data will be available to your components as early as possible. They run before the component renders. They might even run before the js bundle for the component is downloaded and evaluated. And with the `prefetch: 'intent'` feature of TanStack Router, route loaders can be triggered before the user even clicks on links that take them to that route. Yes, you basically get prefetch-on-hover "for free" by using route loaders.
+
+```tsx title="Query in Loader" twoslash
+import {
+  createFileRoute,
+  createRootRouteWithContext,
+  createRouter,
+} from '@tanstack/react-router'
+import {
+  QueryClient,
+  queryOptions,
+  useSuspenseQuery,
+} from '@tanstack/react-query'
+
+type RouteContext = {
+  queryClient: QueryClient
+}
+
+const rootRoute = createRootRouteWithContext<RouteContext>()()
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/dashboard/$dashboardId': {
+      parentRoute: typeof rootRoute
+      id: '/dashboard/$dashboardId'
+      path: '/dashboard/$dashboardId'
+      fullPath: '/dashboard/$dashboardId'
+    }
+  }
+}
+
+type Dashboard = {
+  title: string
+}
+
+declare const fetchDashboard: (id: string) => Promise<Dashboard>
+const dashboardQueryOptions = (dashboardId: string) =>
+  queryOptions({
+    queryKey: ['dashboard', dashboardId],
+    queryFn: async () => fetchDashboard(dashboardId),
+  })
+
+// ---cut---
+export const Route = createFileRoute('/dashboard/$dashboardId')({
+  loader: async ({ context, params }) => {
+    await context.queryClient.ensureQueryData(
+      dashboardQueryOptions(params.dashboardId),
+    )
+  },
+  component: Dashboard,
+})
+
+function Dashboard() {
+  const params = Route.useParams()
+  const { data } = useSuspenseQuery(
+    dashboardQueryOptions(params.dashboardId),
+  )
+}
+// ---cut-after---
+const routeTree = rootRoute.addChildren([Route])
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient: new QueryClient(),
+  },
+})
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
+```
+
+<Aside title="Which queryClient function should I use in the route loader ?">
+
+You might've seen versions where we use `queryClient.prefetchQuery` in the route loader, potentially even without awaiting it. But here, we're using `queryClient.ensureQueryData`, _and_ we are awaiting it. Why?
+
+The answer to this question is nuanced, but the bottom line is: It likely doesn't matter what you do in the route loader! Those imperative fetching functions only differentiate ever so slightly in their behaviour, which is why we have [an RFC](https://github.com/TanStack/query/discussions/9135) up to unify them into a single method `queryClient.query`. If you are curious on how they are different, the RFC explains them in depth.
+
+</Aside>
+
+Here, the route loader merely triggers the Query so that it can start fetching early. Then, when the component renders, it will either have data in the cache already (if we `await` in the loader) or it will pick up the in-flight promise. In any case, there will only be one request, and it will start as early as possible.
+
+Additionally, there are a couple of things we need to keep in mind:
+
+## Add the QueryClient to the Router Context
+
+This is necessary to get access to the `queryClient` in router specific methods like the loaders. The example already does this, but without the wiring, it won't work:
+
+```tsx title="QueryClient in Router Context" {1,5-7}
+const queryClient = new QueryClient()
+
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient,
+  },
+})
+```
+
+Additionally, make sure it's the same `queryClient` you're passing to the `QueryClientProvider`, otherwise they won't see the same cache. You will also have to use `createRootRouteWithContext` for your root route instead of `createRootRoute`. This is all [well documented](https://tanstack.com/router/latest/docs/guide/router-context#typed-router-context).
+
+### Turn off Router Caching
+
+The router has built-in caching and its own stale-while-revalidate logic for when it should run the loaders. When using external caching libraries like TanStack Query, it's best to just turn this off completely because we'd only want one player to control caching.
+
+The only setting we'd need to tweak is `defaultPreloadStaleTime`, which handles how long preloaded data gets cached, and it defaults to `30s`. Everything else already defaults to 0.
+
+```tsx title="defaultPreloadStaleTime" {8}
+const queryClient = new QueryClient()
+
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient,
+  },
+  defaultPreloadStaleTime: 0,
+})
+```
+
+## `useQuery` or `useSuspenseQuery` ?
+
+That's totally up to you, but I really like how Query integrates with the Suspense and Error Boundaries provided by the router. Since every route is wrapped in its own boundaries by default, we can simply call `useSuspenseQuery`, and it'll pick up the same boundaries used by the loader, which we need to set up anyway. That means our components can focus on the sunshine case only. Even better, if we define default boundaries globally, we only have to set it up once:
+
+```tsx title="Default Boundaries" {9,10}
+const queryClient = new QueryClient()
+
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient,
+  },
+  defaultPreloadStaleTime: 0,
+  defaultPendingComponent: DefaultLoader,
+  defaultErrorComponent: DefaultError,
+})
+```
+
+## To `await` or not to `await` in the loader
+
+That's a frequent question I'm getting when integrating Query with Router, so let me try to get to the bottom of it. Most examples will show `await` in the loader for "blocking" data because that's what you would do without Query integration, and that's fine. The router will show the `pendingComponent` while the loader is `pending`, and only render the component afterwards. That's why data coming from `useLoaderData` is guaranteed to be defined. For [deferred data loading](https://tanstack.com/router/latest/docs/guide/deferred-data-loading#deferred-data-loading-with-await), you would return a non-awaited Promise from the loader and use the `Await` component from the router.
+
+But when you integrate with TanStack Query, you can shift that decision to the component if you <Emph>never `await` in the loader</Emph>. That decision can simply be made by using `useSuspenseQuery` for blocking data and `useQuery` for deferred data.
+
+```tsx title="Deferred and Blocking Data" twoslash {3,6,15,18}
+import {
+  createFileRoute,
+  createRootRouteWithContext,
+  createRouter,
+} from '@tanstack/react-router'
+import {
+  QueryClient,
+  queryOptions,
+  useSuspenseQuery,
+  useQuery,
+} from '@tanstack/react-query'
+
+type RouteContext = {
+  queryClient: QueryClient
+}
+
+const rootRoute = createRootRouteWithContext<RouteContext>()()
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/dashboard/$dashboardId': {
+      parentRoute: typeof rootRoute
+      id: '/dashboard/$dashboardId'
+      path: '/dashboard/$dashboardId'
+      fullPath: '/dashboard/$dashboardId'
+    }
+  }
+}
+
+type Dashboard = {
+  title: string
+}
+
+declare const fetchDashboard: (id: string) => Promise<Dashboard>
+declare const fetchWidgetCount: (id: string) => Promise<number>
+const dashboardQueryOptions = (dashboardId: string) =>
+  queryOptions({
+    queryKey: ['dashboard', dashboardId],
+    queryFn: async () => fetchDashboard(dashboardId),
+  })
+
+const widgetCountQueryOptions = (dashboardId: string) =>
+  queryOptions({
+    queryKey: ['dashboard', dashboardId, 'widgetCount'],
+    queryFn: async () => fetchWidgetCount(dashboardId),
+  })
+
+// ---cut---
+export const Route = createFileRoute('/dashboard/$dashboardId')({
+  loader: ({ context, params }) => {
+    context.queryClient.prefetchQuery(
+      dashboardQueryOptions(params.dashboardId),
+    )
+    context.queryClient.prefetchQuery(
+      widgetCountQueryOptions(params.dashboardId),
+    )
+  },
+  component: Dashboard,
+})
+
+function Dashboard() {
+  const params = Route.useParams()
+  const { data: dashboardData } = useSuspenseQuery(
+    //    ^?
+    dashboardQueryOptions(params.dashboardId),
+  )
+  const { data: widgetCountData } = useQuery(
+    //    ^?
+    widgetCountQueryOptions(params.dashboardId),
+  )
+}
+// ---cut-after---
+const routeTree = rootRoute.addChildren([Route])
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient: new QueryClient(),
+  },
+})
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
+```
+
+Look at that loader! It's not even an `async` function. It doesn't `await` anything or `return` anything. But since `useSuspenseQuery` integrates so well with the router's boundaries, we get the same behavior as if we'd `await` the Dashboard Query. There's also no waterfalls if call `useSuspenseQuery` multiple times in the same component, because the fetch has already been started.
+
+And on type level, we get `dashboardData` to never be `undefined` thanks to `useSuspenseQuery`, while our non-blocking `widgetCount` is of type `number | undefined`, so we can decide to e.g. show an inline skeleton loader while that request is pending.
+
+### What about SSR?
+
+When upgrading from TanStack Router to the full-stack framework [TanStack Start](https://tanstack.com/start/latest), you'll get full-stack capabilities like full-document SSR, streaming, server functions, server components and more. The framework itself is probably worth a separate blogpost, but for the Query integration, it's good to know that almost nothing really changes.
+
+TanStack Start offers a unique execution model, where the loaders are <Emph>isomorphic</Emph>, meaning they will run on the server during SSR and on the client during navigations. This model works exceptionally well with client-side caches like TanStack Query.
+
+On the first page load, the server-fetched data is streamed to the client during SSR, which seeds the QueryCache. After that, your application becomes a SPA with client-side transitions, giving you the best of both worlds: Fast, server rendered page loads and fast navigations.
+
+Also, our component and loader code doesn't have to change one bit. The only thing we have to make sure is that data fetched on the server is somehow winding up in the client side cache. For that, TanStack Start offers a [simple integration](https://tanstack.com/router/latest/docs/integrations/query) that we can wire up globally:
+
+```tsx title="setupRouterSsrQueryIntegration" {1,13-16}
+import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
+
+const queryClient = new QueryClient()
+
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient,
+  },
+  defaultPreloadStaleTime: 0,
+})
+
+setupRouterSsrQueryIntegration({
+  router,
+  queryClient,
+})
+```
+
+This integration ensures that data fetched on the server is automatically dehydrated and streamed to the client, where it will be hydrated and put into the client side cache for you.
+
+There's one thing to keep an eye on: For the server to be able to generate the initial HTML, data needs to either be fully available when the component renders on the server, or you need to use React Suspense.
+
+With the Query integration, using `useQuery` means you'll need to `await` the data in the loader so it's ready on the initial render. Otherwise, data will still populate the client cache later, but the server-rendered HTML won't include the component markup. `useSuspenseQuery` doesn't require that extra step, since Suspense works with streaming SSR and can progressively render once the data resolves, which is a pretty good reason to use suspense. 🔥
+
+## Always use a Query
+
+While the router already gives you a way to access data with `useLoaderData`, it's not recommended when combining it with Query. TanStack Query keeps track of which queries are actively used, and for that, it needs Query Observers. Those observers are created with `useQuery` (or `useSuspenseQuery`). Without those hook calls, queries are seen as "inactive", which has a bunch of implications:
+
+- You don't get automatic refetches on triggers like window focus or when you re-gain network connection, because that relies on the query being actively used.
+- Query Invalidation won't re-fetch a Query because that too relies on the query being actively used (unless you change the `refetchType`).
+- Queries that aren't actively used are eligible for garbage collection, so you might see your Query being removed from the cache even though you are "using" it.
+
+Knowing that, relying on `useLoaderData` might work at first, but it can become problematic over time, especially the garbage collection. The easiest thing that prevents falling into this trap is to:
+
+## Treat the loader as an event handler
+
+If we were to treat the loader like a simple fire-and-forget event handler that only primes our cache <Emph>without actually returning any data</Emph>, `useLoaderData` would just give us `undefined`, which isn't very usable. That's good because we shouldn't use it - we should `use(Suspense)Query`. 😁
+
+I find this generally a good mental model to have about route loaders, because it clearly defines what they are for: A point in time to initiate data fetching after a user interaction (navigating to page or showing intent to do so). This can also be introduced gradually as a performance enhancement to speed up loading our pages. Even without the loader in place, our pages should still work.
+
+---
+
+That's it for today. Feel free to reach out to me on [bluesky](https://bsky.app/profile/tkdodo.eu)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />
