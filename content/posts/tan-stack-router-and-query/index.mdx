@@ -189,7 +189,7 @@ const router = createRouter({
 })
 ```
 
-Also, make sure it's the same `queryClient` you're passing to the `QueryClientProvider`, otherwise they won't see the same cache.
+Additionally, make sure it's the same `queryClient` you're passing to the `QueryClientProvider`, otherwise they won't see the same cache. You will also have to use `createRootRouteWithContext` for your root route instead of `createRootRoute`. This is all [well documented](https://tanstack.com/router/latest/docs/guide/router-context#typed-router-context).
 
 ### Turn off Router Caching
 
@@ -209,7 +209,7 @@ const router = createRouter({
 })
 ```
 
-### `useQuery` or `useSuspenseQuery` ?
+## `useQuery` or `useSuspenseQuery` ?
 
 That's totally up to you, but I really like how Query integrates with the Suspense and Error Boundaries provided by the router. Since every route is wrapped in its own boundaries by default, we can simply call `useSuspenseQuery`, and it'll pick up the same boundaries used by the loader, which we need to set up anyway. That means our components can focus on the sunshine case only. Even better, if we define default boundaries globally, we only have to set it up once:
 
@@ -325,25 +325,9 @@ Look at that loader! It's not even an `async` function. It doesn't `await` anyth
 
 And on type level, we get `dashboardData` to never be `undefined` thanks to `useSuspenseQuery`, while our non-blocking `widgetCount` is of type `number | undefined`, so we can decide to e.g. show an inline skeleton loader while that request is pending.
 
-## Always use a Query
+### What about SSR?
 
-While the router already gives you a way to access data with `useLoaderData`, it's not recommended when combining it with Query. TanStack Query keeps track of which queries are actively used, and for that, it needs Query Observers. Those observers are created with `useQuery` (or `useSuspenseQuery`). Without those hook calls, queries are seen as "inactive", which has a bunch of implications:
-
-- You don't get automatic refetches on triggers like window focus or when you re-gain network connection, because that relies on the query being actively used.
-- Query Invalidation won't re-fetch a Query because that too relies on the query being actively used (unless you change the `refetchType`).
-- Queries that aren't actively used are eligible for garbage collection, so you might see your Query being removed from the cache even though you are "using" it.
-
-As you can see, relying on `useLoaderData` might work at first, but can really hurt in the long run (especially the garbage collecting part). The easiest thing that prevents falling into this trap is to:
-
-## Treat the loader as an event handler
-
-If we were to treat the loader like a simple fire-and-forget event handler that only primes our cache <Emph>without actually returning any data</Emph>, `useLoaderData` would just give us `undefined`, which isn't very usable. That's good because we shouldn't use it - we should `useQuery`. 😁
-
-I find this generally a good mental model to have about route loaders, because it clearly defines what they are for: A point in time to initiate data fetching after a user interaction (navigating to page or showing intent to do so). This can also be done gradually, as an enhancement to speed up loading our pages. But if the loader doesn't exist, our pages should still work.
-
-## What about SSR?
-
-When upgrading from TanStack Router to the full-stack framework [TanStack Start](https://tanstack.com/start/latest), you'll get full-stack capabilities like full-document SSR, streaming, server functions, server components and more. The framework itself is probably worth a separate blogpost, but for the Query integration, it's good to know that nothing really changes.
+When upgrading from TanStack Router to the full-stack framework [TanStack Start](https://tanstack.com/start/latest), you'll get full-stack capabilities like full-document SSR, streaming, server functions, server components and more. The framework itself is probably worth a separate blogpost, but for the Query integration, it's good to know that almost nothing really changes.
 
 TanStack Start offers a unique execution model, where the loaders are <Emph>isomorphic</Emph>, meaning they will run on the server during SSR and on the client during navigations. This model works exceptionally well with client-side caches like TanStack Query.
 
@@ -370,7 +354,27 @@ setupRouterSsrQueryIntegration({
 })
 ```
 
-This integration ensures that data fetched on the server is automatically dehydrated and streamed to the client, where it will be hydrated and put into the client side cache for you. It doesn't get any better than that, and it's all opt-in. 🔥
+This integration ensures that data fetched on the server is automatically dehydrated and streamed to the client, where it will be hydrated and put into the client side cache for you.
+
+There's one thing to keep an eye on: For the server to be able to generate the initial HTML, data needs to either be fully available when the component renders on the server, or you need to use React Suspense.
+
+With the Query integration, using `useQuery` means you'll need to `await` the data in the loader so it's ready on the initial render. Otherwise, data will still populate the client cache later, but the server-rendered HTML won't include the component markup. `useSuspenseQuery` doesn't require that extra step, since Suspense works with streaming SSR and can progressively render once the data resolves, which is a pretty good reason to use suspense. 🔥
+
+## Always use a Query
+
+While the router already gives you a way to access data with `useLoaderData`, it's not recommended when combining it with Query. TanStack Query keeps track of which queries are actively used, and for that, it needs Query Observers. Those observers are created with `useQuery` (or `useSuspenseQuery`). Without those hook calls, queries are seen as "inactive", which has a bunch of implications:
+
+- You don't get automatic refetches on triggers like window focus or when you re-gain network connection, because that relies on the query being actively used.
+- Query Invalidation won't re-fetch a Query because that too relies on the query being actively used (unless you change the `refetchType`).
+- Queries that aren't actively used are eligible for garbage collection, so you might see your Query being removed from the cache even though you are "using" it.
+
+Knowing that, relying on `useLoaderData` might work at first, but it can become problematic over time, especially the garbage collection. The easiest thing that prevents falling into this trap is to:
+
+## Treat the loader as an event handler
+
+If we were to treat the loader like a simple fire-and-forget event handler that only primes our cache <Emph>without actually returning any data</Emph>, `useLoaderData` would just give us `undefined`, which isn't very usable. That's good because we shouldn't use it - we should `use(Suspense)Query`. 😁
+
+I find this generally a good mental model to have about route loaders, because it clearly defines what they are for: A point in time to initiate data fetching after a user interaction (navigating to page or showing intent to do so). This can also be introduced gradually as a performance enhancement to speed up loading our pages. Even without the loader in place, our pages should still work.
 
 ---
 
