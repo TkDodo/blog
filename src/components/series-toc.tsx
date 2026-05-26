@@ -34,14 +34,11 @@ export default function SeriesToc({ framed = true, id, items, title }: Props) {
   // non-component function. how view-model in array should be rendered
   function renderItem(item: ItemViewModel) {
     const { id, title } = item;
-    const latest = item.edgeType === "end";
     if (item.diff === 0) {
-      return <ListItemCurrent key={id} title={title} latest={latest} />;
+      return <ListItemCurrent key={id} title={title} />;
     }
     const href = `./${id}`;
-    return (
-      <ListItemClickable key={id} title={title} href={href} latest={latest} />
-    );
+    return <ListItemClickable key={id} title={title} href={href} />;
   }
 
   // if the series is short enough, just render all items without truncation.
@@ -164,16 +161,14 @@ function ListItemEllipsis({ srText }: { srText: React.ReactNode }) {
 
 interface ListItemProps {
   title: string;
-  latest?: boolean;
 }
 
-function ListItemCurrent({ title, latest = false }: ListItemProps) {
+function ListItemCurrent({ title }: ListItemProps) {
   return (
     <li className="!m-0 !p-0">
       <span className="block leading-relaxed font-bold">
         <span>{title}</span>
         <Marker>Current</Marker>
-        {latest && <Marker>Latest</Marker>}
       </span>
     </li>
   );
@@ -182,14 +177,12 @@ function ListItemCurrent({ title, latest = false }: ListItemProps) {
 function ListItemClickable({
   title,
   href,
-  latest = false,
 }: ListItemProps & { href: string }) {
   return (
     <li className="!m-0 !p-0">
       <span className="block leading-relaxed">
         <a href={href}>
           <span>{title}</span>
-          {latest && <Marker>Latest</Marker>}
         </a>
       </span>
     </li>
