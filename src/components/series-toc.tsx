@@ -174,10 +174,7 @@ function ListItemCurrent({ title }: ListItemProps) {
   );
 }
 
-function ListItemClickable({
-  title,
-  href,
-}: ListItemProps & { href: string }) {
+function ListItemClickable({ title, href }: ListItemProps & { href: string }) {
   return (
     <li className="!m-0 !p-0">
       <span className="block leading-relaxed">
