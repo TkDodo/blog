@@ -1,3 +1,7 @@
+[build]
+command = "pnpm run build:netlify"
+publish = "dist"
+
 [[redirects]]
 from = "/"
 to = "/blog"

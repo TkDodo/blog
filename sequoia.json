@@ -1,0 +1,22 @@
+{
+  "$schema": "https://tangled.org/stevedylan.dev/sequoia/raw/main/sequoia.schema.json",
+  "siteUrl": "https://tkdodo.eu",
+  "contentDir": "./.sequoia/generated/posts",
+  "outputDir": "./dist",
+  "pathPrefix": "/blog",
+  "publicDir": "./public",
+  "imagesDir": "./public/og-images",
+  "removeIndexFromSlug": true,
+  "publicationUri": "at://did:plc:3nqrhu5mthmias3zc4a2ovzj/site.standard.publication/3mmyb25hudm2r",
+  "pdsUrl": "https://eurosky.social",
+  "frontmatter": {
+    "publishDate": "date",
+    "slugField": "slug",
+    "coverImage": "ogImage"
+  },
+  "publishContent": false,
+  "bluesky": {
+    "enabled": false,
+    "maxAgeDays": 7
+  }
+}
