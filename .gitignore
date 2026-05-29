@@ -2,6 +2,9 @@ blog-main
 
 # build output
 dist/
+.sequoia/
+.sequoia-state.json
+.tmp-standard-site-*/
 
 # generated types
 .astro/

@@ -19,6 +19,7 @@
     "@tailwindcss/typography",
     "shiki",
     "tailwindcss",
+    "sequoia-cli",
     "@tanstack/react-router",
     "arktype"
   ]
