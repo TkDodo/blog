@@ -164,7 +164,7 @@ async function generateOgImage(
 
 async function loadSharedAssets(): Promise<SharedAssets> {
   const [avatar, interFont] = await Promise.all([
-    fs.readFile(path.join(process.cwd(), "src", "assets", "profile-og.jpg")),
+    fs.readFile(path.join(process.cwd(), "src", "assets", "profile.jpg")),
     fs.readFile(
       path.join(process.cwd(), "public", "fonts", "Inter-Regular.woff"),
     ),
