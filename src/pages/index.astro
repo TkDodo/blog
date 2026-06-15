@@ -127,12 +127,24 @@ const premiumSponsors = await getPremiumSponsors();
           <ProgressiveImage
             src={profileImage}
             width={304}
-            height={304}
+            height={272}
             sizes="304px"
             alt="Portrait of Dominik (TkDodo)"
-            wrapperClass="aspect-square w-full rounded-3xl ring-1 ring-border"
+            wrapperClass="h-[17rem] w-full rounded-3xl ring-1 ring-border"
+            imageClass="object-[center_58%]"
             loading="eager"
           />
+          <p class="mt-2 text-center text-sm text-subtle">
+            Photo by{" "}
+            <a
+              class="text-primary hover:underline"
+              href="https://x.com/tazsingh"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Taz Singh
+            </a>
+          </p>
         </div>
       </div>
       <p class="relative mt-4 text-base leading-relaxed md:text-lg lg:hidden">
