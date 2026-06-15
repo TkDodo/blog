@@ -12,6 +12,7 @@ interface Props {
   wrapperClass?: string;
   wrapperStyle?: string;
   imageClass?: string;
+  placeholderClass?: string;
   loading?: "eager" | "lazy";
   fetchpriority?: "high" | "low" | "auto";
   decoding?: "sync" | "async" | "auto";
@@ -27,6 +28,7 @@ const {
   wrapperClass,
   wrapperStyle,
   imageClass,
+  placeholderClass,
   loading = "lazy",
   fetchpriority = "auto",
   decoding = "async",
@@ -49,7 +51,10 @@ const placeholder = await getImage({
     src={placeholder.src}
     alt={alt}
     aria-hidden="true"
-    class="pointer-events-none absolute inset-0 z-0 !m-0 h-full w-full scale-[1.04] object-cover blur-xl transition-opacity duration-500 ease-out"
+    class:list={[
+      "pointer-events-none absolute inset-0 z-0 !m-0 h-full w-full scale-[1.04] object-cover blur-xl transition-opacity duration-500 ease-out",
+      placeholderClass,
+    ]}
     loading={loading}
     fetchpriority={fetchpriority}
     decoding={decoding}
