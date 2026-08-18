@@ -77,12 +77,7 @@ function toYamlScalar(value: FrontmatterValue): string {
     return String(value);
   }
 
-  const stringValue = String(value);
-  if (/^[A-Za-z0-9 _.,:;!?@/#'()&+-]+$/.test(stringValue)) {
-    return stringValue;
-  }
-
-  return JSON.stringify(stringValue);
+  return JSON.stringify(String(value));
 }
 
 function renderFrontmatter(data: Frontmatter) {
@@ -134,17 +129,20 @@ export async function generateStandardSiteContent(
     const outputFile = path.join(outputDir, slug, "index.mdx");
 
     await fs.mkdir(path.dirname(outputFile), { recursive: true });
-    await fs.writeFile(
-      outputFile,
-      renderFrontmatter({
-        title: data.title,
-        description: data.description,
-        date: data.date,
-        ogImage: coverImage,
-        slug,
-        tags: data.tags,
-      }),
-    );
+    const generatedContent = renderFrontmatter({
+      title: data.title,
+      description: data.description,
+      date: data.date,
+      ogImage: coverImage,
+      slug,
+      tags: data.tags,
+    });
+
+    // Fail the build here instead of letting Sequoia report invalid YAML and
+    // continue with a successful exit code.
+    matter(generatedContent);
+
+    await fs.writeFile(outputFile, generatedContent);
 
     generated.push({
       canonicalPath: `/blog/${slug}`,
