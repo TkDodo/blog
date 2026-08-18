@@ -109,13 +109,7 @@ let sponsorsPromise: Promise<Sponsor[]> | undefined;
 export const isPremiumAmount = (amount: number) => amount >= 20;
 
 export const getTierEmoji = (tier: GithubSponsorsTier): string => {
-  const mappedAmountTier = TIER_AMOUNT_MAP.get(tier.monthlyPriceInDollars);
-
-  if (mappedAmountTier) return mappedAmountTier;
-
-  throw new Error(
-    `Unknown GitHub Sponsors tier: ${tier.name} ($${tier.monthlyPriceInDollars}/month)`,
-  );
+  return TIER_AMOUNT_MAP.get(tier.monthlyPriceInDollars) ?? "🪙";
 };
 
 export const compareSponsors = (left: Sponsor, right: Sponsor): number => {
