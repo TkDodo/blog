@@ -28,7 +28,7 @@ import Emph from '@components/Emph'
 
 In [the last blog post](tan-stack-router-and-query) of this series, I described all the advantages of the imo recommended pattern to do data fetching in TanStack Router with TanStack Query. To recap, it's about triggering fetches as early as possible in the loader, but also about treating the loader as an event handler so that components can "pick up" the promise with `useSuspenseQuery` or `useQuery`.
 
-The takeaway here should be that a component should, if possible, probably never initiate data fetching on its own. Yes, it's great in theory that you have a fully self-contained component that has its own data requirements and resolves them automatically when it renders. But in practice, if that's the only place where we fetch, we are 1) doing this probably way later than we ideally should and 2) we can easily introduce [fetch waterfalls](seeding-the-query-cache#fetch-waterfalls) (with our without suspense).
+The takeaway here should be that a component should, if possible, probably never initiate data fetching on its own. Yes, it's great in theory that you have a fully self-contained component that has its own data requirements and resolves them automatically when it renders. But in practice, if that's the only place where we fetch, we are 1) doing this probably way later than we ideally should and 2) we can easily introduce [fetch waterfalls](seeding-the-query-cache#fetch-waterfalls) (with or without suspense).
 
 So, route loader to the rescue. 🎉 As usual, there is a cost to it though:
 
@@ -386,7 +386,7 @@ declare module '@tanstack/react-router' {
 }
 ```
 
-A couple of things happened here. First, we're no longer depending on `params` or `deps` inside the loader _or_ the component. The `context` function is now the only place where we use those, and it's job is to create the `queryOptions` we want to share and put them under an arbitrary key onto the context.
+A couple of things happened here. First, we're no longer depending on `params` or `deps` inside the loader _or_ the component. The `context` function is now the only place where we use those, and its job is to create the `queryOptions` we want to share and put them under an arbitrary key onto the context.
 
 Then, the loader only uses the `context`, and the component also only uses the `context` with `Route.useRouteContext()`.
 
