@@ -112,14 +112,14 @@ describe("getTierEmoji", () => {
     ).toBe("💍");
   });
 
-  it("fails for unknown tiers", () => {
-    expect(() =>
+  it("uses the custom emoji for unknown tiers", () => {
+    expect(
       getTierEmoji({
         isCustomAmount: false,
-        monthlyPriceInDollars: 42,
-        name: "Mystery",
+        monthlyPriceInDollars: 3,
+        name: "$3 a month",
       }),
-    ).toThrow(/Unknown GitHub Sponsors tier/);
+    ).toBe("🪙");
   });
 });
 

@@ -169,6 +169,10 @@ export const tsrSeriesItems = [
     id: "tan-stack-router-and-query",
     title: "#3: TanStack Router and Query",
   },
+  {
+    id: "reliable-query-prefetching-with-tanstack-router",
+    title: "#4: Reliable Query Prefetching with TanStack Router",
+  },
 ] as const satisfies ReadonlyArray<SeriesItem>;
 
 export const hsSeriesItems = [
