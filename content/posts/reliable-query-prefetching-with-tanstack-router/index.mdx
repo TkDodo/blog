@@ -25,6 +25,8 @@ import Emph from '@components/Emph'
 
 <Translations translations={[]} />
 
+**Last Update: 2026-09-05**
+
 <TsrToc id="reliable-query-prefetching-with-tanstack-router" />
 
 In [the last blog post](tan-stack-router-and-query) of this series, I described all the advantages of the imo recommended pattern to do data fetching in TanStack Router with TanStack Query. To recap, it's about triggering fetches as early as possible in the loader, but also about treating the loader as an event handler so that components can "pick up" the promise with `useSuspenseQuery` or `useQuery`.
@@ -207,6 +209,12 @@ Query params can often be used to store client state that has nothing to do with
 
 </Aside>
 
+<Aside title="Update" icon="bell">
+
+These examples use `queryClient.query`, available since TanStack Query v5.102.0. Passing `staleTime: 'static'` in the loader call replaces the now deprecated `ensureQueryData` method. See [TanStack Router and Query](tan-stack-router-and-query) for the fetching and error handling options.
+
+</Aside>
+
 ```tsx title=loaderDeps {3,6} twoslash
 import {
   createFileRoute,
@@ -257,9 +265,10 @@ export const Route = createFileRoute('/dashboard/$dashboardId')({
   validateSearch: type({ 'asOf?': 'string.date.iso' }).assert,
   loaderDeps: ({ search: { asOf } }) => ({ asOf }),
   loader: async ({ context, params, deps }) => {
-    await context.queryClient.ensureQueryData(
-      dashboardQueryOptions(params.dashboardId, deps),
-    )
+    await context.queryClient.query({
+      ...dashboardQueryOptions(params.dashboardId, deps),
+      staleTime: 'static',
+    })
   },
   component: Dashboard,
 })
@@ -271,11 +280,12 @@ This fixes the symptoms (we can now share URLs again without doing multiple unne
 
 Let's compare the two query related calls again - the one in the loader and the one in the component:
 
-```tsx title=queryOptions {3,8}
+```tsx title=queryOptions {3-4,9}
 //loader
-await context.queryClient.ensureQueryData(
-  dashboardQueryOptions(params.dashboardId, deps),
-)
+await context.queryClient.query({
+  ...dashboardQueryOptions(params.dashboardId, deps),
+  staleTime: 'static',
+})
 
 // component
 const { data } = useSuspenseQuery(
@@ -283,7 +293,7 @@ const { data } = useSuspenseQuery(
 )
 ```
 
-We can see that both instances share the same query options, the only difference is the function they’re passed to: `ensureQueryData` for an imperative, one-time fetch, and `useSuspenseQuery` for setting up a reactive subscription.
+Both calls use the same query key and query function: `query` reads or fetches data imperatively, while `useSuspenseQuery` sets up a reactive subscription. The loader overrides `staleTime` to `'static'` so it only waits for a fetch when there is no cached data. The component keeps its own freshness policy.
 
 In our case, the bug happened because those two weren't actually using the same options. If the component always relied on the same `queryOptions` as the loader, they couldn't drift apart, so let's just put the options into <Emph>Route Context</Emph> and consume them in both places.
 
@@ -295,7 +305,7 @@ This is true, but `beforeLoad` runs on every route change and receives the full 
 
 </Aside>
 
-```tsx title="queryOptions in Route Context" {4-9,12,23,24} twoslash
+```tsx title="queryOptions in Route Context" {4-9,12-13,24,25} twoslash
 import {
   createFileRoute,
   createRootRouteWithContext,
@@ -356,9 +366,10 @@ export const Route = createFileRoute('/dashboard/$dashboardId')({
     ),
   }),
   loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(
-      context.dashboardQueryOptions,
-    )
+    await context.queryClient.query({
+      ...context.dashboardQueryOptions,
+      staleTime: 'static',
+    })
   },
   component: Dashboard,
 })
@@ -395,7 +406,7 @@ This little layer of indirection has a lot of advantages. Not only can our de-du
 
 And because context inherits from parents, sub-routes will know about those `queryOptions`, too. We could, for example, prefetch some user data in the root route loader:
 
-```tsx title=Root loader {4-7,10-12} twoslash
+```tsx title=Root loader {4-7,10-13} twoslash
 import { createRootRouteWithContext } from '@tanstack/react-router'
 import { QueryClient, queryOptions } from '@tanstack/react-query'
 import { type } from 'arktype'
@@ -420,9 +431,10 @@ export const Route = createRootRouteWithContext<RouteContext>()({
     }),
   }),
   loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(
-      context.userQueryOptions,
-    )
+    await context.queryClient.query({
+      ...context.userQueryOptions,
+      staleTime: 'static',
+    })
   },
   component: Root,
 })
