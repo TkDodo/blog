@@ -21,6 +21,8 @@ import Aside from '@components/Aside'
   url="https://unsplash.com/@itfeelslikefilm"
 />
 
+**Last Update: 2026-09-05**
+
 <TsrToc id="context-inheritance-in-tan-stack-router" />
 
 <Translations
@@ -396,6 +398,12 @@ const router = createRouter({
 })
 ```
 
+<Aside title="Update" icon="bell">
+
+The loader examples below use `queryClient.query`, available since TanStack Query v5.102.0. Setting `staleTime: 'static'` only for the loader call replaces `ensureQueryData`: use cached data when available and fetch when it is missing. The component's `useSuspenseQuery` keeps its own freshness policy. See [TanStack Router and Query](tan-stack-router-and-query) for more details.
+
+</Aside>
+
 Then, this `queryClient` instance is available in all loaders:
 
 ```tsx title="QueryClient in Loader" {2-3} twoslash
@@ -436,9 +444,10 @@ const dashboardQueryOptions = (dashboardId: string) =>
 export const Route = createFileRoute('/dashboard/$dashboardId')({
   loader: async ({ context, params }) => {
     //             ^?
-    await context.queryClient.ensureQueryData(
-      dashboardQueryOptions(params.dashboardId),
-    )
+    await context.queryClient.query({
+      ...dashboardQueryOptions(params.dashboardId),
+      staleTime: 'static',
+    })
   },
   component: Dashboard,
 })
@@ -509,9 +518,10 @@ export const Route = createFileRoute('/dashboard/$dashboardId')({
   beforeLoad: () => ({ hello: 'world' }) as const,
   loader: async ({ context, params }) => {
     //             ^?
-    await context.queryClient.ensureQueryData(
-      dashboardQueryOptions(params.dashboardId),
-    )
+    await context.queryClient.query({
+      ...dashboardQueryOptions(params.dashboardId),
+      staleTime: 'static',
+    })
   },
   component: Dashboard,
 })
