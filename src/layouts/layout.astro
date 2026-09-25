@@ -132,7 +132,12 @@ const plausibleDomain = new URL(SITE.url).hostname;
             return false;
           }
 
-          const url = new URL(link.href, window.location.href);
+          let url;
+          try {
+            url = new URL(link.href, window.location.href);
+          } catch {
+            return false;
+          }
           if (url.origin !== window.location.origin) return false;
           if (link.target === "_blank" || link.hasAttribute("download")) {
             return false;
