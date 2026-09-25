@@ -214,9 +214,17 @@ const ogImagePath = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/og-images/${
             if (!commentsSection?.parentElement) return;
             if (callout.nextElementSibling === commentsSection) return;
 
+            document.removeEventListener(
+              "astro:page-load",
+              placeCalloutBeforeComments,
+            );
             commentsSection.parentElement.insertBefore(
               callout,
               commentsSection,
+            );
+            document.addEventListener(
+              "astro:page-load",
+              placeCalloutBeforeComments,
             );
           };
 
