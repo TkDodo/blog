@@ -15,7 +15,7 @@ export default function EthicalAds() {
   var scriptId = "ethical-ads";
   var existingScript = document.getElementById(scriptId);
   if (existingScript && window.ethicalads && typeof window.ethicalads.reload === "function") {
-    window.ethicalads.reload();
+    window.ethicalads.reload().catch(function() {});
     return;
   }
   if (!existingScript) {
