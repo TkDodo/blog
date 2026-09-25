@@ -8,6 +8,11 @@ const TRANSITION_ERROR_MESSAGES = [
   "AbortError: Transition was skipped",
 ];
 
+// Errors injected by the Twitter for iOS in-app browser (WKWebView) that we cannot fix
+const TWITTER_IN_APP_BROWSER_ERROR_MESSAGES = [
+  "window.webkit.messageHandlers.scrollEventHandler.postMessage",
+];
+
 interface EventLike {
   message?: unknown;
   culprit?: unknown;
@@ -60,6 +65,18 @@ function isAbortedTransitionError(event: EventLike): boolean {
   );
 }
 
+function isTwitterInAppBrowserError(event: EventLike): boolean {
+  return (
+    event.exception?.values?.some(
+      (exceptionValue) =>
+        typeof exceptionValue.value === "string" &&
+        TWITTER_IN_APP_BROWSER_ERROR_MESSAGES.some((msg) =>
+          exceptionValue.value!.includes(msg),
+        ),
+    ) === true
+  );
+}
+
 export function shouldDropSentryEvent(event: unknown): boolean {
   const candidateEvent = event as EventLike;
   const candidates: unknown[] = [
@@ -80,6 +97,7 @@ export function shouldDropSentryEvent(event: unknown): boolean {
 
   return (
     isAbortedTransitionError(candidateEvent) ||
+    isTwitterInAppBrowserError(candidateEvent) ||
     candidates.some(hasEthicalAdsPattern)
   );
 }
