@@ -143,10 +143,21 @@ const normalizeSponsorNode = (node: GithubSponsorshipNode): Sponsor => {
       `GitHub Sponsors response is missing tier for ${node.sponsorEntity.login}`,
     );
 
+  // Matteo sponsors on behalf of React Bricks. Keep this tied to his active sponsorship.
+  const sponsorEntity =
+    node.sponsorEntity.login.toLowerCase() === "matteofrana"
+      ? {
+          ...node.sponsorEntity,
+          name: "React Bricks",
+          url: "https://www.reactbricks.com/",
+          avatarUrl: "https://avatars.githubusercontent.com/u/60979227?s=400",
+        }
+      : node.sponsorEntity;
+
   return {
-    name: node.sponsorEntity.name?.trim() || node.sponsorEntity.login,
-    url: node.sponsorEntity.url,
-    image: node.sponsorEntity.avatarUrl,
+    name: sponsorEntity.name?.trim() || sponsorEntity.login,
+    url: sponsorEntity.url,
+    image: sponsorEntity.avatarUrl,
     amount: node.tier.monthlyPriceInDollars,
     emoji: getTierEmoji(node.tier),
     startedAt: node.createdAt,
