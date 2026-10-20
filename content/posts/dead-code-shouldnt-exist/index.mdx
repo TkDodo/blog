@@ -1,0 +1,38 @@
+---
+title: Dead Code Shouldn't Exist
+description: How we removed 28k lines of code from Sentry, one Knip at a time. A talk about the cost of unused code, how Knip finds it, and the lessons we learned along the way.
+date: 2026-10-20
+banner: ./cover.jpg
+tags:
+  - Talk
+  - TypeScript
+  - JavaScript
+  - Knip
+---
+
+import Comments from '@components/Comments.astro'
+import Translations from '@components/Translations'
+import Attribution from '@components/Attribution'
+import { DeadCodePresentation } from '@components/dead-code-shouldnt-exist'
+
+<Attribution
+  name="Egor Komarov"
+  url="https://unsplash.com/@egorkomarov"
+/>
+
+<Translations translations={[]} />
+
+This year, I've had the pleasure of giving **Dead Code Shouldn't Exist: How We Removed 28k Lines of Code, One Knip at a Time** at multiple conferences: [React Paris](https://www.youtube.com/watch?v=B5EQHjtfudY), [JSHeroes](https://www.youtube.com/watch?v=924f0BrkWuc), [JSNation (GitNation)](https://gitnation.com/contents/dead-code-shouldnt-exist-how-we-removed-28k-lines-of-code-one-knip-at-a-time), [React Norway](https://www.youtube.com/watch?v=Ge0DbLf-2R0&t=10910s), React Alicante, and ZurichJS. The linked conference names take you to recordings of the talk.
+
+Here are the slides + transcript. You can swipe left or right or use the arrow buttons / arrow keys to switch between the slides. The slides follow your light or dark theme. Enjoy!
+
+<br />
+
+<DeadCodePresentation client:only="react" />
+
+---
+
+That's it for today. Feel free to reach out to me on [bluesky](https://bsky.app/profile/tkdodo.eu)
+if you have any questions, or just leave a comment below. ⬇️
+
+<Comments />
