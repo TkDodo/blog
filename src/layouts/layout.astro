@@ -96,8 +96,11 @@ const plausibleDomain = new URL(SITE.url).hostname;
 
         let pendingLink = null;
         let safetyTimer = null;
+        let isUpdating = false;
 
         const clearPending = () => {
+          if (isUpdating) return;
+          isUpdating = true;
           document.body?.removeAttribute("data-nav-pending");
           if (pendingLink) pendingLink.removeAttribute("data-nav-pending");
           pendingLink = null;
@@ -105,9 +108,12 @@ const plausibleDomain = new URL(SITE.url).hostname;
             clearTimeout(safetyTimer);
             safetyTimer = null;
           }
+          isUpdating = false;
         };
 
         const setPending = (link) => {
+          if (isUpdating) return;
+          isUpdating = true;
           document.body?.setAttribute("data-nav-pending", "true");
           if (pendingLink && pendingLink !== link) {
             pendingLink.removeAttribute("data-nav-pending");
@@ -118,6 +124,7 @@ const plausibleDomain = new URL(SITE.url).hostname;
           }
           if (safetyTimer) clearTimeout(safetyTimer);
           safetyTimer = setTimeout(clearPending, 5000);
+          isUpdating = false;
         };
 
         const isInternalNavigationLink = (link) => {
